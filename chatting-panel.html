@@ -4,7 +4,7 @@
     <div class="panel panel-default" id="chatting-list-panel">
         <div class="panel-heading" id="chat-panel-heading">Chat</div>
 
-        <ul class="list-group" id="chat-ul" mb-scrollbar="scrollBarConfig">
+        <ul class="list-group" id="chat-ul" slim-scroll height="584px">
 
             <li ng-repeat="user in users" class="list-group-item"><i class={{user.status}}></i>{{user.name}}</li>
 

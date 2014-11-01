@@ -7,7 +7,8 @@ angular.module('slimScrollModule', []).directive('slimScroll',function()
     var linker = function(scope, element, attr)
     {
         element.slimScroll({
-            height: '400px',
+//            height: '400px',
+            height: attr.height,
             size: '5px',
             position: 'right',
             alwaysVisible: false,
@@ -28,34 +29,3 @@ angular.module('slimScrollModule', []).directive('slimScroll',function()
 
 });
 
-//app.config(function($logProvider){
-//    $logProvider.debugEnabled(true);
-//});
-
-
-//angular.module('slimScrollModule', []).directive('slimScroll',function()
-//{
-//    return {
-//        restrict: 'A',
-////        scope: {
-////            slimScroll: '&'
-////        },
-//        link: linker
-//    };
-//
-//    var linker = function(scope, element, attr)
-//    {
-//        element.slimScroll({
-//            height: '400px',
-//            size: '5px',
-//            position: 'right',
-//            alwaysVisible: false,
-//            distance: '2px',
-//            wheelStep: 15,
-//            allowPageScroll: false
-//        });
-//
-//    }
-//
-//});
-//

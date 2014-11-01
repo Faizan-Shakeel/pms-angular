@@ -4,18 +4,6 @@
 
 var app = angular.module('accordionModule', ['ui.bootstrap']);
 
-//app.controller('AccordionCtrl', function ($scope) {
-//    $scope.oneAtATime = true;
-//
-//    $scope.status = {
-//        isFirstOpen: true,
-//        isFirstDisabled: false
-//    };
-//
-//
-//});
-
-
 app.controller('AccordionCtrl', function ($scope) {
 
     $scope.oneAtATime = true;

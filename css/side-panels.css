@@ -53,8 +53,8 @@
 
 #chat-ul
 {
-    height: 584px;
-    overflow: hidden;
+    /*height: 584px;*/
+    /*overflow: hidden;*/
 }
 
 #chat-ul li
@@ -137,11 +137,15 @@
 
 #acc-content, #acc-content2, #acc-content3
 {
-    height: 400px;
-    overflow: hidden;
+    /*height: 400px;*/
+    /*overflow: hidden;*/
 }
 
 
+#acc-content
+{
+    height: 400px;
+}
 
 
 

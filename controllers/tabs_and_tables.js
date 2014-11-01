@@ -47,32 +47,32 @@ app.controller('TabsCtrl', function($scope)
 
 });
 
-app.directive('slimScroll',function()
-{
-    console.log('Inside Directive');
-
-    var linker = function(scope, element, attr)
-    {
-        console.log('Inside Linker');
-
-        element.slimScroll({
-            height: '400px',
-            size: '5px',
-            position: 'right',
-            alwaysVisible: false,
-            distance: '2px',
-            wheelStep: 15,
-            allowPageScroll: false
-        });
-    };
-
-
-    return {
-        restrict: 'A',
-        link: linker
-    };
-
-});
+//app.directive('slimScroll',function()
+//{
+//    console.log('Inside Directive');
+//
+//    var linker = function(scope, element, attr)
+//    {
+//        console.log('Inside Linker');
+//
+//        element.slimScroll({
+//            height: '400px',
+//            size: '5px',
+//            position: 'right',
+//            alwaysVisible: false,
+//            distance: '2px',
+//            wheelStep: 15,
+//            allowPageScroll: false
+//        });
+//    };
+//
+//
+//    return {
+//        restrict: 'A',
+//        link: linker
+//    };
+//
+//});
 
 
 //app.controller('TableProjectCtrl', ['$scope', function ($scope)
