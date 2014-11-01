@@ -1,3 +1,39 @@
+<div class="col-lg-8 col-md-8 col-sm-8 testTabsArea" ng-controller="TabsCtrl as tabsController">
+    <tabset justified="true">
+
+        <tab>
+
+            <tab-heading>
+                Projects
+            </tab-heading>
+
+            <div slim-scroll height="500px">
+                <div ng-repeat="panel in panels">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+
+                            <p>
+                                {{panel.name}}
+                            </p>
+
+                            <p>
+                                {{panel.status}}
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </tab>
+
+        <tab heading="Tasks">Tasks</tab>
+        <tab heading="Documents">Documents</tab>
+        <tab heading="Users">Users</tab>
+    </tabset>
+
+</div>
+
 
 <!--<div class="col-lg-8 col-md-8 col-sm-8 testTabsArea" ng-controller="TabsCtrl as tabsController">-->
     <!--<tabset justified="true">-->
@@ -50,47 +86,4 @@
 
 
 
-
-<div class="col-lg-8 col-md-8 col-sm-8 testTabsArea" ng-controller="TabsCtrl as tabsController">
-    <tabset justified="true">
-
-        <tab>
-
-
-            <tab-heading>
-                    Projects
-            </tab-heading>
-
-                <div slim-scroll height="500px">
-                    <div ng-repeat="panel in panels">
-                        <div class="panel panel-default">
-                            <div class="panel-body">
-
-                                <p>
-                                    {{panel.name}}
-                                </p>
-
-                                <p>
-                                    {{panel.status}}
-                                </p>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-        </tab>
-
-
-        <tab heading="Tasks">Tasks</tab>
-        <tab heading="Documents">Documents</tab>
-        <tab heading="Users">Users</tab>
-    </tabset>
-
-
-
-
-
-
-</div>
 
