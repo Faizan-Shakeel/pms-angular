@@ -1,0 +1,56 @@
+/* this is my custom CSS */
+
+#test-second-custom-bar
+{
+    margin-top: 52px;
+    position: relative;
+    margin-bottom: 1px;
+    height: 40px;
+    background-color: #f5f5f5;
+}
+
+#menu-opener
+{
+    margin-top: 3px;
+    width: 100%;
+}
+
+#chatting-list-opener
+{
+    margin-top: 3px;
+    width: 100%;
+}
+
+#icon-chat-list-color, #icon-main-options-color
+{
+    color: tan;
+}
+
+#one-click-panels-expand
+{
+    padding-left: 0px;
+    padding-top: 2px;
+}
+
+#current-notifications, #current-users-online
+{
+    color: #e38d13;
+}
+
+.vertical-line
+{
+    width: 4px;
+    height: 100%;
+    display: inline;
+    border: 1px inset;
+    background-color: #ebebeb;
+}
+
+.tooltip-inner {
+    font-size: small;
+    letter-spacing: 2px;
+    padding: 5px;
+    border: solid;
+    border-radius: 5px;
+    border-color: #FFFFFF;
+}

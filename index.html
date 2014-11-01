@@ -1,0 +1,214 @@
+<!doctype html>
+<html ng-app="pms-angular">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PMS</title>
+
+    <!--<script type="text/ng-template" id="navigation-bar-top.html"></script>-->
+    <link href="css/Third-Party-CSS/bootstrap.min.css" rel="stylesheet">
+    <!--<link href="css/Third-Party-CSS/bootstrap-theme.min.css" rel="stylesheet">-->
+    <link rel="stylesheet" href="font-awesome-4.0.3/css/font-awesome.min.css">
+    <link href="css/Third-Party-CSS/bootstrap-tour.min.css" rel="stylesheet">
+    <link href="css/Third-Party-CSS/popbox.css" rel="stylesheet">
+    <link href="css/Third-Party-CSS/checkbox-style.css" rel="stylesheet">
+    <!--<link href="css/Third-Party-CSS/smart-table.css" rel="stylesheet">-->
+    <link rel="stylesheet" href="css/Third-Party-CSS/bootstrap-multiselect.css" type="text/css">
+
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular.min.js"></script>-->
+
+    <!--Custom Styles-->
+    <link href="css/table-work.css" rel="stylesheet">
+    <link href="css/container.css" rel="stylesheet">
+    <link href="css/navbar-top.css" rel="stylesheet">
+    <link href="css/navbar2_2.css" rel="stylesheet">
+    <link href="css/navbar-bottom.css" rel="stylesheet">
+    <link href="css/side-panels.css" rel="stylesheet">
+    <link href="css/custom-icon.css" rel="stylesheet">
+    <link href="css/shadow.css" rel="stylesheet">
+    <link href="css/chat.css" rel="stylesheet">
+    <link href="css/panel-table-projects.css" rel="stylesheet">
+    <!--Custom Styles-->
+
+</head>
+
+<body>
+
+<!------------------------------------------------------------ MAIN CONTAINER (Write No HTML Outside) -----------------------------------------------------------------START-->
+<div class="container-full-width">
+
+    <!-------------------------------------------------------------------- Navigation Bar Fixed Top -----------------------------------------------------------------------START-->
+    <ng-include src="'navigation-bar-top.html'"></ng-include>
+    <!-------------------------------------------------------------------- Navigation Bar Fixed Top -----------------------------------------------------------------------END-->
+
+
+    <!-------------------------------------------------------Row-Containing-Buttons-For-Menu-&-Chatting-Panel--------------------------------------------------------------START-->
+    <ng-include src="'second-bar.html'"></ng-include>
+    <!-------------------------------------------------------Row-Containing-Buttons-For-Menu-&-Chatting-Panel----------------------------------------------------------------END-->
+
+
+    <!-------------------------------------------------------Row-Containing-Accordion-&-Table-&-Chatting-Panel-------------------------------------------------------------START-->
+
+    <div class="row" id="third-row">
+
+        <!--<ng-include src="'accordion.html'"></ng-include>-->
+        <ng-include src="'angular_accordion.html'"></ng-include>
+        <!--<ng-include src="'table.html'"></ng-include>-->
+        <ng-include src="'angular_table.html'"></ng-include>
+        <!--<ng-include src="'panel-table-projects.html'"></ng-include>-->
+
+
+        <!-------------------------------------------------------------------------- Chat Box --------------------------------------------------------------------------------START-->
+        <ng-include src="'chat-box.html'"></ng-include>
+        <!-------------------------------------------------------------------------- Chat Box -------------------------------------------------------------------------------------END-->
+
+
+        <!------------------------------------------------------------------------ Context Menu --------------------------------------------------------------------------START-->
+        <ng-include src="'context-menu.html'"></ng-include>
+        <!------------------------------------------------------------------------ Context Menu --------------------------------------------------------------------------END-->
+
+
+        <!------------------------------------------------------------------------ Chatting List -----------------------------------------------------------------------START-->
+        <ng-include src="'chatting-panel.html'"></ng-include>
+        <!------------------------------------------------------------------------ Chatting List -----------------------------------------------------------------------END-->
+
+    </div>
+
+    <!-------------------------------------------------------Row-Containing-Accordion-&-Table-&-Chatting-Panel---------------------------------------------------------------END-->
+
+
+    <!---------------------------------------------------------------------- Navigation Bar Bottom ---------------------------------------------------------------------------START-->
+    <ng-include src="'navigation-bar-bottom.html'"></ng-include>
+    <!---------------------------------------------------------------------- Navigation Bar Bottom -----------------------------------------------------------------------------END-->
+
+
+    <!------------------------------------------------------------------- Modal [ Add New Project ] --------------------------------------------------------------------------START-->
+    <ng-include src="'new-project.html'"></ng-include>
+    <!------------------------------------------------------------------- Modal [ Add New Project ] ---------------------------------------------------------------------------END-->
+
+
+    <!------------------------------------------------------------------- Modal [ Add New Task ] --------------------------------------------------------------------------START-->
+    <ng-include src="'new-task.html'"></ng-include>
+    <!------------------------------------------------------------------- Modal [ Add New Task ] ---------------------------------------------------------------------------END-->
+
+
+    <!------------------------------------------------------------------- Modal [ Add New File ] --------------------------------------------------------------------------START-->
+    <ng-include src="'new-document.html'"></ng-include>
+    <!------------------------------------------------------------------- Modal [ Add New File ] ---------------------------------------------------------------------------END-->
+
+
+    <!------------------------------------------------------------------- Modal [ Add New User ] --------------------------------------------------------------------------START-->
+    <ng-include src="'new-user.html'"></ng-include>
+    <!------------------------------------------------------------------- Modal [ Add New User ] ------------------------------------------------------------------------END-->
+
+
+    <!------------------------------------------------------------------- Modal [ Delete Project Confirmation Dialog ] --------------------------------------------------START-->
+    <ng-include src="'delete-project.html'"></ng-include>
+    <!------------------------------------------------------------------- Modal [ Delete Project Confirmation Dialog ] --------------------------------------------------END-->
+
+
+    <!------------------------------------------------------------------- Modal [ Delete Task Confirmation Dialog ] -----------------------------------------------------START-->
+    <ng-include src="'delete-task.html'"></ng-include>
+    <!------------------------------------------------------------------- Modal [ Delete Task Confirmation Dialog ] -------------------------------------------------------END-->
+
+
+    <!------------------------------------------------------------------- Modal [ Delete File Confirmation Dialog ] -----------------------------------------------------START-->
+    <ng-include src="'delete-document.html'"></ng-include>
+    <!------------------------------------------------------------------- Modal [ Delete File Confirmation Dialog ] -------------------------------------------------------END-->
+
+
+    <!------------------------------------------------------------------- Modal [ Delete User Confirmation Dialog ] -----------------------------------------------------START-->
+    <ng-include src="'delete-user.html'"></ng-include>
+    <!------------------------------------------------------------------- Modal [ Delete User Confirmation Dialog ] ---------------------------------------------------------------------------END-->
+
+
+    <!------------------------------------------------------------------- Modal [ Project Info ] ---------------------------------------------------------------------------START-->
+    <ng-include src="'project-info.html'"></ng-include>
+    <!------------------------------------------------------------------- Modal [ Project Info ] ---------------------------------------------------------------------------END-->
+
+
+    <!------------------------------------------------------------------- Modal [ Task Info ] ---------------------------------------------------------------------------START-->
+    <ng-include src="'task-info.html'"></ng-include>
+    <!------------------------------------------------------------------- Modal [ Task Info ] ---------------------------------------------------------------------------END-->
+
+
+    <!------------------------------------------------------------------- Modal [ File Info ] ---------------------------------------------------------------------------START-->
+    <ng-include src="'document-info.html'"></ng-include>
+    <!------------------------------------------------------------------- Modal [ File Info ] ---------------------------------------------------------------------------END-->
+
+
+    <!------------------------------------------------------------------- Modal [ User Info ] ---------------------------------------------------------------------------START-->
+    <ng-include src="'user-info.html'"></ng-include>
+    <!------------------------------------------------------------------- Modal [ User Info ] ---------------------------------------------------------------------------END-->
+
+
+    <!------------------------------------------------------------------- Modal [ User Profile ] ---------------------------------------------------------------------------START-->
+    <ng-include src="'user-profile.html'"></ng-include>
+    <!------------------------------------------------------------------- Modal [ User Profile ] ---------------------------------------------------------------------------END-->
+
+
+
+    <!------------------------------------------------------------------- Modal [ User Account ] ---------------------------------------------------------------------------START-->
+    <ng-include src="'user-account.html'"></ng-include>
+    <!------------------------------------------------------------------- Modal [ User Account ] ---------------------------------------------------------------------------END-->
+
+
+</div>
+
+<!------------------------------------------------------------- MAIN CONTAINER (Write No HTML Outside) --------------------------------------------------------------------END-->
+
+<!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>-->
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="js/Third-Party-JS/bootstrap.min.js"></script>
+<!--[if lt IE 9]><script src="js/Third-Party-JS/html5shiv.js"><![endif]-->
+<!--<script src="js/Third-Party-JS/popbox.js"></script>-->
+<script src="js/Third-Party-JS/bootstrap-tour.min.js"></script>
+<script src="js/Third-Party-JS/respond.js"></script>
+<script src="js/Third-Party-JS/jquery.slimscroll.js"></script>
+<script src="js/THIRD-PARTY-JS/jquery.validate.min.js"></script>
+
+<script type="text/javascript" src="js/Third-Party-JS/angular.js"></script>
+<!--<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular-animate.min.js"></script>-->
+<!--<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular-sanitize.min.js"></script>-->
+<!--<script src="//cdnjs.cloudflare.com/ajax/libs/angular-strap/2.1.2/angular-strap.min.js"></script>-->
+<!--<script src="//cdnjs.cloudflare.com/ajax/libs/angular-strap/2.1.2/angular-strap.tpl.min.js"></script>-->
+<!--<script type="text/javascript" src="js/Third-Party-JS/smart-table.min.js"></script>-->
+<!--<script type="text/javascript" src="js/Third-Party-JS/smart-table.debug.js"></script>-->
+<script type="text/javascript" src="js/Third-Party-JS/mb-scrollbar.min.js"></script>
+
+<script type="text/javascript" src="js/Third-Party-JS/ui-bootstrap-tpls-0.11.2.min.js"></script>
+
+
+<!--Custom Scripts-->
+
+<script type="text/javascript" src="controllers/tooltip.js"></script>
+<script type="text/javascript" src="controllers/accordion.js"></script>
+<script type="text/javascript" src="controllers/chatting-panel.js"></script>
+<!--<script type="text/javascript" src="controllers/tables.js"></script>-->
+<script type="text/javascript" src="directives/slim-scroll.js"></script>
+<script type="text/javascript" src="controllers/tabs_and_tables.js"></script>
+<!--<script type="text/javascript" src="controllers/panel_table_projects.js"></script>-->
+
+<script type="text/javascript" src="app.js"></script>
+
+<!--<script src="http://localhost:1337/socket.io/socket.io.js"></script>-->
+
+<!--<script src="js/scrollbar.js"></script>-->
+<!--<script src="js/navbar-top.js"></script>-->
+<!--<script src="js/navbar-top-test.js"></script>-->
+<!--<script src="js/navbar2-2.js"></script>-->
+<!--<script src="js/side-panels2.js"></script>-->
+<!--<script src="js/main-menu-popover2.js"></script>-->
+<!--<script src="js/context-menu-modals.js"></script>-->
+<!--<script src="js/tour-wizard.js"></script>-->
+<!--<script src="js/login.js"></script>-->
+
+<!--Custom Scripts-->
+<!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular.min.js"></script>-->
+<!--<script type="text/javascript" src="js/Third-Party-JS/ui-bootstrap-tpls-0.11.2.min.js"></script>-->
+<!--<script type="text/javascript" src="js/angular-test.js"></script>-->
+
+
+</body>
+</html>
