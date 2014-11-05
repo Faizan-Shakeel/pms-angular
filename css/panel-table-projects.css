@@ -1,12 +1,45 @@
-/*#panel-table-projects*/
-/*{*/
-    /*height: 550px;*/
-    /*overflow: hidden;*/
-/*}*/
+#outer-panel
+{
+    position: relative;
+    margin-top: 10px;
+    /*width: 50px;*/
+}
 
-/*#test-test*/
-/*{*/
-    /*height: 500px;*/
-    /*overflow: hidden;*/
-/*}*/
+#inner-panel
+{
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    bottom: -1px;
+    width: 40px;
+    height: 101px;
+    margin-right: 5px;
+    line-height: 70px;
+}
 
+
+#btn-grp-panel
+{
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    bottom: -1px;
+}
+
+#panel-content
+{
+    margin-left: 35px;
+}
+
+#panel-icon-fix
+{
+    margin-left: -10px;
+}
+
+.test-button-border
+{
+
+    /*border-bottom-left-radius: 0;*/
+    /*border-top-left-radius: 0;*/
+
+}
