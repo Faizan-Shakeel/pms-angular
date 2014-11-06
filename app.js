@@ -10,7 +10,8 @@ var app = angular.module('pms-angular', [
     'slimScrollModule',
 //    'smart-table',
 //    'panelTableProjectsModule',
-    'chattingPanelModule'
+    'chattingPanelModule',
+    'modalNewProjectModule'
 //    'mb-scrollbar'
 
 
