@@ -3,6 +3,7 @@
     position: relative;
     margin-top: 10px;
     /*width: 50px;*/
+
 }
 
 #inner-panel
@@ -36,10 +37,22 @@
     margin-left: -10px;
 }
 
-.test-button-border
+
+/*.modal-new-project-tab-body*/
+/*{*/
+    /*height: 350px;*/
+
+    /*overflow-y: hidden;*/
+/*}*/
+
+.test-modal-width .modal-dialog
 {
+    width: 800px;
+}
 
-    /*border-bottom-left-radius: 0;*/
-    /*border-top-left-radius: 0;*/
 
+#test-tabs-height
+{
+    /*height: 400px;*/
+    /*overflow: hidden;*/
 }

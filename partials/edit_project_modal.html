@@ -1,15 +1,15 @@
 
-<div ng-controller="ModalDemoCtrl">
+<div ng-controller="TabsCtrl as editModalScope">
 
     <div class="modal-header">
-        <h4 class="modal-title text-center">Create New Project</h4>
+        <h4 class="modal-title text-center">Edit Project</h4>
     </div>
 
     <div class="modal-body">
 
-        <uib-tabset justified="true">
+        <tabset justified="true">
 
-            <uib-tab>
+            <tab>
 
                 <tab-heading>
                     Projects
@@ -19,17 +19,11 @@
 
                     <br/>
 
-                    <!--<label for="userName" class="col-lg-2 col-md-2 col-sm-2 control-label">Name</label>-->
-                    <!--<input type="text" class="form-control" placeholder="Name" ng-model="name">-->
-                    <!--Project Name <input type="text" ng-model="modalScope.name"><br>-->
-
-                    <!--<p>Project Name: {{name}}</p>-->
-
-                    <form class="form-horizontal">
+                    <form class="form-horizontal" role="form" ng-submit="submit()">
                         <div class="form-group">
                             <label for="userName" class="col-lg-2 col-md-2 col-sm-2 control-label">Name</label>
                             <div class="col-lg-4 col-md-4 col-sm-4">
-                                <input type="text" class="form-control" id="userName" placeholder="Name" ng-model="modalScope.projectname">
+                                <input type="text" class="form-control" id="userName" placeholder="Name" ng-model="editModalScope.project.name">
                             </div>
                             <div class="form-group">
                                 <label for="userDepartment" class="col-lg-2 col-md-2 col-sm-2 control-label">Department</label>
@@ -77,33 +71,31 @@
 
                     </form>
 
-                    <!--<h1>{{project.name}}</h1>-->
-
                 </div>
 
-            </uib-tab>
+            </tab>
 
-            <uib-tab heading="Tasks">
+            <tab heading="Tasks">
                 <div class="modal-new-project-tab-body">Tasks</div>
-            </uib-tab>
+            </tab>
 
-            <uib-tab heading="Documents">
+            <tab heading="Documents">
                 <div class="modal-new-project-tab-body">Documents</div>
-            </uib-tab>
+            </tab>
 
-            <uib-tab heading="Users">
+            <tab heading="Users">
                 <div class="modal-new-project-tab-body">Users</div>
-            </uib-tab>
+            </tab>
 
-        </uib-tabset>
+        </tabset>
 
         <!--<button class="btn btn-primary" ng-click="checkUpdatedValue()">Check Value</button>-->
 
     </div>
 
     <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" ng-click="ok(modalScope.projectname)">Create</button>
-        <button type="button" class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        <button class="btn btn-primary" ng-click="ok(editModalScope.project)">Create</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
     </div>
 
 </div>

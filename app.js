@@ -11,8 +11,8 @@ var app = angular.module('pms-angular', [
 //    'smart-table',
 //    'panelTableProjectsModule',
     'chattingPanelModule',
-    'modalNewProjectModule'
+    'modalNewProjectModule',
 //    'mb-scrollbar'
-
+    'newProjectModule'
 
 ]);

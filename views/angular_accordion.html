@@ -1,12 +1,12 @@
 
-<div class="col-lg-2 col-md-2 col-sm-2" ng-controller="AccordionCtrl">
+<div class="col-lg-2 col-md-2 col-sm-2" ng-controller="UibAccordionCtrl">
 
-    <accordion close-others="oneAtATime">
-        <accordion-group is-open="status.isFirstOpen">
-            <accordion-heading>
+    <uib-accordion close-others="oneAtATime">
+        <uib-accordion-group is-open="status.isFirstOpen">
+            <uib-accordion-heading>
                 <p id="testId">Dashboard</p>
 
-            </accordion-heading>
+            </uib-accordion-heading>
 
             <div id="acc-content" ng-controller="ModalDemoCtrl">
 
@@ -17,14 +17,13 @@
 
             </div>
 
-        </accordion-group>
+        </uib-accordion-group>
 
-
-        <accordion-group>
-            <accordion-heading>
+        <uib-accordion-group>
+            <uib-accordion-heading>
                 <p id="testId2">Notifications</p>
 
-            </accordion-heading>
+            </uib-accordion-heading>
 
             <!--<div id="acc-content2" mb-scrollbar="scrollBarConfig">-->
             <div slim-scroll height="400px">
@@ -111,14 +110,14 @@
 
             </div>
 
-        </accordion-group>
+        </uib-accordion-group>
 
 
-        <accordion-group>
-            <accordion-heading>
+        <uib-accordion-group>
+            <uib-accordion-heading>
                 <p id="testId3">History</p>
 
-            </accordion-heading>
+            </uib-accordion-heading>
 
             <div slim-scroll height="400px">
 
@@ -216,8 +215,8 @@
 
             </div>
 
-        </accordion-group>
+        </uib-accordion-group>
 
-    </accordion>
+    </uib-accordion>
 </div>
 
