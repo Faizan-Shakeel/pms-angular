@@ -1,0 +1,30 @@
+[33mcommit 4290f4ed0da11f2f79492ec6858f917f4af7e151[m
+Author: Faizan Khan <faizan.khan@axtrion.com>
+Date:   Thu Nov 6 02:11:53 2014 +0100
+
+    Modal showing
+
+[33mcommit 76b1d1f3152f653a45972e12de154baf1aeb2dc6[m
+Author: Faizan Khan <faizan.khan@axtrion.com>
+Date:   Wed Nov 5 15:21:21 2014 +0100
+
+    Table replaced by Panel
+
+[33mcommit 5e3a2303edf3c52ca293b94c8cdfc40ebc02f47f[m
+Author: Faizan Khan <faizan.khan@axtrion.com>
+Date:   Sat Nov 1 18:12:57 2014 +0100
+
+    Removed "chat box", "context menu", "pop box".
+    Added Markup to views folder
+
+[33mcommit 02edfc8caa53b2c3932e994a8f317f0d97c04d0e[m
+Author: Faizan Khan <faizan.khan@axtrion.com>
+Date:   Sat Nov 1 03:34:20 2014 +0100
+
+    mb-scrollbar replaced with slimScroll
+
+[33mcommit fc2c6acd82bac8c4d59f8fc888ffeaa585311cd3[m
+Author: Faizan Khan <faizan.khan@axtrion.com>
+Date:   Sat Nov 1 03:03:25 2014 +0100
+
+    Initial Commit (Directive working as a seperate module)

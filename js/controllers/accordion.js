@@ -4,7 +4,7 @@
 
 var app = angular.module('accordionModule', ['ui.bootstrap']);
 
-app.controller('AccordionCtrl', function ($scope) {
+app.controller('UibAccordionCtrl', function ($scope) {
 
     $scope.oneAtATime = true;
 
