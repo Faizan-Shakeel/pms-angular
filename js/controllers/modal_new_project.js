@@ -2,8 +2,6 @@ var app = angular.module('modalNewProjectModule', ['ui.bootstrap']);
 
 app.controller('ModalDemoCtrl', ['$scope', '$rootScope', '$uibModal', '$log', function ($scope, $rootScope, $uibModal, $log) {
 
-//    $scope.form = {};
-
     var vm = this;
 
     vm.open = function () {
@@ -41,7 +39,7 @@ app.controller('ModalDemoCtrl', ['$scope', '$rootScope', '$uibModal', '$log', fu
 //            windowClass: 'test-modal-width',
             backdrop: false,
             resolve: {
-                newProjectName: function(){
+                selectedProject: function(){
                     return name;
                 }
             }
@@ -52,66 +50,45 @@ app.controller('ModalDemoCtrl', ['$scope', '$rootScope', '$uibModal', '$log', fu
 // Please note that $uibModalInstance represents a modal window (instance) dependency.
 // It is not the same as the $modal service used above.
 
-app.controller('EditModalInstanceCtrl', ['$scope', '$uibModalInstance', 'newProjectName', 'NewProjectService', function ($scope, $uibModalInstance, newProjectName, NewProjectService) {
+app.controller('EditModalInstanceCtrl', ['$scope', '$uibModalInstance', 'selectedProject', 'NewProjectService', function ($scope, $uibModalInstance, selectedProject, NewProjectService) {
 
-//    var scope = this;
     var vm = this;
 
-//    console.log("TESTIGN : " + vm.modalForm.projectname);
+    vm.modalHeading = 'Update Project';
+    vm.modalType = 'Update';
 
-    this.projectname = newProjectName;
-//    $scope.form.modalForm.projectname = newProjectName;
+    vm.projectname = selectedProject;
 
-//    alert($scope);
-//    console.log($scope.testForm);
-//    $scope.name = 'test change';
+    vm.ok = function(updatedProjectName) {
 
-//    $scope.project.name = projectName;
+        var projectArray = NewProjectService.panels;
 
-//    project.name = selectedProject;
-//    $scope.project.name = "test";
+        angular.forEach(projectArray, function(value,index){
 
-//    alert($scope.project.name);
-//    $scope.project.name = selectedProject;
-
-//    var arrayToBeModified = NewProjectService.panels;
-
-//    angular.forEach(NewProjectService.panels, function(value,index){
-//        alert(value['status'] + " at " + index);
-//
-//        if(value.name == selectedProject)
-//        {
-//            $scope.project.name =
-//        }
-//
-//    });
-
-    $scope.ok = function(project) {
-        var new_project_params = {
-            'name': project.name,
-            'status': 'Status New'
-        };
-
-        NewProjectService.setValue(new_project_params);
+            if(value.name == selectedProject)
+            {
+                projectArray[index].name = updatedProjectName;
+            }
+        });
 
         $uibModalInstance.close();
 
     };
 
-    $scope.cancel = function () {
+    vm.cancel = function () {
         $uibModalInstance.dismiss('cancel');
     };
+
 }]);
 
 app.controller('ModalInstanceCtrl', ['$scope', '$uibModalInstance', 'projectName', 'NewProjectService', function ($scope, $uibModalInstance, projectName, NewProjectService) {
 
-//    var vm = this;
+    var vm = this;
 
-//    this.projectname = 'oaisndoaiwd';
+    vm.modalHeading = 'Create New Project';
+    vm.modalType = 'Create';
 
-    $scope.ok = function(projectName) {
-        console.log(projectName);
-        console.log($scope.modalForm);
+    vm.ok = function(projectName) {
 
         var new_project_params = {
             'name': projectName,
@@ -124,7 +101,7 @@ app.controller('ModalInstanceCtrl', ['$scope', '$uibModalInstance', 'projectName
 
     };
 
-    $scope.cancel = function () {
+    vm.cancel = function () {
         $uibModalInstance.dismiss('cancel');
     };
 }]);

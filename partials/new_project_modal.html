@@ -2,7 +2,7 @@
 <div ng-controller="ModalDemoCtrl">
 
     <div class="modal-header">
-        <h4 class="modal-title text-center">Create New Project {{ModalVM.projectname}}</h4>
+        <h4 class="modal-title text-center">{{ModalVM.modalHeading}}</h4>
     </div>
 
     <div class="modal-body">
@@ -18,12 +18,6 @@
                 <div class="modal-new-project-tab-body">
 
                     <br/>
-
-                    <!--<label for="userName" class="col-lg-2 col-md-2 col-sm-2 control-label">Name</label>-->
-                    <!--<input type="text" class="form-control" placeholder="Name" ng-model="name">-->
-                    <!--Project Name <input type="text" ng-model="modalScope.name"><br>-->
-
-                    <!--<p>Project Name: {{name}}</p>-->
 
                     <form class="form-horizontal">
                         <div class="form-group">
@@ -102,8 +96,8 @@
     </div>
 
     <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" ng-click="ok(ModalVM.projectname)">Create</button>
-        <button type="button" class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        <button type="submit" class="btn btn-primary" ng-click="ModalVM.ok(ModalVM.projectname)">{{ModalVM.modalType}}</button>
+        <button type="button" class="btn btn-warning" ng-click="ModalVM.cancel()">Cancel</button>
     </div>
 
 </div>
