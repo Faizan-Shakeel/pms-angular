@@ -1,23 +1,25 @@
 var app = angular.module('modalNewProjectModule', ['ui.bootstrap']);
 
-app.controller('ModalDemoCtrl', function ($scope, $rootScope, $uibModal, $log) {
+app.controller('ModalDemoCtrl', ['$scope', '$rootScope', '$uibModal', '$log', function ($scope, $rootScope, $uibModal, $log) {
 
 //    $scope.form = {};
 
-    $scope.open = function () {
+    var vm = this;
+
+    vm.open = function () {
 
         var modalInstance = $uibModal.open({
 //            animation: false,
             templateUrl: 'partials/new_project_modal.html',
             controller: 'ModalInstanceCtrl',
-            controllerAs: 'modalScope',
+            controllerAs: 'ModalVM',
             scope: $scope,
 //            size: size,
-            windowClass: 'test-modal-width',
-            backdrop: 'static',
+//            windowClass: 'test-modal-width',
+            backdrop: false,
             resolve: {
                 projectName: function () {
-                    return $scope.projectname;
+                    return vm.projectname;
                 }
             }
         });
@@ -29,14 +31,14 @@ app.controller('ModalDemoCtrl', function ($scope, $rootScope, $uibModal, $log) {
 //        });
     };
 
-    $scope.editProject = function (name) {
+    vm.editProject = function (name) {
 
         var modalInstance = $uibModal.open({
             templateUrl: 'partials/new_project_modal.html',
             controller: 'EditModalInstanceCtrl',
-            controllerAs: 'modalScope',
+            controllerAs: 'ModalVM',
             scope: $scope,
-            windowClass: 'test-modal-width',
+//            windowClass: 'test-modal-width',
             backdrop: false,
             resolve: {
                 newProjectName: function(){
@@ -45,14 +47,17 @@ app.controller('ModalDemoCtrl', function ($scope, $rootScope, $uibModal, $log) {
             }
         });
     };
-});
+}]);
 
 // Please note that $uibModalInstance represents a modal window (instance) dependency.
 // It is not the same as the $modal service used above.
 
-app.controller('EditModalInstanceCtrl', function ($scope, $uibModalInstance, newProjectName, NewProjectService) {
+app.controller('EditModalInstanceCtrl', ['$scope', '$uibModalInstance', 'newProjectName', 'NewProjectService', function ($scope, $uibModalInstance, newProjectName, NewProjectService) {
 
 //    var scope = this;
+    var vm = this;
+
+//    console.log("TESTIGN : " + vm.modalForm.projectname);
 
     this.projectname = newProjectName;
 //    $scope.form.modalForm.projectname = newProjectName;
@@ -96,12 +101,17 @@ app.controller('EditModalInstanceCtrl', function ($scope, $uibModalInstance, new
     $scope.cancel = function () {
         $uibModalInstance.dismiss('cancel');
     };
-});
+}]);
 
-app.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, projectName, NewProjectService) {
+app.controller('ModalInstanceCtrl', ['$scope', '$uibModalInstance', 'projectName', 'NewProjectService', function ($scope, $uibModalInstance, projectName, NewProjectService) {
+
+//    var vm = this;
+
+//    this.projectname = 'oaisndoaiwd';
 
     $scope.ok = function(projectName) {
         console.log(projectName);
+        console.log($scope.modalForm);
 
         var new_project_params = {
             'name': projectName,
@@ -117,5 +127,5 @@ app.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, project
     $scope.cancel = function () {
         $uibModalInstance.dismiss('cancel');
     };
-});
+}]);
 

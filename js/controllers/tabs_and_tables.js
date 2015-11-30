@@ -4,9 +4,11 @@ var app = angular.module('tabsAndTablesModule', ['ui.bootstrap']);
 app.controller('TabsCtrl', function($scope, $http, $filter, NewProjectService)
 {
 
-    $scope.panels = NewProjectService.panels;
+    var vm = this;
 
-//        $scope.panels = [
+    vm.panels = NewProjectService.panels;
+
+//        vm.panels = [
 //        {
 //            'name': 'Name XYZ',
 //            'status': 'Status XYZ'
@@ -17,28 +19,28 @@ app.controller('TabsCtrl', function($scope, $http, $filter, NewProjectService)
 //        }
 //    ];
 
-//    $scope.$watch( function() { return NewProjectService.getValue(); }, function(new_project, old_project) {
+//    vm.$watch( function() { return NewProjectService.getValue(); }, function(new_project, old_project) {
 //
 //        if(new_project !== old_project)
 //        {
-//            $scope.panels.push(new_project);
+//            vm.panels.push(new_project);
 //        }
 //
 //
 //    });
 
 
-    $scope.deleteProject = function(projectName)
+    vm.deleteProject = function(projectName)
     {
         var deleteThisProject = {
             'name': projectName,
             'status': 'Status New'
         };
 
-        $scope.panels = removeByAttr($scope.panels, 'name', projectName);
+        vm.panels = removeByAttr(vm.panels, 'name', projectName);
 
-//        $scope.panels = $filter('filter')($scope.panels, {name: '!ted'}, true);
-//        $scope.panels = $filter('filter')($scope.panels, {name: !projectName}, true);
+//        vm.panels = $filter('filter')(vm.panels, {name: '!ted'}, true);
+//        vm.panels = $filter('filter')(vm.panels, {name: !projectName}, true);
 
     };
 
