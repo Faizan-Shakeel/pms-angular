@@ -1,5 +1,5 @@
 
-<div ng-controller="ModalDemoCtrl">
+<div>
 
     <div class="modal-header">
         <h4 class="modal-title text-center">{{ModalVM.modalHeading}}</h4>
@@ -44,10 +44,18 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="userEmail" class="col-lg-2 col-md-2 col-sm-2 control-label">Email</label>
+
+                            <label for="projectDate" class="col-lg-2 col-md-2 col-sm-2 control-label">Date</label>
+
                             <div class="col-lg-4 col-md-4 col-sm-4">
-                                <input type="email" class="form-control " id="userEmail" placeholder="Email">
+                                <p class="input-group">
+                                    <input type="text" id="projectDate" class="form-control" uib-datepicker-popup="{{ModalVM.format}}" is-open="ModalVM.status.opened" ng-model="ModalVM.projectDate" close-text="Close" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" ng-click="ModalVM.openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                    </span>
+                                </p>
                             </div>
+
                             <div class="form-group">
                                 <label for="userDesignation" class="col-lg-2 col-md-2 col-sm-2 control-label">Designation</label>
                                 <div class="col-lg-3 col-md-3 col-sm-3">
@@ -62,23 +70,27 @@
                             <label for="userRole" class="col-lg-2 col-md-2 col-sm-2 control-label">Role</label>
                             <div class="col-lg-4 col-md-4 col-sm-4">
                                 <select class="form-control " id="userRole">
-                                    <option>Admin</option>
-                                    <option>User</option>
+                                    <option ng-repeat="option in ModalVM.roleOptions">{{option.role}}</option>
                                 </select>
                             </div>
 
                         </div>
 
-                    </form>
 
-                    <!--<h1>{{project.name}}</h1>-->
+                    </form>
 
                 </div>
 
             </uib-tab>
 
             <uib-tab heading="Tasks">
-                <div class="modal-new-project-tab-body">Tasks</div>
+                <div class="modal-new-project-tab-body">
+
+                    <button class="btn btn-default" ng-click="ModalVM.openModalFromThisModal(ModalVM.projectname)">Open Modal</button>
+
+                </div>
+
+
             </uib-tab>
 
             <uib-tab heading="Documents">

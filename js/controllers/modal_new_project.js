@@ -4,6 +4,8 @@ app.controller('ModalDemoCtrl', ['$scope', '$rootScope', '$uibModal', '$log', fu
 
     var vm = this;
 
+// Modal
+
     vm.open = function () {
 
         var modalInstance = $uibModal.open({
@@ -11,10 +13,10 @@ app.controller('ModalDemoCtrl', ['$scope', '$rootScope', '$uibModal', '$log', fu
             templateUrl: 'partials/new_project_modal.html',
             controller: 'ModalInstanceCtrl',
             controllerAs: 'ModalVM',
-            scope: $scope,
+//            scope: $scope,
 //            size: size,
 //            windowClass: 'test-modal-width',
-            backdrop: false,
+//            backdrop: false,
             resolve: {
                 projectName: function () {
                     return vm.projectname;
@@ -35,7 +37,7 @@ app.controller('ModalDemoCtrl', ['$scope', '$rootScope', '$uibModal', '$log', fu
             templateUrl: 'partials/new_project_modal.html',
             controller: 'EditModalInstanceCtrl',
             controllerAs: 'ModalVM',
-            scope: $scope,
+//            scope: $scope,
 //            windowClass: 'test-modal-width',
             backdrop: false,
             resolve: {
@@ -81,9 +83,31 @@ app.controller('EditModalInstanceCtrl', ['$scope', '$uibModalInstance', 'selecte
 
 }]);
 
-app.controller('ModalInstanceCtrl', ['$scope', '$uibModalInstance', 'projectName', 'NewProjectService', function ($scope, $uibModalInstance, projectName, NewProjectService) {
+app.controller('ModalInstanceCtrl', ['$scope', '$uibModal', '$uibModalInstance', 'projectName', 'NewProjectService', function ($scope, $uibModal, $uibModalInstance, projectName, NewProjectService) {
 
     var vm = this;
+
+// Roles Dropdown
+
+    vm.roleOptions = [
+        {'role' : 'Admin'},
+        {'role' : 'Project Leader'},
+        {'role' : 'User'}
+    ];
+
+// Datepicker
+
+    vm.projectDate = new Date();
+
+    vm.status = {
+        opened: false
+    };
+
+    vm.openDatePicker = function($event) {
+        vm.status.opened = true;
+    };
+
+    vm.format = 'dd.MM.yyyy';
 
     vm.modalHeading = 'Create New Project';
     vm.modalType = 'Create';
@@ -104,5 +128,70 @@ app.controller('ModalInstanceCtrl', ['$scope', '$uibModalInstance', 'projectName
     vm.cancel = function () {
         $uibModalInstance.dismiss('cancel');
     };
+
+
+
+
+
+
+
+
+
+    vm.openModalFromThisModal = function(projectName)
+    {
+//        console.log(projectName);
+//        $uibModalInstance.close();
+
+        var modalFromModalInstance = $uibModal.open({
+            templateUrl: 'partials/modal_in_modal.html',
+            controller: 'ModalFromModalCtrl',
+            controllerAs: 'ModalFromModalVM',
+//            scope: $scope,
+//            backdrop: false,
+            resolve: {
+                projectName: function () {
+                    return projectName;
+                }
+            }
+        });
+
+
+
+
+            modalFromModalInstance.result.then(function (projectNameFromSecondModal) {
+                vm.projectname = projectNameFromSecondModal;
+                }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+            });
+
+
+
+
+    }
+
 }]);
 
+
+
+
+app.controller('ModalFromModalCtrl', ['$scope', '$uibModal', '$uibModalInstance', 'projectName', function ($scope, $uibModal, $uibModalInstance, projectName) {
+
+    var vm = this;
+
+    vm.projectnameinsecondmodal = projectName;
+
+    vm.sendDataBackToFirstModal = function(projectName) {
+
+//        console.log($scope.projectnameinsecondmodal);
+//        vm.projectnameinsecondmodal = projectName;
+
+        $uibModalInstance.close(projectName);
+
+    };
+
+
+    vm.cancelModal = function () {
+        $uibModalInstance.dismiss('cancel');
+    };
+
+}]);
