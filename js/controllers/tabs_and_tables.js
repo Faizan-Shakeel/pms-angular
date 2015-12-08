@@ -1,12 +1,13 @@
 
 var app = angular.module('tabsAndTablesModule', ['ui.bootstrap']);
 
-app.controller('TabsController', function($scope, $http, $filter, NewProjectService)
+app.controller('TabsController', function($scope, $http, $filter, NewProjectService, NewTaskService)
 {
 
     var vm = this;
 
     vm.panels = NewProjectService.panels;
+    vm.taskPanels = NewTaskService.taskPanels;
 
 //        vm.panels = [
 //        {

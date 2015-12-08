@@ -84,17 +84,17 @@ app.controller('EditModalInstanceController', ['$scope', '$uibModalInstance', 's
 
 }]);
 
-app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'projectName', 'NewProjectService', function ($scope, $uibModal, $uibModalInstance, projectName, NewProjectService) {
+app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'projectName', 'NewProjectService', 'NewTaskService', function ($scope, $uibModal, $uibModalInstance, projectName, NewProjectService, NewTaskService) {
 
     var vm = this;
 
 // Roles Dropdown
 
-    vm.roleOptions = [
-        {'role' : 'Admin'},
-        {'role' : 'Project Leader'},
-        {'role' : 'User'}
-    ];
+//    vm.roleOptions = [
+//        {'role' : 'Admin'},
+//        {'role' : 'Project Leader'},
+//        {'role' : 'User'}
+//    ];
 
 // Datepicker
 
@@ -114,6 +114,7 @@ app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInst
     vm.modalType = 'Create';
 
     var projectsArray = NewProjectService.panels;
+    var taskArray = [];
 
     vm.ok = function(projectName) {
 
@@ -123,6 +124,7 @@ app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInst
         };
 
         NewProjectService.setValue(new_project_params);
+//        NewTaskService.setValue(new_task_params);
 
         $uibModalInstance.close();
 
@@ -133,33 +135,26 @@ app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInst
     };
 
 
-    vm.openModalFromThisModal = function(projectName)
-    {
-//        console.log(projectName);
-//        $uibModalInstance.close();
-
-        var modalFromModalInstance = $uibModal.open({
-            templateUrl: 'partials/modal_in_modal.html',
-            controller: 'ModalFromModalController',
-            controllerAs: 'ModalFromModalVM',
-            windowClass: 'modal-width',
-//            scope: $scope,
-//            backdrop: false,
-            resolve: {
-                projectName: function () {
-                    return projectName;
-                }
-            }
-        });
-
-
-        modalFromModalInstance.result.then(function (projectNameFromSecondModal) {
-            vm.projectname = projectNameFromSecondModal;
-            }, function () {
-            $log.info('Modal dismissed at: ' + new Date());
-        });
-
-    };
+//    vm.openModalFromThisModal = function(projectName)
+//    {
+//        var modalFromModalInstance = $uibModal.open({
+//            templateUrl: 'partials/modal_in_modal.html',
+//            controller: 'ModalFromModalController',
+//            controllerAs: 'ModalFromModalVM',
+//            windowClass: 'modal-width',
+//            resolve: {
+//                projectName: function () {
+//                    return projectName;
+//                }
+//            }
+//        });
+//
+//        modalFromModalInstance.result.then(function (projectNameFromSecondModal) {
+//            vm.projectname = projectNameFromSecondModal;
+//            }, function () {
+//            $log.info('Modal dismissed at: ' + new Date());
+//        });
+//    };
 
 
 // Add New Task Modal
@@ -180,21 +175,75 @@ app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInst
             }
         });
 
-        addNewTaskModalInstance.result.then(function (newTaskObject) {
-//            vm.projectname = newTaskObject;
+        addNewTaskModalInstance.result.then(function (new_task_params) {
+
+//            NewTaskService.setValue(new_task_params);
+            taskArray.push(new_task_params);
+
+            vm.taskPanels = taskArray;
+//            vm.taskPanels = NewTaskService.taskPanels;
+
+//            var new_task_params = {
+//                'name': newTaskObject.name,
+//                'status': newTaskObject.status
+//            };
+
         }, function () {
 //            $log.info('Modal dismissed at: ' + new Date());
         });
 
-    }
+    };
 
 
+//    vm.taskPanels = NewTaskService.taskPanels;
+
+
+
+
+
+
+
+
+
+
+//    vm.taskPanels = NewTaskService.taskPanels;
+//
+//    vm.deleteTask = function(taskName)
+//    {
+//        var deleteThisTask = {
+//            'name': taskName,
+//            'status': 'Status New'
+//        };
+//
+//        vm.taskPanels = removeByAttr(vm.taskPanels, 'name', taskName);
+//
+//    };
+//
+//    var removeByAttr = function(arr, attr, value){
+//        var i = arr.length;
+//        while(i--){
+//            if( arr[i]
+//                && arr[i].hasOwnProperty(attr)
+//                && (arguments.length > 2 && arr[i][attr] === value ) ){
+//
+//                arr.splice(i,1);
+//
+//            }
+//        }
+//        return arr;
+//    };
 
 }]);
 
-app.controller('AddNewTaskModalController', ['$scope', '$uibModal', '$uibModalInstance', 'projectsList', function ($scope, $uibModal, $uibModalInstance, projectsList) {
+app.controller('AddNewTaskModalController', ['$scope', '$uibModal', '$uibModalInstance', 'projectsList', 'NewTaskService', function ($scope, $uibModal, $uibModalInstance, projectsList, NewTaskService) {
 
     var vm = this;
+
+//    vm.taskPanels = NewTaskService.taskPanels;
+
+//    var tasksArray = [];
+
+
     vm.modalType = 'Create';
     vm.modalHeading = 'Create New Task';
     vm.projects = projectsList;
@@ -211,10 +260,23 @@ app.controller('AddNewTaskModalController', ['$scope', '$uibModal', '$uibModalIn
     };
     vm.format = 'dd.MM.yyyy';
 
-    vm.addNewTaskInProject = function(projectName) {
+    vm.addNewTaskInProject = function(taskName) {
 
-        console.log('Task Created');
-        $uibModalInstance.close(projectName);
+//        console.log(taskName);
+
+        var new_task_params = {
+            'name': taskName,
+            'status': 'Task Status'
+        };
+
+//        tasksArray.push(new_task_params);
+
+        NewTaskService.setValue(new_task_params);
+
+        $uibModalInstance.close(new_task_params);
+//
+//
+//        $uibModalInstance.close();
 
     };
 
@@ -227,24 +289,24 @@ app.controller('AddNewTaskModalController', ['$scope', '$uibModal', '$uibModalIn
 
 
 
-app.controller('ModalFromModalController', ['$scope', '$uibModal', '$uibModalInstance', 'projectName', function ($scope, $uibModal, $uibModalInstance, projectName) {
-
-    var vm = this;
-
-    vm.projectnameinsecondmodal = projectName;
-
-    vm.sendDataBackToFirstModal = function(projectName) {
-
-//        console.log($scope.projectnameinsecondmodal);
-//        vm.projectnameinsecondmodal = projectName;
-
-        $uibModalInstance.close(projectName);
-
-    };
-
-
-    vm.cancelModal = function () {
-        $uibModalInstance.dismiss('cancel');
-    };
-
-}]);
+//app.controller('ModalFromModalController', ['$scope', '$uibModal', '$uibModalInstance', 'projectName', function ($scope, $uibModal, $uibModalInstance, projectName) {
+//
+//    var vm = this;
+//
+//    vm.projectnameinsecondmodal = projectName;
+//
+//    vm.sendDataBackToFirstModal = function(projectName) {
+//
+////        console.log($scope.projectnameinsecondmodal);
+////        vm.projectnameinsecondmodal = projectName;
+//
+//        $uibModalInstance.close(projectName);
+//
+//    };
+//
+//
+//    vm.cancelModal = function () {
+//        $uibModalInstance.dismiss('cancel');
+//    };
+//
+//}]);

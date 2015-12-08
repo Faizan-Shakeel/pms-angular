@@ -14,6 +14,7 @@ var app = angular.module('pmsAngular', [
     'modalNewProjectModule',
 //    'mb-scrollbar'
     'newProjectModule',
+    'newTaskModule',
     'ui.utils.masks',
     'ngMessages'
 

@@ -3,10 +3,27 @@
     position: relative;
     margin-top: 10px;
     /*width: 50px;*/
+}
 
+#outer-panel-tasks-in-new-project-modal
+{
+    position: relative;
+    margin-top: 10px;
 }
 
 #inner-panel
+{
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    bottom: -1px;
+    width: 40px;
+    height: 101px;
+    margin-right: 5px;
+    line-height: 70px;
+}
+
+#inner-panel-tasks-in-new-project-modal
 {
     position: absolute;
     top: -1px;
@@ -27,9 +44,27 @@
     bottom: -1px;
 }
 
+#tasks-btn-grp-panel-in-new-project-modal
+{
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    bottom: -1px;
+}
+
 #panel-content
 {
     margin-left: 35px;
+}
+
+#task-panel-content-in-new-project-modal
+{
+    margin-left: 35px;
+}
+
+#task-panel-icon-fix-in-new-project-modal
+{
+    margin-left: -10px;
 }
 
 #panel-icon-fix

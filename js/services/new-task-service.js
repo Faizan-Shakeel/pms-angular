@@ -2,19 +2,19 @@
  * Created by faizankhan on 11/8/2014.
  */
 
-var app = angular.module('newProjectModule', []);
+var app = angular.module('newTaskModule', []);
 
-app.service('NewProjectService', function(){
+app.service('NewTaskService', function(){
 
-    var panels = [];
+    var taskPanels = [];
 
     var setValue = function(value){
 //        test_value_update = value;
-        panels.push(value);
+        taskPanels.push(value);
     };
 
     var getValue = function(){
-        return panels;
+        return taskPanels;
     };
 
 //    return {setValue:setValue};
@@ -22,7 +22,7 @@ app.service('NewProjectService', function(){
     return{
         setValue: setValue,
         getValue: getValue,
-        panels: panels
+        taskPanels: taskPanels
 //        test_value_update: test_value_update
     };
 

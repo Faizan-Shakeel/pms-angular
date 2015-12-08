@@ -77,11 +77,125 @@
             <uib-tab heading="Tasks">
                 <button type="button" class="btn btn-default btn-circle btn-lg" uib-tooltip="Add Task" tooltip-placement="right" ng-click="ModalVM.addNewTask()"><i class="fa fa-plus fa-lg addEntityIconColor"></i></button>
 
-                <div class="modal-new-project-tab-body">
-
+                <!--<div class="modal-new-project-tab-body">-->
                     <!--<button class="btn btn-default" ng-click="ModalVM.openModalFromThisModal(ModalVM.projectname)">Open Modal</button>-->
+                <!--</div>-->
+
+                <div slim-scroll height="300px">
+
+                    <div class="panel panel-default" id="outer-panel-tasks-in-new-project-modal" ng-repeat="taskPanel in ModalVM.taskPanels">
+                        <div class="panel-body">
+
+                            <div class="panel panel-default" id="inner-panel-tasks-in-new-project-modal">
+                                <div class="panel-body">
+                                    <i class="fa fa-suitcase fa-2x" id="task-panel-icon-fix-in-new-project-modal"></i>
+                                </div>
+                            </div>
+
+                            <div id="task-panel-content-in-new-project-modal">
+                                <p>
+                                <h4>{{taskPanel.name}}</h4>
+                                </p>
+
+                                <p>
+                                    {{taskPanel.status}}
+                                </p>
+                            </div>
+
+                            <div class="btn-group-vertical" id="tasks-btn-grp-panel-in-new-project-modal">
+                                <button class="btn btn-default test-button-border"><i class="fa fa-info"></i></button>
+                                <button class="btn btn-default" ng-click="ModalVM.editTask(taskPanel.name)"><i class="fa fa-edit"></i></button>
+                                <button class="btn btn-default test-button-border" ng-click="ModalVM.deleteTask(taskPanel.name)"><i class="fa fa-trash-o"></i></button>
+                            </div>
+
+                        </div>
+                    </div>
 
                 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             </uib-tab>
 
             <uib-tab heading="Documents">
