@@ -4,7 +4,7 @@
 
 var app = angular.module('panelTableProjectsModule', []);
 
-app.controller('PanelTableProjectsCtrl', function ($scope)
+app.controller('PanelTableProjectsController', function ($scope)
 {
 
     $scope.panels = [

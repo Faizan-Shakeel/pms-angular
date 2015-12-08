@@ -1,7 +1,7 @@
 
 var app = angular.module('tablesModule', ['smart-table']);
 
-app.controller('TableProjectCtrl', ['$scope', function ($scope)
+app.controller('TableProjectController', ['$scope', function ($scope)
 {
         var
             nameList = ['Pierre', 'Pol', 'Jacques', 'Robert', 'Elisa'],

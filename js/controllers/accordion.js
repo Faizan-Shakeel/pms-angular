@@ -4,11 +4,13 @@
 
 var app = angular.module('accordionModule', ['ui.bootstrap']);
 
-app.controller('UibAccordionCtrl', function ($scope) {
+app.controller('AccordionController', function ($scope) {
 
-    $scope.oneAtATime = true;
+    var vm = this;
 
-    $scope.groups = [
+    vm.oneAtATime = true;
+
+    vm.groups = [
         {
             title: 'Dynamic Group Header - 1',
             content: 'Dynamic Group Body - 1'
@@ -19,12 +21,12 @@ app.controller('UibAccordionCtrl', function ($scope) {
         }
     ];
 
-    $scope.status = {
+    vm.status = {
         isFirstOpen: true,
         isFirstDisabled: false
     };
 
-    $scope.scrollBarConfig = {
+    vm.scrollBarConfig = {
         autoResize: true // If true, will listen for DOM elements being added or removed inside the scroll container
 //        direction: 'vertical', // The direction of the scrollbar
 //        scrollbar: {
@@ -41,3 +43,5 @@ app.controller('UibAccordionCtrl', function ($scope) {
     }
 
 });
+
+

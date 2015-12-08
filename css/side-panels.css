@@ -120,7 +120,15 @@
     font-style: italic;
 }
 
-.fa-circle-o
+/*.fa-circle-o*/
+/*{*/
+    /*position: absolute;*/
+    /*top: 18px;*/
+    /*left: 10px;*/
+    /*color: #428bca;*/
+/*}*/
+
+#onlineUserIcon
 {
     position: absolute;
     top: 18px;

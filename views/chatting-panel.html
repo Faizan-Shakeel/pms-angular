@@ -1,12 +1,12 @@
 
 <!------------------------------------------------------------------------ Chatting List -----------------------------------------------------------------------START-->
-<aside class="col-lg-2 col-md-2 col-sm-2" id="chatting-list-fixed" ng-controller="ChattingPanelCtrl">
+<aside class="col-lg-2 col-md-2 col-sm-2" id="chatting-list-fixed" ng-controller="ChattingPanelController as CPVM">
     <div class="panel panel-default" id="chatting-list-panel">
         <div class="panel-heading" id="chat-panel-heading">Chat</div>
 
         <ul class="list-group" id="chat-ul" slim-scroll height="500px">
 
-            <li ng-repeat="user in users" class="list-group-item"><i class={{user.status}}></i>{{user.name}}</li>
+            <li ng-repeat="user in CPVM.users" class="list-group-item"><i id="onlineUserIcon" class={{user.status}}></i>{{user.name}}</li>
 
             <!--<li class="list-group-item">User 1</li>-->
             <!--<li class="list-group-item"><i class="fa fa-circle-o"></i>User 2</li>-->

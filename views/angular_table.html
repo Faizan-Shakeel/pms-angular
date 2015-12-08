@@ -1,5 +1,5 @@
 
-<div class="col-lg-8 col-md-8 col-sm-8 testTabsArea" ng-controller="TabsCtrl as TabsVM">
+<div class="col-lg-8 col-md-8 col-sm-8 testTabsArea" ng-controller="TabsController as TabsVM">
     <uib-tabset justified="true">
 
         <uib-tab>
@@ -31,7 +31,7 @@
                     </div>
 
                     <!--<div class="pull-right">-->
-                        <div class="btn-group-vertical" id="btn-grp-panel" ng-controller="ModalDemoCtrl as ModalVM">
+                        <div class="btn-group-vertical" id="btn-grp-panel" ng-controller="ModalDemoController as ModalVM">
                             <button class="btn btn-default test-button-border"><i class="fa fa-info"></i></button>
                             <button class="btn btn-default" ng-click="ModalVM.editProject(panel.name)"><i class="fa fa-edit"></i></button>
                             <button class="btn btn-default test-button-border" ng-click="TabsVM.deleteProject(panel.name)"><i class="fa fa-trash-o"></i></button>

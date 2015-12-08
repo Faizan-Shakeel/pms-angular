@@ -6,4 +6,4 @@
 
 var app = angular.module('tooltipsModule', ['ui.bootstrap']);
 
-app.controller('TooltipsCtrl', function ($scope) {});
+app.controller('TooltipsController', function ($scope) {});

@@ -1,14 +1,14 @@
 
-<div class="col-lg-2 col-md-2 col-sm-2" ng-controller="UibAccordionCtrl as AccVM">
+<div class="col-lg-2 col-md-2 col-sm-2" ng-controller="AccordionController as AccVM">
 
-    <uib-accordion close-others="oneAtATime">
-        <uib-accordion-group is-open="status.isFirstOpen">
+    <uib-accordion close-others="AccVM.oneAtATime">
+        <uib-accordion-group is-open="AccVM.status.isFirstOpen">
             <uib-accordion-heading>
                 <p id="testId">Dashboard</p>
 
             </uib-accordion-heading>
 
-            <div id="acc-content" ng-controller="ModalDemoCtrl as ModalVM">
+            <div id="acc-content" ng-controller="ModalDemoController as ModalVM">
 
                 <a href="#" id="project-popover" class="btn btn-default center-block" ng-click="ModalVM.open()"><i class="fa fa-bar-chart-o pull-left" id="test1"></i>Create Project</a>
                 <a href="#" id="task-popover" class="btn btn-default center-block"><i class="fa fa-tasks pull-left" id="test2"></i>Create Task</a>

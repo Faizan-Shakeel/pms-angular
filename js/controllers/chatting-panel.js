@@ -4,13 +4,15 @@
 
 var app = angular.module('chattingPanelModule', ['ui.bootstrap']);
 
-app.controller('ChattingPanelCtrl', function ($scope) {
+app.controller('ChattingPanelController', function ($scope) {
+
+    var vm = this;
 
     var online = 'fa fa-circle-o';
     var offline = '';
 
 
-    $scope.users = [
+    vm.users = [
 
         {
             'name': 'User Name',
@@ -145,7 +147,7 @@ app.controller('ChattingPanelCtrl', function ($scope) {
 
 
 
-    $scope.scrollBarConfig = {
+    vm.scrollBarConfig = {
         autoResize: true // If true, will listen for DOM elements being added or removed inside the scroll container
     };
 });

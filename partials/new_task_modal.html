@@ -1,0 +1,104 @@
+
+<div>
+
+    <div class="modal-header">
+        <h4 class="modal-title text-center">{{AddNewTaskModalVM.modalHeading}}</h4>
+    </div>
+
+    <div class="modal-body">
+
+        <uib-tabset justified="true">
+
+            <uib-tab>
+
+                <tab-heading>
+                    Task
+                </tab-heading>
+
+                <div class="modal-new-task-tab-body">
+
+                    <br/>
+
+                    <form name="addNewTaskValidationForm" class="form-horizontal" ng-submit="addNewTaskValidationForm.$valid && AddNewTaskModalVM.addNewTaskInProject(AddNewTaskModalVM.taskName)" novalidate>
+                        <div class="form-group" ng-class="{ 'has-error': addNewTaskValidationForm.taskName.$touched && addNewTaskValidationForm.taskName.$invalid }">
+                            <label for="taskName" class="col-lg-2 col-md-2 col-sm-2 control-label">Name</label>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">
+                                <!--<input type="text" class="form-control" id="taskName" placeholder="Name" ng-model="AddNewTaskModalVM.taskName" ng-required="AddNewTaskModalVM.required()">-->
+                                <!--<input type="text" class="form-control" id="taskName" placeholder="Name" ng-model="AddNewTaskModalVM.taskName" ng-required="AddNewTaskModalVM.required">-->
+                                <input type="text" class="form-control" id="taskName" name="taskName" placeholder="Task Name" ng-model="AddNewTaskModalVM.taskName" ng-minlength="5" ng-maxlength="20" required=""/>
+                            </div>
+
+                            <div class="help-block" ng-messages="addNewTaskValidationForm.taskName.$error" ng-show="addNewTaskValidationForm.taskName.$touched">
+                                <p ng-message="minlength">Mininum 5 characters.</p>
+                                <p ng-message="maxlength">Maximum 20 characters.</p>
+                                <p ng-message="required">Name is required.</p>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="taskDate" class="col-lg-2 col-md-2 col-sm-2 control-label">Target Date</label>
+
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">
+                                <p class="input-group">
+                                    <input type="text" id="taskDate" class="form-control" uib-datepicker-popup="{{AddNewTaskModalVM.format}}" is-open="AddNewTaskModalVM.status.opened" ng-model="AddNewTaskModalVM.taskDate" close-text="Close" placeholder="Target Date"/>
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" ng-click="AddNewTaskModalVM.openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="taskDescription" class="col-lg-2 col-md-2 col-sm-2 control-label">Task Description</label>
+                            <div class="col-lg-8 col-md-8 col-sm-8 col-lg-offset-1">
+                                <textarea class="form-control taskModalTextAreaForDescription" id="taskDescription" ng-model="string" placeholder="Task Description"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="taskBelongsToProject" class="col-lg-2 col-md-2 col-sm-2 control-label">Project</label>
+                            <div class="col-lg-8 col-md-8 col-sm-8 col-lg-offset-1">
+
+                                <!--<select name="" id="taskBelongsToProject">-->
+                                    <!--<option ng-repeat="project in AddNewTaskModalVM.projects" value="">{{AddNewTaskModalVM.project.name}}</option>-->
+                                <!--</select>-->
+
+                                <select class="form-control" id="taskBelongsToProject" ng-options="project.name for project in AddNewTaskModalVM.projects" ng-model="AddNewTaskModalVM.selected"></select>
+
+
+                            </div>
+                        </div>
+
+                        <input type="submit" id="submit-new-task-form" class="hidden" />
+
+                    </form>
+
+                </div>
+
+            </uib-tab>
+
+            <uib-tab heading="Documents">
+                <!--<a href="#" class="btn btn-default btn-circle"><i class="fa fa-user"></i></a>-->
+                <button type="button" class="btn btn-default btn-circle btn-lg" uib-tooltip="Add Document" tooltip-placement="right"><i class="fa fa-plus fa-lg addEntityIconColor"></i></button>
+
+                <div class="modal-new-task-tab-body">Documents</div>
+            </uib-tab>
+
+            <uib-tab heading="Users">
+                <button type="button" class="btn btn-default btn-circle btn-lg" uib-tooltip="Add User" tooltip-placement="right"><i class="fa fa-plus fa-lg addEntityIconColor"></i></button>
+                <div class="modal-new-task-tab-body">Users</div>
+            </uib-tab>
+
+        </uib-tabset>
+
+    </div>
+
+    <div class="modal-footer">
+        <label for="submit-new-task-form" class="btn btn-primary" ng-disabled="addNewTaskValidationForm.$invalid">{{AddNewTaskModalVM.modalType}}</label>
+        <!--<button type="submit" class="btn btn-primary" ng-click="AddNewTaskModalVM.ok(AddNewTaskModalVM.taskName)">{{AddNewTaskModalVM.modalType}}</button>-->
+        <button type="button" class="btn btn-warning" ng-click="AddNewTaskModalVM.cancelModal()">Cancel</button>
+    </div>
+
+</div>

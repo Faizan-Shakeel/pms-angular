@@ -1,7 +1,7 @@
 
 var app = angular.module('tabsAndTablesModule', ['ui.bootstrap']);
 
-app.controller('TabsCtrl', function($scope, $http, $filter, NewProjectService)
+app.controller('TabsController', function($scope, $http, $filter, NewProjectService)
 {
 
     var vm = this;
