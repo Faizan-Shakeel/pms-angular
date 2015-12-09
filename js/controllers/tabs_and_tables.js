@@ -3,45 +3,26 @@ var app = angular.module('tabsAndTablesModule', ['ui.bootstrap']);
 
 app.controller('TabsController', function($scope, $http, $filter, NewProjectService, NewTaskService)
 {
-
     var vm = this;
 
     vm.panels = NewProjectService.panels;
     vm.taskPanels = NewTaskService.taskPanels;
 
-//        vm.panels = [
-//        {
-//            'name': 'Name XYZ',
-//            'status': 'Status XYZ'
-//        },
-//        {
-//            'name': 'Name XYZ',
-//            'status': 'Status XYZ'
-//        }
-//    ];
-
-//    vm.$watch( function() { return NewProjectService.getValue(); }, function(new_project, old_project) {
-//
-//        if(new_project !== old_project)
-//        {
-//            vm.panels.push(new_project);
-//        }
-//
-//
-//    });
-
-
     vm.deleteProject = function(projectName)
     {
-        var deleteThisProject = {
-            'name': projectName,
-            'status': 'Status New'
-        };
+        var selectedProjectTasksArray;
 
+        angular.forEach(vm.panels, function(value,index){
+
+            if(value.name == projectName)
+            {
+                selectedProjectTasksArray = vm.panels[index].taskPanels;
+            }
+
+        });
+
+        NewTaskService.deleteTask(selectedProjectTasksArray);
         vm.panels = removeByAttr(vm.panels, 'name', projectName);
-
-//        vm.panels = $filter('filter')(vm.panels, {name: '!ted'}, true);
-//        vm.panels = $filter('filter')(vm.panels, {name: !projectName}, true);
 
     };
 
@@ -58,10 +39,6 @@ app.controller('TabsController', function($scope, $http, $filter, NewProjectServ
         }
         return arr;
     };
-
-//    var arr = [{id:1,name:'serdar'},{id:2,name:'alfalfa'},{id:3,name:'joe'}];
-//    removeByAttr(arr, 'id', 1);
-
 
 });
 

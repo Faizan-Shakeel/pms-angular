@@ -9,7 +9,6 @@ app.service('NewProjectService', function(){
     var panels = [];
 
     var setValue = function(value){
-//        test_value_update = value;
         panels.push(value);
     };
 
@@ -17,17 +16,27 @@ app.service('NewProjectService', function(){
         return panels;
     };
 
-//    return {setValue:setValue};
+    var getSelectedProjectTasksArray = function(selectedProjectName)
+    {
+        var selectedProjectTasksArray;
+
+        angular.forEach(panels, function(value,index){
+
+            if(value.name == selectedProjectName)
+            {
+                selectedProjectTasksArray = panels[index].taskPanels;
+            }
+        });
+
+        return selectedProjectTasksArray
+
+    };
 
     return{
         setValue: setValue,
         getValue: getValue,
+        getSelectedProjectTasksArray: getSelectedProjectTasksArray,
         panels: panels
-//        test_value_update: test_value_update
     };
-
-//    {
-//        setValue: setValue;
-//    }
 
 });
