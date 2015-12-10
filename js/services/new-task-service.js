@@ -10,26 +10,15 @@ app.service('NewTaskService', function(){
 
     var setValue = function(newTaskObject){
 
-//        taskPanels.push(value);
-
         angular.forEach(newTaskObject, function(value, index){
             taskPanels.push(newTaskObject[index]);
         });
-
-
-
-
 
     };
 
     var getValue = function(){
         return taskPanels;
     };
-
-//    var deleteTask = function(taskName)
-//    {
-//        taskPanels = removeByAttr(taskPanels, 'name', taskName);
-//    };
 
     var deleteTask = function(tasksArray)
     {
@@ -38,7 +27,7 @@ app.service('NewTaskService', function(){
             angular.forEach(taskPanels, function(valueFromSpecificProject,indexSpecificProject){
                 if(valueFromGlobalList.name == valueFromSpecificProject.name)
                 {
-                    removeByAttr(taskPanels, 'name', valueFromGlobalList.name);
+                    taskPanels = removeByAttr(taskPanels, 'name', valueFromGlobalList.name);
                 }
             });
         });

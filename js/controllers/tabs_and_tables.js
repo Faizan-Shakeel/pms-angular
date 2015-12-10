@@ -8,6 +8,9 @@ app.controller('TabsController', function($scope, $http, $filter, NewProjectServ
     vm.panels = NewProjectService.panels;
     vm.taskPanels = NewTaskService.taskPanels;
 
+    console.log("vm.taskPanels [GLOBAL] : " + vm.taskPanels);
+    console.log("NewTaskService.taskPanels : " + NewTaskService.taskPanels);
+
     vm.deleteProject = function(projectName)
     {
         var selectedProjectTasksArray;
@@ -22,7 +25,28 @@ app.controller('TabsController', function($scope, $http, $filter, NewProjectServ
         });
 
         NewTaskService.deleteTask(selectedProjectTasksArray);
-        vm.panels = removeByAttr(vm.panels, 'name', projectName);
+//        vm.panels = removeByAttr(vm.panels, 'name', projectName);
+        removeByAttr(vm.panels, 'name', projectName);
+
+    };
+
+    vm.deleteTask = function(taskName)
+    {
+        removeByAttr(NewTaskService.taskPanels, 'name', taskName);
+
+        angular.forEach(vm.panels, function(valueProject,indexProject){
+
+            angular.forEach(valueProject.taskPanels, function(valueTask,indexTask){
+
+                if(valueTask.name == taskName)
+                {
+                    removeByAttr(valueProject.taskPanels, 'name', taskName);
+                }
+            });
+        });
+
+        console.log("vm.taskPanels [GLOBAL] : " + vm.taskPanels);
+        console.log("NewTaskService.taskPanels : " + NewTaskService.taskPanels);
 
     };
 

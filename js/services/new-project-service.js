@@ -28,7 +28,7 @@ app.service('NewProjectService', function(){
             }
         });
 
-        return selectedProjectTasksArray
+        return selectedProjectTasksArray;
 
     };
 

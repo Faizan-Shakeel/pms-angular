@@ -51,9 +51,6 @@ app.controller('ModalDemoController', ['$scope', '$rootScope', '$uibModal', '$lo
     };
 }]);
 
-// Please note that $uibModalInstance represents a modal window (instance) dependency.
-// It is not the same as the $modal service used above.
-
 app.controller('EditModalInstanceController', ['$scope', '$uibModalInstance', 'selectedProject', 'NewProjectService', function ($scope, $uibModalInstance, selectedProject, NewProjectService) {
 
     var vm = this;
@@ -121,7 +118,6 @@ app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInst
 
         NewProjectService.setValue(new_project_params);
         NewTaskService.setValue(tasksArray);
-//        NewTaskService.setValue(new_task_params);
 
         $uibModalInstance.close();
 
@@ -154,19 +150,12 @@ app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInst
 
             tasksArray.push(new_task_params);
             vm.taskPanels = tasksArray;
-//            NewTaskService.setValue(new_task_params);
 
         }, function () {
 //            $log.info('Modal dismissed at: ' + new Date());
         });
 
     };
-
-//    vm.deleteTask = function(taskName)
-//    {
-//        NewTaskService.deleteTask(taskName);
-//        vm.taskPanels = removeByAttr(vm.taskPanels, 'name', taskName);
-//    };
 
     vm.deleteTask = function(taskName)
     {
@@ -175,11 +164,9 @@ app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInst
 
             if(value.name == taskName)
             {
-//                typeof(vm.taskPanels[index]);
                 taskToDeleteArray.push(vm.taskPanels[index]);
                 NewTaskService.deleteTask(taskToDeleteArray);
-                vm.taskPanels = removeByAttr(vm.taskPanels, 'name', taskName);
-//                console.log(typeof(taskToDeleteArray));
+                removeByAttr(vm.taskPanels, 'name', taskName);
             }
         });
 
@@ -218,6 +205,7 @@ app.controller('AddNewTaskModalController', ['$scope', '$uibModal', '$uibModalIn
     vm.openDatePicker = function($event) {
         vm.status.opened = true;
     };
+
     vm.format = 'dd.MM.yyyy';
 
     vm.addNewTaskInProject = function(taskName) {
