@@ -8,8 +8,8 @@ app.controller('TabsController', function($scope, $http, $filter, NewProjectServ
     vm.panels = NewProjectService.panels;
     vm.taskPanels = NewTaskService.taskPanels;
 
-    console.log("vm.taskPanels [GLOBAL] : " + vm.taskPanels);
-    console.log("NewTaskService.taskPanels : " + NewTaskService.taskPanels);
+//    console.log("vm.taskPanels [GLOBAL] : " + vm.taskPanels);
+//    console.log("NewTaskService.taskPanels : " + NewTaskService.taskPanels);
 
     vm.deleteProject = function(projectName)
     {
@@ -45,8 +45,8 @@ app.controller('TabsController', function($scope, $http, $filter, NewProjectServ
             });
         });
 
-        console.log("vm.taskPanels [GLOBAL] : " + vm.taskPanels);
-        console.log("NewTaskService.taskPanels : " + NewTaskService.taskPanels);
+//        console.log("vm.taskPanels [GLOBAL] : " + vm.taskPanels);
+//        console.log("NewTaskService.taskPanels : " + NewTaskService.taskPanels);
 
     };
 

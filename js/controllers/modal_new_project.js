@@ -84,7 +84,7 @@ app.controller('EditModalInstanceController', ['$scope', '$uibModalInstance', 's
 
 }]);
 
-app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'projectName', 'NewProjectService', 'NewTaskService', function ($scope, $uibModal, $uibModalInstance, projectName, NewProjectService, NewTaskService) {
+app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'projectName', 'NewProjectService', 'NewTaskService', '$log', function ($scope, $uibModal, $uibModalInstance, projectName, NewProjectService, NewTaskService, $log) {
 
     var vm = this;
 
@@ -110,7 +110,10 @@ app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInst
 
     vm.ok = function(projectName) {
 
+        NewProjectService.addTasksToProject(tasksArray, projectName);
+
         var new_project_params = {
+            'id': NewProjectService.newProjectID(),
             'name': projectName,
             'status': 'Status New',
             'taskPanels': tasksArray
@@ -211,6 +214,7 @@ app.controller('AddNewTaskModalController', ['$scope', '$uibModal', '$uibModalIn
     vm.addNewTaskInProject = function(taskName) {
 
         var new_task_params = {
+            'id': NewTaskService.newTaskID(),
             'name': taskName,
             'status': 'Task Status'
         };

@@ -7,6 +7,7 @@ var app = angular.module('newTaskModule', []);
 app.service('NewTaskService', function(){
 
     var taskPanels = [];
+    var tasksIdArray = [];
 
     var setValue = function(newTaskObject){
 
@@ -14,6 +15,14 @@ app.service('NewTaskService', function(){
             taskPanels.push(newTaskObject[index]);
         });
 
+    };
+
+    var newTaskID = function()
+    {
+        var taskID = tasksIdArray.length;
+        tasksIdArray.push(taskID);
+
+        return taskID;
     };
 
     var getValue = function(){
@@ -48,6 +57,7 @@ app.service('NewTaskService', function(){
     };
 
     return{
+        newTaskID: newTaskID,
         setValue: setValue,
         getValue: getValue,
         deleteTask: deleteTask,
