@@ -17,6 +17,27 @@ app.service('NewTaskService', function(){
 
     };
 
+    var checkTaskExistence = function(taskName, tasksArray)
+    {
+        var taskAlreadyExists = false;
+
+        for(var i in tasksArray)
+        {
+            if(tasksArray[i].name == taskName)
+            {
+                taskAlreadyExists = true;
+                break;
+            }
+            else
+            {
+                taskAlreadyExists = false;
+            }
+        }
+
+        return taskAlreadyExists;
+
+    };
+
     var newTaskID = function()
     {
         var taskID = tasksIdArray.length;
@@ -32,17 +53,16 @@ app.service('NewTaskService', function(){
     var deleteTask = function(tasksArray)
     {
         angular.forEach(tasksArray, function(valueFromGlobalList,indexGlobalList){
-
             angular.forEach(taskPanels, function(valueFromSpecificProject,indexSpecificProject){
-                if(valueFromGlobalList.name == valueFromSpecificProject.name)
+                if(valueFromGlobalList.id == valueFromSpecificProject.id)
                 {
-                    taskPanels = removeByAttr(taskPanels, 'name', valueFromGlobalList.name);
+                    taskPanels = removeEntity(taskPanels, 'id', valueFromGlobalList.id);
                 }
             });
         });
     };
 
-    var removeByAttr = function(arr, attr, value){
+    var removeEntity = function(arr, attr, value){
         var i = arr.length;
         while(i--){
             if( arr[i]
@@ -58,6 +78,7 @@ app.service('NewTaskService', function(){
 
     return{
         newTaskID: newTaskID,
+        checkTaskExistence: checkTaskExistence,
         setValue: setValue,
         getValue: getValue,
         deleteTask: deleteTask,

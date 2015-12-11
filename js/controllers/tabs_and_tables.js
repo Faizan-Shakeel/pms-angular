@@ -8,9 +8,6 @@ app.controller('TabsController', function($scope, $http, $filter, NewProjectServ
     vm.panels = NewProjectService.panels;
     vm.taskPanels = NewTaskService.taskPanels;
 
-//    console.log("vm.taskPanels [GLOBAL] : " + vm.taskPanels);
-//    console.log("NewTaskService.taskPanels : " + NewTaskService.taskPanels);
-
     vm.deleteProject = function(projectName)
     {
         var selectedProjectTasksArray;
@@ -25,37 +22,32 @@ app.controller('TabsController', function($scope, $http, $filter, NewProjectServ
         });
 
         NewTaskService.deleteTask(selectedProjectTasksArray);
-//        vm.panels = removeByAttr(vm.panels, 'name', projectName);
-        removeByAttr(vm.panels, 'name', projectName);
+        removeEntity(vm.panels, 'name', projectName);
 
     };
 
-    vm.deleteTask = function(taskName)
+    vm.deleteTask = function(taskID)
     {
-        removeByAttr(NewTaskService.taskPanels, 'name', taskName);
+        removeEntity(NewTaskService.taskPanels, 'id', taskID);
 
         angular.forEach(vm.panels, function(valueProject,indexProject){
 
             angular.forEach(valueProject.taskPanels, function(valueTask,indexTask){
 
-                if(valueTask.name == taskName)
+                if(valueTask.id == taskID)
                 {
-                    removeByAttr(valueProject.taskPanels, 'name', taskName);
+                    removeEntity(valueProject.taskPanels, 'id', taskID);
                 }
             });
         });
 
-//        console.log("vm.taskPanels [GLOBAL] : " + vm.taskPanels);
-//        console.log("NewTaskService.taskPanels : " + NewTaskService.taskPanels);
-
     };
 
-    var removeByAttr = function(arr, attr, value){
+    var removeEntity = function(arr, attr, value){
         var i = arr.length;
         while(i--){
             if( arr[i]
-                && arr[i].hasOwnProperty(attr)
-                && (arguments.length > 2 && arr[i][attr] === value ) ){
+                && (arr[i][attr] === value) ){
 
                 arr.splice(i,1);
 
@@ -63,6 +55,20 @@ app.controller('TabsController', function($scope, $http, $filter, NewProjectServ
         }
         return arr;
     };
+
+//    var removeByAttr = function(arr, attr, value, tasksProject){
+//        var i = arr.length;
+//        while(i--){
+//            if( arr[i]
+//                && arr[i].hasOwnProperty(attr)
+//                && (arguments.length > 2 && arr[i][attr] === value ) ){
+//
+//                arr.splice(i,1);
+//
+//            }
+//        }
+//        return arr;
+//    };
 
 });
 

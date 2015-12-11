@@ -51,12 +51,35 @@ app.service('NewProjectService', function(){
 
     };
 
+
+    var checkProjectExistence = function(projectName)
+    {
+        var projectAlreadyExists = false;
+
+        for(var i in panels)
+        {
+            if(panels[i].name == projectName)
+            {
+                projectAlreadyExists = true;
+                break;
+            }
+            else
+            {
+                projectAlreadyExists = false;
+            }
+        }
+
+        return projectAlreadyExists;
+
+    };
+
     return{
         newProjectID: newProjectID,
         setValue: setValue,
         getValue: getValue,
         getSelectedProjectTasksArray: getSelectedProjectTasksArray,
         addTasksToProject: addTasksToProject,
+        checkProjectExistence: checkProjectExistence,
         panels: panels
     };
 

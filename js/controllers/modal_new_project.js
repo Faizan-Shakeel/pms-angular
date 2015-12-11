@@ -110,6 +110,12 @@ app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInst
 
     vm.ok = function(projectName) {
 
+        if(NewProjectService.checkProjectExistence(projectName))
+        {
+            alert('Project Already Exists');
+            return;
+        }
+
         NewProjectService.addTasksToProject(tasksArray, projectName);
 
         var new_project_params = {
@@ -143,8 +149,11 @@ app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInst
 //            scope: $scope,
 //            backdrop: false,
             resolve: {
-                projectsList: function () {
-                    return projectsArray;
+                projectsAndArrays: function () {
+                    return {
+                        projectsArray: projectsArray,
+                        tasksArray: tasksArray
+                    };
                 }
             }
         });
@@ -190,13 +199,14 @@ app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInst
     };
 }]);
 
-app.controller('AddNewTaskModalController', ['$scope', '$uibModal', '$uibModalInstance', 'projectsList', 'NewTaskService', function ($scope, $uibModal, $uibModalInstance, projectsList, NewTaskService) {
+app.controller('AddNewTaskModalController', ['$scope', '$uibModal', '$uibModalInstance', 'projectsAndArrays', 'NewTaskService', function ($scope, $uibModal, $uibModalInstance, projectsAndArrays, NewTaskService) {
 
     var vm = this;
 
     vm.modalType = 'Create';
     vm.modalHeading = 'Create New Task';
-    vm.projects = projectsList;
+//    vm.projects = projectsAndArrays.projectsArray;
+
 //    vm.selected = vm.projects[0];
 
 // Datepicker
@@ -212,6 +222,12 @@ app.controller('AddNewTaskModalController', ['$scope', '$uibModal', '$uibModalIn
     vm.format = 'dd.MM.yyyy';
 
     vm.addNewTaskInProject = function(taskName) {
+
+        if(NewTaskService.checkTaskExistence(taskName, projectsAndArrays.tasksArray))
+        {
+            alert('Task Already Exists');
+            return;
+        }
 
         var new_task_params = {
             'id': NewTaskService.newTaskID(),
