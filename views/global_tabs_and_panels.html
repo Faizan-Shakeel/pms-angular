@@ -2,16 +2,13 @@
 <div class="col-lg-8 col-md-8 col-sm-8 testTabsArea" ng-controller="TabsController as TabsVM">
     <uib-tabset justified="true">
 
-        <uib-tab>
+        <uib-tab heading="Projects" active="TabsVM.active.Projects">
 
-            <tab-heading>
-                Projects
-            </tab-heading>
+        <div id="test-tabs-height" slim-scroll height="500px" >
 
-
-        <div id="test-tabs-height" slim-scroll height="500px">
-
-            <div class="panel panel-default" id="outer-panel" ng-repeat="panel in TabsVM.panels">
+            <!--<div class="panel panel-default" id="outer-panel" ng-repeat="panel in TabsVM.panels">-->
+        <div ng-controller="NavigationBarController as NavBarVM">
+            <div class="panel panel-default" id="outer-panel" ng-repeat="panel in TabsVM.panels | filter:NavBarVM.searchInputFieldText">
                 <div class="panel-body">
 
                     <div class="panel panel-default" id="inner-panel">
@@ -40,15 +37,12 @@
 
                 </div>
             </div>
-
+        </div>
         </div>
 
         </uib-tab>
 
-
-
-
-        <uib-tab heading="Tasks">
+        <uib-tab heading="Tasks" active="TabsVM.active.Tasks">
 
             <div slim-scroll height="500px">
 
@@ -84,41 +78,10 @@
 
             </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
         </uib-tab>
 
-
-
-
-
-
-
-        <uib-tab heading="Documents">Documents</uib-tab>
-        <uib-tab heading="Users">Users</uib-tab>
+        <uib-tab heading="Documents" active="TabsVM.active.Documents">Documents</uib-tab>
+        <uib-tab heading="Users" active="TabsVM.active.Users">Users</uib-tab>
     </uib-tabset>
 
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-

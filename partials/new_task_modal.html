@@ -26,13 +26,15 @@
                                 <!--<input type="text" class="form-control" id="taskName" placeholder="Name" ng-model="AddNewTaskModalVM.taskName" ng-required="AddNewTaskModalVM.required()">-->
                                 <!--<input type="text" class="form-control" id="taskName" placeholder="Name" ng-model="AddNewTaskModalVM.taskName" ng-required="AddNewTaskModalVM.required">-->
                                 <input type="text" class="form-control" id="taskName" name="taskName" placeholder="Task Name" ng-model="AddNewTaskModalVM.taskName" ng-minlength="5" ng-maxlength="20" required=""/>
+
+                                <div class="help-block" ng-messages="addNewTaskValidationForm.taskName.$error" ng-show="addNewTaskValidationForm.taskName.$touched">
+                                    <p ng-message="minlength">Mininum 5 characters.</p>
+                                    <p ng-message="maxlength">Maximum 20 characters.</p>
+                                    <p ng-message="required">Name is required.</p>
+                                </div>
+
                             </div>
 
-                            <div class="help-block" ng-messages="addNewTaskValidationForm.taskName.$error" ng-show="addNewTaskValidationForm.taskName.$touched">
-                                <p ng-message="minlength">Mininum 5 characters.</p>
-                                <p ng-message="maxlength">Maximum 20 characters.</p>
-                                <p ng-message="required">Name is required.</p>
-                            </div>
 
                         </div>
 

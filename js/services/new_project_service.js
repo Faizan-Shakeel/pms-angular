@@ -2,15 +2,21 @@
  * Created by faizankhan on 11/8/2014.
  */
 
-var app = angular.module('newProjectModule', []);
+var app = angular.module('newProjectServiceModule', []);
 
 app.service('NewProjectService', function(){
 
     var panels = [];
     var projectsIdArray = [];
+    var searchInputFieldText = '';
 
     var setValue = function(value){
         panels.push(value);
+    };
+
+    var updateSearchInputFieldText = function(text)
+    {
+        searchInputFieldText = text;
     };
 
     var newProjectID = function()
@@ -80,6 +86,8 @@ app.service('NewProjectService', function(){
         getSelectedProjectTasksArray: getSelectedProjectTasksArray,
         addTasksToProject: addTasksToProject,
         checkProjectExistence: checkProjectExistence,
+        updateSearchInputFieldText: updateSearchInputFieldText,
+        searchInputFieldText: searchInputFieldText,
         panels: panels
     };
 

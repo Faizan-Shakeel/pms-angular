@@ -4,17 +4,11 @@
 
 var app = angular.module('pmsAngular', [
 
-    'tooltipsModule',
-    'accordionModule',
-    'tabsAndTablesModule',
+    'mainViewModule',
     'slimScrollModule',
-//    'smart-table',
-//    'panelTableProjectsModule',
-    'chattingPanelModule',
     'modalNewProjectModule',
-//    'mb-scrollbar'
-    'newProjectModule',
-    'newTaskModule',
+    'newProjectServiceModule',
+    'newTaskServiceModule',
     'ui.utils.masks',
     'ngMessages'
 

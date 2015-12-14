@@ -1,6 +1,6 @@
 <!-------------------------------------------------------------------- Navigation Bar Fixed Top -----------------------------------------------------------------------START-->
 
-<nav class="navbar navbar-default navbar-fixed-top" id="navbar-bottom-margin" role="navigation">
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar-bottom-margin" role="navigation" ng-controller="NavigationBarController as NavBarVM">
 
     <header class="navbar-header">
         <a class="navbar-brand" href="#" id="application-logo">PMS</a>
@@ -8,33 +8,27 @@
 
     <div class="collapse navbar-collapse col-lg-offset-2" id="bs-example-navbar-collapse-1">
 
-        <form action="" class="navbar-form navbar-left">
-
+        <div class="navbar-form navbar-left">
             <div class="form-group" id="main-div">
                 <div class="input-group" id="inline-div-1">
-                    <div class="input-group-btn" id="inline-div-2">
-                        <button type="button" class="btn btn-default dropdown-toggle" id="search-categories" data-toggle="dropdown">
-                            Projects <span class="caret"></span>
+                    <div class="input-group-btn" id="inline-div-2" uib-dropdown is-open="NavBarVM.searchDropdownStatus.isopen">
+                        <button type="button" class="btn btn-default" uib-dropdown-toggle ng-disabled="disabled" id="search-categories">
+                            {{NavBarVM.selectedItem}} <span class="caret"></span>
                         </button>
 
-                        <ul class="dropdown-menu" id="test-drop-down" role="menu">
-                            <li id="item-projects"><a id="dropdown-item-projects" href="#">Projects</a></li>
-                            <li id="item-tasks"><a id="dropdown-item-tasks" href="#">Tasks</a></li>
-                            <li id="item-files"><a id="dropdown-item-files" href="#">Files</a></li>
-                            <li id="item-users"><a id="dropdown-item-users" href="#">Users</a></li>
+                        <ul class="uib-dropdown-menu" id="test-drop-down" role="menu" aria-labelledby="search-categories">
+                            <li ng-repeat="dropdownItem in NavBarVM.dropdownItems" role="menuitem"><a ng-click="NavBarVM.dropboxitemselected(dropdownItem)">{{dropdownItem}}</a></li>
                         </ul>
-
                     </div>
 
-                    <input type="search" class="form-control" id="search-width" placeholder="Search"/>
+                    <input type="search" class="form-control" id="search-width" placeholder="Search" ng-model="NavBarVM.searchInputFieldText"/>
 
                     <div class="input-group-btn" id="inline-div-3">
                         <button class="btn btn-default" id="search-button" type="submit"><span class="glyphicon glyphicon-search"></span></button>
                     </div>
                 </div>
             </div>
-        </form>
-        <!--</div>-->
+        </div>
 
         <!--<div class="navbar-btn navbar-right" id="signed-in-user">-->
             <!--<span id="signed-in-user-id">online.user@gmail.com</span>-->
@@ -72,7 +66,7 @@
             <!--</div>-->
         <!--</div>-->
 
-        <div ng-controller="TooltipsController as TtipVM">
+        <div>
             <p class="navbar-text" id="notifications" uib-tooltip="Notifications" tooltip-placement="bottom"><i class="fa fa-comments-o"></i><strong> 7</strong></p>
             <p class="navbar-text" id="users-online" uib-tooltip="Online Users" tooltip-placement="bottom"><i class="fa fa-user-md"></i><strong> 3</strong></p>
         </div>

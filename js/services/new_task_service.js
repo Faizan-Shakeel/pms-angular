@@ -2,7 +2,7 @@
  * Created by faizankhan on 11/8/2014.
  */
 
-var app = angular.module('newTaskModule', []);
+var app = angular.module('newTaskServiceModule', []);
 
 app.service('NewTaskService', function(){
 

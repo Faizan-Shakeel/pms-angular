@@ -1,11 +1,53 @@
 
-var app = angular.module('tabsAndTablesModule', ['ui.bootstrap']);
+var app = angular.module('globalTabsAndPanelsModule', ['ui.bootstrap']);
 
-app.controller('TabsController', function($scope, $http, $filter, NewProjectService, NewTaskService)
+app.controller('TabsController', ['$scope', 'NewProjectService', 'NewTaskService', 'filterFilter', function ($scope, NewProjectService, NewTaskService, filterFilter)
 {
     var vm = this;
 
+//    vm.searchInputFieldText = NewProjectService.searchInputFieldText;
+
+//    GlobalViewService.testArray = vm.testArray;
+
+//    vm.active = {
+//        'Projects': true,
+//        'Tasks': false,
+//        'Documents': false,
+//        'Users': false
+//    };
+
+//    vm.activateTab = function(tab) {
+//        console.log(tab);
+//        vm.active = {}; //reset
+//        vm.active[tab] = true;
+//    };
+
+    vm.searchDropdownStatus = {
+        isOpen: false
+    };
+
+    vm.dropdownItems = ['Projects', 'Tasks', 'Documents', 'Users'];
+    vm.selectedItem = vm.dropdownItems[0];
+    vm.dropboxitemselected = function (item) {
+
+        vm.selectedItem = item;
+
+//        vm.active = {}; //reset
+//        vm.active[item] = true;
+
+//        if(vm.selectedItem == 'Tasks')
+//        {
+//            console.log(vm.tabs[1].active);
+//            vm.tabs[1].active = true;
+//            console.log(vm.tabs[1].active);
+//        }
+
+    };
+
     vm.panels = NewProjectService.panels;
+
+//    vm.panels = filterFilter(NewProjectService.panels, NewProjectService.searchInputFieldText);
+
     vm.taskPanels = NewTaskService.taskPanels;
 
     vm.deleteProject = function(projectName)
@@ -70,5 +112,5 @@ app.controller('TabsController', function($scope, $http, $filter, NewProjectServ
 //        return arr;
 //    };
 
-});
+}]);
 
