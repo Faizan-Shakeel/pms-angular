@@ -115,87 +115,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             </uib-tab>
 
             <uib-tab heading="Documents">
@@ -207,6 +126,7 @@
 
             <uib-tab heading="Users">
                 <button type="button" class="btn btn-default btn-circle btn-lg" uib-tooltip="Add User" tooltip-placement="right"><i class="fa fa-plus fa-lg addEntityIconColor"></i></button>
+
                 <div class="modal-new-project-tab-body">Users</div>
             </uib-tab>
 
@@ -216,7 +136,6 @@
 
     <div class="modal-footer">
         <label for="submit-form" class="btn btn-primary" ng-disabled="validatedForm.$invalid">{{ModalVM.modalType}}</label>
-        <!--<button type="submit" class="btn btn-primary" ng-click="ModalVM.ok(ModalVM.projectname)">{{ModalVM.modalType}}</button>-->
         <button type="button" class="btn btn-warning" ng-click="ModalVM.cancel()">Cancel</button>
     </div>
 

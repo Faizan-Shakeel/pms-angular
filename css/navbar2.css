@@ -13,12 +13,34 @@
 {
     margin-top: 3px;
     width: 100%;
+    white-space: normal;
+}
+
+.common-class
+{
+    top: 3px;
+}
+
+/*#create-record*/
+/*{*/
+
+/*}*/
+
+#edit-record
+{
+    display: none;
+}
+
+#delete-record
+{
+    display: none;
 }
 
 #chatting-list-opener
 {
     margin-top: 3px;
     width: 100%;
+    white-space: normal;
 }
 
 #icon-chat-list-color, #icon-main-options-color
@@ -26,10 +48,21 @@
     color: tan;
 }
 
+#icon-edit-record-color
+{
+    color: #00b3ee;
+}
+
+#icon-delete-record-color
+{
+    color: red;
+}
+
 #one-click-panels-expand
 {
-    padding-left: 0px;
-    padding-top: 2px;
+    position: absolute;
+    right: 47%;
+    top: 3px;
 }
 
 #current-notifications, #current-users-online
