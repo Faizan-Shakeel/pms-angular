@@ -5,7 +5,7 @@ app.controller('ModalDemoController', ['$scope', '$rootScope', '$uibModal', '$lo
 
     var vm = this;
 
-// Modal
+////////////////// Add New Project Modal //////////////////
 
     vm.open = function () {
 
@@ -14,10 +14,7 @@ app.controller('ModalDemoController', ['$scope', '$rootScope', '$uibModal', '$lo
             templateUrl: 'partials/new_project_modal.html',
             controller: 'ModalInstanceController',
             controllerAs: 'ModalVM',
-//            scope: $scope,
-//            size: size,
             windowClass: 'modal-width',
-//            backdrop: false,
             resolve: {
                 projectName: function () {
                     return vm.projectname;
@@ -39,7 +36,6 @@ app.controller('ModalDemoController', ['$scope', '$rootScope', '$uibModal', '$lo
             templateUrl: 'partials/new_project_modal.html',
             controller: 'EditModalInstanceController',
             controllerAs: 'ModalVM',
-//            scope: $scope,
             windowClass: 'modal-width',
             backdrop: false,
             resolve: {
@@ -61,6 +57,7 @@ app.controller('EditModalInstanceController', ['$scope', '$uibModalInstance', 's
     vm.projectname = selectedProject;
 
     vm.taskPanels = NewProjectService.getSelectedProjectTasksArray(selectedProject);
+    vm.documentPanels = NewProjectService.getSelectedProjectDocumentsArray(selectedProject);
 
     vm.ok = function(updatedProjectName) {
 
@@ -84,7 +81,7 @@ app.controller('EditModalInstanceController', ['$scope', '$uibModalInstance', 's
 
 }]);
 
-app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'projectName', 'NewProjectService', 'NewTaskService', '$log', function ($scope, $uibModal, $uibModalInstance, projectName, NewProjectService, NewTaskService, $log) {
+app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'projectName', 'NewProjectService', 'NewTaskService', 'NewDocumentService', '$log', function ($scope, $uibModal, $uibModalInstance, projectName, NewProjectService, NewTaskService, NewDocumentService, $log) {
 
     var vm = this;
 
@@ -107,6 +104,7 @@ app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInst
 
     var projectsArray = NewProjectService.panels;
     var tasksArray = [];
+    var documentsArray = [];
 
     vm.ok = function(projectName) {
 
@@ -117,16 +115,19 @@ app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInst
         }
 
         NewProjectService.addTasksToProject(tasksArray, projectName);
+        NewProjectService.addDocumentsToProject(documentsArray, projectName);
 
         var new_project_params = {
             'id': NewProjectService.newProjectID(),
             'name': projectName,
             'status': 'Status New',
-            'taskPanels': tasksArray
+            'taskPanels': tasksArray,
+            'documentPanels': documentsArray
         };
 
         NewProjectService.setValue(new_project_params);
         NewTaskService.setValue(tasksArray);
+        NewDocumentService.setValue(documentsArray);
 
         $uibModalInstance.close();
 
@@ -136,7 +137,7 @@ app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInst
         $uibModalInstance.dismiss('cancel');
     };
 
-// Add New Task Modal
+////////////////// Add New Task Modal //////////////////
 
     vm.addNewTask = function()
     {
@@ -146,8 +147,6 @@ app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInst
             controller: 'AddNewTaskModalController',
             controllerAs: 'AddNewTaskModalVM',
             windowClass: 'modal-width',
-//            scope: $scope,
-//            backdrop: false,
             resolve: {
                 projectsAndArrays: function () {
                     return {
@@ -197,16 +196,64 @@ app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInst
         }
         return arr;
     };
+
+
+
+////////////////// Add New Document Modal //////////////////
+
+    vm.addNewDocument = function()
+    {
+        var addNewDocumentModalInstance = $uibModal.open({
+            animation: false,
+            templateUrl: 'partials/new_document_modal.html',
+            controller: 'AddNewDocumentModalController',
+            controllerAs: 'AddNewDocumentModalVM',
+            windowClass: 'modal-width',
+            resolve: {
+                documentsArray: function () {
+                    return {
+//                        projectsArray: projectsArray,
+                        documentsArray: documentsArray
+                    };
+                }
+            }
+        });
+
+        addNewDocumentModalInstance.result.then(function (new_document_params) {
+
+            documentsArray.push(new_document_params);
+            vm.documentPanels = documentsArray;
+
+        }, function () {
+//            $log.info('Modal dismissed at: ' + new Date());
+        });
+
+    };
+
+    vm.deleteDocument = function(documentName)
+    {
+        var documentToDeleteArray = [];
+        angular.forEach(vm.documentPanels, function(value,index){
+
+            if(value.name == documentName)
+            {
+                documentToDeleteArray.push(vm.documentPanels[index]);
+                NewDocumentService.deleteDocument(documentToDeleteArray);
+                removeByAttr(vm.documentPanels, 'name', documentName);
+            }
+        });
+
+    };
+
 }]);
 
-app.controller('AddNewTaskModalController', ['$scope', '$uibModal', '$uibModalInstance', 'projectsAndArrays', 'NewTaskService', function ($scope, $uibModal, $uibModalInstance, projectsAndArrays, NewTaskService) {
+app.controller('AddNewTaskModalController', ['$scope', '$uibModalInstance', 'projectsAndArrays', 'NewTaskService', function ($scope, $uibModalInstance, projectsAndArrays, NewTaskService) {
 
     var vm = this;
 
     vm.modalType = 'Create';
     vm.modalHeading = 'Create New Task';
 //    vm.projects = projectsAndArrays.projectsArray;
-
 //    vm.selected = vm.projects[0];
 
 // Datepicker
@@ -236,6 +283,37 @@ app.controller('AddNewTaskModalController', ['$scope', '$uibModal', '$uibModalIn
         };
 
         $uibModalInstance.close(new_task_params);
+
+    };
+
+    vm.cancelModal = function () {
+        $uibModalInstance.dismiss('cancel');
+    };
+
+}]);
+
+app.controller('AddNewDocumentModalController', ['$scope', '$uibModalInstance', 'documentsArray', 'NewDocumentService', function ($scope, $uibModalInstance, documentsArray, NewDocumentService) {
+
+    var vm = this;
+
+    vm.modalType = 'Create';
+    vm.modalHeading = 'Create New Document';
+
+    vm.addNewDocumentInProject = function(documentName) {
+
+        if(NewDocumentService.checkDocumentExistence(documentName, documentsArray.documentsArray))
+        {
+            alert('Document Already Exists');
+            return;
+        }
+
+        var new_document_params = {
+            'id': NewDocumentService.newDocumentID(),
+            'name': documentName,
+            'status': 'Document Status'
+        };
+
+        $uibModalInstance.close(new_document_params);
 
     };
 

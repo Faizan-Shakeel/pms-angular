@@ -1,7 +1,7 @@
 
 var app = angular.module('mainViewModule', ['ui.bootstrap', 'nsPopover']);
 
-app.controller('Main_View_Controller', ['$scope', 'NewProjectService', 'NewTaskService', 'filterFilter', function ($scope, NewProjectService, NewTaskService, filterFilter)
+app.controller('Main_View_Controller', ['$scope', 'NewProjectService', 'NewTaskService', 'NewDocumentService', function ($scope, NewProjectService, NewTaskService, NewDocumentService)
 {
     var vm = this;
 
@@ -190,6 +190,7 @@ app.controller('Main_View_Controller', ['$scope', 'NewProjectService', 'NewTaskS
         isOpen: false
     };
 
+    vm.projectVisibility = true;
     vm.dropdownItems = ['Projects', 'Tasks', 'Documents', 'Users'];
     vm.selectedItem = vm.dropdownItems[0];
     vm.dropboxitemselected = function (item) {
@@ -198,6 +199,37 @@ app.controller('Main_View_Controller', ['$scope', 'NewProjectService', 'NewTaskS
 
         vm.active = {}; //reset
         vm.active[item] = true;
+
+        switch(item) {
+            case 'Projects':
+                vm.projectVisibility = true;
+                vm.taskVisibility = false;
+                vm.documentVisibility = false;
+                vm.userVisibility = false;
+                break;
+            case 'Tasks':
+                console.log(vm.taskVisibility);
+                vm.projectVisibility = false;
+                vm.taskVisibility = true;
+                vm.documentVisibility = false;
+                vm.userVisibility = false;
+                console.log(vm.taskVisibility);
+                break;
+            case 'Documents':
+                vm.projectVisibility = false;
+                vm.taskVisibility = false;
+                vm.documentVisibility = true;
+                vm.userVisibility = false;
+                break;
+            case 'Users':
+                vm.projectVisibility = false;
+                vm.taskVisibility = false;
+                vm.documentVisibility = false;
+                vm.userVisibility = true;
+                break;
+        }
+//        vm.searchProjectsVisibility = true;
+
 
     };
 
@@ -213,20 +245,25 @@ app.controller('Main_View_Controller', ['$scope', 'NewProjectService', 'NewTaskS
 
     vm.taskPanels = NewTaskService.taskPanels;
 
+    vm.documentPanels = NewDocumentService.documentPanels;
+
     vm.deleteProject = function(projectName)
     {
         var selectedProjectTasksArray;
+        var selectedProjectDocumentsArray;
 
         angular.forEach(vm.panels, function(value,index){
 
             if(value.name == projectName)
             {
                 selectedProjectTasksArray = vm.panels[index].taskPanels;
+                selectedProjectDocumentsArray = vm.panels[index].documentPanels;
             }
 
         });
 
         NewTaskService.deleteTask(selectedProjectTasksArray);
+        NewDocumentService.deleteDocument(selectedProjectDocumentsArray);
         removeEntity(vm.panels, 'name', projectName);
 
     };
@@ -234,18 +271,27 @@ app.controller('Main_View_Controller', ['$scope', 'NewProjectService', 'NewTaskS
     vm.deleteTask = function(taskID)
     {
         removeEntity(NewTaskService.taskPanels, 'id', taskID);
-
         angular.forEach(vm.panels, function(valueProject,indexProject){
-
             angular.forEach(valueProject.taskPanels, function(valueTask,indexTask){
-
                 if(valueTask.id == taskID)
                 {
                     removeEntity(valueProject.taskPanels, 'id', taskID);
                 }
             });
         });
+    };
 
+    vm.deleteDocument = function(documentID)
+    {
+        removeEntity(NewDocumentService.documentPanels, 'id', documentID);
+        angular.forEach(vm.panels, function(valueProject,indexProject){
+            angular.forEach(valueProject.documentPanels, function(valueDocument,indexDocument){
+                if(valueDocument.id == documentID)
+                {
+                    removeEntity(valueProject.documentPanels, 'id', documentID);
+                }
+            });
+        });
     };
 
     var removeEntity = function(arr, attr, value){

@@ -56,7 +56,10 @@
                             </ul>
                         </div>
 
-                        <input type="search" class="form-control" id="search-width" placeholder="Search" ng-model="MainViewVM.searchInputFieldText" />
+                        <input type="search" class="form-control" placeholder="Search Projects" ng-model="MainViewVM.searchProjects" ng-show="MainViewVM.projectVisibility" ng-class="ngHide"/>
+                        <input type="search" class="form-control" placeholder="Search Tasks" ng-model="MainViewVM.searchTasks" ng-show="MainViewVM.taskVisibility" ng-class="ngHide"/>
+                        <input type="search" class="form-control" placeholder="Search Documents" ng-model="MainViewVM.searchDocuments" ng-show="MainViewVM.documentVisibility" ng-class="ngHide"/>
+                        <input type="search" class="form-control" placeholder="Search Users" ng-model="MainViewVM.searchUsers" ng-show="MainViewVM.userVisibility" ng-class="ngHide"/>
 
                         <div class="input-group-btn" id="inline-div-3">
                             <button class="btn btn-default" id="search-button" type="submit"><span class="glyphicon glyphicon-search"></span></button>
@@ -67,42 +70,7 @@
 
             <div class="navbar-btn navbar-right" id="signed-in-user">
                 <span id="signed-in-user-id">online.user@gmail.com</span>
-
-                    <!--<img class="open img-rounded" id="signed-in-user-pic" ng-src="images/Original_Size/user.png" alt=""/>-->
-                    <!--<img class="open img-rounded" id="signed-in-user-pic" ng-src="images/Original_Size/user.png" alt="" ns-popover ns-popover-template="partials/popover.html" ns-popover-timeout=-1 ns-popover-trigger="click" ns-popover-placement="bottom|right" ns-popover="MainViewVM.displayPopover"/>-->
-                    <img class="open img-rounded" id="signed-in-user-pic" ng-src="images/Original_Size/user.png" alt="" ns-popover ns-popover-template="partials/popover.html" ns-popover-timeout=-1 ns-popover-trigger="click" ns-popover-placement="bottom|right" ns-popover="MainViewVM.displayPopover"/>
-
-                    <!--<script type="text/ng-template" id="nsPopoverForUserLogout">-->
-                        <!--<div class="triangle"></div>-->
-                        <!--<h1>Template heading</h1>-->
-                        <!--<p>Some content</p>-->
-                    <!--</script>-->
-
-                    <!--<button class="btn btn-default" ns-popover ns-popover-template="nsPopoverForUserLogout" ns-popover-trigger="click" ns-popover-placement="left" ns-popover="MainViewVM.displayPopover">NS PopOver</button>-->
-                    <!--<button class="btn btn-default" ns-popover ns-popover-template="partials/popover.html" ns-popover-timeout=-1 ns-popover-trigger="click" ns-popover-placement="bottom|left" ns-popover="MainViewVM.displayPopover">NS PopOver</button>-->
-
-
-                    <!--<div style="position:relative;">-->
-                        <!--<div class='box'>-->
-                            <!--<div class='arrow'></div>-->
-                            <!--<div class='arrow-border'></div>-->
-
-                            <!--<div id="test-content-size">-->
-
-                                <!--<img class="img-thumbnail pull-left" id="user-pic-inside-popover" src="../images/Original_Size/user.png" alt=""/>-->
-
-                                <!--<p id="user-name">Online User</p>-->
-                                <!--<p id="user-designation">Quality Assurance</p>-->
-
-                                <!--<button class="btn btn-default btn-xs pull-left" id="user-profile" >Profile</button>-->
-                                <!--<button class="btn btn-default btn-xs pull-right" id="user-account" >Account</button>-->
-
-                                <!--<form class="form-signout">-->
-                                    <!--<button class="btn btn-success" id="testing-signout-button"  type="submit">Sign Out</button>-->
-                                <!--</form>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
+                <img class="open img-rounded" id="signed-in-user-pic" ng-src="images/Original_Size/user.png" alt="" ns-popover ns-popover-template="partials/popover.html" ns-popover-timeout=-1 ns-popover-trigger="click" ns-popover-placement="bottom|right" ns-popover="MainViewVM.displayPopover"/>
             </div>
 
             <div>
@@ -162,8 +130,6 @@
 
     <div class="row" id="third-row">
 
-
-        <!--<div class="col-lg-2 col-md-2 col-sm-2" ng-controller="AccordionController as AccVM">-->
         <div class="col-lg-2 col-md-2 col-sm-2">
 
             <uib-accordion close-others="MainViewVM.oneAtATime">
@@ -181,10 +147,6 @@
                         <a href="#" id="user-popover" class="btn btn-default center-block"><i class="fa fa-users pull-left" id="test4"></i>Create User</a>
 
                     </div>
-
-                    <!--<script type="text/ng-template" id="popover.html">-->
-                        <!--<p>My name is {{user.name || 'undefined' }}</p>-->
-                    <!--</script>-->
 
                 </uib-accordion-group>
 
@@ -242,7 +204,7 @@
 
                     <div id="test-tabs-height" slim-scroll height="500px">
 
-                            <div class="panel panel-default" id="outer-panel" ng-repeat="panel in MainViewVM.panels | filter:MainViewVM.searchInputFieldText">
+                            <div class="panel panel-default" id="outer-panel" ng-repeat="panel in MainViewVM.panels | filter:MainViewVM.searchProjects">
                             <div class="panel-body">
 
                                 <div class="panel panel-default" id="inner-panel">
@@ -261,13 +223,11 @@
                                     </p>
                                 </div>
 
-                                <!--<div class="pull-right">-->
                                 <div class="btn-group-vertical" id="btn-grp-panel" ng-controller="ModalDemoController as ModalVM">
                                     <button class="btn btn-default test-button-border"><i class="fa fa-info"></i></button>
                                     <button class="btn btn-default" ng-click="ModalVM.editProject(panel.name)"><i class="fa fa-edit"></i></button>
                                     <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteProject(panel.name)"><i class="fa fa-trash-o"></i></button>
                                 </div>
-                                <!--</div>-->
 
                             </div>
                         </div>
@@ -280,7 +240,7 @@
 
                     <div slim-scroll height="500px">
 
-                        <div class="panel panel-default" id="outer-panel-tasks-in-new-project-modal" ng-repeat="taskPanel in MainViewVM.taskPanels">
+                        <div class="panel panel-default" id="outer-panel-tasks-in-new-project-modal" ng-repeat="taskPanel in MainViewVM.taskPanels | filter:MainViewVM.searchTasks">
                             <div class="panel-body">
 
                                 <div class="panel panel-default" id="inner-panel-tasks-in-new-project-modal">
@@ -299,13 +259,11 @@
                                     </p>
                                 </div>
 
-                                <!--<div class="pull-right">-->
                                 <div class="btn-group-vertical" id="tasks-btn-grp-panel-in-new-project-modal" ng-controller="ModalDemoController as ModalVM">
                                     <button class="btn btn-default test-button-border"><i class="fa fa-info"></i></button>
                                     <button class="btn btn-default" ng-click="ModalVM.editTask(taskPanel.name)"><i class="fa fa-edit"></i></button>
                                     <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteTask(taskPanel.id)"><i class="fa fa-trash-o"></i></button>
                                 </div>
-                                <!--</div>-->
 
                             </div>
                         </div>
@@ -314,7 +272,43 @@
 
                 </uib-tab>
 
-                <uib-tab heading="Documents" active="MainViewVM.active.Documents">Documents</uib-tab>
+                <uib-tab heading="Documents" active="MainViewVM.active.Documents">
+
+                    <div slim-scroll height="500px">
+
+                        <div class="panel panel-default" id="outer-panel-documents-in-new-project-modal" ng-repeat="documentPanel in MainViewVM.documentPanels | filter:MainViewVM.searchDocuments">
+                            <div class="panel-body">
+
+                                <div class="panel panel-default" id="inner-panel-documents-in-new-project-modal">
+                                    <div class="panel-body">
+                                        <i class="fa fa-suitcase fa-2x" id="document-panel-icon-fix-in-new-project-modal"></i>
+                                    </div>
+                                </div>
+
+                                <div id="document-panel-content-in-new-project-modal">
+                                    <p>
+                                    <h4>{{documentPanel.name}}</h4>
+                                    </p>
+
+                                    <p>
+                                        {{documentPanel.status}}
+                                    </p>
+                                </div>
+
+                                <div class="btn-group-vertical" id="documents-btn-grp-panel-in-new-project-modal" ng-controller="ModalDemoController as ModalVM">
+                                    <button class="btn btn-default test-button-border"><i class="fa fa-info"></i></button>
+                                    <button class="btn btn-default" ng-click="ModalVM.editDocument(documentPanel.name)"><i class="fa fa-edit"></i></button>
+                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteDocument(documentPanel.id)"><i class="fa fa-trash-o"></i></button>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </uib-tab>
+
+
                 <uib-tab heading="Users" active="MainViewVM.active.Users">Users</uib-tab>
             </uib-tabset>
 
@@ -331,7 +325,6 @@
 
 
         <!------------------------------------------------------------------------ Chatting List -----------------------------------------------------------------------START-->
-        <!--<aside class="col-lg-2 col-md-2 col-sm-2" id="chatting-list-fixed" ng-controller="ChattingPanelController as CPVM">-->
         <aside class="col-lg-2 col-md-2 col-sm-2" id="chatting-list-fixed">
             <div class="panel panel-default" id="chatting-list-panel">
                 <div class="panel-heading" id="chat-panel-heading">Chat</div>
@@ -388,27 +381,16 @@
 
 <!--Controllers-->
 
-<!--<script type="text/javascript" src="js/controllers/top_nav_bar.js"></script>-->
-<!--<script type="text/javascript" src="js/controllers/accordion.js"></script>-->
-<!--<script type="text/javascript" src="js/controllers/chatting_panel.js"></script>-->
-<!--<script type="text/javascript" src="js/controllers/global_tabs_and_panels.js"></script>-->
 <script type="text/javascript" src="js/controllers/global_tabs_and_panels.js"></script>
 
 <script type="text/javascript" src="js/controllers/modal_new_project.js"></script>
 
-<!--Partials-->
-
-
-
 <!--Services-->
 
-
+<script type="text/javascript" src="js/services/global_view_service.js"></script>
 <script type="text/javascript" src="js/services/new_project_service.js"></script>
 <script type="text/javascript" src="js/services/new_task_service.js"></script>
-<script type="text/javascript" src="js/services/global_view_service.js"></script>
-
-
-<!--Custom Scripts-->
+<script type="text/javascript" src="js/services/new_document_service.js"></script>
 
 <script type="text/javascript" src="app.js"></script>
 

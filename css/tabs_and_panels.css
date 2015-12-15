@@ -5,7 +5,7 @@
     /*width: 50px;*/
 }
 
-#outer-panel-tasks-in-new-project-modal
+#outer-panel-tasks-in-new-project-modal, #outer-panel-documents-in-new-project-modal
 {
     position: relative;
     margin-top: 10px;
@@ -23,7 +23,7 @@
     line-height: 70px;
 }
 
-#inner-panel-tasks-in-new-project-modal
+#inner-panel-tasks-in-new-project-modal, #inner-panel-documents-in-new-project-modal
 {
     position: absolute;
     top: -1px;
@@ -44,7 +44,7 @@
     bottom: -1px;
 }
 
-#tasks-btn-grp-panel-in-new-project-modal
+#tasks-btn-grp-panel-in-new-project-modal, #documents-btn-grp-panel-in-new-project-modal
 {
     position: absolute;
     top: -1px;
@@ -57,12 +57,12 @@
     margin-left: 35px;
 }
 
-#task-panel-content-in-new-project-modal
+#task-panel-content-in-new-project-modal, #document-panel-content-in-new-project-modal
 {
     margin-left: 35px;
 }
 
-#task-panel-icon-fix-in-new-project-modal
+#task-panel-icon-fix-in-new-project-modal, #document-panel-icon-fix-in-new-project-modal
 {
     margin-left: -10px;
 }
@@ -73,7 +73,7 @@
 }
 
 
-.modal-new-project-tab-body, .modal-new-task-tab-body
+.modal-new-project-tab-body, .modal-new-task-tab-body, .modal-new-document-tab-body, .modal-new-user-tab-body
 {
     height: 300px;
     /*overflow-y: hidden;*/

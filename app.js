@@ -9,6 +9,7 @@ var app = angular.module('pmsAngular', [
     'modalNewProjectModule',
     'newProjectServiceModule',
     'newTaskServiceModule',
+    'newDocumentServiceModule',
     'ui.utils.masks',
     'ngMessages'
 
