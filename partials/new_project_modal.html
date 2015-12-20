@@ -19,7 +19,7 @@
 
                     <br/>
 
-                    <form name="validatedForm" class="form-horizontal" ng-submit="validatedForm.$valid && ModalVM.ok(ModalVM.projectname)" novalidate>
+                    <form name="validatedForm" class="form-horizontal" ng-submit="validatedForm.$valid && ModalVM.createNewProject(ModalVM.projectname)" novalidate>
                         <div class="form-group" ng-class="{ 'has-error': validatedForm.userName.$touched && validatedForm.userName.$invalid }">
                             <label for="userName" class="col-lg-2 col-md-2 col-sm-2 control-label">Name</label>
                             <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">
@@ -75,9 +75,21 @@
             </uib-tab>
 
             <uib-tab heading="Tasks">
-                <button type="button" class="btn btn-default btn-circle btn-lg" uib-tooltip="Add Task" tooltip-placement="right" ng-click="ModalVM.addNewTask()"><i class="fa fa-plus fa-lg addEntityIconColor"></i></button>
 
-                <div slim-scroll height="300px">
+                <div class="btn-group test-position" uib-dropdown is-open="false">
+                    <!--<button id="add-new-task-dropDown-button-in-project-modal" uib-dropdown-toggle ng-disabled="disabled" type="button" class="btn btn-default btn-circle btn-lg" uib-tooltip="Add Task" tooltip-placement="right" ng-click="ModalVM.addNewTask()"><i class="fa fa-plus fa-lg addEntityIconColor"></i></button>-->
+                    <button id="add-new-task-dropDown-button-in-project-modal" uib-dropdown-toggle ng-disabled="disabled" type="button" class="btn btn-default btn-circle btn-lg">
+                        <i class="fa fa-plus fa-lg addEntityIconColor"></i>
+                    </button>
+
+                    <ul class="uib-dropdown-menu" role="menu" aria-labelledby="add-new-task-dropDown-button-in-project-modal">
+                        <li role="menuitem" ng-click="ModalVM.addNewTask()"><a href="#">Create New Task</a></li>
+                        <li class="divider"></li>
+                        <li role="menuitem" ng-click="ModalVM.existingTasksModalInProjectModal()"><a href="#">Import Existing Tasks</a></li>
+                    </ul>
+                </div>
+
+                <div slim-scroll height="260px">
 
                     <div class="panel panel-default" id="outer-panel-tasks-in-new-project-modal" ng-repeat="taskPanel in ModalVM.taskPanels">
                         <div class="panel-body">
@@ -90,7 +102,7 @@
 
                             <div id="task-panel-content-in-new-project-modal">
                                 <p>
-                                <h4>{{taskPanel.name}}</h4>
+                                <h4>{{taskPanel.name}} <span class="col-lg-offset-8">ID: {{taskPanel.id}}</span> </h4>
                                 </p>
 
                                 <p>
@@ -109,10 +121,21 @@
             </uib-tab>
 
             <uib-tab heading="Documents">
-                <button type="button" class="btn btn-default btn-circle btn-lg" uib-tooltip="Add Document" tooltip-placement="right" ng-click="ModalVM.addNewDocument()"><i class="fa fa-plus fa-lg addEntityIconColor"></i></button>
+                <!--<button type="button" class="btn btn-default btn-circle btn-lg" uib-tooltip="Add Document" tooltip-placement="right" ng-click="ModalVM.addNewDocument()"><i class="fa fa-plus fa-lg addEntityIconColor"></i></button>-->
 
-                <!--<div class="modal-new-project-tab-body">Documents</div>-->
-                <div slim-scroll height="300px">
+                <div class="btn-group test-position" uib-dropdown is-open="false">
+                    <button id="add-new-document-dropDown-button-in-project-modal" uib-dropdown-toggle ng-disabled="disabled" type="button" class="btn btn-default btn-circle btn-lg">
+                        <i class="fa fa-plus fa-lg addEntityIconColor"></i>
+                    </button>
+
+                    <ul class="uib-dropdown-menu" role="menu" aria-labelledby="add-new-document-dropDown-button-in-project-modal">
+                        <li role="menuitem"><a href="#">Import Existing Documents</a></li>
+                        <li class="divider"></li>
+                        <li role="menuitem"><a href="#">Create New Documents</a></li>
+                    </ul>
+                </div>
+
+                <div slim-scroll height="260px">
 
                     <div class="panel panel-default" id="outer-panel-documents-in-new-project-modal" ng-repeat="documentPanel in ModalVM.documentPanels">
                         <div class="panel-body">
@@ -147,9 +170,43 @@
             </uib-tab>
 
             <uib-tab heading="Users">
-                <button type="button" class="btn btn-default btn-circle btn-lg" uib-tooltip="Add User" tooltip-placement="right"><i class="fa fa-plus fa-lg addEntityIconColor"></i></button>
+                <!--<button type="button" class="btn btn-default btn-circle btn-lg" uib-tooltip="Add User" tooltip-placement="right"><i class="fa fa-plus fa-lg addEntityIconColor"></i></button>-->
 
-                <div class="modal-new-project-tab-body">Users</div>
+                <button type="button" class="btn btn-default btn-circle-user-tab-project-modal btn-lg" uib-tooltip="Add User" tooltip-placement="right" ng-click="ModalVM.addNewTask()"><i class="fa fa-plus fa-lg addEntityIconColor"></i></button>
+
+                <div slim-scroll height="300px">
+
+                    <div class="panel panel-default" id="outer-panel-users-in-new-project-modal" ng-repeat="userPanel in ModalVM.userPanels">
+                        <div class="panel-body">
+
+                            <div class="panel panel-default" id="inner-panel-users-in-new-project-modal">
+                                <div class="panel-body">
+                                    <i class="fa fa-suitcase fa-2x" id="user-panel-icon-fix-in-new-project-modal"></i>
+                                </div>
+                            </div>
+
+                            <div id="user-panel-content-in-new-project-modal">
+                                <p>
+                                <h4>{{userPanel.name}}</h4>
+                                </p>
+
+                                <p>
+                                    {{userPanel.status}}
+                                </p>
+                            </div>
+
+                            <div class="btn-group-vertical" id="users-btn-grp-panel-in-new-project-modal">
+                                <button class="btn btn-default test-button-border"><i class="fa fa-info"></i></button>
+                                <button class="btn btn-default" ng-click="ModalVM.editUsers(userPanel.name)"><i class="fa fa-edit"></i></button>
+                                <button class="btn btn-default test-button-border" ng-click="ModalVM.deleteUser(userPanel.name)"><i class="fa fa-trash-o"></i></button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <!--<div class="modal-new-project-tab-body">Users</div>-->
             </uib-tab>
 
         </uib-tabset>

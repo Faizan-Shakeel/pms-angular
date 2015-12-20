@@ -48,135 +48,18 @@ app.controller('Main_View_Controller', ['$scope', 'NewProjectService', 'NewTaskS
 
     var online = 'fa fa-circle-o';
     var offline = '';
+    var usersArray = [];
+    var usersObject = {};
 
-    vm.users = [
+    for(var i=0; i<20; i++)
+    {
+        usersObject.name = 'User Name';
+        usersObject.status = '';
+        usersArray.push(usersObject);
+        usersObject = {};
+    }
 
-        {
-            'name': 'User Name',
-            'status': offline
-        },
-        {
-            'name': 'User Name',
-            'status': online
-        },
-        {
-            'name': 'User Name',
-            'status': offline
-        },
-        {
-            'name': 'User Name',
-            'status': online
-        },
-        {
-            'name': 'User Name',
-            'status': offline
-        },
-        {
-            'name': 'User Name',
-            'status': online
-        },
-        {
-            'name': 'User Name',
-            'status': offline
-        },
-        {
-            'name': 'User Name',
-            'status': online
-        },
-        {
-            'name': 'User Name',
-            'status': offline
-        },
-        {
-            'name': 'User Name',
-            'status': online
-        },
-        {
-            'name': 'User Name',
-            'status': offline
-        },
-        {
-            'name': 'User Name',
-            'status': online
-        },
-        {
-            'name': 'User Name',
-            'status': offline
-        },
-        {
-            'name': 'User Name',
-            'status': online
-        },
-        {
-            'name': 'User Name',
-            'status': offline
-        },
-        {
-            'name': 'User Name',
-            'status': online
-        },
-        {
-            'name': 'User Name',
-            'status': offline
-        },
-        {
-            'name': 'User Name',
-            'status': online
-        },
-        {
-            'name': 'User Name',
-            'status': offline
-        },
-        {
-            'name': 'User Name',
-            'status': online
-        },
-        {
-            'name': 'User Name',
-            'status': offline
-        },
-        {
-            'name': 'User Name',
-            'status': online
-        },
-        {
-            'name': 'User Name',
-            'status': offline
-        },
-        {
-            'name': 'User Name',
-            'status': online
-        },
-        {
-            'name': 'User Name',
-            'status': offline
-        },
-        {
-            'name': 'User Name',
-            'status': online
-        },
-        {
-            'name': 'User Name',
-            'status': offline
-        },
-        {
-            'name': 'User Name',
-            'status': online
-        },
-        {
-            'name': 'User Name',
-            'status': offline
-        },
-        {
-            'name': 'User Name',
-            'status': online
-        },
-        {
-            'name': 'User Name',
-            'status': online
-        }
-
-    ];
+    vm.users = usersArray;
 
 //    vm.scrollBarConfig = {
 //        autoResize: true // If true, will listen for DOM elements being added or removed inside the scroll container
@@ -192,8 +75,9 @@ app.controller('Main_View_Controller', ['$scope', 'NewProjectService', 'NewTaskS
 
     vm.projectVisibility = true;
     vm.dropdownItems = ['Projects', 'Tasks', 'Documents', 'Users'];
+
     vm.selectedItem = vm.dropdownItems[0];
-    vm.dropboxitemselected = function (item) {
+    vm.globalSearchDropDown = function (item) {
 
         vm.selectedItem = item;
 
@@ -208,12 +92,10 @@ app.controller('Main_View_Controller', ['$scope', 'NewProjectService', 'NewTaskS
                 vm.userVisibility = false;
                 break;
             case 'Tasks':
-                console.log(vm.taskVisibility);
                 vm.projectVisibility = false;
                 vm.taskVisibility = true;
                 vm.documentVisibility = false;
                 vm.userVisibility = false;
-                console.log(vm.taskVisibility);
                 break;
             case 'Documents':
                 vm.projectVisibility = false;
@@ -230,9 +112,7 @@ app.controller('Main_View_Controller', ['$scope', 'NewProjectService', 'NewTaskS
         }
 //        vm.searchProjectsVisibility = true;
 
-
     };
-
 
     vm.displayPopover = false;
 
@@ -241,7 +121,7 @@ app.controller('Main_View_Controller', ['$scope', 'NewProjectService', 'NewTaskS
 
     ////////////////// TABS AND PANELS //////////////////
 
-    vm.panels = NewProjectService.panels;
+    vm.projectPanels = NewProjectService.projectPanels;
 
     vm.taskPanels = NewTaskService.taskPanels;
 
@@ -252,26 +132,26 @@ app.controller('Main_View_Controller', ['$scope', 'NewProjectService', 'NewTaskS
         var selectedProjectTasksArray;
         var selectedProjectDocumentsArray;
 
-        angular.forEach(vm.panels, function(value,index){
+        angular.forEach(vm.projectPanels, function(value,index){
 
             if(value.name == projectName)
             {
-                selectedProjectTasksArray = vm.panels[index].taskPanels;
-                selectedProjectDocumentsArray = vm.panels[index].documentPanels;
+                selectedProjectTasksArray = vm.projectPanels[index].taskPanels;
+                selectedProjectDocumentsArray = vm.projectPanels[index].documentPanels;
             }
 
         });
 
         NewTaskService.deleteTask(selectedProjectTasksArray);
         NewDocumentService.deleteDocument(selectedProjectDocumentsArray);
-        removeEntity(vm.panels, 'name', projectName);
+        removeEntity(vm.projectPanels, 'name', projectName);
 
     };
 
     vm.deleteTask = function(taskID)
     {
         removeEntity(NewTaskService.taskPanels, 'id', taskID);
-        angular.forEach(vm.panels, function(valueProject,indexProject){
+        angular.forEach(vm.projectPanels, function(valueProject,indexProject){
             angular.forEach(valueProject.taskPanels, function(valueTask,indexTask){
                 if(valueTask.id == taskID)
                 {
@@ -284,7 +164,7 @@ app.controller('Main_View_Controller', ['$scope', 'NewProjectService', 'NewTaskS
     vm.deleteDocument = function(documentID)
     {
         removeEntity(NewDocumentService.documentPanels, 'id', documentID);
-        angular.forEach(vm.panels, function(valueProject,indexProject){
+        angular.forEach(vm.projectPanels, function(valueProject,indexProject){
             angular.forEach(valueProject.documentPanels, function(valueDocument,indexDocument){
                 if(valueDocument.id == documentID)
                 {

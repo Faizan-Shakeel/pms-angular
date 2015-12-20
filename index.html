@@ -52,14 +52,14 @@
                             </button>
 
                             <ul class="uib-dropdown-menu" id="test-drop-down" role="menu" aria-labelledby="search-categories">
-                                <li ng-repeat="dropdownItem in MainViewVM.dropdownItems" role="menuitem"><a ng-click="MainViewVM.dropboxitemselected(dropdownItem)">{{dropdownItem}}</a></li>
+                                <li ng-repeat="dropdownItem in MainViewVM.dropdownItems" role="menuitem"><a ng-click="MainViewVM.globalSearchDropDown(dropdownItem)">{{dropdownItem}}</a></li>
                             </ul>
                         </div>
 
-                        <input type="search" class="form-control" placeholder="Search Projects" ng-model="MainViewVM.searchProjects" ng-show="MainViewVM.projectVisibility" ng-class="ngHide"/>
-                        <input type="search" class="form-control" placeholder="Search Tasks" ng-model="MainViewVM.searchTasks" ng-show="MainViewVM.taskVisibility" ng-class="ngHide"/>
-                        <input type="search" class="form-control" placeholder="Search Documents" ng-model="MainViewVM.searchDocuments" ng-show="MainViewVM.documentVisibility" ng-class="ngHide"/>
-                        <input type="search" class="form-control" placeholder="Search Users" ng-model="MainViewVM.searchUsers" ng-show="MainViewVM.userVisibility" ng-class="ngHide"/>
+                        <input type="search" class="form-control" placeholder="Search Projects" ng-model="MainViewVM.searchProjects.name" ng-show="MainViewVM.projectVisibility" ng-class="ngHide"/>
+                        <input type="search" class="form-control" placeholder="Search Tasks" ng-model="MainViewVM.searchTasks.name" ng-show="MainViewVM.taskVisibility" ng-class="ngHide"/>
+                        <input type="search" class="form-control" placeholder="Search Documents" ng-model="MainViewVM.searchDocuments.name" ng-show="MainViewVM.documentVisibility" ng-class="ngHide"/>
+                        <input type="search" class="form-control" placeholder="Search Users" ng-model="MainViewVM.searchUsers.name" ng-show="MainViewVM.userVisibility" ng-class="ngHide"/>
 
                         <div class="input-group-btn" id="inline-div-3">
                             <button class="btn btn-default" id="search-button" type="submit"><span class="glyphicon glyphicon-search"></span></button>
@@ -141,10 +141,10 @@
 
                     <div id="acc-content" ng-controller="ModalDemoController as ModalVM">
 
-                        <a href="#" id="project-popover" class="btn btn-default center-block" ng-click="ModalVM.open()"><i class="fa fa-bar-chart-o pull-left" id="test1"></i>Create Project</a>
-                        <a href="#" id="task-popover" class="btn btn-default center-block"><i class="fa fa-tasks pull-left" id="test2"></i>Create Task</a>
-                        <a href="#" id="file-popover" class="btn btn-default center-block"><i class="fa fa-files-o pull-left" id="test3"></i>Create File</a>
-                        <a href="#" id="user-popover" class="btn btn-default center-block"><i class="fa fa-users pull-left" id="test4"></i>Create User</a>
+                        <a href="#" id="project-popover" class="btn btn-default center-block" ng-click="ModalVM.newProjectModal()"><i class="fa fa-bar-chart-o pull-left" id="test1"></i>Create Project</a>
+                        <a href="#" id="task-popover" class="btn btn-default center-block" ng-click="ModalVM.newTaskModal()"><i class="fa fa-tasks pull-left" id="test2"></i>Create Task</a>
+                        <a href="#" id="file-popover" class="btn btn-default center-block" ng-click="ModalVM.newDocumentModal()"><i class="fa fa-files-o pull-left" id="test3"></i>Create File</a>
+                        <a href="#" id="user-popover" class="btn btn-default center-block" ng-click="ModalVM.newUserModal()"><i class="fa fa-users pull-left" id="test4"></i>Create User</a>
 
                     </div>
 
@@ -204,7 +204,7 @@
 
                     <div id="test-tabs-height" slim-scroll height="500px">
 
-                            <div class="panel panel-default" id="outer-panel" ng-repeat="panel in MainViewVM.panels | filter:MainViewVM.searchProjects">
+                            <div class="panel panel-default" id="outer-panel" ng-repeat="projectPanel in MainViewVM.projectPanels | filter:MainViewVM.searchProjects">
                             <div class="panel-body">
 
                                 <div class="panel panel-default" id="inner-panel">
@@ -215,18 +215,18 @@
 
                                 <div id="panel-content">
                                     <p>
-                                    <h4>{{panel.name}}</h4>
+                                    <h4>{{projectPanel.name}}</h4>
                                     </p>
 
                                     <p>
-                                        {{panel.status}}
+                                        {{projectPanel.status}}
                                     </p>
                                 </div>
 
                                 <div class="btn-group-vertical" id="btn-grp-panel" ng-controller="ModalDemoController as ModalVM">
                                     <button class="btn btn-default test-button-border"><i class="fa fa-info"></i></button>
-                                    <button class="btn btn-default" ng-click="ModalVM.editProject(panel.name)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteProject(panel.name)"><i class="fa fa-trash-o"></i></button>
+                                    <button class="btn btn-default" ng-click="ModalVM.editProject(projectPanel.name)"><i class="fa fa-edit"></i></button>
+                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteProject(projectPanel.name)"><i class="fa fa-trash-o"></i></button>
                                 </div>
 
                             </div>
@@ -251,11 +251,12 @@
 
                                 <div id="task-panel-content-in-new-project-modal">
                                     <p>
-                                    <h4>{{taskPanel.name}}</h4>
+                                        <h4>{{taskPanel.name}} <span class="col-lg-offset-8">ID: {{taskPanel.id}}</span></h4>
                                     </p>
 
                                     <p>
                                         {{taskPanel.status}}
+                                        <span class="col-lg-offset-8">Project: {{taskPanel.projectName}}</span>
                                     </p>
                                 </div>
 
@@ -373,6 +374,7 @@
 <!--<script type="text/javascript" src="bower_components/angular-animate/angular-animate.min.js"></script>-->
 <script src="bower_components/angular-input-masks/angular-input-masks-standalone.min.js"></script>
 <script src="bower_components/angular-messages/angular-messages.min.js"></script>
+<script src="bower_components/angular-bootstrap-multiselect/dist/angular-bootstrap-multiselect.min.js"></script>
 
 
 <!--Directives-->
@@ -382,12 +384,10 @@
 <!--Controllers-->
 
 <script type="text/javascript" src="js/controllers/global_tabs_and_panels.js"></script>
-
-<script type="text/javascript" src="js/controllers/modal_new_project.js"></script>
+<script type="text/javascript" src="js/controllers/proj_task_doc_user_modal.js"></script>
 
 <!--Services-->
 
-<script type="text/javascript" src="js/services/global_view_service.js"></script>
 <script type="text/javascript" src="js/services/new_project_service.js"></script>
 <script type="text/javascript" src="js/services/new_task_service.js"></script>
 <script type="text/javascript" src="js/services/new_document_service.js"></script>

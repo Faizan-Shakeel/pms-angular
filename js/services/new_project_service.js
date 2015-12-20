@@ -6,11 +6,11 @@ var app = angular.module('newProjectServiceModule', []);
 
 app.service('NewProjectService', function(){
 
-    var panels = [];
+    var projectPanels = [];
     var projectsIdArray = [];
 
     var setValue = function(value){
-        panels.push(value);
+        projectPanels.push(value);
     };
 
     var newProjectID = function()
@@ -22,10 +22,47 @@ app.service('NewProjectService', function(){
     };
 
     var getValue = function(){
-        return panels;
+        return projectPanels;
     };
 
-    var addTasksToProject = function(tasksArray, projectName)
+    var addTaskToProject = function(projName, taskObject)
+    {
+        var taskExistence = false;
+
+        for(var i in projectPanels)
+        {
+            if (projectPanels[i].name == projName)
+            {
+                for(var j in projectPanels[i].taskPanels)
+                {
+                    if(projectPanels[i].taskPanels[j].name == taskObject.name)
+                    {
+//                        console.log("Task Already Exists In This Project");
+//                        alert("Task Already Exists In This Project");
+
+                        taskExistence = true;
+
+                        return{
+                            status: true,
+                            inProject: projectPanels[i].name
+                        };
+                    }
+                }
+
+                if(!taskExistence)
+                {
+                    projectPanels[i].taskPanels.push(taskObject);
+                    return{
+                        status: false
+                    };
+                }
+
+            }
+        }
+
+    };
+
+    var addProjectToTask = function(tasksArray, projectName)
     {
         angular.forEach(tasksArray, function(value, index)
         {
@@ -44,11 +81,11 @@ app.service('NewProjectService', function(){
     var getSelectedProjectTasksArray = function(selectedProjectName)
     {
         var selectedProjectTasksArray;
-        angular.forEach(panels, function(value,index){
+        angular.forEach(projectPanels, function(value,index){
 
             if(value.name == selectedProjectName)
             {
-                selectedProjectTasksArray = panels[index].taskPanels;
+                selectedProjectTasksArray = projectPanels[index].taskPanels;
             }
         });
         return selectedProjectTasksArray;
@@ -57,11 +94,11 @@ app.service('NewProjectService', function(){
     var getSelectedProjectDocumentsArray = function(selectedProjectName)
     {
         var selectedProjectDocumentsArray;
-        angular.forEach(panels, function(value,index){
+        angular.forEach(projectPanels, function(value,index){
 
             if(value.name == selectedProjectName)
             {
-                selectedProjectDocumentsArray = panels[index].documentPanels;
+                selectedProjectDocumentsArray = projectPanels[index].documentPanels;
             }
         });
         return selectedProjectDocumentsArray;
@@ -72,9 +109,9 @@ app.service('NewProjectService', function(){
     {
         var projectAlreadyExists = false;
 
-        for(var i in panels)
+        for(var i in projectPanels)
         {
-            if(panels[i].name == projectName)
+            if(projectPanels[i].name == projectName)
             {
                 projectAlreadyExists = true;
                 break;
@@ -95,10 +132,11 @@ app.service('NewProjectService', function(){
         getValue: getValue,
         getSelectedProjectTasksArray: getSelectedProjectTasksArray,
         getSelectedProjectDocumentsArray: getSelectedProjectDocumentsArray,
-        addTasksToProject: addTasksToProject,
+        addProjectToTask: addProjectToTask,
+        addTaskToProject: addTaskToProject,
         addDocumentsToProject: addDocumentsToProject,
         checkProjectExistence: checkProjectExistence,
-        panels: panels
+        projectPanels: projectPanels
     };
 
 });

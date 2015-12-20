@@ -6,11 +6,12 @@ var app = angular.module('pmsAngular', [
 
     'mainViewModule',
     'slimScrollModule',
-    'modalNewProjectModule',
+    'newProjectGlobalModule',
     'newProjectServiceModule',
     'newTaskServiceModule',
     'newDocumentServiceModule',
     'ui.utils.masks',
-    'ngMessages'
+    'ngMessages',
+    'btorfs.multiselect'
 
 ]);

@@ -9,11 +9,39 @@ app.service('NewTaskService', function(){
     var taskPanels = [];
     var tasksIdArray = [];
 
-    var setValue = function(newTaskObject){
+    var setValue = function(newTasksArray){
 
-        angular.forEach(newTaskObject, function(value, index){
-            taskPanels.push(newTaskObject[index]);
+        angular.forEach(newTasksArray, function(value, index){
+            taskPanels.push(newTasksArray[index]);
         });
+
+    };
+
+    var checkIfTaskIsAlreadyInSelectedProject = function(taskName, selectedProjects)
+    {
+        var taskAlreadyExists = false;
+
+
+    };
+
+    var checkTaskExistenceGlobal = function(taskName, tasksArrayGlobal)
+    {
+        var taskAlreadyExists = false;
+
+        for(var i in tasksArrayGlobal)
+        {
+            if(tasksArrayGlobal[i].name == taskName)
+            {
+                taskAlreadyExists = true;
+                break;
+            }
+            else
+            {
+                taskAlreadyExists = false;
+            }
+        }
+
+        return taskAlreadyExists;
 
     };
 
@@ -79,6 +107,7 @@ app.service('NewTaskService', function(){
     return{
         newTaskID: newTaskID,
         checkTaskExistence: checkTaskExistence,
+        checkTaskExistenceGlobal: checkTaskExistenceGlobal,
         setValue: setValue,
         getValue: getValue,
         deleteTask: deleteTask,
