@@ -33,102 +33,103 @@
 <!------------------------------------------------------------ MAIN CONTAINER (Write No HTML Outside) -----------------------------------------------------------------START-->
 <div class="container-full-width" ng-controller="Main_View_Controller as MainViewVM">
 
-    <!-------------------------------------------------------------------- Navigation Bar Fixed Top -----------------------------------------------------------------------START-->
+<!-------------------------------------------------------------------- Navigation Bar Fixed Top -----------------------------------------------------------------------START-->
+    <div ng-controller="ModalDemoController as ModalVM">
 
-    <nav class="navbar navbar-default navbar-fixed-top" id="navbar-bottom-margin" role="navigation">
+        <nav class="navbar navbar-default navbar-fixed-top" id="navbar-bottom-margin" role="navigation">
 
-        <header class="navbar-header">
-            <a class="navbar-brand" href="#" id="application-logo">PMS</a>
-        </header>
+            <header class="navbar-header">
+                <a class="navbar-brand" href="#" id="application-logo">PMS</a>
+            </header>
 
-        <div class="collapse navbar-collapse col-lg-offset-2" id="bs-example-navbar-collapse-1">
+            <div class="collapse navbar-collapse col-lg-offset-2" id="bs-example-navbar-collapse-1">
 
-            <div class="navbar-form navbar-left">
-                <div class="form-group" id="main-div">
-                    <div class="input-group" id="inline-div-1">
-                        <div class="input-group-btn" id="inline-div-2" uib-dropdown is-open="MainViewVM.searchDropdownStatus.isopen">
-                            <button type="button" class="btn btn-default" uib-dropdown-toggle ng-disabled="disabled" id="search-categories">
-                                {{MainViewVM.selectedItem}} <span class="caret"></span>
-                            </button>
+                <div class="navbar-form navbar-left">
+                    <div class="form-group" id="main-div">
+                        <div class="input-group" id="inline-div-1">
+                            <div class="input-group-btn" id="inline-div-2" uib-dropdown is-open="MainViewVM.searchDropdownStatus.isopen">
+                                <button type="button" class="btn btn-default" uib-dropdown-toggle ng-disabled="disabled" id="search-categories">
+                                    {{MainViewVM.selectedItem}} <span class="caret"></span>
+                                </button>
 
-                            <ul class="uib-dropdown-menu" id="test-drop-down" role="menu" aria-labelledby="search-categories">
-                                <li ng-repeat="dropdownItem in MainViewVM.dropdownItems" role="menuitem"><a ng-click="MainViewVM.globalSearchDropDown(dropdownItem)">{{dropdownItem}}</a></li>
-                            </ul>
-                        </div>
+                                <ul class="uib-dropdown-menu" id="test-drop-down" role="menu" aria-labelledby="search-categories">
+                                    <li ng-repeat="dropdownItem in MainViewVM.dropdownItems" role="menuitem"><a ng-click="MainViewVM.globalSearchDropDown(dropdownItem)">{{dropdownItem}}</a></li>
+                                </ul>
+                            </div>
 
-                        <input type="search" class="form-control" placeholder="Search Projects" ng-model="MainViewVM.searchProjects.name" ng-show="MainViewVM.projectVisibility" ng-class="ngHide"/>
-                        <input type="search" class="form-control" placeholder="Search Tasks" ng-model="MainViewVM.searchTasks.name" ng-show="MainViewVM.taskVisibility" ng-class="ngHide"/>
-                        <input type="search" class="form-control" placeholder="Search Documents" ng-model="MainViewVM.searchDocuments.name" ng-show="MainViewVM.documentVisibility" ng-class="ngHide"/>
-                        <input type="search" class="form-control" placeholder="Search Users" ng-model="MainViewVM.searchUsers.name" ng-show="MainViewVM.userVisibility" ng-class="ngHide"/>
+                            <input type="search" class="form-control" placeholder="Search Projects" ng-model="MainViewVM.searchProjects.name" ng-show="MainViewVM.projectVisibility" ng-class="ngHide"/>
+                            <input type="search" class="form-control" placeholder="Search Tasks" ng-model="MainViewVM.searchTasks.name" ng-show="MainViewVM.taskVisibility" ng-class="ngHide"/>
+                            <input type="search" class="form-control" placeholder="Search Documents" ng-model="MainViewVM.searchDocuments.name" ng-show="MainViewVM.documentVisibility" ng-class="ngHide"/>
+                            <input type="search" class="form-control" placeholder="Search Users" ng-model="MainViewVM.searchUsers.name" ng-show="MainViewVM.userVisibility" ng-class="ngHide"/>
 
-                        <div class="input-group-btn" id="inline-div-3">
-                            <button class="btn btn-default" id="search-button" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+                            <div class="input-group-btn" id="inline-div-3">
+                                <button class="btn btn-default" id="search-button" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <div class="navbar-btn navbar-right" id="signed-in-user">
+                    <span id="signed-in-user-id">online.user@gmail.com</span>
+                    <img class="open img-rounded" id="signed-in-user-pic" ng-src="images/Original_Size/user.png" alt="" ns-popover ns-popover-template="partials/popover.html" ns-popover-timeout=-1 ns-popover-trigger="click" ns-popover-placement="bottom|right" ns-popover="MainViewVM.displayPopover"/>
+                </div>
+
+                <div>
+                    <p class="navbar-text" id="notifications" uib-tooltip="Notifications" tooltip-placement="bottom"><i class="fa fa-comments-o"></i><strong> 7</strong></p>
+                    <p class="navbar-text" id="users-online" uib-tooltip="Online Users" tooltip-placement="bottom"><i class="fa fa-user-md"></i><strong> 3</strong></p>
+                </div>
+
+            </div>
+        </nav>
+
+        <!-------------------------------------------------------------------- Navigation Bar Fixed Top -----------------------------------------------------------------------END-->
+
+
+        <!-------------------------------------------------------Row-Containing-Buttons-For-Menu-&-Chatting-Panel--------------------------------------------------------------START-->
+
+        <div class="row hidden-xs" id="test-second-custom-bar">
+
+            <div class="col-lg-2 col-md-2 col-sm-2" id="123">
+                <button class="btn btn-default" id="menu-opener">Menu <span class="glyphicon glyphicon-book" id="icon-main-options-color"></span></button>
             </div>
 
-            <div class="navbar-btn navbar-right" id="signed-in-user">
-                <span id="signed-in-user-id">online.user@gmail.com</span>
-                <img class="open img-rounded" id="signed-in-user-pic" ng-src="images/Original_Size/user.png" alt="" ns-popover ns-popover-template="partials/popover.html" ns-popover-timeout=-1 ns-popover-trigger="click" ns-popover-placement="bottom|right" ns-popover="MainViewVM.displayPopover"/>
-            </div>
-
-            <div>
-                <p class="navbar-text" id="notifications" uib-tooltip="Notifications" tooltip-placement="bottom"><i class="fa fa-comments-o"></i><strong> 7</strong></p>
-                <p class="navbar-text" id="users-online" uib-tooltip="Online Users" tooltip-placement="bottom"><i class="fa fa-user-md"></i><strong> 3</strong></p>
-            </div>
-
-        </div>
-    </nav>
-
-    <!-------------------------------------------------------------------- Navigation Bar Fixed Top -----------------------------------------------------------------------END-->
-
-
-    <!-------------------------------------------------------Row-Containing-Buttons-For-Menu-&-Chatting-Panel--------------------------------------------------------------START-->
-
-    <div class="row hidden-xs" id="test-second-custom-bar">
-
-        <div class="col-lg-2 col-md-2 col-sm-2" id="123">
-            <button class="btn btn-default" id="menu-opener">Menu <span class="glyphicon glyphicon-book" id="icon-main-options-color"></span></button>
-        </div>
-
-        <div class="col-lg-3 col-md-4 col-sm-5 common-class">
-            <div class="btn-group" id="create-record">
-                <!--<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">-->
+            <div class="col-lg-3 col-md-4 col-sm-5 common-class">
+                <div class="btn-group" id="create-record">
+                    <!--<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">-->
                     <!--Create <span class="caret"></span>-->
-                <!--</button>-->
-                <ul class="dropdown-menu" role="menu">
-                    <li><a href="#" id="create-project-dropdown-menu">Project</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#" id="create-task-dropdown-menu">Task</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#" id="create-file-dropdown-menu">File</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#" id="create-user-dropdown-menu">User</a></li>
-                </ul>
+                    <!--</button>-->
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#" id="create-project-dropdown-menu">Project</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#" id="create-task-dropdown-menu">Task</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#" id="create-file-dropdown-menu">File</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#" id="create-user-dropdown-menu">User</a></li>
+                    </ul>
 
+                </div>
+                <button class="btn btn-default common-class" id="edit-record">Edit <span class="glyphicon glyphicon-edit" id="icon-edit-record-color"></span></button>
+                <button class="btn btn-default common-class" id="delete-record">Delete <span class="glyphicon glyphicon-remove" id="icon-delete-record-color"></span></button>
             </div>
-            <button class="btn btn-default common-class" id="edit-record">Edit <span class="glyphicon glyphicon-edit" id="icon-edit-record-color"></span></button>
-            <button class="btn btn-default common-class" id="delete-record">Delete <span class="glyphicon glyphicon-remove" id="icon-delete-record-color"></span></button>
-        </div>
 
-        <!--<div id="one-click-panels-expand">-->
+            <!--<div id="one-click-panels-expand">-->
             <!--<button class="btn btn-default" id="expand-tooltip" data-toggle="tooltip" data-original-title="Expand"><i class="fa fa-angle-double-left" id="expand-left"></i><i class="fa fa-angle-double-right" id="expand-right"></i></button>-->
             <!--<button class="btn btn-default" id="contract-tooltip" data-toggle="tooltip" data-original-title="Contract" style="display: none"><i class="fa fa-angle-double-right" id="contract-left"></i><i class="fa fa-angle-double-left" id="contract-right"></i></button>-->
-        <!--</div>-->
+            <!--</div>-->
 
-        <div class="col-lg-2 col-md-2 col-sm-2 pull-right">
-            <button class="btn btn-default" id="chatting-list-opener">Work Together <span class="glyphicon glyphicon-comment" id="icon-chat-list-color"></span></button>
+            <div class="col-lg-2 col-md-2 col-sm-2 pull-right">
+                <button class="btn btn-default" id="chatting-list-opener">Work Together <span class="glyphicon glyphicon-comment" id="icon-chat-list-color"></span></button>
+            </div>
+
         </div>
 
-    </div>
-
-    <!-------------------------------------------------------Row-Containing-Buttons-For-Menu-&-Chatting-Panel----------------------------------------------------------------END-->
+        <!-------------------------------------------------------Row-Containing-Buttons-For-Menu-&-Chatting-Panel----------------------------------------------------------------END-->
 
 
-    <!-------------------------------------------------------Row-Containing-Accordion-&-Table-&-Chatting-Panel-------------------------------------------------------------START-->
+        <!-------------------------------------------------------Row-Containing-Accordion-&-Table-&-Chatting-Panel-------------------------------------------------------------START-->
 
-    <div class="row" id="third-row">
+        <div class="row" id="third-row">
 
         <div class="col-lg-2 col-md-2 col-sm-2">
 
@@ -139,7 +140,7 @@
 
                     </uib-accordion-heading>
 
-                    <div id="acc-content" ng-controller="ModalDemoController as ModalVM">
+                    <div id="acc-content">
 
                         <a href="#" id="project-popover" class="btn btn-default center-block" ng-click="ModalVM.newProjectModal()"><i class="fa fa-bar-chart-o pull-left" id="test1"></i>Create Project</a>
                         <a href="#" id="task-popover" class="btn btn-default center-block" ng-click="ModalVM.newTaskModal()"><i class="fa fa-tasks pull-left" id="test2"></i>Create Task</a>
@@ -204,7 +205,7 @@
 
                     <div id="test-tabs-height" slim-scroll height="500px">
 
-                            <div class="panel panel-default" id="outer-panel" ng-repeat="projectPanel in MainViewVM.projectPanels | filter:MainViewVM.searchProjects">
+                        <div class="panel panel-default" id="outer-panel" ng-repeat="projectPanel in MainViewVM.projectPanels | filter:MainViewVM.searchProjects">
                             <div class="panel-body">
 
                                 <div class="panel panel-default" id="inner-panel">
@@ -223,7 +224,7 @@
                                     </p>
                                 </div>
 
-                                <div class="btn-group-vertical" id="btn-grp-panel" ng-controller="ModalDemoController as ModalVM">
+                                <div class="btn-group-vertical" id="btn-grp-panel">
                                     <button class="btn btn-default test-button-border"><i class="fa fa-info"></i></button>
                                     <button class="btn btn-default" ng-click="ModalVM.editProject(projectPanel.name)"><i class="fa fa-edit"></i></button>
                                     <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteProject(projectPanel.name)"><i class="fa fa-trash-o"></i></button>
@@ -251,7 +252,7 @@
 
                                 <div id="task-panel-content-in-new-project-modal">
                                     <p>
-                                        <h4>{{taskPanel.name}} <span class="col-lg-offset-8">ID: {{taskPanel.id}}</span></h4>
+                                    <h4>{{taskPanel.name}} <span class="col-lg-offset-8">ID: {{taskPanel.id}}</span></h4>
                                     </p>
 
                                     <p>
@@ -260,7 +261,7 @@
                                     </p>
                                 </div>
 
-                                <div class="btn-group-vertical" id="tasks-btn-grp-panel-in-new-project-modal" ng-controller="ModalDemoController as ModalVM">
+                                <div class="btn-group-vertical" id="tasks-btn-grp-panel-in-new-project-modal">
                                     <button class="btn btn-default test-button-border"><i class="fa fa-info"></i></button>
                                     <button class="btn btn-default" ng-click="ModalVM.editTask(taskPanel.name)"><i class="fa fa-edit"></i></button>
                                     <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteTask(taskPanel.id)"><i class="fa fa-trash-o"></i></button>
@@ -296,7 +297,7 @@
                                     </p>
                                 </div>
 
-                                <div class="btn-group-vertical" id="documents-btn-grp-panel-in-new-project-modal" ng-controller="ModalDemoController as ModalVM">
+                                <div class="btn-group-vertical" id="documents-btn-grp-panel-in-new-project-modal">
                                     <button class="btn btn-default test-button-border"><i class="fa fa-info"></i></button>
                                     <button class="btn btn-default" ng-click="ModalVM.editDocument(documentPanel.name)"><i class="fa fa-edit"></i></button>
                                     <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteDocument(documentPanel.id)"><i class="fa fa-trash-o"></i></button>
@@ -340,17 +341,18 @@
         </aside>
         <!------------------------------------------------------------------------ Chatting List -----------------------------------------------------------------------END-->
 
+        </div>
+
+        <!-------------------------------------------------------Row-Containing-Accordion-&-Table-&-Chatting-Panel---------------------------------------------------------------END-->
+
+
+        <!---------------------------------------------------------------------- Navigation Bar Bottom ---------------------------------------------------------------------------START-->
+        <footer class="navbar navbar-default navbar-fixed-bottom hidden-xs" id="navbar-bottom">
+            <p id="nav-bottom-elem-left">Project Management System</p>
+        </footer>
+        <!---------------------------------------------------------------------- Navigation Bar Bottom -----------------------------------------------------------------------------END-->
+
     </div>
-
-    <!-------------------------------------------------------Row-Containing-Accordion-&-Table-&-Chatting-Panel---------------------------------------------------------------END-->
-
-
-    <!---------------------------------------------------------------------- Navigation Bar Bottom ---------------------------------------------------------------------------START-->
-    <footer class="navbar navbar-default navbar-fixed-bottom hidden-xs" id="navbar-bottom">
-        <p id="nav-bottom-elem-left">Project Management System</p>
-    </footer>
-    <!---------------------------------------------------------------------- Navigation Bar Bottom -----------------------------------------------------------------------------END-->
-
 
 </div>
 

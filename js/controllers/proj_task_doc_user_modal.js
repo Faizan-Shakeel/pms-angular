@@ -41,6 +41,10 @@ app.controller('ModalDemoController', ['$scope', '$rootScope', '$uibModal', 'New
     */////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+    /*////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////// Edit Project Modal /////////////////////////////////////////////////////////////
+    */////////////////////////////////////////////////////////////////////////////////////////////////
+
     vm.editProject = function (name) {
 
         var editProjectModalInstance = $uibModal.open({
@@ -57,7 +61,18 @@ app.controller('ModalDemoController', ['$scope', '$rootScope', '$uibModal', 'New
                 }
             }
         });
+
+        editProjectModalInstance.result.then(function ()
+        {
+
+        }, function () {
+
+        });
     };
+     /*////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////// Edit Project Modal ////////////////////[E N D]//////////////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////
+
 
      /*////////////////////////////////////////////////////////////////////////////////////////////////
      //////////////// Add New Task Global /////////////////////////////////////////////////////////////
@@ -77,20 +92,17 @@ app.controller('ModalDemoController', ['$scope', '$rootScope', '$uibModal', 'New
                     return {
                         isGlobal: true,
                         projectsArray: NewProjectService.projectPanels
-//                        tasksArray: tasksArray
                     };
                 }
             }
         });
 
-        newTaskModalModalInstance.result.then(function () {
-
-//            console.log("Task Created");
+        newTaskModalModalInstance.result.then(function ()
+        {
 
         }, function () {
-//            $log.info('Modal dismissed at: ' + new Date());
-        });
 
+        });
     };
 
     /*////////////////////////////////////////////////////////////////////////////////////////////////
@@ -181,7 +193,6 @@ app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInst
             'documentPanels': documentsArray
         };
 
-
         NewProjectService.setValue(new_project_params);
         NewTaskService.setValue(tasksArray);
         NewDocumentService.setValue(documentsArray);
@@ -215,7 +226,8 @@ app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInst
             resolve: {
                 tasksArray: function () {
                     return {
-                        tasksArray: NewTaskService.taskPanels
+                        tasksArray: NewTaskService.taskPanels,
+                        tasksInModal: tasksArray
                     };
                 }
             }
@@ -256,11 +268,9 @@ app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInst
     };
 
     /*////////////////////////////////////////////////////////////////////////////////////////////////
-     ////////////////// Add Existing Tasks Modal /////////////////////[E N D]////////////////////////////////////
+     ////////////////// Add Existing Tasks Modal /////////////////////[E N D]//////////////////////////
      */////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-////////////////// Add New Task Modal //////////////////
 
     /*////////////////////////////////////////////////////////////////////////////////////////////////
      ////////////////// Add New Task Modal /////////////////////////////////////////////////////////
@@ -458,6 +468,18 @@ app.controller('AddExistingTasksModalController', ['$scope', '$uibModalInstance'
                 }
             }
 
+            for(var x in vm.selectedExistingTasks)
+            {
+                for(var y in tasksArray.tasksInModal)
+                {
+                    if(vm.selectedExistingTasks[x].name == tasksArray.tasksInModal[y].name)
+                    {
+                        alert("Task " + "'" + vm.selectedExistingTasks[x].name + "' Already Exists In This Project");
+                        return;
+                    }
+                }
+            }
+
             $uibModalInstance.close(vm.selectedExistingTasks);
         }
 
@@ -638,7 +660,7 @@ app.controller('AddNewTaskModalController', ['$scope', '$uibModalInstance', 'pro
                 alert('Task Already Exists');
                 return;
             }
-
+            console.log("pmpom");
             new_task_params = {
                 'id': NewTaskService.newTaskID(),
                 'name': taskName,
