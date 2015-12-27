@@ -31,7 +31,7 @@
 <body>
 
 <!------------------------------------------------------------ MAIN CONTAINER (Write No HTML Outside) -----------------------------------------------------------------START-->
-<div class="container-full-width" ng-controller="Main_View_Controller as MainViewVM">
+<div class="container-full-width" ng-controller="Main_View_Controller as MainViewVM" ng-cloak>
 
 <!-------------------------------------------------------------------- Navigation Bar Fixed Top -----------------------------------------------------------------------START-->
     <div ng-controller="ModalDemoController as ModalVM">
@@ -226,7 +226,7 @@
 
                                 <div class="btn-group-vertical" id="btn-grp-panel">
                                     <button class="btn btn-default test-button-border"><i class="fa fa-info"></i></button>
-                                    <button class="btn btn-default" ng-click="ModalVM.editProject(projectPanel.name)"><i class="fa fa-edit"></i></button>
+                                    <button class="btn btn-default" ng-click="ModalVM.editProject(projectPanel)"><i class="fa fa-edit"></i></button>
                                     <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteProject(projectPanel.name)"><i class="fa fa-trash-o"></i></button>
                                 </div>
 
@@ -257,7 +257,7 @@
 
                                     <p>
                                         {{taskPanel.status}}
-                                        <span class="col-lg-offset-8">Project: {{taskPanel.projectName}}</span>
+                                        <span class="col-lg-offset-7">{{taskPanel.projectName}}</span>
                                     </p>
                                 </div>
 

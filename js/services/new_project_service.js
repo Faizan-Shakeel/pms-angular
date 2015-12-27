@@ -29,29 +29,26 @@ app.service('NewProjectService', function(){
     {
         var taskExistence = false;
 
-        for(var i in projectPanels)
+        for(var projectPanel of projectPanels)
         {
-            if (projectPanels[i].name == projName)
+            if (projectPanel.name == projName)
             {
-                for(var j in projectPanels[i].taskPanels)
+                for(var taskPanel of projectPanel.taskPanels)
                 {
-                    if(projectPanels[i].taskPanels[j].name == taskObject.name)
+                    if(taskPanel.name == taskObject.name)
                     {
-//                        console.log("Task Already Exists In This Project");
-//                        alert("Task Already Exists In This Project");
-
                         taskExistence = true;
 
                         return{
                             status: true,
-                            inProject: projectPanels[i].name
+                            inProject: projectPanel.name
                         };
                     }
                 }
 
                 if(!taskExistence)
                 {
-                    projectPanels[i].taskPanels.push(taskObject);
+                    projectPanel.taskPanels.push(taskObject);
                     return{
                         status: false
                     };
@@ -78,40 +75,70 @@ app.service('NewProjectService', function(){
         });
     };
 
-    var getSelectedProjectTasksArray = function(selectedProjectName)
+    var deleteTasksFromProject = function(tasksToDelete, fromProject)
     {
-        var selectedProjectTasksArray;
-        angular.forEach(projectPanels, function(value,index){
-
-            if(value.name == selectedProjectName)
+        for(var project of projectPanels)
+        {
+            if(project.name == fromProject)
             {
-                selectedProjectTasksArray = projectPanels[index].taskPanels;
+                for(var task of tasksToDelete)
+                {
+                    removeEntity(project.taskPanels, 'id', task.id);
+                }
+                break;
             }
-        });
-        return selectedProjectTasksArray;
+        }
     };
 
-    var getSelectedProjectDocumentsArray = function(selectedProjectName)
-    {
-        var selectedProjectDocumentsArray;
-        angular.forEach(projectPanels, function(value,index){
 
-            if(value.name == selectedProjectName)
-            {
-                selectedProjectDocumentsArray = projectPanels[index].documentPanels;
+    var removeEntity = function(arr, attr, value){
+        var i = arr.length;
+        while(i--){
+            if( arr[i]
+                && arr[i].hasOwnProperty(attr)
+                && (arguments.length > 2 && arr[i][attr] === value ) ){
+
+                arr.splice(i,1);
+
             }
-        });
-        return selectedProjectDocumentsArray;
+        }
+        return arr;
     };
+
+//    var getSelectedProjectTasksArray = function(selectedProjectName)
+//    {
+//        var selectedProjectTasksArray;
+//        angular.forEach(projectPanels, function(value,index){
+//
+//            if(value.name == selectedProjectName)
+//            {
+//                selectedProjectTasksArray = projectPanels[index].taskPanels;
+//            }
+//        });
+//        return selectedProjectTasksArray;
+//    };
+//
+//    var getSelectedProjectDocumentsArray = function(selectedProjectName)
+//    {
+//        var selectedProjectDocumentsArray;
+//        angular.forEach(projectPanels, function(value,index){
+//
+//            if(value.name == selectedProjectName)
+//            {
+//                selectedProjectDocumentsArray = projectPanels[index].documentPanels;
+//            }
+//        });
+//        return selectedProjectDocumentsArray;
+//    };
 
 
     var checkProjectExistence = function(projectName)
     {
         var projectAlreadyExists = false;
 
-        for(var i in projectPanels)
+        for(var projectPanel of projectPanels)
         {
-            if(projectPanels[i].name == projectName)
+            if(projectPanel.name == projectName)
             {
                 projectAlreadyExists = true;
                 break;
@@ -130,10 +157,11 @@ app.service('NewProjectService', function(){
         newProjectID: newProjectID,
         setValue: setValue,
         getValue: getValue,
-        getSelectedProjectTasksArray: getSelectedProjectTasksArray,
-        getSelectedProjectDocumentsArray: getSelectedProjectDocumentsArray,
+//        getSelectedProjectTasksArray: getSelectedProjectTasksArray,
+//        getSelectedProjectDocumentsArray: getSelectedProjectDocumentsArray,
         addProjectToTask: addProjectToTask,
         addTaskToProject: addTaskToProject,
+        deleteTasksFromProject: deleteTasksFromProject,
         addDocumentsToProject: addDocumentsToProject,
         checkProjectExistence: checkProjectExistence,
         projectPanels: projectPanels

@@ -21,9 +21,9 @@ app.service('NewDocumentService', function(){
     {
         var documentAlreadyExists = false;
 
-        for(var i in documentsArray)
+        for(var doc of documentsArray)
         {
-            if(documentsArray[i].name == documentName)
+            if(doc.name == documentName)
             {
                 documentAlreadyExists = true;
                 break;

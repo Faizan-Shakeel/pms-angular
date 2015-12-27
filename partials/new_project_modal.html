@@ -19,23 +19,16 @@
 
                     <br/>
 
-                    <form name="validatedForm" class="form-horizontal" ng-submit="validatedForm.$valid && ModalVM.createNewProject(ModalVM.projectname)" novalidate>
+                    <form name="validatedForm" class="form-horizontal" ng-submit="validatedForm.$valid && ModalVM.updateFlag && ModalVM.createOrUpdateProject(ModalVM.projectName)" novalidate>
                         <div class="form-group" ng-class="{ 'has-error': validatedForm.userName.$touched && validatedForm.userName.$invalid }">
                             <label for="userName" class="col-lg-2 col-md-2 col-sm-2 control-label">Name</label>
                             <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">
-                                <!--<input type="text" class="form-control" id="userName" placeholder="Name" ng-model="ModalVM.projectname" ng-required="ModalVM.required()">-->
-                                <!--<input type="text" class="form-control" id="userName" placeholder="Name" ng-model="ModalVM.projectname" ng-required="ModalVM.required">-->
-                                <input type="text" class="form-control" id="userName" name="userName" placeholder="Name" ng-model="ModalVM.projectname" ng-minlength="5" ng-maxlength="20" required=""/>
+                                <input type="text" class="form-control" id="userName" name="userName" placeholder="Name" ng-model="ModalVM.projectName" required="" ng-disabled="ModalVM.projectNameInputState"/>
 
                                 <div class="help-block" ng-messages="validatedForm.userName.$error" ng-show="validatedForm.userName.$touched">
-                                    <p ng-message="minlength">Mininum 5 characters.</p>
-                                    <p ng-message="maxlength">Maximum 20 characters.</p>
                                     <p ng-message="required">Name is required.</p>
                                 </div>
-
                             </div>
-
-
                         </div>
 
                         <div class="form-group">
@@ -112,8 +105,8 @@
 
                             <div class="btn-group-vertical" id="tasks-btn-grp-panel-in-new-project-modal">
                                 <button class="btn btn-default test-button-border"><i class="fa fa-info"></i></button>
-                                <button class="btn btn-default" ng-click="ModalVM.editTask(taskPanel.name)"><i class="fa fa-edit"></i></button>
-                                <button class="btn btn-default test-button-border" ng-click="ModalVM.deleteTask(taskPanel.name)"><i class="fa fa-trash-o"></i></button>
+                                <button class="btn btn-default" ng-click="ModalVM.editTask(taskPanel)"><i class="fa fa-edit"></i></button>
+                                <button class="btn btn-default test-button-border" ng-click="ModalVM.deleteTask(taskPanel)"><i class="fa fa-trash-o"></i></button>
                             </div>
                         </div>
                     </div>

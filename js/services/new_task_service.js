@@ -28,9 +28,9 @@ app.service('NewTaskService', function(){
     {
         var taskAlreadyExists = false;
 
-        for(var i in tasksArrayGlobal)
+        for(var task of tasksArrayGlobal)
         {
-            if(tasksArrayGlobal[i].name == taskName)
+            if(task.name == taskName)
             {
                 taskAlreadyExists = true;
                 break;
@@ -49,9 +49,9 @@ app.service('NewTaskService', function(){
     {
         var taskAlreadyExists = false;
 
-        for(var i in tasksArray)
+        for(var task of tasksArray)
         {
-            if(tasksArray[i].name == taskName)
+            if(task.name == taskName)
             {
                 taskAlreadyExists = true;
                 break;
@@ -76,6 +76,33 @@ app.service('NewTaskService', function(){
 
     var getValue = function(){
         return taskPanels;
+    };
+
+    var deleteTaskModal = function(selectedTaskToDelete, modalTasksArray)
+    {
+        removeEntity(modalTasksArray, 'id', selectedTaskToDelete.id);
+    };
+
+    var deleteTaskGlobal = function(tasksToDelete, deleteFrom)
+    {
+        for(var task of tasksToDelete)
+        {
+            removeEntity(deleteFrom, 'id', task.id);
+        }
+    };
+
+    var deleteFloatingTasks = function(floatingTasks)
+    {
+        for(var floatTask of floatingTasks)
+        {
+            for(var task of taskPanels)
+            {
+                if(!(task.projectName) && (task.id == floatTask.id))
+                {
+                    removeEntity(taskPanels, 'projectName', task.projectName);
+                }
+            }
+        }
     };
 
     var deleteTask = function(tasksArray)
@@ -104,6 +131,10 @@ app.service('NewTaskService', function(){
         return arr;
     };
 
+    function hasDuplicates(array) {
+        return (new Set(array)).size !== array.length;
+    }
+
     return{
         newTaskID: newTaskID,
         checkTaskExistence: checkTaskExistence,
@@ -111,6 +142,10 @@ app.service('NewTaskService', function(){
         setValue: setValue,
         getValue: getValue,
         deleteTask: deleteTask,
+        deleteTaskModal: deleteTaskModal,
+        deleteTaskGlobal: deleteTaskGlobal,
+        deleteFloatingTasks: deleteFloatingTasks,
+        hasDuplicates: hasDuplicates,
         taskPanels: taskPanels
     };
 
