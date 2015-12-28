@@ -311,7 +311,40 @@
                 </uib-tab>
 
 
-                <uib-tab heading="Users" active="MainViewVM.active.Users">Users</uib-tab>
+                <uib-tab heading="Users" active="MainViewVM.active.Users">
+                    <div slim-scroll height="500px">
+
+                        <div class="panel panel-default" id="outer-panel-users-in-new-project-modal" ng-repeat="userPanel in MainViewVM.userPanels | filter:MainViewVM.searchUsers">
+                            <div class="panel-body">
+
+                                <div class="panel panel-default" id="inner-panel-users-in-new-project-modal">
+                                    <div class="panel-body">
+                                        <i class="fa fa-suitcase fa-2x" id="user-panel-icon-fix-in-new-project-modal"></i>
+                                    </div>
+                                </div>
+
+                                <div id="user-panel-content-in-new-project-modal">
+                                    <p>
+                                    <h4>{{userPanel.name}}</h4>
+                                    </p>
+
+                                    <p>
+                                        {{userPanel.status}}
+                                    </p>
+                                </div>
+
+                                <div class="btn-group-vertical" id="users-btn-grp-panel-in-new-project-modal">
+                                    <button class="btn btn-default test-button-border"><i class="fa fa-info"></i></button>
+                                    <button class="btn btn-default" ng-click="ModalVM.editUser(userPanel.name)"><i class="fa fa-edit"></i></button>
+                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteUser(userPanel.id)"><i class="fa fa-trash-o"></i></button>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </uib-tab>
             </uib-tabset>
 
         </div>

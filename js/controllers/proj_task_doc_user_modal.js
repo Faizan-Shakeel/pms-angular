@@ -208,7 +208,6 @@ app.controller('EditModalInstanceController', ['$scope', '$uibModal', '$uibModal
         vm.updateFlag = true;
     };
 
-
     vm.existingTasksModalInProjectModal = function()
     {
         var addExistingTasksModalInstance = $uibModal.open({
@@ -221,6 +220,7 @@ app.controller('EditModalInstanceController', ['$scope', '$uibModal', '$uibModal
             resolve: {
                 dataForThisModalInstance: function () {
                     return {
+                        projectName: vm.projectName,
                         tasksArray: JSON.parse(JSON.stringify(NewTaskService.taskPanels)),
                         tasksInModal: JSON.parse(JSON.stringify(vm.taskPanels))
                     };
@@ -561,11 +561,10 @@ app.controller('AddExistingTasksModalController', ['$scope', '$uibModalInstance'
             }];
 
         noTasks = true;
-
     }
     else
     {
-        vm.existingTasksOptions = dataForThisModalInstance.tasksArray;
+        vm.existingTasksOptions = NewTaskService.removeProjectTasksFromExistingTasks(dataForThisModalInstance.tasksInModal, dataForThisModalInstance.projectName);
     }
 
     /*////////////////////////////////////////////////////////////////////////////////////////////////
@@ -623,6 +622,7 @@ app.controller('AddNewTaskModalController', ['$scope', '$uibModalInstance', 'dat
 
     var vm = this;
     var new_task_params = '';
+
 
     if(dataForThisModalInstance.isGlobal)
     {

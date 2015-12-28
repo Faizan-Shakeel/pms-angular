@@ -135,6 +135,43 @@ app.service('NewTaskService', function(){
         return (new Set(array)).size !== array.length;
     }
 
+    var removeProjectTasksFromExistingTasks = function(projectTasks, projectName)
+    {
+        var filteredArray = [];
+        var taskNotFound;
+
+        for(var task of taskPanels)
+        {
+            taskNotFound = true;
+
+            if(projectTasks.length)
+            {
+                for(var projectTask of projectTasks)
+                {
+                    if((projectTask.name == task.name) || (task.projectName == projectName))
+                    {
+                        taskNotFound = false;
+                        break;
+                    }
+                }
+            }
+
+            else if(task.projectName == projectName)
+            {
+                taskNotFound = false;
+            }
+
+            if(taskNotFound)
+            {
+                filteredArray.push(task);
+            }
+
+        }
+
+        console.log("filteredArray : " + JSON.stringify(filteredArray));
+        return filteredArray;
+    };
+
     return{
         newTaskID: newTaskID,
         checkTaskExistence: checkTaskExistence,
@@ -146,6 +183,7 @@ app.service('NewTaskService', function(){
         deleteTaskGlobal: deleteTaskGlobal,
         deleteFloatingTasks: deleteFloatingTasks,
         hasDuplicates: hasDuplicates,
+        removeProjectTasksFromExistingTasks: removeProjectTasksFromExistingTasks,
         taskPanels: taskPanels
     };
 
