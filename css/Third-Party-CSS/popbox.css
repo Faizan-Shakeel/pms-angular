@@ -1,22 +1,26 @@
 .popbox {
-    margin: 0 auto;
+    /*margin: 0 auto;*/
+    /*margin-top: 500px;*/
+    /*padding-top: 500px;*/
+
     text-align: center;
-    position: relative;
-    display: inline;
+    /*position: relative;*/
+    /*display: inline;*/
 }
 
 .box {
+    margin-top: 20px;
     display: block;
     background: #FFF;
     border: solid 1px #BBBBBB;
     border-radius: 5px;
     box-shadow: 0 0 15px #999;
-    position: absolute;
+    /*position: absolute;*/
 }
 
-.box {
-    display: none;
-}
+/*.box {*/
+    /*display: none;*/
+/*}*/
 
 
 .box a.close {

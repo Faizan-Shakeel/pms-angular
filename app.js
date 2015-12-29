@@ -2,17 +2,16 @@
  * Created by faizankhan on 10/27/2014.
  */
 
-var app = angular.module('pms-angular', [
+var app = angular.module('pmsAngular', [
 
-    'tooltipsModule',
-    'accordionModule',
-    'tabsAndTablesModule',
+    'mainViewModule',
     'slimScrollModule',
-//    'smart-table',
-//    'panelTableProjectsModule',
-    'chattingPanelModule',
-    'modalNewProjectModule',
-//    'mb-scrollbar'
-    'newProjectModule'
+    'newProjectGlobalModule',
+    'newProjectServiceModule',
+    'newTaskServiceModule',
+    'newDocumentServiceModule',
+    'ui.utils.masks',
+    'ngMessages',
+    'btorfs.multiselect'
 
 ]);
