@@ -153,6 +153,52 @@ app.service('NewProjectService', function(){
 
     };
 
+    var getTaskProject = function(projectName)
+    {
+        for(var project of projectPanels)
+        {
+            if(project.name == projectName)
+            {
+                return [project];
+            }
+        }
+    };
+
+    var updateTasksInProject = function(projectName, updatedTasks)
+    {
+        for(var i=0; i<projectPanels.length; i++)
+        {
+            if(projectPanels[i].name == projectName)
+            {
+                for (var j = 0; j < updatedTasks.length; j++)
+                {
+                    for (var k = 0; k < projectPanels[i].taskPanels.length; k++)
+                    {
+                        if(projectPanels[i].taskPanels[k].id == updatedTasks[j].id)
+                        {
+                            projectPanels[i].taskPanels[k] = updatedTasks[j];
+                        }
+                    }
+                }
+            }
+        }
+
+//        for(var project of projectPanels)
+//        {
+//            if(project.name == projectName)
+//            {
+//                for(var task of project.taskPanels)
+//                {
+//                    if(task.id == updatedTask.id)
+//                    {
+//                        task = updatedTask;
+//                        return;
+//                    }
+//                }
+//            }
+//        }
+    };
+
     return{
         newProjectID: newProjectID,
         setValue: setValue,
@@ -164,6 +210,8 @@ app.service('NewProjectService', function(){
         deleteTasksFromProject: deleteTasksFromProject,
         addDocumentsToProject: addDocumentsToProject,
         checkProjectExistence: checkProjectExistence,
+        getTaskProject: getTaskProject,
+        updateTasksInProject: updateTasksInProject,
         projectPanels: projectPanels
     };
 

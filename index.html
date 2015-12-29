@@ -229,12 +229,9 @@
                                     <button class="btn btn-default" ng-click="ModalVM.editProject(projectPanel)"><i class="fa fa-edit"></i></button>
                                     <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteProject(projectPanel.name)"><i class="fa fa-trash-o"></i></button>
                                 </div>
-
                             </div>
                         </div>
-
                     </div>
-
                 </uib-tab>
 
                 <uib-tab heading="Tasks" active="MainViewVM.active.Tasks">
@@ -263,15 +260,12 @@
 
                                 <div class="btn-group-vertical" id="tasks-btn-grp-panel-in-new-project-modal">
                                     <button class="btn btn-default test-button-border"><i class="fa fa-info"></i></button>
-                                    <button class="btn btn-default" ng-click="ModalVM.editTask(taskPanel.name)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteTask(taskPanel.id)"><i class="fa fa-trash-o"></i></button>
+                                    <button class="btn btn-default" ng-click="ModalVM.editTask(taskPanel)"><i class="fa fa-edit"></i></button>
+                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteTask(taskPanel)"><i class="fa fa-trash-o"></i></button>
                                 </div>
-
                             </div>
                         </div>
-
                     </div>
-
                 </uib-tab>
 
                 <uib-tab heading="Documents" active="MainViewVM.active.Documents">
@@ -302,14 +296,10 @@
                                     <button class="btn btn-default" ng-click="ModalVM.editDocument(documentPanel.name)"><i class="fa fa-edit"></i></button>
                                     <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteDocument(documentPanel.id)"><i class="fa fa-trash-o"></i></button>
                                 </div>
-
                             </div>
                         </div>
-
                     </div>
-
                 </uib-tab>
-
 
                 <uib-tab heading="Users" active="MainViewVM.active.Users">
                     <div slim-scroll height="500px">
@@ -338,12 +328,9 @@
                                     <button class="btn btn-default" ng-click="ModalVM.editUser(userPanel.name)"><i class="fa fa-edit"></i></button>
                                     <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteUser(userPanel.id)"><i class="fa fa-trash-o"></i></button>
                                 </div>
-
                             </div>
                         </div>
-
                     </div>
-
                 </uib-tab>
             </uib-tabset>
 

@@ -148,14 +148,15 @@ app.controller('Main_View_Controller', ['$scope', 'NewProjectService', 'NewTaskS
 
     };
 
-    vm.deleteTask = function(taskID)
+    vm.deleteTask = function(taskToDelete)
     {
-        removeEntity(NewTaskService.taskPanels, 'id', taskID);
+        removeEntity(NewTaskService.taskPanels, 'id', taskToDelete.id);
+
         angular.forEach(vm.projectPanels, function(valueProject,indexProject){
             angular.forEach(valueProject.taskPanels, function(valueTask,indexTask){
-                if(valueTask.id == taskID)
+                if(valueTask.id == taskToDelete.id)
                 {
-                    removeEntity(valueProject.taskPanels, 'id', taskID);
+                    removeEntity(valueProject.taskPanels, 'id', taskToDelete.id);
                 }
             });
         });

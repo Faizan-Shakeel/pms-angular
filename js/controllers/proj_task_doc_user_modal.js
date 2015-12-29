@@ -47,7 +47,7 @@ app.controller('ModalDemoController', ['$scope', '$rootScope', '$uibModal', 'New
         var editProjectModalInstance = $uibModal.open({
             animation: false,
             templateUrl: 'partials/new_project_modal.html',
-            controller: 'EditModalInstanceController',
+            controller: 'ProjectEditModalInstanceController',
             controllerAs: 'ModalVM',
             windowClass: 'modal-width',
             backdrop: 'static',
@@ -82,7 +82,7 @@ app.controller('ModalDemoController', ['$scope', '$rootScope', '$uibModal', 'New
             animation: false,
             templateUrl: 'partials/new_task_modal.html',
             controller: 'AddNewTaskModalController',
-            controllerAs: 'AddNewTaskModalVM',
+            controllerAs: 'TaskModalVM',
             windowClass: 'modal-width',
             backdrop: 'static',
             resolve: {
@@ -107,15 +107,51 @@ app.controller('ModalDemoController', ['$scope', '$rootScope', '$uibModal', 'New
     //////////////// Add New Task Global ///////[E N D]/////////////////////////////////////////////////
     */////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /*////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////// Edit Task Global /////////////////////////////////////////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.editTask = function (taskToEdit) {
+
+        var editTaskModalInstance = $uibModal.open({
+            animation: false,
+            templateUrl: 'partials/new_task_modal.html',
+            controller: 'TaskEditModalInstanceController',
+            controllerAs: 'TaskModalVM',
+            windowClass: 'modal-width',
+            backdrop: 'static',
+            resolve: {
+                dataForThisModalInstance: function(){
+                    return{
+                        isGlobal: true,
+                        taskToEdit: JSON.parse(JSON.stringify(taskToEdit))
+                    };
+                }
+            }
+        });
+
+        editTaskModalInstance.result.then(function ()
+        {
+
+        }, function () {
+
+        });
+    };
+
+    /*////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////// Edit Task Global ////////////////////[E N D]//////////////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////
+
 }]);
 
-app.controller('EditModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'NewProjectService', 'NewTaskService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, NewProjectService, NewTaskService) {
+app.controller('ProjectEditModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'NewProjectService', 'NewTaskService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, NewProjectService, NewTaskService) {
 
     var vm = this;
     var updatedTasksArray = [];
     var tasksToDelete = [];
     var floatingTasks = [];
     var taskCreatedFlag = false;
+    var taskUpdateFlag = false;
     var taskDeletedFlag = false;
     vm.projectNameInputState = true;
     vm.modalHeading = 'Update Project';
@@ -133,7 +169,7 @@ app.controller('EditModalInstanceController', ['$scope', '$uibModal', '$uibModal
             animation: false,
             templateUrl: 'partials/new_task_modal.html',
             controller: 'AddNewTaskModalController',
-            controllerAs: 'AddNewTaskModalVM',
+            controllerAs: 'TaskModalVM',
             windowClass: 'modal-width',
             backdrop: 'static',
             resolve: {
@@ -164,6 +200,53 @@ app.controller('EditModalInstanceController', ['$scope', '$uibModal', '$uibModal
      ////////////////// Add New Task Modal /////////////////////////[E N D]////////////////////////////////
      *////////////////// Update Project ///////////////////////////////////////////////////////////////////
 
+    /*////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////// Edit Task Modal /////////////////////////////////////////////////////////////
+     *////////////////// Update Project ///////////////////////////////////////////////////////////////
+
+    vm.editTask = function (taskToEdit) {
+
+//        console.log("taskToEdit : " + JSON.stringify(taskToEdit));
+
+        var editTaskModalInstance = $uibModal.open({
+            animation: false,
+            templateUrl: 'partials/new_task_modal.html',
+            controller: 'TaskEditModalInstanceController',
+            controllerAs: 'TaskModalVM',
+            windowClass: 'modal-width',
+            backdrop: 'static',
+            resolve: {
+                dataForThisModalInstance: function(){
+                    return{
+                        isGlobal: false,
+                        taskToEdit: JSON.parse(JSON.stringify(taskToEdit))
+                    };
+                }
+            }
+        });
+
+        editTaskModalInstance.result.then(function (updated_task)
+        {
+            for(var i=0; i<vm.taskPanels.length; i++)
+            {
+                console.log("vm.taskPanels[i].name : " + vm.taskPanels[i].name);
+                if(vm.taskPanels[i].id == updated_task.id)
+                {
+                    vm.taskPanels[i] = updated_task;
+                    taskUpdateFlag = true;
+                    vm.updateFlag = true;
+                    break;
+                }
+            }
+        }, function () {
+
+        });
+    };
+
+    /*////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////// Edit Task Modal ////////////////////[E N D]//////////////////////////////////
+     *////////////////// Update Project /////////////////////////////////////////////////////////////////
+
     vm.createOrUpdateProject = function()
     {
         if(taskDeletedFlag)
@@ -191,6 +274,15 @@ app.controller('EditModalInstanceController', ['$scope', '$uibModal', '$uibModal
             }
 
             taskCreatedFlag = false;
+        }
+
+        if(taskUpdateFlag)
+        {
+            NewProjectService.updateTasksInProject(dataForThisModalInstance.projectToEdit.name, JSON.parse(JSON.stringify(vm.taskPanels)));
+            NewTaskService.updateTasks(JSON.parse(JSON.stringify(vm.taskPanels)), false);
+
+            taskUpdateFlag = false;
+
         }
 
         $uibModalInstance.close();
@@ -273,6 +365,7 @@ app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInst
 
     var vm = this;
     var floatingTasks = [];
+    var taskUpdateFlag = false;
     vm.updateFlag = true;
     vm.projectNameInputState = false;
     vm.taskPanels = [];
@@ -415,7 +508,7 @@ app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInst
             animation: false,
             templateUrl: 'partials/new_task_modal.html',
             controller: 'AddNewTaskModalController',
-            controllerAs: 'AddNewTaskModalVM',
+            controllerAs: 'TaskModalVM',
             windowClass: 'modal-width',
             backdrop: 'static',
             resolve: {
@@ -444,12 +537,72 @@ app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInst
      ////////////////// Add New Task Modal /////////////////////////[E N D]////////////////////////////////
      */////////////////////////////////////////////////////////////////////////////////////////////////
 
-     /*////////////////////////////////////////////////////////////////////////////////////////////////
-     ////////////////// Delete Task [ Create Project Modal ] //////////////////////////////////////////
-     */////////////////////////////////////////////////////////////////////////////////////////////////
+    /*////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////// Edit Task Modal /////////////////////////////////////////////////////////////
+     *//////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.editTask = function (taskToEdit) {
+
+//        console.log("taskToEdit : " + JSON.stringify(taskToEdit));
+
+        var editTaskModalInstance = $uibModal.open({
+            animation: false,
+            templateUrl: 'partials/new_task_modal.html',
+            controller: 'TaskEditModalInstanceController',
+            controllerAs: 'TaskModalVM',
+            windowClass: 'modal-width',
+            backdrop: 'static',
+            resolve: {
+                dataForThisModalInstance: function(){
+                    return{
+                        isGlobal: false,
+                        taskToEdit: JSON.parse(JSON.stringify(taskToEdit))
+                    };
+                }
+            }
+        });
+
+        editTaskModalInstance.result.then(function (updated_task)
+        {
+            for(var i=0; i<vm.taskPanels.length; i++)
+            {
+                if(vm.taskPanels[i].id == updated_task.id)
+                {
+                    vm.taskPanels[i] = updated_task;
+                    vm.updateFlag = true;
+                    break;
+                }
+            }
+
+            for(var i=0; i<tasksArray.length; i++)
+            {
+                if(tasksArray[i].id == updated_task.id)
+                {
+                    tasksArray[i] = updated_task;
+//                    vm.updateFlag = true;
+                    break;
+                }
+            }
+
+
+        }, function () {
+
+        });
+    };
+
+    /*////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////// Edit Task Modal ////////////////////[E N D]//////////////////////////////////
+     *//////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /*////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////// Delete Task [ Create Project Modal ] //////////////////////////////////////////
+    */////////////////////////////////////////////////////////////////////////////////////////////////
 
     vm.deleteTask = function(taskToDelete)
     {
+        console.log("Delete");
+
         NewTaskService.deleteTaskModal(taskToDelete, vm.taskPanels);
         NewTaskService.deleteTaskModal(taskToDelete, tasksArray);
     };
@@ -621,12 +774,16 @@ app.controller('AddExistingTasksModalController', ['$scope', '$uibModalInstance'
 app.controller('AddNewTaskModalController', ['$scope', '$uibModalInstance', 'dataForThisModalInstance', 'NewProjectService', 'NewTaskService', function ($scope, $uibModalInstance, dataForThisModalInstance, NewProjectService, NewTaskService) {
 
     var vm = this;
+
+    vm.taskUpdateFlag = true;
+
     var new_task_params = '';
 
+    vm.taskNameInputState = false;
 
     if(dataForThisModalInstance.isGlobal)
     {
-        vm.projectsList = dataForThisModalInstance.projectsArray;
+        vm.taskProject = dataForThisModalInstance.projectsArray;
         vm.projectsListVisibility = true;
     }
     else
@@ -653,18 +810,21 @@ app.controller('AddNewTaskModalController', ['$scope', '$uibModalInstance', 'dat
 
     vm.format = 'dd.MM.yyyy';
 
+//    vm.selectedProjects = [NewProjectService.projectPanels[0]];
+//
     /*////////////////////////////////////////////////////////////////////////////////////////////////
      ////////////////// New Task Create Button Click /////////////////////////////////////////////
      */////////////////////////////////////////////////////////////////////////////////////////////////
 
-    vm.addNewTaskInProject = function(taskName) {
+    vm.createOrUpdateTask = function(taskName, taskDescription) {
 
         if(dataForThisModalInstance.isGlobal)
         {
             new_task_params = {
                 'name': taskName,
                 'status': 'Task Status',
-                'projectsArray': vm.selectedProjects
+                'projectsArray': vm.selectedProjects,
+                'description': taskDescription
             };
 
             var newTaskObject = {};
@@ -680,6 +840,7 @@ app.controller('AddNewTaskModalController', ['$scope', '$uibModalInstance', 'dat
                     newTaskObject.name = new_task_params.name;
                     newTaskObject.status = "Waiting For Approval";
                     newTaskObject.projectName = project.name;
+                    newTaskObject.description = new_task_params.description;
 
                     taskAlreadyExistsInProject = NewProjectService.addTaskToProject(newTaskObject.projectName, newTaskObject);
 
@@ -717,6 +878,7 @@ app.controller('AddNewTaskModalController', ['$scope', '$uibModalInstance', 'dat
                 newTaskObject.name = new_task_params.name;
                 newTaskObject.status = "Waiting For Approval";
                 newTaskObject.projectName = '';
+                newTaskObject.description = new_task_params.description;
                 newTasksArray.push(newTaskObject);
                 NewTaskService.setValue(newTasksArray);
                 newTaskObject = {};
@@ -735,7 +897,8 @@ app.controller('AddNewTaskModalController', ['$scope', '$uibModalInstance', 'dat
             new_task_params = {
                 'id': NewTaskService.newTaskID(),
                 'name': taskName,
-                'status': 'Task Status'
+                'status': 'Task Status',
+                'description': taskDescription
             };
 
             $uibModalInstance.close(new_task_params);
@@ -744,6 +907,78 @@ app.controller('AddNewTaskModalController', ['$scope', '$uibModalInstance', 'dat
 
     /*////////////////////////////////////////////////////////////////////////////////////////////////
      ////////////////// New Task Create Button Click /////////////////////[E N D]////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.cancelModal = function () {
+        $uibModalInstance.dismiss('cancel');
+    };
+
+}]);
+
+app.controller('TaskEditModalInstanceController', ['$scope', '$uibModalInstance', 'dataForThisModalInstance', 'NewProjectService', 'NewTaskService', function ($scope, $uibModalInstance, dataForThisModalInstance, NewProjectService, NewTaskService) {
+
+    var vm = this;
+
+    vm.taskUpdateFlag = false;
+//    var taskProject = NewProjectService.getTaskProject(dataForThisModalInstance.taskToEdit.projectName);
+
+    vm.taskNameInputState = true;
+    vm.taskName = dataForThisModalInstance.taskToEdit.name;
+
+    vm.taskDescription = dataForThisModalInstance.taskToEdit.description;
+
+    vm.modalType = 'Update';
+    vm.modalHeading = 'Update Task';
+
+// Datepicker
+
+    vm.projectDate = '';
+
+    vm.status = {
+        opened: false
+    };
+
+    vm.openDatePicker = function($event) {
+        vm.status.opened = true;
+    };
+
+    vm.format = 'dd.MM.yyyy';
+
+    vm.taskUpdateDetected = function()
+    {
+        vm.taskUpdateFlag = true;
+    };
+
+//    console.log("task'sProjects : " + JSON.stringify(NewProjectService.getTaskProject(dataForThisModalInstance.taskToEdit.projectName)));
+
+    /*////////////////////////////////////////////////////////////////////////////////////////////////
+     ////////////////// Update Task Button Click /////////////////////////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.createOrUpdateTask = function(taskName, taskDescription) {
+
+        var updated_task = {};
+        dataForThisModalInstance.taskToEdit.description = vm.taskDescription;
+
+        if(dataForThisModalInstance.isGlobal)
+        {
+            updated_task = NewTaskService.updateTasks([dataForThisModalInstance.taskToEdit], true);
+
+            if(updated_task.projectName)
+            {
+                NewProjectService.updateTasksInProject(updated_task.projectName, [updated_task]);
+            }
+        }
+        else
+        {
+            updated_task = dataForThisModalInstance.taskToEdit;
+        }
+
+        $uibModalInstance.close(updated_task);
+    };
+
+    /*////////////////////////////////////////////////////////////////////////////////////////////////
+     ////////////////// Update Task Button Click /////////////////////[E N D]////////////////////////
      */////////////////////////////////////////////////////////////////////////////////////////////////
 
     vm.cancelModal = function () {

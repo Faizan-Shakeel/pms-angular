@@ -168,8 +168,54 @@ app.service('NewTaskService', function(){
 
         }
 
-        console.log("filteredArray : " + JSON.stringify(filteredArray));
         return filteredArray;
+
+    };
+
+//    var updateTasks = function(updatedTaskObject)
+//    {
+//        for(var task of taskPanels)
+//        {
+//            if(task.id == updatedTaskObject.id)
+//            {
+//                console.log("TASK : " + JSON.stringify(task));
+//                task.description = updatedTaskObject.description;
+////                task = updatedTaskObject;
+//                console.log("TASK : " + JSON.stringify(task));
+//                return task;
+//            }
+//        }
+//    };
+
+    var updateTasks = function(updatedTasks, global)
+    {
+//        if(global)
+//        {
+//            for(var i=0; i<taskPanels.length; i++)
+//            {
+//                if(taskPanels[i].id == updatedTaskObject.id)
+//                {
+//                    taskPanels[i] = updatedTaskObject;
+//                    return taskPanels[i];
+//                }
+//            }
+//        }
+        for(var i=0; i<updatedTasks.length; i++)
+        {
+            for(var j=0; j<taskPanels.length; j++)
+            {
+                if(taskPanels[j].id == updatedTasks[i].id)
+                {
+                    taskPanels[j] = updatedTasks[i];
+                    if(global)
+                    {
+                        return taskPanels[j];
+                    }
+                }
+            }
+        }
+
+
     };
 
     return{
@@ -184,6 +230,7 @@ app.service('NewTaskService', function(){
         deleteFloatingTasks: deleteFloatingTasks,
         hasDuplicates: hasDuplicates,
         removeProjectTasksFromExistingTasks: removeProjectTasksFromExistingTasks,
+        updateTasks: updateTasks,
         taskPanels: taskPanels
     };
 

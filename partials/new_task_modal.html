@@ -2,7 +2,7 @@
 <div>
 
     <div class="modal-header">
-        <h4 class="modal-title text-center">{{AddNewTaskModalVM.modalHeading}}</h4>
+        <h4 class="modal-title text-center">{{TaskModalVM.modalHeading}}</h4>
     </div>
 
     <div class="modal-body">
@@ -15,17 +15,15 @@
 
                     <br/>
 
-                    <form name="addNewTaskValidationForm" class="form-horizontal" ng-submit="addNewTaskValidationForm.$valid && AddNewTaskModalVM.addNewTaskInProject(AddNewTaskModalVM.taskName)" novalidate>
+                    <form name="addNewTaskValidationForm" class="form-horizontal" ng-submit="addNewTaskValidationForm.$valid && TaskModalVM.taskUpdateFlag && TaskModalVM.createOrUpdateTask(TaskModalVM.taskName, TaskModalVM.taskDescription)" novalidate>
                         <div class="form-group" ng-class="{ 'has-error': addNewTaskValidationForm.taskName.$touched && addNewTaskValidationForm.taskName.$invalid }">
                             <label for="taskName" class="col-lg-2 col-md-2 col-sm-2 control-label">Name</label>
                             <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">
-                                <!--<input type="text" class="form-control" id="taskName" placeholder="Name" ng-model="AddNewTaskModalVM.taskName" ng-required="AddNewTaskModalVM.required()">-->
-                                <!--<input type="text" class="form-control" id="taskName" placeholder="Name" ng-model="AddNewTaskModalVM.taskName" ng-required="AddNewTaskModalVM.required">-->
-                                <input type="text" class="form-control" id="taskName" name="taskName" placeholder="Task Name" ng-model="AddNewTaskModalVM.taskName" ng-minlength="5" ng-maxlength="20" required=""/>
+                                <!--<input type="text" class="form-control" id="taskName" placeholder="Name" ng-model="TaskModalVM.taskName" ng-required="TaskModalVM.required()">-->
+                                <!--<input type="text" class="form-control" id="taskName" placeholder="Name" ng-model="TaskModalVM.taskName" ng-required="TaskModalVM.required">-->
+                                <input type="text" class="form-control" id="taskName" name="taskName" placeholder="Task Name" ng-model="TaskModalVM.taskName" required="" ng-disabled="TaskModalVM.taskNameInputState"/>
 
                                 <div class="help-block" ng-messages="addNewTaskValidationForm.taskName.$error" ng-show="addNewTaskValidationForm.taskName.$touched">
-                                    <p ng-message="minlength">Mininum 5 characters.</p>
-                                    <p ng-message="maxlength">Maximum 20 characters.</p>
                                     <p ng-message="required">Name is required.</p>
                                 </div>
 
@@ -38,9 +36,9 @@
 
                             <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">
                                 <p class="input-group">
-                                    <input type="text" id="taskDate" class="form-control" uib-datepicker-popup="{{AddNewTaskModalVM.format}}" is-open="AddNewTaskModalVM.status.opened" ng-model="AddNewTaskModalVM.taskDate" close-text="Close" placeholder="Target Date"/>
+                                    <input type="text" id="taskDate" class="form-control" uib-datepicker-popup="{{TaskModalVM.format}}" is-open="TaskModalVM.status.opened" ng-model="TaskModalVM.taskDate" close-text="Close" placeholder="Target Date"/>
                                     <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default" ng-click="AddNewTaskModalVM.openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                        <button type="button" class="btn btn-default" ng-click="TaskModalVM.openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                                     </span>
                                 </p>
                             </div>
@@ -49,25 +47,25 @@
                         <div class="form-group">
                             <label for="taskDescription" class="col-lg-2 col-md-2 col-sm-2 control-label">Task Description</label>
                             <div class="col-lg-8 col-md-8 col-sm-8 col-lg-offset-1">
-                                <textarea class="form-control taskModalTextAreaForDescription" id="taskDescription" ng-model="string" placeholder="Task Description"></textarea>
+                                <textarea class="form-control taskModalTextAreaForDescription" id="taskDescription" ng-model="TaskModalVM.taskDescription" placeholder="Task Description" ng-change="TaskModalVM.taskUpdateDetected()"></textarea>
                             </div>
                         </div>
 
-                        <div class="form-group" ng-show="AddNewTaskModalVM.projectsListVisibility">
+                        <div class="form-group" ng-show="TaskModalVM.projectsListVisibility">
                             <label for="taskBelongsToProject" class="col-lg-2 col-md-2 col-sm-2 control-label">Project</label>
                             <div id="taskBelongsToProject" class="col-lg-8 col-md-8 col-sm-8 col-lg-offset-1">
-                                <multiselect ng-model="AddNewTaskModalVM.selectedProjects" options="AddNewTaskModalVM.projectsList" id-prop="id" display-prop="name" show-search="true"></multiselect>
+                                <multiselect ng-model="TaskModalVM.selectedProjects" options="TaskModalVM.taskProject" id-prop="id" display-prop="name"></multiselect>
                             </div>
                         </div>
 
-                        <!--<div ng-show="AddNewTaskModalVM.projectsListVisibility">-->
-                            <!--<multiselect ng-model="AddNewTaskModalVM.selectedProjects" options="AddNewTaskModalVM.projectsList" id-prop="id" display-prop="name"></multiselect>-->
+                        <!--<div ng-show="TaskModalVM.projectsListVisibility">-->
+                            <!--<multiselect ng-model="TaskModalVM.selectedProjects" options="TaskModalVM.projectsList" id-prop="id" display-prop="name"></multiselect>-->
                         <!--</div>-->
 
                         <!--<div class="form-group">-->
                             <!--<label for="taskBelongsToProject" class="col-lg-2 col-md-2 col-sm-2 control-label">Project</label>-->
                             <!--<div class="col-lg-8 col-md-8 col-sm-8 col-lg-offset-1">-->
-                                <!--<select class="form-control" id="taskBelongsToProject" ng-options="project.name for project in AddNewTaskModalVM.projects" ng-model="AddNewTaskModalVM.selected"></select>-->
+                                <!--<select class="form-control" id="taskBelongsToProject" ng-options="project.name for project in TaskModalVM.projects" ng-model="TaskModalVM.selected"></select>-->
                             <!--</div>-->
                         <!--</div>-->
 
@@ -172,9 +170,9 @@
     </div>
 
     <div class="modal-footer">
-        <label for="submit-new-task-form" class="btn btn-primary" ng-disabled="addNewTaskValidationForm.$invalid">{{AddNewTaskModalVM.modalType}}</label>
-        <!--<button type="submit" class="btn btn-primary" ng-click="AddNewTaskModalVM.ok(AddNewTaskModalVM.taskName)">{{AddNewTaskModalVM.modalType}}</button>-->
-        <button type="button" class="btn btn-warning" ng-click="AddNewTaskModalVM.cancelModal()">Cancel</button>
+        <label for="submit-new-task-form" class="btn btn-primary" ng-disabled="addNewTaskValidationForm.$invalid">{{TaskModalVM.modalType}}</label>
+        <!--<button type="submit" class="btn btn-primary" ng-click="TaskModalVM.ok(TaskModalVM.taskName)">{{TaskModalVM.modalType}}</button>-->
+        <button type="button" class="btn btn-warning" ng-click="TaskModalVM.cancelModal()">Cancel</button>
     </div>
 
 </div>
