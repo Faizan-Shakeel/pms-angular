@@ -705,6 +705,15 @@ app.controller('AddExistingTasksModalController', ['$scope', '$uibModalInstance'
 
     vm.modalHeading = 'Import Tasks of Project';
 
+    if(dataForThisModalInstance.tasksArray.length > 10)
+    {
+        vm.multiSearchSwitch = true;
+    }
+    else
+    {
+        vm.multiSearchSwitch = false;
+    }
+
     if(dataForThisModalInstance.tasksArray.length==0)
     {
         vm.existingTasksOptions = [
@@ -776,6 +785,15 @@ app.controller('AddNewTaskModalController', ['$scope', '$uibModalInstance', 'dat
     var vm = this;
 
     vm.taskUpdateFlag = true;
+
+    if(dataForThisModalInstance.projectsArray.length > 10)
+    {
+        vm.multiSearchSwitch = true;
+    }
+    else
+    {
+        vm.multiSearchSwitch = false;
+    }
 
     var new_task_params = '';
 
