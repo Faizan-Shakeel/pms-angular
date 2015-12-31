@@ -131,6 +131,20 @@ app.controller('Main_View_Controller', ['$scope', 'NewProjectService', 'NewTaskS
         }
     };
 
+//    vm.messages = [];
+//    vm.username = 'Online User';
+//    vm.visible = false;
+//
+//    vm.sendMessage = function(message, username) {
+//        if(message && message !== '' && username) {
+//            vm.messages.push({
+//                'username': username,
+//                'content': message
+//            });
+//        }
+//    };
+//    vm.expandOnNew = true;
+
     /*//////////////////////////////////////////////////////////////////////////////////////////////////
      ////////////////// CHATTING PANEL [E N D] /////////////////////////////////////////////////////////
      *//////////////////////////////////////////////////////////////////////////////////////////////////
@@ -196,9 +210,7 @@ app.controller('Main_View_Controller', ['$scope', 'NewProjectService', 'NewTaskS
 
     vm.globalTabsBootstrapClass = 'col-lg-8 col-md-8 col-sm-8';
     vm.projectPanels = NewProjectService.projectPanels;
-
     vm.taskPanels = NewTaskService.taskPanels;
-
     vm.documentPanels = NewDocumentService.documentPanels;
 
     vm.deleteProject = function(projectName)
@@ -236,14 +248,14 @@ app.controller('Main_View_Controller', ['$scope', 'NewProjectService', 'NewTaskS
         });
     };
 
-    vm.deleteDocument = function(documentID)
+    vm.deleteDocument = function(documentToDelete)
     {
-        removeEntity(NewDocumentService.documentPanels, 'id', documentID);
+        removeEntity(NewDocumentService.documentPanels, 'id', documentToDelete.id);
         angular.forEach(vm.projectPanels, function(valueProject,indexProject){
             angular.forEach(valueProject.documentPanels, function(valueDocument,indexDocument){
-                if(valueDocument.id == documentID)
+                if(valueDocument.id == documentToDelete.id)
                 {
-                    removeEntity(valueProject.documentPanels, 'id', documentID);
+                    removeEntity(valueProject.documentPanels, 'id', documentToDelete.id);
                 }
             });
         });

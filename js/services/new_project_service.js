@@ -56,7 +56,39 @@ app.service('NewProjectService', function(){
 
             }
         }
+    };
 
+    var addDocumentToProject = function(projName, documentObject)
+    {
+        var documentExistence = false;
+
+        for(var projectPanel of projectPanels)
+        {
+            if (projectPanel.name == projName)
+            {
+                for(var documentPanel of projectPanel.documentPanels)
+                {
+                    if(documentPanel.name == documentObject.name)
+                    {
+                        documentExistence = true;
+
+                        return{
+                            status: true,
+                            inProject: projectPanel.name
+                        };
+                    }
+                }
+
+                if(!documentExistence)
+                {
+                    projectPanel.documentPanels.push(documentObject);
+                    return{
+                        status: false
+                    };
+                }
+
+            }
+        }
     };
 
     var addProjectToTask = function(tasksArray, projectName)
@@ -64,6 +96,14 @@ app.service('NewProjectService', function(){
         angular.forEach(tasksArray, function(value, index)
         {
             tasksArray[index].projectName = projectName;
+        });
+    };
+
+    var addProjectToDocument = function(documentsArray, projectName)
+    {
+        angular.forEach(documentsArray, function(value, index)
+        {
+            documentsArray[index].projectName = projectName;
         });
     };
 
@@ -90,6 +130,20 @@ app.service('NewProjectService', function(){
         }
     };
 
+    var deleteDocumentsFromProject = function(documentsToDelete, fromProject)
+    {
+        for(var project of projectPanels)
+        {
+            if(project.name == fromProject)
+            {
+                for(var task of documentsToDelete)
+                {
+                    removeEntity(project.documentPanels, 'id', task.id);
+                }
+                break;
+            }
+        }
+    };
 
     var removeEntity = function(arr, attr, value){
         var i = arr.length;
@@ -104,33 +158,6 @@ app.service('NewProjectService', function(){
         }
         return arr;
     };
-
-//    var getSelectedProjectTasksArray = function(selectedProjectName)
-//    {
-//        var selectedProjectTasksArray;
-//        angular.forEach(projectPanels, function(value,index){
-//
-//            if(value.name == selectedProjectName)
-//            {
-//                selectedProjectTasksArray = projectPanels[index].taskPanels;
-//            }
-//        });
-//        return selectedProjectTasksArray;
-//    };
-//
-//    var getSelectedProjectDocumentsArray = function(selectedProjectName)
-//    {
-//        var selectedProjectDocumentsArray;
-//        angular.forEach(projectPanels, function(value,index){
-//
-//            if(value.name == selectedProjectName)
-//            {
-//                selectedProjectDocumentsArray = projectPanels[index].documentPanels;
-//            }
-//        });
-//        return selectedProjectDocumentsArray;
-//    };
-
 
     var checkProjectExistence = function(projectName)
     {
@@ -182,36 +209,43 @@ app.service('NewProjectService', function(){
                 }
             }
         }
+    };
 
-//        for(var project of projectPanels)
-//        {
-//            if(project.name == projectName)
-//            {
-//                for(var task of project.taskPanels)
-//                {
-//                    if(task.id == updatedTask.id)
-//                    {
-//                        task = updatedTask;
-//                        return;
-//                    }
-//                }
-//            }
-//        }
+    var updateDocumentsInProject = function(projectName, updatedDocuments)
+    {
+        for(var i=0; i<projectPanels.length; i++)
+        {
+            if(projectPanels[i].name == projectName)
+            {
+                for (var j = 0; j < updatedDocuments.length; j++)
+                {
+                    for (var k = 0; k < projectPanels[i].documentPanels.length; k++)
+                    {
+                        if(projectPanels[i].documentPanels[k].id == updatedDocuments[j].id)
+                        {
+                            projectPanels[i].documentPanels[k] = updatedDocuments[j];
+                        }
+                    }
+                }
+            }
+        }
     };
 
     return{
         newProjectID: newProjectID,
         setValue: setValue,
         getValue: getValue,
-//        getSelectedProjectTasksArray: getSelectedProjectTasksArray,
-//        getSelectedProjectDocumentsArray: getSelectedProjectDocumentsArray,
         addProjectToTask: addProjectToTask,
+        addProjectToDocument: addProjectToDocument,
         addTaskToProject: addTaskToProject,
+        addDocumentToProject: addDocumentToProject,
         deleteTasksFromProject: deleteTasksFromProject,
+        deleteDocumentsFromProject: deleteDocumentsFromProject,
         addDocumentsToProject: addDocumentsToProject,
         checkProjectExistence: checkProjectExistence,
         getTaskProject: getTaskProject,
         updateTasksInProject: updateTasksInProject,
+        updateDocumentsInProject: updateDocumentsInProject,
         projectPanels: projectPanels
     };
 

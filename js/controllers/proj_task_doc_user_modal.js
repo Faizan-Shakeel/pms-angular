@@ -6,7 +6,7 @@ app.controller('ModalDemoController', ['$scope', '$rootScope', '$uibModal', 'New
     var vm = this;
 
     /*////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////// Add New Project Modal /////////////////////////////////////////////////////////
+    ////////////////// Modal For Creating Project ////////////////////////////////////////////////////
     */////////////////////////////////////////////////////////////////////////////////////////////////
 
     vm.newProjectModal = function () {
@@ -34,12 +34,12 @@ app.controller('ModalDemoController', ['$scope', '$rootScope', '$uibModal', 'New
 
 
     /*////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////// Add New Project Modal ///////[E N D]/////////////////////////////////////////////
+    ////////////////// Modal For Creating Project ////////////////////////////[E N D]/////////////////
     */////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     /*////////////////////////////////////////////////////////////////////////////////////////////////
-    ///////////////// Edit Project Modal /////////////////////////////////////////////////////////////
+    ///////////////// Modal For Editing Project /////////////////////////////////////////////////////
     */////////////////////////////////////////////////////////////////////////////////////////////////
 
     vm.editProject = function (projectToEdit) {
@@ -68,13 +68,13 @@ app.controller('ModalDemoController', ['$scope', '$rootScope', '$uibModal', 'New
         });
     };
      /*////////////////////////////////////////////////////////////////////////////////////////////////
-     ///////////////// Edit Project Modal ////////////////////[E N D]//////////////////////////////////
+     ///////////////// Modal For Editing Project /////////////////////////////[E N D]/////////////////
      */////////////////////////////////////////////////////////////////////////////////////////////////
 
 
      /*////////////////////////////////////////////////////////////////////////////////////////////////
-     //////////////// Add New Task Global /////////////////////////////////////////////////////////////
-     */////////////////////////////////////////////////////////////////////////////////////////////////
+     //////////////// Modal For Creating Task /////////////////////////////////////////////////////////
+     *////////////////////// Global ///////////////////////////////////////////////////////////////////
 
     vm.newTaskModal = function()
     {
@@ -103,13 +103,48 @@ app.controller('ModalDemoController', ['$scope', '$rootScope', '$uibModal', 'New
         });
     };
 
-    /*////////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////// Add New Task Global ///////[E N D]/////////////////////////////////////////////////
-    */////////////////////////////////////////////////////////////////////////////////////////////////
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////
+     //////////////// Modal For Creating Task //////////////////////////////////// [E N D] ////////////
+     *////////////////////// Global ///////////////////////////////////////////////////////////////////
 
     /*////////////////////////////////////////////////////////////////////////////////////////////////
-     ///////////////// Edit Task Global /////////////////////////////////////////////////////////////
-     */////////////////////////////////////////////////////////////////////////////////////////////////
+     //////////////// Modal For Creating Document /////////////////////////////////////////////////////////
+     *////////////////////// Global ///////////////////////////////////////////////////////////////////
+
+    vm.newDocumentModal = function()
+    {
+        var newDocumentModalInstance = $uibModal.open({
+            animation: false,
+            templateUrl: 'partials/new_document_modal.html',
+            controller: 'AddNewDocumentModalController',
+            controllerAs: 'DocumentModalVM',
+            windowClass: 'modal-width',
+            backdrop: 'static',
+            resolve: {
+                dataForThisModalInstance: function () {
+                    return {
+                        isGlobal: true,
+                        projectsArray: JSON.parse(JSON.stringify(NewProjectService.projectPanels))
+                    };
+                }
+            }
+        });
+
+        newDocumentModalInstance.result.then(function ()
+        {
+
+        }, function () {
+
+        });
+    };
+
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////
+     //////////////// Modal For Creating Document //////////////////////////////////// [E N D] ////////////
+     *////////////////////// Global ///////////////////////////////////////////////////////////////////
+
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////// Modal For Editing Task /////////////////////////////////////////////////////////
+     */////////////////////// Global //////////////////////////////////////////////////////////////////
 
     vm.editTask = function (taskToEdit) {
 
@@ -138,30 +173,72 @@ app.controller('ModalDemoController', ['$scope', '$rootScope', '$uibModal', 'New
         });
     };
 
-    /*////////////////////////////////////////////////////////////////////////////////////////////////
-     ///////////////// Edit Task Global ////////////////////[E N D]//////////////////////////////////
-     */////////////////////////////////////////////////////////////////////////////////////////////////
+    /*//////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////// Modal For Editing Task ////////////////////////////////// [E N D] ///////////////
+     */////////////////////// Global ///////////////////////////////////////////////////////////////////
+
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////// Modal For Editing Document /////////////////////////////////////////////////////////
+     */////////////////////// Global //////////////////////////////////////////////////////////////////
+
+    vm.editDocument = function (documentToEdit) {
+
+        var editDocumentModalInstance = $uibModal.open({
+            animation: false,
+            templateUrl: 'partials/new_document_modal.html',
+            controller: 'DocumentEditModalInstanceController',
+            controllerAs: 'DocumentModalVM',
+            windowClass: 'modal-width',
+            backdrop: 'static',
+            resolve: {
+                dataForThisModalInstance: function(){
+                    return{
+                        isGlobal: true,
+                        documentToEdit: JSON.parse(JSON.stringify(documentToEdit))
+                    };
+                }
+            }
+        });
+
+        editDocumentModalInstance.result.then(function ()
+        {
+
+        }, function () {
+
+        });
+    };
+
+    /*//////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////// Modal For Editing Document ////////////////////////////////// [E N D] ///////////////
+     */////////////////////// Global ///////////////////////////////////////////////////////////////////
 
 }]);
 
-app.controller('ProjectEditModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'NewProjectService', 'NewTaskService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, NewProjectService, NewTaskService) {
+app.controller('ProjectEditModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'NewProjectService', 'NewTaskService', 'NewDocumentService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, NewProjectService, NewTaskService, NewDocumentService) {
 
     var vm = this;
     var updatedTasksArray = [];
+    var updatedDocumentsArray = [];
     var tasksToDelete = [];
+    var documentsToDelete = [];
     var floatingTasks = [];
+    var floatingDocuments = [];
     var taskCreatedFlag = false;
     var taskUpdateFlag = false;
+    var documentUpdateFlag = false;
     var taskDeletedFlag = false;
-    vm.projectNameInputState = true;
+    var documentDeletedFlag = false;
+    var documentCreatedFlag = false;
+    vm.projectNameEditable = true;
     vm.modalHeading = 'Update Project';
     vm.modalType = 'Update';
     vm.projectName = dataForThisModalInstance.projectToEdit.name;
     vm.taskPanels = JSON.parse(JSON.stringify(dataForThisModalInstance.projectToEdit.taskPanels));
+    vm.documentPanels = JSON.parse(JSON.stringify(dataForThisModalInstance.projectToEdit.documentPanels));
 
     /*////////////////////////////////////////////////////////////////////////////////////////////////
-     ////////////////// Add New Task Modal /////////////////////////////////////////////////////////
-     *////////////////// Update Project ///////////////////////////////////////////////////////////////////
+     ////////////////// Modal For Creating Task /////////////////////////////////////////////////////////
+     *///////////////////// Update Project ///////////////////////////////////////////////////////////////////
 
     vm.addNewTask = function()
     {
@@ -197,16 +274,55 @@ app.controller('ProjectEditModalInstanceController', ['$scope', '$uibModal', '$u
     };
 
     /*////////////////////////////////////////////////////////////////////////////////////////////////
-     ////////////////// Add New Task Modal /////////////////////////[E N D]////////////////////////////////
-     *////////////////// Update Project ///////////////////////////////////////////////////////////////////
+     ////////////////// Modal For Creating Task /////////////////////////[E N D]///////////////////////
+     *///////////////////// Update Project ////////////////////////////////////////////////////////////
 
     /*////////////////////////////////////////////////////////////////////////////////////////////////
-     ///////////////// Edit Task Modal /////////////////////////////////////////////////////////////
-     *////////////////// Update Project ///////////////////////////////////////////////////////////////
+     ////////////////// Modal For Creating Document /////////////////////////////////////////////////////////
+     *///////////////////// Update Project ///////////////////////////////////////////////////////////////////
+
+    vm.addNewDocument = function()
+    {
+        var addNewDocumentModalInstance = $uibModal.open({
+            animation: false,
+            templateUrl: 'partials/new_document_modal.html',
+            controller: 'AddNewDocumentModalController',
+            controllerAs: 'DocumentModalVM',
+            windowClass: 'modal-width',
+            backdrop: 'static',
+            resolve: {
+                dataForThisModalInstance: function () {
+                    return {
+                        isGlobal: false,
+                        projectsArray: JSON.parse(JSON.stringify(NewProjectService.projectPanels)),
+                        documentsArray: JSON.parse(JSON.stringify(vm.documentPanels))
+                    };
+                }
+            }
+        });
+
+        addNewDocumentModalInstance.result.then(function (new_document_params) {
+
+            updatedDocumentsArray.push(new_document_params);
+            vm.documentPanels.push(new_document_params);
+            documentCreatedFlag = true;
+            vm.updateFlag = true;
+
+        }, function () {
+//            $log.info('Modal dismissed at: ' + new Date());
+        });
+
+    };
+
+    /*////////////////////////////////////////////////////////////////////////////////////////////////
+     ////////////////// Modal For Creating Document /////////////////////////[E N D]///////////////////////
+     *///////////////////// Update Project ////////////////////////////////////////////////////////////
+
+    /*////////////////////////////////////////////////////////////////////////////////////////////////
+     /////////////////// Modal For Editing Task /////////////////////////////////////////////////////////////
+     *////////////////////// Update Project ///////////////////////////////////////////////////////////////
 
     vm.editTask = function (taskToEdit) {
-
-//        console.log("taskToEdit : " + JSON.stringify(taskToEdit));
 
         var editTaskModalInstance = $uibModal.open({
             animation: false,
@@ -229,7 +345,6 @@ app.controller('ProjectEditModalInstanceController', ['$scope', '$uibModal', '$u
         {
             for(var i=0; i<vm.taskPanels.length; i++)
             {
-                console.log("vm.taskPanels[i].name : " + vm.taskPanels[i].name);
                 if(vm.taskPanels[i].id == updated_task.id)
                 {
                     vm.taskPanels[i] = updated_task;
@@ -239,13 +354,63 @@ app.controller('ProjectEditModalInstanceController', ['$scope', '$uibModal', '$u
                 }
             }
         }, function () {
-
         });
     };
 
+    /*////////////////////////////////////////////////////////////////////////////////////////////////////
+     /////////////////// Modal For Editing Task ////////////////////////////////[E N D]///////////////////
+     *////////////////////// Update Project //////////////////////////////////////////////////////////////
+
+
     /*////////////////////////////////////////////////////////////////////////////////////////////////
-     ///////////////// Edit Task Modal ////////////////////[E N D]//////////////////////////////////
-     *////////////////// Update Project /////////////////////////////////////////////////////////////////
+     /////////////////// Modal For Editing Document /////////////////////////////////////////////////////////////
+     *////////////////////// Update Project ///////////////////////////////////////////////////////////////
+
+    vm.editDocument = function (documentToEdit) {
+
+        console.log("aisundasd");
+
+        var editDocumentModalInstance = $uibModal.open({
+            animation: false,
+            templateUrl: 'partials/new_document_modal.html',
+            controller: 'DocumentEditModalInstanceController',
+            controllerAs: 'DocumentModalVM',
+            windowClass: 'modal-width',
+            backdrop: 'static',
+            resolve: {
+                dataForThisModalInstance: function(){
+                    return{
+                        isGlobal: false,
+                        documentToEdit: JSON.parse(JSON.stringify(documentToEdit))
+                    };
+                }
+            }
+        });
+
+        editDocumentModalInstance.result.then(function (updated_document)
+        {
+            for(var i=0; i<vm.documentPanels.length; i++)
+            {
+                if(vm.documentPanels[i].id == updated_document.id)
+                {
+                    vm.documentPanels[i] = updated_document;
+                    documentUpdateFlag = true;
+                    vm.updateFlag = true;
+                    break;
+                }
+            }
+        }, function () {
+        });
+    };
+
+    /*////////////////////////////////////////////////////////////////////////////////////////////////////
+     /////////////////// Modal For Editing Document ////////////////////////////////[E N D]///////////////////
+     *////////////////////// Update Project //////////////////////////////////////////////////////////////
+
+
+    /*////////////////////////////////////////////////////////////////////////////////////////////////
+     ////////////////////// Update Project /////////////////////////////////////////////////////////////
+     *////////////////////////////////////////////////////////////////////////////////////////////////
 
     vm.createOrUpdateProject = function()
     {
@@ -263,6 +428,20 @@ app.controller('ProjectEditModalInstanceController', ['$scope', '$uibModal', '$u
             taskDeletedFlag = false;
         }
 
+        if(documentDeletedFlag)
+        {
+            NewProjectService.deleteDocumentsFromProject(documentsToDelete, dataForThisModalInstance.projectToEdit.name);
+            NewDocumentService.deleteDocumentGlobal(documentsToDelete, NewDocumentService.documentPanels);
+            NewDocumentService.deleteDocumentGlobal(documentsToDelete, updatedDocumentsArray);
+
+            if(floatingDocuments.length)
+            {
+                NewDocumentService.deleteFloatingDocuments(floatingDocuments);
+            }
+
+            documentDeletedFlag = false;
+        }
+
         if(taskCreatedFlag)
         {
             NewProjectService.addProjectToTask(updatedTasksArray, dataForThisModalInstance.projectToEdit.name);
@@ -276,21 +455,57 @@ app.controller('ProjectEditModalInstanceController', ['$scope', '$uibModal', '$u
             taskCreatedFlag = false;
         }
 
+        if(documentCreatedFlag)
+        {
+            NewProjectService.addProjectToDocument(updatedDocumentsArray, dataForThisModalInstance.projectToEdit.name);
+            NewDocumentService.setValue(updatedDocumentsArray);
+
+            for(var newDocument of updatedDocumentsArray)
+            {
+                NewProjectService.addDocumentToProject(dataForThisModalInstance.projectToEdit.name, newDocument);
+            }
+
+            documentCreatedFlag = false;
+        }
+
         if(taskUpdateFlag)
         {
             NewProjectService.updateTasksInProject(dataForThisModalInstance.projectToEdit.name, JSON.parse(JSON.stringify(vm.taskPanels)));
             NewTaskService.updateTasks(JSON.parse(JSON.stringify(vm.taskPanels)), false);
 
             taskUpdateFlag = false;
+        }
 
+        if(documentUpdateFlag)
+        {
+            NewProjectService.updateDocumentsInProject(dataForThisModalInstance.projectToEdit.name, JSON.parse(JSON.stringify(vm.documentPanels)));
+            NewDocumentService.updateDocuments(JSON.parse(JSON.stringify(vm.documentPanels)), false);
+
+            documentUpdateFlag = false;
         }
 
         $uibModalInstance.close();
     };
 
+    /*////////////////////////////////////////////////////////////////////////////////////////////////
+     /////////////////////// Update Project ///////////////////////////////////[E N D]////////////////////
+     *////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /*////////////////////////////////////////////////////////////////////////////////////////////////
+     /////////////////// Cancel Project Update ///////////////////////////////////////////////////////
+     *////////////////////////////////////////////////////////////////////////////////////////////////
+
     vm.cancel = function () {
         $uibModalInstance.dismiss('cancel');
     };
+
+    /*////////////////////////////////////////////////////////////////////////////////////////////////
+     /////////////////// Cancel Project Update ////////////////////////////[E N D]////////////////////
+     *////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /*////////////////////////////////////////////////////////////////////////////////////////////////
+     /////////////////// Delete Task /////////////////////////////////////////////////////////////////
+     *//////////////// Update Project ////////////////////////////////////////////////////////////////
 
     vm.deleteTask = function(taskToDelete)
     {
@@ -299,6 +514,30 @@ app.controller('ProjectEditModalInstanceController', ['$scope', '$uibModal', '$u
         taskDeletedFlag = true;
         vm.updateFlag = true;
     };
+
+    /*////////////////////////////////////////////////////////////////////////////////////////////////
+     /////////////////// Delete Task //////////////////////////////////////[E N D]////////////////////
+     *//////////////// Update Project ////////////////////////////////////////////////////////////////
+
+    /*////////////////////////////////////////////////////////////////////////////////////////////////
+     /////////////////// Delete Document /////////////////////////////////////////////////////////////////
+     *//////////////// Update Project ////////////////////////////////////////////////////////////////
+
+    vm.deleteDocument = function(documentToDelete)
+    {
+        documentsToDelete.push(documentToDelete);
+        NewDocumentService.deleteDocumentModal(documentToDelete, vm.documentPanels);
+        documentDeletedFlag = true;
+        vm.updateFlag = true;
+    };
+
+    /*////////////////////////////////////////////////////////////////////////////////////////////////
+     /////////////////// Delete Document //////////////////////////////////////[E N D]////////////////////
+     *//////////////// Update Project ////////////////////////////////////////////////////////////////
+
+    /*////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////// Add From Existing Tasks ///////////////////////////////////////////////////////////
+     *//////////////// Update Project ////////////////////////////////////////////////////////////////
 
     vm.existingTasksModalInProjectModal = function()
     {
@@ -359,16 +598,90 @@ app.controller('ProjectEditModalInstanceController', ['$scope', '$uibModal', '$u
 
     };
 
+    /*////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////// Add From Existing Tasks //////////////////////////////// [E N D] //////////////////
+     *//////////////// Update Project ////////////////////////////////////////////////////////////////
+
+    /*////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////// Add From Existing Documents ///////////////////////////////////////////////////////////
+     *//////////////// Update Project ////////////////////////////////////////////////////////////////
+
+    vm.existingDocumentsModalInProjectModal = function()
+    {
+        var addExistingDocumentsModalInstance = $uibModal.open({
+            animation: false,
+            templateUrl: 'partials/existing_documents_modal.html',
+            controller: 'AddExistingDocumentsModalController',
+            controllerAs: 'AddExistingDocumentsModalVM',
+            windowClass: 'modal-width',
+            backdrop: 'static',
+            resolve: {
+                dataForThisModalInstance: function () {
+                    return {
+                        projectName: vm.projectName,
+                        documentsArray: JSON.parse(JSON.stringify(NewDocumentService.documentPanels)),
+                        documentsInModal: JSON.parse(JSON.stringify(vm.documentPanels))
+                    };
+                }
+            }
+        });
+
+        addExistingDocumentsModalInstance.result.then(function (selected_existing_documents) {
+
+            var new_documents_obj = {};
+
+            for(var document of selected_existing_documents)
+            {
+                for(var documentPanel of NewDocumentService.documentPanels)
+                {
+                    if(document.id == documentPanel.id)
+                    {
+                        if(documentPanel.projectName)
+                        {
+                            new_documents_obj = document;
+                            new_documents_obj.id = NewDocumentService.newDocumentID();
+                            updatedDocumentsArray.push(new_documents_obj);
+                            vm.documentPanels.push(new_documents_obj);
+                            new_documents_obj = {};
+                            documentCreatedFlag = true;
+                            vm.updateFlag = true;
+                        }
+                        else
+                        {
+                            floatingDocuments.push(document);
+                            updatedDocumentsArray.push(document);
+                            vm.documentPanels.push(document);
+                            documentCreatedFlag = true;
+                            documentDeletedFlag = true;
+                            vm.updateFlag = true;
+                        }
+                    }
+                }
+            }
+
+        }, function () {
+//            $log.info('Modal dismissed at: ' + new Date());
+        });
+
+    };
+
+    /*////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////// Add From Existing Documents //////////////////////////////// [E N D] //////////////////
+     *//////////////// Update Project ////////////////////////////////////////////////////////////////
+
 }]);
 
 app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'NewProjectService', 'NewTaskService', 'NewDocumentService', '$log', function ($scope, $uibModal, $uibModalInstance, NewProjectService, NewTaskService, NewDocumentService, $log) {
 
     var vm = this;
     var floatingTasks = [];
+    var floatingDocuments = [];
     var taskUpdateFlag = false;
+    var documentUpdateFlag = false;
     vm.updateFlag = true;
-    vm.projectNameInputState = false;
+    vm.projectNameEditable = false;
     vm.taskPanels = [];
+    vm.documentPanels = [];
 
 // Datepicker
 
@@ -391,7 +704,7 @@ app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInst
     var documentsArray = [];
 
     /*////////////////////////////////////////////////////////////////////////////////////////////////
-     ////////////////// New Project Create Button Click //////////////////////////////////////////////
+     ////////////////// Create New Project ///////////////////////////////////////////////////////////
      *////////////////////////////////////////////////////////////////////////////////////////////////
 
     vm.createOrUpdateProject = function(projectName) {
@@ -422,12 +735,17 @@ app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInst
             NewTaskService.deleteFloatingTasks(floatingTasks);
         }
 
+        if(floatingDocuments.length)
+        {
+            NewDocumentService.deleteFloatingDocuments(floatingDocuments);
+        }
+
         $uibModalInstance.close();
 
     };
 
     /*///////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////// New Project Create Button Click /////[E N D]////////////////////////////////////////////
+    ////////////////// Create New Project ///////////////////////////// [E N D] /////////////////////////////
     *////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -435,9 +753,9 @@ app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInst
         $uibModalInstance.dismiss('cancel');
     };
 
-    /*////////////////////////////////////////////////////////////////////////////////////////////////
-     ////////////////// Add Existing Tasks Modal /////////////////////////////////////////////////////////
-     */////////////////////////////////////////////////////////////////////////////////////////////////
+    /*//////////////////////////////////////////////////////////////////////////////////////////////////////
+     ////////////////// Modal For Adding From Existing Tasks ///////////////////////////////////////////////
+     */////////////////////////// Create Project /////////////////////////////////////////////////////////////////
 
     vm.existingTasksModalInProjectModal = function()
     {
@@ -492,14 +810,75 @@ app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInst
 
     };
 
-    /*////////////////////////////////////////////////////////////////////////////////////////////////
-     ////////////////// Add Existing Tasks Modal /////////////////////[E N D]//////////////////////////
-     */////////////////////////////////////////////////////////////////////////////////////////////////
+    /*//////////////////////////////////////////////////////////////////////////////////////////////////////
+     ////////////////// Modal For Adding From Existing Tasks //////////////////// [E N D] //////////////////
+     */////////////////////////// Create Project ///////////////////////////////////////////////////////////
+
+    /*//////////////////////////////////////////////////////////////////////////////////////////////////////
+     ////////////////// Modal For Adding From Existing Documents ///////////////////////////////////////////////
+     */////////////////////////// Create Project /////////////////////////////////////////////////////////////////
+
+    vm.existingDocumentsModalInProjectModal = function()
+    {
+        var addExistingDocumentsModalInstance = $uibModal.open({
+            animation: false,
+            templateUrl: 'partials/existing_documents_modal.html',
+            controller: 'AddExistingDocumentsModalController',
+            controllerAs: 'AddExistingDocumentsModalVM',
+            windowClass: 'modal-width',
+            backdrop: 'static',
+            resolve: {
+                dataForThisModalInstance: function () {
+                    return {
+                        documentsArray: JSON.parse(JSON.stringify(NewDocumentService.documentPanels)),
+                        documentsInModal: JSON.parse(JSON.stringify(vm.documentPanels))
+                    };
+                }
+            }
+        });
+
+        addExistingDocumentsModalInstance.result.then(function (selected_existing_documents) {
+
+            var new_documents_obj = {};
+
+            for(var document of selected_existing_documents)
+            {
+                for(var documentPanel of NewDocumentService.documentPanels)
+                {
+                    if(document.id == documentPanel.id)
+                    {
+                        if(documentPanel.projectName)
+                        {
+                            new_documents_obj = document;
+                            new_documents_obj.id = NewDocumentService.newDocumentID();
+                            documentsArray.push(new_documents_obj);
+                            vm.documentPanels.push(new_documents_obj);
+                            new_documents_obj = {};
+                        }
+                        else
+                        {
+                            floatingDocuments.push(document);
+                            documentsArray.push(document);
+                            vm.documentPanels.push(document);
+                        }
+                    }
+                }
+            }
+
+        }, function () {
+//            $log.info('Modal dismissed at: ' + new Date());
+        });
+
+    };
+
+    /*//////////////////////////////////////////////////////////////////////////////////////////////////////
+     ////////////////// Modal For Adding From Existing Documents //////////////////// [E N D] //////////////////
+     */////////////////////////// Create Project ///////////////////////////////////////////////////////////
 
 
     /*////////////////////////////////////////////////////////////////////////////////////////////////
-     ////////////////// Add New Task Modal /////////////////////////////////////////////////////////
-     */////////////////////////////////////////////////////////////////////////////////////////////////
+     ////////////////// Modal For Creating Task /////////////////////////////////////////////////////////
+     *///////////////////// Create Project ///////////////////////////////////////////////////////////////////////////
 
 
     vm.addNewTask = function()
@@ -533,17 +912,15 @@ app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInst
 
     };
 
-    /*////////////////////////////////////////////////////////////////////////////////////////////////
-     ////////////////// Add New Task Modal /////////////////////////[E N D]////////////////////////////////
-     */////////////////////////////////////////////////////////////////////////////////////////////////
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////
+     ////////////////// Modal For Creating Task /////////////////////////[E N D]///////////////////////////
+     *////////////////////// Create Project ///////////////////////////////////////////////////////////////
 
-    /*////////////////////////////////////////////////////////////////////////////////////////////////
-     ///////////////// Edit Task Modal /////////////////////////////////////////////////////////////
-     *//////////////////////////////////////////////////////////////////////////////////////////////////
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////// Modal For Editing Task /////////////////////////////////////////////////////////////
+     *//////////////////// Create Project /////////////////////////////////////////////////////////////////
 
     vm.editTask = function (taskToEdit) {
-
-//        console.log("taskToEdit : " + JSON.stringify(taskToEdit));
 
         var editTaskModalInstance = $uibModal.open({
             animation: false,
@@ -590,9 +967,62 @@ app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInst
         });
     };
 
-    /*////////////////////////////////////////////////////////////////////////////////////////////////
-     ///////////////// Edit Task Modal ////////////////////[E N D]//////////////////////////////////
-     *//////////////////////////////////////////////////////////////////////////////////////////////
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////// Modal For Editing Task ////////////////////[E N D]//////////////////////////////////
+     *//////////////////// Create Project /////////////////////////////////////////////////////////////////
+
+
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////// Modal For Editing Document /////////////////////////////////////////////////////////////
+     *//////////////////// Create Project /////////////////////////////////////////////////////////////////
+
+    vm.editDocument = function (documentToEdit) {
+
+        var editDocumentModalInstance = $uibModal.open({
+            animation: false,
+            templateUrl: 'partials/new_document_modal.html',
+            controller: 'DocumentEditModalInstanceController',
+            controllerAs: 'DocumentModalVM',
+            windowClass: 'modal-width',
+            backdrop: 'static',
+            resolve: {
+                dataForThisModalInstance: function(){
+                    return{
+                        isGlobal: false,
+                        documentToEdit: JSON.parse(JSON.stringify(documentToEdit))
+                    };
+                }
+            }
+        });
+
+        editDocumentModalInstance.result.then(function (updated_document)
+        {
+            for(var i=0; i<vm.documentPanels.length; i++)
+            {
+                if(vm.documentPanels[i].id == updated_document.id)
+                {
+                    vm.documentPanels[i] = updated_document;
+                    vm.updateFlag = true;
+                    break;
+                }
+            }
+
+            for(var i=0; i<documentsArray.length; i++)
+            {
+                if(documentsArray[i].id == updated_document.id)
+                {
+                    documentsArray[i] = updated_document;
+                    break;
+                }
+            }
+        }, function () {
+
+        });
+    };
+
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////// Modal For Editing Document ////////////////////[E N D]//////////////////////////////////
+     *//////////////////// Create Project /////////////////////////////////////////////////////////////////
 
 
     /*////////////////////////////////////////////////////////////////////////////////////////////////
@@ -601,8 +1031,6 @@ app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInst
 
     vm.deleteTask = function(taskToDelete)
     {
-        console.log("Delete");
-
         NewTaskService.deleteTaskModal(taskToDelete, vm.taskPanels);
         NewTaskService.deleteTaskModal(taskToDelete, tasksArray);
     };
@@ -625,7 +1053,33 @@ app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInst
 
 
 
-////////////////// Add New Document Modal //////////////////
+    /*////////////////////////////////////////////////////////////////////////////////////////////////
+     ////////////////// Delete Document [ Create Project Modal ] //////////////////////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.deleteDocument = function(documentToDelete)
+    {
+        console.log("deleteDocument");
+        NewDocumentService.deleteDocumentModal(documentToDelete, vm.documentPanels);
+        NewDocumentService.deleteDocumentModal(documentToDelete, documentsArray);
+    };
+
+//    var removeByAttr = function(arr, attr, value){
+//        var i = arr.length;
+//        while(i--){
+//            if( arr[i]
+//                && arr[i].hasOwnProperty(attr)
+//                && (arguments.length > 2 && arr[i][attr] === value ) ){
+//                arr.splice(i,1);
+//            }
+//        }
+//        return arr;
+//    };
+
+    /*////////////////////////////////////////////////////////////////////////////////////////////////
+     ////////////////// Delete Document [ Create Project Modal ] ////////////////[E N D]///////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     /*////////////////////////////////////////////////////////////////////////////////////////////////
      ////////////////// Add New Document Modal /////////////////////////////////////////////////////////
@@ -637,7 +1091,7 @@ app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInst
             animation: false,
             templateUrl: 'partials/new_document_modal.html',
             controller: 'AddNewDocumentModalController',
-            controllerAs: 'AddNewDocumentModalVM',
+            controllerAs: 'DocumentModalVM',
             windowClass: 'modal-width',
             backdrop: 'static',
             resolve: {
@@ -664,20 +1118,27 @@ app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInst
      ////////////////// Add New Document Modal //////////////////////[E N D]///////////////////////////////////
      */////////////////////////////////////////////////////////////////////////////////////////////////
 
-    vm.deleteDocument = function(documentName)
-    {
-        var documentToDeleteArray = [];
-        angular.forEach(vm.documentPanels, function(value,index){
+    /*////////////////////////////////////////////////////////////////////////////////////////////////
+     ////////////////// Delete Document //////////////////////////////////////////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////
 
-            if(value.name == documentName)
-            {
-                documentToDeleteArray.push(vm.documentPanels[index]);
-                NewDocumentService.deleteDocument(documentToDeleteArray);
-                removeByAttr(vm.documentPanels, 'name', documentName);
-            }
-        });
+//    vm.deleteDocument = function(documentToDelete)
+//    {
+//        var documentToDeleteArray = [];
+//        angular.forEach(vm.documentPanels, function(value,index){
+//
+//            if(value.name == documentToDelete.name)
+//            {
+//                documentToDeleteArray.push(vm.documentPanels[index]);
+//                NewDocumentService.deleteDocument(documentToDeleteArray);
+//                removeByAttr(vm.documentPanels, 'name', documentToDelete.name);
+//            }
+//        });
+//    };
 
-    };
+    /*////////////////////////////////////////////////////////////////////////////////////////////////
+     ////////////////// Delete Document ////////////////////////////////[E N D]////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////
 
 }]);
 
@@ -780,6 +1241,88 @@ app.controller('AddExistingTasksModalController', ['$scope', '$uibModalInstance'
 
 }]);
 
+app.controller('AddExistingDocumentsModalController', ['$scope', '$uibModalInstance', 'dataForThisModalInstance', 'NewDocumentService', function ($scope, $uibModalInstance, dataForThisModalInstance, NewDocumentService) {
+
+    var vm = this;
+    var noDocuments = false;
+
+    vm.modalHeading = 'Import Documents of Project';
+
+    if(dataForThisModalInstance.documentsArray.length > 10)
+    {
+        vm.multiSearchSwitch = true;
+    }
+    else
+    {
+        vm.multiSearchSwitch = false;
+    }
+
+    if(dataForThisModalInstance.documentsArray.length==0)
+    {
+        vm.existingDocumentsOptions = [
+            {
+                'id': 0,
+                'name': 'No Documents Are Available'
+            }];
+
+        noDocuments = true;
+    }
+    else
+    {
+        vm.existingDocumentsOptions = NewDocumentService.removeProjectDocumentsFromExistingDocuments(dataForThisModalInstance.documentsInModal, dataForThisModalInstance.projectName);
+    }
+
+    /*////////////////////////////////////////////////////////////////////////////////////////////////
+     ////////////////// Existing Document Create Button Click /////////////////////////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.addExistingDocumentsInProject = function() {
+
+        if((vm.selectedExistingDocuments) && (!noDocuments))
+        {
+            if(vm.selectedExistingDocuments.length > 1)
+            {
+                var documentNamesArray = [];
+
+                for(var document of vm.selectedExistingDocuments)
+                {
+                    documentNamesArray.push(document.name);
+                }
+
+                if(NewDocumentService.hasDuplicates(documentNamesArray))
+                {
+                    alert("A Project Can Not Have Documents With Same Names");
+                    return;
+                }
+            }
+
+            for(var document of vm.selectedExistingDocuments)
+            {
+                for(var documentModal of dataForThisModalInstance.documentsInModal)
+                {
+                    if(document.name == documentModal.name)
+                    {
+                        alert("Document " + "'" + document.name + "' Already Exists of This Project");
+                        return;
+                    }
+                }
+            }
+
+            $uibModalInstance.close(vm.selectedExistingDocuments);
+        }
+
+    };
+
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////
+     ////////////////// Existing Document Create Button Click ///////////////////[E N D]///////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.cancelModal = function () {
+        $uibModalInstance.dismiss('cancel');
+    };
+
+}]);
+
 app.controller('AddNewTaskModalController', ['$scope', '$uibModalInstance', 'dataForThisModalInstance', 'NewProjectService', 'NewTaskService', function ($scope, $uibModalInstance, dataForThisModalInstance, NewProjectService, NewTaskService) {
 
     var vm = this;
@@ -797,7 +1340,7 @@ app.controller('AddNewTaskModalController', ['$scope', '$uibModalInstance', 'dat
 
     var new_task_params = '';
 
-    vm.taskNameInputState = false;
+    vm.taskNameEditable = false;
 
     if(dataForThisModalInstance.isGlobal)
     {
@@ -938,9 +1481,7 @@ app.controller('TaskEditModalInstanceController', ['$scope', '$uibModalInstance'
     var vm = this;
 
     vm.taskUpdateFlag = false;
-//    var taskProject = NewProjectService.getTaskProject(dataForThisModalInstance.taskToEdit.projectName);
-
-    vm.taskNameInputState = true;
+    vm.taskNameEditable = true;
     vm.taskName = dataForThisModalInstance.taskToEdit.name;
 
     vm.taskDescription = dataForThisModalInstance.taskToEdit.description;
@@ -966,8 +1507,6 @@ app.controller('TaskEditModalInstanceController', ['$scope', '$uibModalInstance'
     {
         vm.taskUpdateFlag = true;
     };
-
-//    console.log("task'sProjects : " + JSON.stringify(NewProjectService.getTaskProject(dataForThisModalInstance.taskToEdit.projectName)));
 
     /*////////////////////////////////////////////////////////////////////////////////////////////////
      ////////////////// Update Task Button Click /////////////////////////////////////////////
@@ -1005,37 +1544,215 @@ app.controller('TaskEditModalInstanceController', ['$scope', '$uibModalInstance'
 
 }]);
 
-app.controller('AddNewDocumentModalController', ['$scope', '$uibModalInstance', 'dataForThisModalInstance', 'NewDocumentService', function ($scope, $uibModalInstance, dataForThisModalInstance, NewDocumentService) {
+app.controller('DocumentEditModalInstanceController', ['$scope', '$uibModalInstance', 'dataForThisModalInstance', 'NewProjectService', 'NewDocumentService', function ($scope, $uibModalInstance, dataForThisModalInstance, NewProjectService, NewDocumentService) {
 
     var vm = this;
+
+    vm.documentUpdateFlag = false;
+    vm.documentNameEditable = true;
+    vm.documentName = dataForThisModalInstance.documentToEdit.name;
+
+    vm.documentDescription = dataForThisModalInstance.documentToEdit.description;
+
+    vm.modalType = 'Update';
+    vm.modalHeading = 'Update Document';
+
+// Datepicker
+
+    vm.projectDate = '';
+
+    vm.status = {
+        opened: false
+    };
+
+    vm.openDatePicker = function($event) {
+        vm.status.opened = true;
+    };
+
+    vm.format = 'dd.MM.yyyy';
+
+    vm.documentUpdateDetected = function()
+    {
+        vm.documentUpdateFlag = true;
+    };
+
+    /*////////////////////////////////////////////////////////////////////////////////////////////////
+     ////////////////// Update Document Button Click /////////////////////////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.createOrUpdateDocument = function(documentName, documentDescription) {
+
+        var updated_document = {};
+        dataForThisModalInstance.documentToEdit.description = vm.documentDescription;
+
+        if(dataForThisModalInstance.isGlobal)
+        {
+            updated_document = NewDocumentService.updateDocuments([dataForThisModalInstance.documentToEdit], true);
+
+            if(updated_document.projectName)
+            {
+                NewProjectService.updateDocumentsInProject(updated_document.projectName, [updated_document]);
+            }
+        }
+        else
+        {
+            updated_document = dataForThisModalInstance.documentToEdit;
+        }
+
+        $uibModalInstance.close(updated_document);
+    };
+
+    /*////////////////////////////////////////////////////////////////////////////////////////////////
+     ////////////////// Update Document Button Click /////////////////////[E N D]////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.cancelModal = function () {
+        $uibModalInstance.dismiss('cancel');
+    };
+
+}]);
+
+app.controller('AddNewDocumentModalController', ['$scope', '$uibModalInstance', 'dataForThisModalInstance', 'NewProjectService', 'NewDocumentService', function ($scope, $uibModalInstance, dataForThisModalInstance, NewProjectService, NewDocumentService) {
+
+    var vm = this;
+
+    vm.documentUpdateFlag = true;
+
+//    if(dataForThisModalInstance.projectsArray.length > 10)
+//    {
+//        vm.multiSearchSwitch = true;
+//    }
+//    else
+//    {
+//        vm.multiSearchSwitch = false;
+//    }
+
+    var new_document_params = '';
+
+    vm.documentNameEditable = false;
+
+//    if(dataForThisModalInstance.isGlobal)
+//    {
+//        vm.documentProject = dataForThisModalInstance.projectsArray;
+//        vm.projectsListVisibility = true;
+//    }
+//    else
+//    {
+//        vm.projectsListVisibility = false;
+//    }
 
     vm.modalType = 'Create';
     vm.modalHeading = 'Create New Document';
 
+// Datepicker
+
+//    vm.projectDate = '';
+//
+//    vm.status = {
+//        opened: false
+//    };
+//
+//    vm.openDatePicker = function($event) {
+//        vm.status.opened = true;
+//    };
+//
+//    vm.format = 'dd.MM.yyyy';
+
+//    vm.selectedProjects = [NewProjectService.projectPanels[0]];
+//
     /*////////////////////////////////////////////////////////////////////////////////////////////////
      ////////////////// New Document Create Button Click /////////////////////////////////////////////
      */////////////////////////////////////////////////////////////////////////////////////////////////
 
-    vm.addNewDocumentInProject = function(documentName) {
+    vm.createOrUpdateDocument = function(documentName, documentDescription) {
 
-        if(NewDocumentService.checkDocumentExistence(documentName, dataForThisModalInstance.documentsArray))
+        if(dataForThisModalInstance.isGlobal)
         {
-            alert('Document Already Exists');
-            return;
+            new_document_params = {
+                'name': documentName,
+                'status': 'Document Status',
+//                'projectsArray': vm.selectedProjects,
+                'description': documentDescription
+            };
+
+            var newDocumentObject = {};
+            var newDocumentsArray = [];
+            var documentAlreadyExistsInProject = false;
+
+//            if(new_document_params.projectsArray)
+//            {
+//                for(var project of new_document_params.projectsArray)
+//                {
+//                    newDocumentObject.id = NewDocumentService.newDocumentID();
+//                    newDocumentObject.name = new_document_params.name;
+//                    newDocumentObject.status = "Waiting For Approval";
+//                    newDocumentObject.projectName = project.name;
+//                    newDocumentObject.description = new_document_params.description;
+//
+//                    documentAlreadyExistsInProject = NewProjectService.addDocumentToProject(newDocumentObject.projectName, newDocumentObject);
+//
+//                    if(documentAlreadyExistsInProject.status)
+//                    {
+//                        alert("Document Already Exists of Project : " + documentAlreadyExistsInProject.inProject);
+//                        return;
+//                    }
+//                    else
+//                    {
+//                        newDocumentsArray.push(newDocumentObject);
+//                    }
+//
+//                    newDocumentObject = {};
+//                }
+//
+//                NewDocumentService.setValue(newDocumentsArray);
+//
+//                $uibModalInstance.close();
+//
+//            }
+//            else
+//            {
+            for(var documentPanel of NewDocumentService.documentPanels)
+            {
+                if(!(documentPanel.projectName) && (documentPanel.name == new_document_params.name))
+                {
+                    alert("Multiple Documents With Same Names Can Not Be Associated Within The Same Project");
+                    return;
+                }
+            }
+
+            newDocumentObject.id = NewDocumentService.newDocumentID();
+            newDocumentObject.name = new_document_params.name;
+            newDocumentObject.status = "Waiting For Approval";
+            newDocumentObject.projectName = '';
+            newDocumentObject.description = new_document_params.description;
+            newDocumentsArray.push(newDocumentObject);
+            NewDocumentService.setValue(newDocumentsArray);
+            newDocumentObject = {};
+
+            $uibModalInstance.close();
+//            }
         }
+        else
+        {
+            if(NewDocumentService.checkDocumentExistence(documentName, dataForThisModalInstance.documentsArray))
+            {
+                alert('Document Already Exists');
+                return;
+            }
 
-        var new_document_params = {
-            'id': NewDocumentService.newDocumentID(),
-            'name': documentName,
-            'status': 'Document Status'
-        };
+            new_document_params = {
+                'id': NewDocumentService.newDocumentID(),
+                'name': documentName,
+                'status': 'Document Status',
+                'description': documentDescription
+            };
 
-        $uibModalInstance.close(new_document_params);
-
+            $uibModalInstance.close(new_document_params);
+        }
     };
 
-    /*/////////////////////////////////////////////////////////////////////////////////////////////////
-     ////////////////// New Document Create Button Click //////////////////[E N D]/////////////////////
+    /*////////////////////////////////////////////////////////////////////////////////////////////////
+     ////////////////// New Document Create Button Click /////////////////////[E N D]////////////////////////
      */////////////////////////////////////////////////////////////////////////////////////////////////
 
     vm.cancelModal = function () {

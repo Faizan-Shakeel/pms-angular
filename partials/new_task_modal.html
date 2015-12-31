@@ -1,4 +1,3 @@
-
 <div>
 
     <div class="modal-header">
@@ -19,9 +18,7 @@
                         <div class="form-group" ng-class="{ 'has-error': addNewTaskValidationForm.taskName.$touched && addNewTaskValidationForm.taskName.$invalid }">
                             <label for="taskName" class="col-lg-2 col-md-2 col-sm-2 control-label">Name</label>
                             <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">
-                                <!--<input type="text" class="form-control" id="taskName" placeholder="Name" ng-model="TaskModalVM.taskName" ng-required="TaskModalVM.required()">-->
-                                <!--<input type="text" class="form-control" id="taskName" placeholder="Name" ng-model="TaskModalVM.taskName" ng-required="TaskModalVM.required">-->
-                                <input type="text" class="form-control" id="taskName" name="taskName" placeholder="Task Name" ng-model="TaskModalVM.taskName" required="" ng-disabled="TaskModalVM.taskNameInputState"/>
+                                <input type="text" class="form-control" id="taskName" name="taskName" placeholder="Task Name" ng-model="TaskModalVM.taskName" required="" ng-disabled="TaskModalVM.taskNameEditable"/>
 
                                 <div class="help-block" ng-messages="addNewTaskValidationForm.taskName.$error" ng-show="addNewTaskValidationForm.taskName.$touched">
                                     <p ng-message="required">Name is required.</p>
@@ -58,17 +55,6 @@
                             </div>
                         </div>
 
-                        <!--<div ng-show="TaskModalVM.projectsListVisibility">-->
-                            <!--<multiselect ng-model="TaskModalVM.selectedProjects" options="TaskModalVM.projectsList" id-prop="id" display-prop="name"></multiselect>-->
-                        <!--</div>-->
-
-                        <!--<div class="form-group">-->
-                            <!--<label for="taskBelongsToProject" class="col-lg-2 col-md-2 col-sm-2 control-label">Project</label>-->
-                            <!--<div class="col-lg-8 col-md-8 col-sm-8 col-lg-offset-1">-->
-                                <!--<select class="form-control" id="taskBelongsToProject" ng-options="project.name for project in TaskModalVM.projects" ng-model="TaskModalVM.selected"></select>-->
-                            <!--</div>-->
-                        <!--</div>-->
-
                         <input type="submit" id="submit-new-task-form" class="hidden" />
 
                     </form>
@@ -86,9 +72,9 @@
                         </button>
 
                         <ul class="uib-dropdown-menu" role="menu" aria-labelledby="add-new-document-dropDown-button-in-project-modal">
-                            <li role="menuitem"><a href="#">Import Existing Documents</a></li>
-                            <li class="divider"></li>
                             <li role="menuitem"><a href="#">Create New Documents</a></li>
+                            <li class="divider"></li>
+                            <li role="menuitem"><a href="#">Import Existing Documents</a></li>
                         </ul>
                     </div>
 
@@ -171,7 +157,6 @@
 
     <div class="modal-footer">
         <label for="submit-new-task-form" class="btn btn-primary" ng-disabled="addNewTaskValidationForm.$invalid">{{TaskModalVM.modalType}}</label>
-        <!--<button type="submit" class="btn btn-primary" ng-click="TaskModalVM.ok(TaskModalVM.taskName)">{{TaskModalVM.modalType}}</button>-->
         <button type="button" class="btn btn-warning" ng-click="TaskModalVM.cancelModal()">Cancel</button>
     </div>
 

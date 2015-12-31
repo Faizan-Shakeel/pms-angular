@@ -19,7 +19,7 @@
                         <div class="form-group" ng-class="{ 'has-error': validatedForm.userName.$touched && validatedForm.userName.$invalid }">
                             <label for="userName" class="col-lg-2 col-md-2 col-sm-2 control-label">Name</label>
                             <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">
-                                <input type="text" class="form-control" id="userName" name="userName" placeholder="Name" ng-model="ModalVM.projectName" required="" ng-disabled="ModalVM.projectNameInputState"/>
+                                <input type="text" class="form-control" id="userName" name="userName" placeholder="Name" ng-model="ModalVM.projectName" required="" ng-disabled="ModalVM.projectNameEditable"/>
 
                                 <div class="help-block" ng-messages="validatedForm.userName.$error" ng-show="validatedForm.userName.$touched">
                                     <p ng-message="required">Name is required.</p>
@@ -122,9 +122,9 @@
                         </button>
 
                         <ul class="uib-dropdown-menu" role="menu" aria-labelledby="add-new-document-dropDown-button-in-project-modal">
-                            <li role="menuitem"><a href="#">Import Existing Documents</a></li>
+                            <li role="menuitem" ng-click="ModalVM.addNewDocument()"><a href="#">Create New Documents</a></li>
                             <li class="divider"></li>
-                            <li role="menuitem"><a href="#">Create New Documents</a></li>
+                            <li role="menuitem" ng-click="ModalVM.existingDocumentsModalInProjectModal()"><a href="#">Import Existing Documents</a></li>
                         </ul>
                     </div>
 
@@ -141,7 +141,7 @@
 
                                 <div id="document-panel-content-in-new-project-modal">
                                     <p>
-                                    <h4>{{documentPanel.name}}</h4>
+                                    <h4>{{documentPanel.name}} <span class="col-lg-offset-8">ID: {{documentPanel.id}}</span> </h4>
                                     </p>
 
                                     <p>
@@ -151,8 +151,8 @@
 
                                 <div class="btn-group-vertical" id="documents-btn-grp-panel-in-new-project-modal">
                                     <button class="btn btn-default test-button-border"><i class="fa fa-info"></i></button>
-                                    <button class="btn btn-default" ng-click="ModalVM.editDocuments(documentPanel.name)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-default test-button-border" ng-click="ModalVM.deleteDocument(documentPanel.name)"><i class="fa fa-trash-o"></i></button>
+                                    <button class="btn btn-default" ng-click="ModalVM.editDocument(documentPanel)"><i class="fa fa-edit"></i></button>
+                                    <button class="btn btn-default test-button-border" ng-click="ModalVM.deleteDocument(documentPanel)"><i class="fa fa-trash-o"></i></button>
                                 </div>
 
                             </div>

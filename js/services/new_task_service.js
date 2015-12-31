@@ -91,6 +91,14 @@ app.service('NewTaskService', function(){
         }
     };
 
+//    var deleteDocumentGlobal = function(documentsToDelete, deleteFrom)
+//    {
+//        for(var document of documentsToDelete)
+//        {
+//            removeEntity(deleteFrom, 'id', document.id);
+//        }
+//    };
+
     var deleteFloatingTasks = function(floatingTasks)
     {
         for(var floatTask of floatingTasks)
@@ -172,34 +180,8 @@ app.service('NewTaskService', function(){
 
     };
 
-//    var updateTasks = function(updatedTaskObject)
-//    {
-//        for(var task of taskPanels)
-//        {
-//            if(task.id == updatedTaskObject.id)
-//            {
-//                console.log("TASK : " + JSON.stringify(task));
-//                task.description = updatedTaskObject.description;
-////                task = updatedTaskObject;
-//                console.log("TASK : " + JSON.stringify(task));
-//                return task;
-//            }
-//        }
-//    };
-
     var updateTasks = function(updatedTasks, global)
     {
-//        if(global)
-//        {
-//            for(var i=0; i<taskPanels.length; i++)
-//            {
-//                if(taskPanels[i].id == updatedTaskObject.id)
-//                {
-//                    taskPanels[i] = updatedTaskObject;
-//                    return taskPanels[i];
-//                }
-//            }
-//        }
         for(var i=0; i<updatedTasks.length; i++)
         {
             for(var j=0; j<taskPanels.length; j++)
@@ -214,8 +196,6 @@ app.service('NewTaskService', function(){
                 }
             }
         }
-
-
     };
 
     return{

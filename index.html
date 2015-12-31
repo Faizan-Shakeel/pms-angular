@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="font-awesome-4.0.3/css/font-awesome.min.css">
     <link href="css/Third-Party-CSS/bootstrap-tour.min.css" rel="stylesheet">
     <link href="css/Third-Party-CSS/popbox.css" rel="stylesheet">
+    <link rel="stylesheet" href="bower_components/angular-bootstrap-simple-chat/src/css/style.css">
+    <link rel="stylesheet" href="bower_components/angular-bootstrap-simple-chat/src/css/themes.css">
 
     <!--Third Party Styles-->
 
@@ -284,18 +286,19 @@
 
                                 <div id="document-panel-content-in-new-project-modal">
                                     <p>
-                                    <h4>{{documentPanel.name}}</h4>
+                                    <h4>{{documentPanel.name}} <span class="col-lg-offset-8">ID: {{documentPanel.id}} </span> </h4>
                                     </p>
 
                                     <p>
                                         {{documentPanel.status}}
+                                        <span class="col-lg-offset-7">{{documentPanel.projectName}}</span>
                                     </p>
                                 </div>
 
                                 <div class="btn-group-vertical" id="documents-btn-grp-panel-in-new-project-modal">
                                     <button class="btn btn-default test-button-border"><i class="fa fa-info"></i></button>
-                                    <button class="btn btn-default" ng-click="ModalVM.editDocument(documentPanel.name)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteDocument(documentPanel.id)"><i class="fa fa-trash-o"></i></button>
+                                    <button class="btn btn-default" ng-click="ModalVM.editDocument(documentPanel)"><i class="fa fa-edit"></i></button>
+                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteDocument(documentPanel)"><i class="fa fa-trash-o"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -338,7 +341,20 @@
         </div>
 
         <!-------------------------------------------------------------------------- Chat Box --------------------------------------------------------------------------------START-->
-        <!--<ng-include src="'chat-box.html'"></ng-include>-->
+
+        <!--<div class="chatting-box">-->
+            <!--<irontec-simple-chat-->
+                    <!--messages="MainViewVM.messages"-->
+                    <!--username="MainViewVM.username"-->
+                    <!--input-placeholder-text="You can write here"-->
+                    <!--submit-button-text="Send"-->
+                    <!--title="Super Awesome Chat"-->
+                    <!--theme="material"-->
+                    <!--submit-function="MainViewVM.sendMessage"-->
+                    <!--visible="MainViewVM.visible"-->
+                    <!--expand-on-new="MainViewVM.expandOnNew">-->
+            <!--</irontec-simple-chat>-->
+        <!--</div>-->
         <!-------------------------------------------------------------------------- Chat Box -------------------------------------------------------------------------------------END-->
 
 
@@ -354,6 +370,7 @@
 
                 <ul class="list-group" id="chat-ul" slim-scroll height="500px">
 
+                    <!--<li ng-repeat="user in MainViewVM.users" class="list-group-item" ng-click="MainViewVM.visible = !MainViewVM.visible"><i id="onlineUserIcon" class={{user.status}}></i>{{user.name}}</li>-->
                     <li ng-repeat="user in MainViewVM.users" class="list-group-item"><i id="onlineUserIcon" class={{user.status}}></i>{{user.name}}</li>
 
                 </ul>
@@ -388,16 +405,16 @@
 <script src="js/Third-Party-JS/respond.js"></script>
 <script src="js/Third-Party-JS/jquery.slimscroll.js"></script>
 <script src="js/Third-Party-JS/jquery.validate.min.js"></script>
-<!--<script type="text/javascript" src="js/Third-Party-JS/angular.js"></script>-->
 <script type="text/javascript" src="js/Third-Party-JS/angular.min.js"></script>
 <script type="text/javascript" src="i18n/angular-locale_de-de.js"></script>
 <script type="text/javascript" src="js/Third-Party-JS/ui-bootstrap-tpls-0.14.3.min.js"></script>
-<!--<script type="text/javascript" src="js/Third-Party-JS/nsPopover.js"></script>-->
 <script type="text/javascript" src="bower_components/nsPopover/src/nsPopover.js"></script>
 <!--<script type="text/javascript" src="bower_components/angular-animate/angular-animate.min.js"></script>-->
 <script src="bower_components/angular-input-masks/angular-input-masks-standalone.min.js"></script>
 <script src="bower_components/angular-messages/angular-messages.min.js"></script>
 <script src="bower_components/angular-bootstrap-multiselect/dist/angular-bootstrap-multiselect.min.js"></script>
+<script src="bower_components/lodash/dist/lodash.min.js"></script>
+<script src="bower_components/angular-bootstrap-simple-chat/src/scripts/index.js"></script>
 
 
 <!--Directives-->

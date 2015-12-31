@@ -62,6 +62,88 @@ app.service('NewDocumentService', function(){
         });
     };
 
+    var deleteDocumentModal = function(selectedDocumentToDelete, modalDocumentsArray)
+    {
+        removeEntity(modalDocumentsArray, 'id', selectedDocumentToDelete.id);
+    };
+
+    var deleteDocumentGlobal = function(documentsToDelete, deleteFrom)
+    {
+        for(var document of documentsToDelete)
+        {
+            removeEntity(deleteFrom, 'id', document.id);
+        }
+    };
+
+    var deleteFloatingDocuments = function(floatingDocuments)
+    {
+        for(var floatDocument of floatingDocuments)
+        {
+            for(var document of documentPanels)
+            {
+                if(!(document.projectName) && (document.id == floatDocument.id))
+                {
+                    removeEntity(documentPanels, 'projectName', document.projectName);
+                }
+            }
+        }
+    };
+
+    var updateDocuments = function(updatedDocuments, global)
+    {
+        for(var i=0; i<updatedDocuments.length; i++)
+        {
+            for(var j=0; j<documentPanels.length; j++)
+            {
+                if(documentPanels[j].id == updatedDocuments[i].id)
+                {
+                    documentPanels[j] = updatedDocuments[i];
+                    if(global)
+                    {
+                        return documentPanels[j];
+                    }
+                }
+            }
+        }
+    };
+
+    var removeProjectDocumentsFromExistingDocuments = function(projectDocuments, projectName)
+    {
+        var filteredArray = [];
+        var documentNotFound;
+
+        for(var document of documentPanels)
+        {
+            documentNotFound = true;
+
+            if(projectDocuments.length)
+            {
+                for(var projectDocument of projectDocuments)
+                {
+                    if((projectDocument.name == document.name) || (document.projectName == projectName))
+                    {
+                        documentNotFound = false;
+                        break;
+                    }
+                }
+            }
+
+            else if(document.projectName == projectName)
+            {
+                documentNotFound = false;
+            }
+
+            if(documentNotFound)
+            {
+                filteredArray.push(document);
+            }
+
+        }
+
+        return filteredArray;
+
+    };
+
     var removeEntity = function(arr, attr, value){
         var i = arr.length;
         while(i--){
@@ -82,6 +164,11 @@ app.service('NewDocumentService', function(){
         setValue: setValue,
         getValue: getValue,
         deleteDocument: deleteDocument,
+        deleteDocumentModal: deleteDocumentModal,
+        deleteDocumentGlobal: deleteDocumentGlobal,
+        deleteFloatingDocuments: deleteFloatingDocuments,
+        updateDocuments: updateDocuments,
+        removeProjectDocumentsFromExistingDocuments: removeProjectDocumentsFromExistingDocuments,
         documentPanels: documentPanels
     };
 
