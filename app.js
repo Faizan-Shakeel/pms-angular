@@ -6,7 +6,7 @@ var app = angular.module('pmsAngular', [
 
     'mainViewModule',
     'slimScrollModule',
-    'newProjectGlobalModule',
+    'modalsModule',
     'newProjectServiceModule',
     'newTaskServiceModule',
     'newDocumentServiceModule',

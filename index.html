@@ -36,7 +36,7 @@
 <div class="container-full-width" ng-controller="Main_View_Controller as MainViewVM" ng-cloak>
 
 <!-------------------------------------------------------------------- Navigation Bar Fixed Top -----------------------------------------------------------------------START-->
-    <div ng-controller="ModalDemoController as ModalVM">
+    <div ng-controller="ModalsController as ModalVM">
 
         <nav class="navbar navbar-default navbar-fixed-top" id="navbar-bottom-margin" role="navigation">
 
@@ -229,7 +229,7 @@
 
                                 <div class="btn-group-vertical" id="btn-grp-panel">
                                     <button class="btn btn-default test-button-border"><i class="fa fa-info"></i></button>
-                                    <button class="btn btn-default" ng-click="ModalVM.editProject(projectPanel)"><i class="fa fa-edit"></i></button>
+                                    <button class="btn btn-default" ng-click="ModalVM.editProjectModal(projectPanel)"><i class="fa fa-edit"></i></button>
                                     <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteProject(projectPanel.name)"><i class="fa fa-trash-o"></i></button>
                                 </div>
                             </div>
@@ -263,7 +263,7 @@
 
                                 <div class="btn-group-vertical" id="tasks-btn-grp-panel-in-new-project-modal">
                                     <button class="btn btn-default test-button-border"><i class="fa fa-info"></i></button>
-                                    <button class="btn btn-default" ng-click="ModalVM.editTask(taskPanel)"><i class="fa fa-edit"></i></button>
+                                    <button class="btn btn-default" ng-click="ModalVM.editTaskModal(taskPanel)"><i class="fa fa-edit"></i></button>
                                     <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteTask(taskPanel)"><i class="fa fa-trash-o"></i></button>
                                 </div>
                             </div>
@@ -297,7 +297,7 @@
 
                                 <div class="btn-group-vertical" id="documents-btn-grp-panel-in-new-project-modal">
                                     <button class="btn btn-default test-button-border"><i class="fa fa-info"></i></button>
-                                    <button class="btn btn-default" ng-click="ModalVM.editDocument(documentPanel)"><i class="fa fa-edit"></i></button>
+                                    <button class="btn btn-default" ng-click="ModalVM.editDocumentModal(documentPanel)"><i class="fa fa-edit"></i></button>
                                     <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteDocument(documentPanel)"><i class="fa fa-trash-o"></i></button>
                                 </div>
                             </div>
@@ -424,13 +424,13 @@
 <!--Controllers-->
 
 <script type="text/javascript" src="js/controllers/global_tabs_and_panels.js"></script>
-<script type="text/javascript" src="js/controllers/proj_task_doc_user_modal.js"></script>
+<script type="text/javascript" src="js/controllers/modal.js"></script>
 
 <!--Services-->
 
-<script type="text/javascript" src="js/services/new_project_service.js"></script>
-<script type="text/javascript" src="js/services/new_task_service.js"></script>
-<script type="text/javascript" src="js/services/new_document_service.js"></script>
+<script type="text/javascript" src="js/services/project_service.js"></script>
+<script type="text/javascript" src="js/services/task_service.js"></script>
+<script type="text/javascript" src="js/services/document_service.js"></script>
 
 <script type="text/javascript" src="app.js"></script>
 

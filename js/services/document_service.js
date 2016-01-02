@@ -144,6 +144,10 @@ app.service('NewDocumentService', function(){
 
     };
 
+    function hasDuplicates(array) {
+        return (new Set(array)).size !== array.length;
+    }
+
     var removeEntity = function(arr, attr, value){
         var i = arr.length;
         while(i--){
@@ -167,6 +171,7 @@ app.service('NewDocumentService', function(){
         deleteDocumentModal: deleteDocumentModal,
         deleteDocumentGlobal: deleteDocumentGlobal,
         deleteFloatingDocuments: deleteFloatingDocuments,
+        hasDuplicates: hasDuplicates,
         updateDocuments: updateDocuments,
         removeProjectDocumentsFromExistingDocuments: removeProjectDocumentsFromExistingDocuments,
         documentPanels: documentPanels

@@ -73,7 +73,7 @@
                         </button>
 
                         <ul class="uib-dropdown-menu" role="menu" aria-labelledby="add-new-task-dropDown-button-in-project-modal">
-                            <li role="menuitem" ng-click="ModalVM.addNewTask()"><a href="#">Create New Task</a></li>
+                            <li role="menuitem" ng-click="ModalVM.addNewTaskModal()"><a href="#">Create New Task</a></li>
                             <li class="divider"></li>
                             <li role="menuitem" ng-click="ModalVM.existingTasksModalInProjectModal()"><a href="#">Import Existing Tasks</a></li>
                         </ul>
@@ -102,7 +102,7 @@
 
                                 <div class="btn-group-vertical" id="tasks-btn-grp-panel-in-new-project-modal">
                                     <button class="btn btn-default test-button-border"><i class="fa fa-info"></i></button>
-                                    <button class="btn btn-default" ng-click="ModalVM.editTask(taskPanel)"><i class="fa fa-edit"></i></button>
+                                    <button class="btn btn-default" ng-click="ModalVM.editTaskModal(taskPanel)"><i class="fa fa-edit"></i></button>
                                     <button class="btn btn-default test-button-border" ng-click="ModalVM.deleteTask(taskPanel)"><i class="fa fa-trash-o"></i></button>
                                 </div>
                             </div>
@@ -122,7 +122,7 @@
                         </button>
 
                         <ul class="uib-dropdown-menu" role="menu" aria-labelledby="add-new-document-dropDown-button-in-project-modal">
-                            <li role="menuitem" ng-click="ModalVM.addNewDocument()"><a href="#">Create New Documents</a></li>
+                            <li role="menuitem" ng-click="ModalVM.addNewDocumentModal()"><a href="#">Create New Documents</a></li>
                             <li class="divider"></li>
                             <li role="menuitem" ng-click="ModalVM.existingDocumentsModalInProjectModal()"><a href="#">Import Existing Documents</a></li>
                         </ul>
@@ -151,7 +151,7 @@
 
                                 <div class="btn-group-vertical" id="documents-btn-grp-panel-in-new-project-modal">
                                     <button class="btn btn-default test-button-border"><i class="fa fa-info"></i></button>
-                                    <button class="btn btn-default" ng-click="ModalVM.editDocument(documentPanel)"><i class="fa fa-edit"></i></button>
+                                    <button class="btn btn-default" ng-click="ModalVM.editDocumentModal(documentPanel)"><i class="fa fa-edit"></i></button>
                                     <button class="btn btn-default test-button-border" ng-click="ModalVM.deleteDocument(documentPanel)"><i class="fa fa-trash-o"></i></button>
                                 </div>
 
@@ -167,7 +167,7 @@
 
                 <div class="modal-new-user-tab-body">
 
-                    <button type="button" class="btn btn-default btn-circle-user-tab-project-modal btn-lg" uib-tooltip="Add User" tooltip-placement="right" ng-click="ModalVM.addNewTask()"><i class="fa fa-plus fa-lg addEntityIconColor"></i></button>
+                    <button type="button" class="btn btn-default btn-circle-user-tab-project-modal btn-lg" uib-tooltip="Add User" tooltip-placement="right" ng-click="ModalVM.addNewTaskModal()"><i class="fa fa-plus fa-lg addEntityIconColor"></i></button>
 
                     <div slim-scroll height="300px">
 
