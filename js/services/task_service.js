@@ -1,3 +1,4 @@
+"use strict";
 /**
  * Created by faizankhan on 11/8/2014.
  */
@@ -9,44 +10,19 @@ app.service('NewTaskService', function(){
     var taskPanels = [];
     var tasksIdArray = [];
 
-    var setValue = function(newTasksArray){
+    var createTaskPanel = function(newTasksArray)
+    {
+        "use strict";
 
         angular.forEach(newTasksArray, function(value, index){
             taskPanels.push(newTasksArray[index]);
         });
-
-    };
-
-    var checkIfTaskIsAlreadyInSelectedProject = function(taskName, selectedProjects)
-    {
-        var taskAlreadyExists = false;
-
-
-    };
-
-    var checkTaskExistenceGlobal = function(taskName, tasksArrayGlobal)
-    {
-        var taskAlreadyExists = false;
-
-        for(var task of tasksArrayGlobal)
-        {
-            if(task.name == taskName)
-            {
-                taskAlreadyExists = true;
-                break;
-            }
-            else
-            {
-                taskAlreadyExists = false;
-            }
-        }
-
-        return taskAlreadyExists;
-
     };
 
     var checkTaskExistence = function(taskName, tasksArray)
     {
+        "use strict";
+
         var taskAlreadyExists = false;
 
         for(var task of tasksArray)
@@ -68,39 +44,42 @@ app.service('NewTaskService', function(){
 
     var newTaskID = function()
     {
+        "use strict";
+
         var taskID = tasksIdArray.length;
         tasksIdArray.push(taskID);
 
         return taskID;
     };
 
-    var getValue = function(){
+    var getTaskPanels = function()
+    {
+        "use strict";
+
         return taskPanels;
     };
 
     var deleteTaskModal = function(selectedTaskToDelete, modalTasksArray)
     {
+        "use strict";
+
         removeEntity(modalTasksArray, 'id', selectedTaskToDelete.id);
     };
 
     var deleteTaskGlobal = function(tasksToDelete, deleteFrom)
     {
+        "use strict";
+
         for(var task of tasksToDelete)
         {
             removeEntity(deleteFrom, 'id', task.id);
         }
     };
 
-//    var deleteDocumentGlobal = function(documentsToDelete, deleteFrom)
-//    {
-//        for(var document of documentsToDelete)
-//        {
-//            removeEntity(deleteFrom, 'id', document.id);
-//        }
-//    };
-
     var deleteFloatingTasks = function(floatingTasks)
     {
+        "use strict";
+
         for(var floatTask of floatingTasks)
         {
             for(var task of taskPanels)
@@ -115,8 +94,10 @@ app.service('NewTaskService', function(){
 
     var deleteTask = function(tasksArray)
     {
-        angular.forEach(tasksArray, function(valueFromGlobalList,indexGlobalList){
-            angular.forEach(taskPanels, function(valueFromSpecificProject,indexSpecificProject){
+        "use strict";
+
+        angular.forEach(tasksArray, function(valueFromSpecificProject,indexGlobalList){
+            angular.forEach(taskPanels, function(valueFromGlobalList,indexSpecificProject){
                 if(valueFromGlobalList.id == valueFromSpecificProject.id)
                 {
                     taskPanels = removeEntity(taskPanels, 'id', valueFromGlobalList.id);
@@ -125,26 +106,17 @@ app.service('NewTaskService', function(){
         });
     };
 
-    var removeEntity = function(arr, attr, value){
-        var i = arr.length;
-        while(i--){
-            if( arr[i]
-                && arr[i].hasOwnProperty(attr)
-                && (arguments.length > 2 && arr[i][attr] === value ) ){
+    function hasDuplicates(array)
+    {
+        "use strict";
 
-                arr.splice(i,1);
-
-            }
-        }
-        return arr;
-    };
-
-    function hasDuplicates(array) {
         return (new Set(array)).size !== array.length;
     }
 
     var removeProjectTasksFromExistingTasks = function(projectTasks, projectName)
     {
+        "use strict";
+
         var filteredArray = [];
         var taskNotFound;
 
@@ -173,7 +145,6 @@ app.service('NewTaskService', function(){
             {
                 filteredArray.push(task);
             }
-
         }
 
         return filteredArray;
@@ -182,6 +153,8 @@ app.service('NewTaskService', function(){
 
     var updateTasks = function(updatedTasks, global)
     {
+        "use strict";
+
         for(var i=0; i<updatedTasks.length; i++)
         {
             for(var j=0; j<taskPanels.length; j++)
@@ -198,20 +171,34 @@ app.service('NewTaskService', function(){
         }
     };
 
+    var removeEntity = function(arr, attr, value)
+    {
+        "use strict";
+
+        var i = arr.length;
+        while(i--){
+            if( arr[i]
+                && arr[i].hasOwnProperty(attr)
+                && (arguments.length > 2 && arr[i][attr] === value ) ){
+
+                arr.splice(i,1);
+            }
+        }
+        return arr;
+    };
+
     return{
         newTaskID: newTaskID,
         checkTaskExistence: checkTaskExistence,
-        checkTaskExistenceGlobal: checkTaskExistenceGlobal,
-        setValue: setValue,
-        getValue: getValue,
+        createTaskPanel: createTaskPanel,
+        getTaskPanels: getTaskPanels,
         deleteTask: deleteTask,
         deleteTaskModal: deleteTaskModal,
         deleteTaskGlobal: deleteTaskGlobal,
         deleteFloatingTasks: deleteFloatingTasks,
         hasDuplicates: hasDuplicates,
         removeProjectTasksFromExistingTasks: removeProjectTasksFromExistingTasks,
-        updateTasks: updateTasks,
-        taskPanels: taskPanels
+        updateTasks: updateTasks
     };
 
 });

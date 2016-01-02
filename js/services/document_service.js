@@ -1,3 +1,4 @@
+"use strict";
 /**
  * Created by faizankhan on 11/8/2014.
  */
@@ -9,16 +10,19 @@ app.service('NewDocumentService', function(){
     var documentPanels = [];
     var documentsIdArray = [];
 
-    var setValue = function(newDocumentObject){
+    var createDocumentPanel = function(newDocumentObject)
+    {
+        "use strict";
 
         angular.forEach(newDocumentObject, function(value, index){
             documentPanels.push(newDocumentObject[index]);
         });
-
     };
 
     var checkDocumentExistence = function(documentName, documentsArray)
     {
+        "use strict";
+
         var documentAlreadyExists = false;
 
         for(var doc of documentsArray)
@@ -40,18 +44,24 @@ app.service('NewDocumentService', function(){
 
     var newDocumentID = function()
     {
+        "use strict";
+
         var documentID = documentsIdArray.length;
         documentsIdArray.push(documentID);
 
         return documentID;
     };
 
-    var getValue = function(){
+    var getDocumentPanels = function(){
+        "use strict";
+
         return documentPanels;
     };
 
     var deleteDocument = function(documentsArray)
     {
+        "use strict";
+
         angular.forEach(documentsArray, function(valueFromGlobalList,indexGlobalList){
             angular.forEach(documentPanels, function(valueFromSpecificProject,indexSpecificProject){
                 if(valueFromGlobalList.id == valueFromSpecificProject.id)
@@ -64,11 +74,15 @@ app.service('NewDocumentService', function(){
 
     var deleteDocumentModal = function(selectedDocumentToDelete, modalDocumentsArray)
     {
+        "use strict";
+
         removeEntity(modalDocumentsArray, 'id', selectedDocumentToDelete.id);
     };
 
     var deleteDocumentGlobal = function(documentsToDelete, deleteFrom)
     {
+        "use strict";
+
         for(var document of documentsToDelete)
         {
             removeEntity(deleteFrom, 'id', document.id);
@@ -77,6 +91,8 @@ app.service('NewDocumentService', function(){
 
     var deleteFloatingDocuments = function(floatingDocuments)
     {
+        "use strict";
+
         for(var floatDocument of floatingDocuments)
         {
             for(var document of documentPanels)
@@ -91,6 +107,8 @@ app.service('NewDocumentService', function(){
 
     var updateDocuments = function(updatedDocuments, global)
     {
+        "use strict";
+
         for(var i=0; i<updatedDocuments.length; i++)
         {
             for(var j=0; j<documentPanels.length; j++)
@@ -109,6 +127,8 @@ app.service('NewDocumentService', function(){
 
     var removeProjectDocumentsFromExistingDocuments = function(projectDocuments, projectName)
     {
+        "use strict";
+
         var filteredArray = [];
         var documentNotFound;
 
@@ -144,11 +164,17 @@ app.service('NewDocumentService', function(){
 
     };
 
-    function hasDuplicates(array) {
+    function hasDuplicates(array)
+    {
+        "use strict";
+
         return (new Set(array)).size !== array.length;
     }
 
-    var removeEntity = function(arr, attr, value){
+    var removeEntity = function(arr, attr, value)
+    {
+        "use strict";
+
         var i = arr.length;
         while(i--){
             if( arr[i]
@@ -165,16 +191,15 @@ app.service('NewDocumentService', function(){
     return{
         newDocumentID: newDocumentID,
         checkDocumentExistence: checkDocumentExistence,
-        setValue: setValue,
-        getValue: getValue,
+        createDocumentPanel: createDocumentPanel,
+        getDocumentPanels: getDocumentPanels,
         deleteDocument: deleteDocument,
         deleteDocumentModal: deleteDocumentModal,
         deleteDocumentGlobal: deleteDocumentGlobal,
         deleteFloatingDocuments: deleteFloatingDocuments,
         hasDuplicates: hasDuplicates,
         updateDocuments: updateDocuments,
-        removeProjectDocumentsFromExistingDocuments: removeProjectDocumentsFromExistingDocuments,
-        documentPanels: documentPanels
+        removeProjectDocumentsFromExistingDocuments: removeProjectDocumentsFromExistingDocuments
     };
 
 });

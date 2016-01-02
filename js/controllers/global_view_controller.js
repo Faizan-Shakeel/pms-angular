@@ -1,3 +1,4 @@
+"use strict";
 
 var app = angular.module('mainViewModule', ['ui.bootstrap', 'nsPopover']);
 
@@ -209,9 +210,9 @@ app.controller('Main_View_Controller', ['$scope', 'NewProjectService', 'NewTaskS
      */////////////////////////////////////////////////////////////////////////////////////////////////
 
     vm.globalTabsBootstrapClass = 'col-lg-8 col-md-8 col-sm-8';
-    vm.projectPanels = NewProjectService.projectPanels;
-    vm.taskPanels = NewTaskService.taskPanels;
-    vm.documentPanels = NewDocumentService.documentPanels;
+    vm.projectPanels = NewProjectService.getProjectPanels();
+    vm.taskPanels = NewTaskService.getTaskPanels();
+    vm.documentPanels = NewDocumentService.getDocumentPanels();
 
     vm.deleteProject = function(projectName)
     {
@@ -225,7 +226,6 @@ app.controller('Main_View_Controller', ['$scope', 'NewProjectService', 'NewTaskS
                 selectedProjectTasksArray = vm.projectPanels[index].taskPanels;
                 selectedProjectDocumentsArray = vm.projectPanels[index].documentPanels;
             }
-
         });
 
         NewTaskService.deleteTask(selectedProjectTasksArray);
@@ -236,7 +236,7 @@ app.controller('Main_View_Controller', ['$scope', 'NewProjectService', 'NewTaskS
 
     vm.deleteTask = function(taskToDelete)
     {
-        removeEntity(NewTaskService.taskPanels, 'id', taskToDelete.id);
+        removeEntity(NewTaskService.getTaskPanels(), 'id', taskToDelete.id);
 
         angular.forEach(vm.projectPanels, function(valueProject,indexProject){
             angular.forEach(valueProject.taskPanels, function(valueTask,indexTask){
@@ -250,7 +250,7 @@ app.controller('Main_View_Controller', ['$scope', 'NewProjectService', 'NewTaskS
 
     vm.deleteDocument = function(documentToDelete)
     {
-        removeEntity(NewDocumentService.documentPanels, 'id', documentToDelete.id);
+        removeEntity(NewDocumentService.getDocumentPanels(), 'id', documentToDelete.id);
         angular.forEach(vm.projectPanels, function(valueProject,indexProject){
             angular.forEach(valueProject.documentPanels, function(valueDocument,indexDocument){
                 if(valueDocument.id == documentToDelete.id)

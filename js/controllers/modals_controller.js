@@ -1,3 +1,4 @@
+"use strict";
 
 var app = angular.module('modalsModule', ['ui.bootstrap']);
 
@@ -13,8 +14,8 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'NewPro
 
         var newProjectModalInstance = $uibModal.open({
             animation: false,
-            templateUrl: 'partials/new_project_modal.html',
-            controller: 'newProjectModalInstanceController',
+            templateUrl: 'partials/project_modal.html',
+            controller: 'NewProjectModalInstanceController',
             controllerAs: 'ModalVM',
             windowClass: 'modals-style',
             backdrop: 'static'
@@ -46,8 +47,8 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'NewPro
 
         var editProjectModalInstance = $uibModal.open({
             animation: false,
-            templateUrl: 'partials/new_project_modal.html',
-            controller: 'ProjectEditModalInstanceController',
+            templateUrl: 'partials/project_modal.html',
+            controller: 'EditProjectModalInstanceController',
             controllerAs: 'ModalVM',
             windowClass: 'modals-style',
             backdrop: 'static',
@@ -80,8 +81,8 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'NewPro
     {
         var newTaskModalInstance = $uibModal.open({
             animation: false,
-            templateUrl: 'partials/new_task_modal.html',
-            controller: 'AddNewTaskModalController',
+            templateUrl: 'partials/task_modal.html',
+            controller: 'NewTaskModalController',
             controllerAs: 'TaskModalVM',
             windowClass: 'modals-style',
             backdrop: 'static',
@@ -89,7 +90,7 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'NewPro
                 dataForThisModalInstance: function () {
                     return {
                         isGlobal: true,
-                        projectsArray: JSON.parse(JSON.stringify(NewProjectService.projectPanels))
+                        projectsArray: JSON.parse(JSON.stringify(NewProjectService.getProjectPanels()))
                     };
                 }
             }
@@ -115,8 +116,8 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'NewPro
     {
         var newDocumentModalInstance = $uibModal.open({
             animation: false,
-            templateUrl: 'partials/new_document_modal.html',
-            controller: 'AddNewDocumentModalController',
+            templateUrl: 'partials/document_modal.html',
+            controller: 'NewDocumentModalController',
             controllerAs: 'DocumentModalVM',
             windowClass: 'modals-style',
             backdrop: 'static',
@@ -124,7 +125,7 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'NewPro
                 dataForThisModalInstance: function () {
                     return {
                         isGlobal: true,
-                        projectsArray: JSON.parse(JSON.stringify(NewProjectService.projectPanels))
+                        projectsArray: JSON.parse(JSON.stringify(NewProjectService.getProjectPanels()))
                     };
                 }
             }
@@ -150,8 +151,8 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'NewPro
 
         var editTaskModalInstance = $uibModal.open({
             animation: false,
-            templateUrl: 'partials/new_task_modal.html',
-            controller: 'TaskEditModalInstanceController',
+            templateUrl: 'partials/task_modal.html',
+            controller: 'EditTaskModalInstanceController',
             controllerAs: 'TaskModalVM',
             windowClass: 'modals-style',
             backdrop: 'static',
@@ -185,8 +186,8 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'NewPro
 
         var editDocumentModalInstance = $uibModal.open({
             animation: false,
-            templateUrl: 'partials/new_document_modal.html',
-            controller: 'DocumentEditModalInstanceController',
+            templateUrl: 'partials/document_modal.html',
+            controller: 'EditDocumentModalInstanceController',
             controllerAs: 'DocumentModalVM',
             windowClass: 'modals-style',
             backdrop: 'static',
@@ -214,7 +215,7 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'NewPro
 
 }]);
 
-app.controller('ProjectEditModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'NewProjectService', 'NewTaskService', 'NewDocumentService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, NewProjectService, NewTaskService, NewDocumentService) {
+app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'NewProjectService', 'NewTaskService', 'NewDocumentService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, NewProjectService, NewTaskService, NewDocumentService) {
 
     var vm = this;
     var updatedTasksArray = [];
@@ -244,8 +245,8 @@ app.controller('ProjectEditModalInstanceController', ['$scope', '$uibModal', '$u
     {
         var addNewTaskModalInstance = $uibModal.open({
             animation: false,
-            templateUrl: 'partials/new_task_modal.html',
-            controller: 'AddNewTaskModalController',
+            templateUrl: 'partials/task_modal.html',
+            controller: 'NewTaskModalController',
             controllerAs: 'TaskModalVM',
             windowClass: 'modals-style',
             backdrop: 'static',
@@ -253,7 +254,7 @@ app.controller('ProjectEditModalInstanceController', ['$scope', '$uibModal', '$u
                 dataForThisModalInstance: function () {
                     return {
                         isGlobal: false,
-                        projectsArray: JSON.parse(JSON.stringify(NewProjectService.projectPanels)),
+                        projectsArray: JSON.parse(JSON.stringify(NewProjectService.getProjectPanels())),
                         tasksArray: JSON.parse(JSON.stringify(vm.taskPanels))
                     };
                 }
@@ -285,8 +286,8 @@ app.controller('ProjectEditModalInstanceController', ['$scope', '$uibModal', '$u
     {
         var addNewDocumentModalInstance = $uibModal.open({
             animation: false,
-            templateUrl: 'partials/new_document_modal.html',
-            controller: 'AddNewDocumentModalController',
+            templateUrl: 'partials/document_modal.html',
+            controller: 'NewDocumentModalController',
             controllerAs: 'DocumentModalVM',
             windowClass: 'modals-style',
             backdrop: 'static',
@@ -294,7 +295,7 @@ app.controller('ProjectEditModalInstanceController', ['$scope', '$uibModal', '$u
                 dataForThisModalInstance: function () {
                     return {
                         isGlobal: false,
-                        projectsArray: JSON.parse(JSON.stringify(NewProjectService.projectPanels)),
+                        projectsArray: JSON.parse(JSON.stringify(NewProjectService.getProjectPanels())),
                         documentsArray: JSON.parse(JSON.stringify(vm.documentPanels))
                     };
                 }
@@ -326,8 +327,8 @@ app.controller('ProjectEditModalInstanceController', ['$scope', '$uibModal', '$u
 
         var editTaskModalInstance = $uibModal.open({
             animation: false,
-            templateUrl: 'partials/new_task_modal.html',
-            controller: 'TaskEditModalInstanceController',
+            templateUrl: 'partials/task_modal.html',
+            controller: 'EditTaskModalInstanceController',
             controllerAs: 'TaskModalVM',
             windowClass: 'modals-style',
             backdrop: 'static',
@@ -368,12 +369,10 @@ app.controller('ProjectEditModalInstanceController', ['$scope', '$uibModal', '$u
 
     vm.editDocumentModal = function (documentToEdit) {
 
-        console.log("aisundasd");
-
         var editDocumentModalInstance = $uibModal.open({
             animation: false,
-            templateUrl: 'partials/new_document_modal.html',
-            controller: 'DocumentEditModalInstanceController',
+            templateUrl: 'partials/document_modal.html',
+            controller: 'EditDocumentModalInstanceController',
             controllerAs: 'DocumentModalVM',
             windowClass: 'modals-style',
             backdrop: 'static',
@@ -417,7 +416,7 @@ app.controller('ProjectEditModalInstanceController', ['$scope', '$uibModal', '$u
         if(taskDeletedFlag)
         {
             NewProjectService.deleteTasksFromProject(tasksToDelete, dataForThisModalInstance.projectToEdit.name);
-            NewTaskService.deleteTaskGlobal(tasksToDelete, NewTaskService.taskPanels);
+            NewTaskService.deleteTaskGlobal(tasksToDelete, NewTaskService.getTaskPanels());
             NewTaskService.deleteTaskGlobal(tasksToDelete, updatedTasksArray);
 
             if(floatingTasks.length)
@@ -431,7 +430,7 @@ app.controller('ProjectEditModalInstanceController', ['$scope', '$uibModal', '$u
         if(documentDeletedFlag)
         {
             NewProjectService.deleteDocumentsFromProject(documentsToDelete, dataForThisModalInstance.projectToEdit.name);
-            NewDocumentService.deleteDocumentGlobal(documentsToDelete, NewDocumentService.documentPanels);
+            NewDocumentService.deleteDocumentGlobal(documentsToDelete, NewDocumentService.getDocumentPanels());
             NewDocumentService.deleteDocumentGlobal(documentsToDelete, updatedDocumentsArray);
 
             if(floatingDocuments.length)
@@ -445,7 +444,7 @@ app.controller('ProjectEditModalInstanceController', ['$scope', '$uibModal', '$u
         if(taskCreatedFlag)
         {
             NewProjectService.addProjectToTask(updatedTasksArray, dataForThisModalInstance.projectToEdit.name);
-            NewTaskService.setValue(updatedTasksArray);
+            NewTaskService.createTaskPanel(updatedTasksArray);
 
             for(var newTask of updatedTasksArray)
             {
@@ -458,7 +457,7 @@ app.controller('ProjectEditModalInstanceController', ['$scope', '$uibModal', '$u
         if(documentCreatedFlag)
         {
             NewProjectService.addProjectToDocument(updatedDocumentsArray, dataForThisModalInstance.projectToEdit.name);
-            NewDocumentService.setValue(updatedDocumentsArray);
+            NewDocumentService.createDocumentPanel(updatedDocumentsArray);
 
             for(var newDocument of updatedDocumentsArray)
             {
@@ -552,7 +551,7 @@ app.controller('ProjectEditModalInstanceController', ['$scope', '$uibModal', '$u
                 dataForThisModalInstance: function () {
                     return {
                         projectName: vm.projectName,
-                        tasksArray: JSON.parse(JSON.stringify(NewTaskService.taskPanels)),
+                        tasksArray: JSON.parse(JSON.stringify(NewTaskService.getTaskPanels())),
                         tasksInModal: JSON.parse(JSON.stringify(vm.taskPanels))
                     };
                 }
@@ -565,7 +564,7 @@ app.controller('ProjectEditModalInstanceController', ['$scope', '$uibModal', '$u
 
             for(var task of selected_existing_tasks)
             {
-                for(var taskPanel of NewTaskService.taskPanels)
+                for(var taskPanel of NewTaskService.getTaskPanels())
                 {
                     if(task.id == taskPanel.id)
                     {
@@ -619,7 +618,7 @@ app.controller('ProjectEditModalInstanceController', ['$scope', '$uibModal', '$u
                 dataForThisModalInstance: function () {
                     return {
                         projectName: vm.projectName,
-                        documentsArray: JSON.parse(JSON.stringify(NewDocumentService.documentPanels)),
+                        documentsArray: JSON.parse(JSON.stringify(NewDocumentService.getDocumentPanels())),
                         documentsInModal: JSON.parse(JSON.stringify(vm.documentPanels))
                     };
                 }
@@ -632,7 +631,7 @@ app.controller('ProjectEditModalInstanceController', ['$scope', '$uibModal', '$u
 
             for(var document of selected_existing_documents)
             {
-                for(var documentPanel of NewDocumentService.documentPanels)
+                for(var documentPanel of NewDocumentService.getDocumentPanels())
                 {
                     if(document.id == documentPanel.id)
                     {
@@ -671,7 +670,7 @@ app.controller('ProjectEditModalInstanceController', ['$scope', '$uibModal', '$u
 
 }]);
 
-app.controller('newProjectModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'NewProjectService', 'NewTaskService', 'NewDocumentService', '$log', function ($scope, $uibModal, $uibModalInstance, NewProjectService, NewTaskService, NewDocumentService, $log) {
+app.controller('NewProjectModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'NewProjectService', 'NewTaskService', 'NewDocumentService', '$log', function ($scope, $uibModal, $uibModalInstance, NewProjectService, NewTaskService, NewDocumentService, $log) {
 
     var vm = this;
     var floatingTasks = [];
@@ -699,7 +698,7 @@ app.controller('newProjectModalInstanceController', ['$scope', '$uibModal', '$ui
     vm.modalHeading = 'Create New Project';
     vm.modalType = 'Create';
 
-    var projectsArray = JSON.parse(JSON.stringify(NewProjectService.projectPanels));
+    var projectsArray = JSON.parse(JSON.stringify(NewProjectService.getProjectPanels()));
     var tasksArray = [];
     var documentsArray = [];
 
@@ -726,9 +725,9 @@ app.controller('newProjectModalInstanceController', ['$scope', '$uibModal', '$ui
             'documentPanels': documentsArray
         };
 
-        NewProjectService.setValue(new_project_params);
-        NewTaskService.setValue(tasksArray);
-        NewDocumentService.setValue(documentsArray);
+        NewProjectService.createProjectPanel(new_project_params);
+        NewTaskService.createTaskPanel(tasksArray);
+        NewDocumentService.createDocumentPanel(documentsArray);
 
         if(floatingTasks.length)
         {
@@ -769,7 +768,7 @@ app.controller('newProjectModalInstanceController', ['$scope', '$uibModal', '$ui
             resolve: {
                 dataForThisModalInstance: function () {
                     return {
-                        tasksArray: JSON.parse(JSON.stringify(NewTaskService.taskPanels)),
+                        tasksArray: JSON.parse(JSON.stringify(NewTaskService.getTaskPanels())),
                         tasksInModal: JSON.parse(JSON.stringify(vm.taskPanels))
                     };
                 }
@@ -782,7 +781,7 @@ app.controller('newProjectModalInstanceController', ['$scope', '$uibModal', '$ui
 
             for(var task of selected_existing_tasks)
             {
-                for(var taskPanel of NewTaskService.taskPanels)
+                for(var taskPanel of NewTaskService.getTaskPanels())
                 {
                     if(task.id == taskPanel.id)
                     {
@@ -830,7 +829,7 @@ app.controller('newProjectModalInstanceController', ['$scope', '$uibModal', '$ui
             resolve: {
                 dataForThisModalInstance: function () {
                     return {
-                        documentsArray: JSON.parse(JSON.stringify(NewDocumentService.documentPanels)),
+                        documentsArray: JSON.parse(JSON.stringify(NewDocumentService.getDocumentPanels())),
                         documentsInModal: JSON.parse(JSON.stringify(vm.documentPanels))
                     };
                 }
@@ -843,7 +842,7 @@ app.controller('newProjectModalInstanceController', ['$scope', '$uibModal', '$ui
 
             for(var document of selected_existing_documents)
             {
-                for(var documentPanel of NewDocumentService.documentPanels)
+                for(var documentPanel of NewDocumentService.getDocumentPanels())
                 {
                     if(document.id == documentPanel.id)
                     {
@@ -885,8 +884,8 @@ app.controller('newProjectModalInstanceController', ['$scope', '$uibModal', '$ui
     {
         var addNewTaskModalInstance = $uibModal.open({
             animation: false,
-            templateUrl: 'partials/new_task_modal.html',
-            controller: 'AddNewTaskModalController',
+            templateUrl: 'partials/task_modal.html',
+            controller: 'NewTaskModalController',
             controllerAs: 'TaskModalVM',
             windowClass: 'modals-style',
             backdrop: 'static',
@@ -924,8 +923,8 @@ app.controller('newProjectModalInstanceController', ['$scope', '$uibModal', '$ui
 
         var editTaskModalInstance = $uibModal.open({
             animation: false,
-            templateUrl: 'partials/new_task_modal.html',
-            controller: 'TaskEditModalInstanceController',
+            templateUrl: 'partials/task_modal.html',
+            controller: 'EditTaskModalInstanceController',
             controllerAs: 'TaskModalVM',
             windowClass: 'modals-style',
             backdrop: 'static',
@@ -980,8 +979,8 @@ app.controller('newProjectModalInstanceController', ['$scope', '$uibModal', '$ui
 
         var editDocumentModalInstance = $uibModal.open({
             animation: false,
-            templateUrl: 'partials/new_document_modal.html',
-            controller: 'DocumentEditModalInstanceController',
+            templateUrl: 'partials/document_modal.html',
+            controller: 'EditDocumentModalInstanceController',
             controllerAs: 'DocumentModalVM',
             windowClass: 'modals-style',
             backdrop: 'static',
@@ -1089,8 +1088,8 @@ app.controller('newProjectModalInstanceController', ['$scope', '$uibModal', '$ui
     {
         var addNewDocumentModalInstance = $uibModal.open({
             animation: false,
-            templateUrl: 'partials/new_document_modal.html',
-            controller: 'AddNewDocumentModalController',
+            templateUrl: 'partials/document_modal.html',
+            controller: 'NewDocumentModalController',
             controllerAs: 'DocumentModalVM',
             windowClass: 'modals-style',
             backdrop: 'static',
@@ -1284,7 +1283,7 @@ app.controller('AddExistingDocumentsModalController', ['$scope', '$uibModalInsta
 
 }]);
 
-app.controller('AddNewTaskModalController', ['$scope', '$uibModalInstance', 'dataForThisModalInstance', 'NewProjectService', 'NewTaskService', function ($scope, $uibModalInstance, dataForThisModalInstance, NewProjectService, NewTaskService) {
+app.controller('NewTaskModalController', ['$scope', '$uibModalInstance', 'dataForThisModalInstance', 'NewProjectService', 'NewTaskService', function ($scope, $uibModalInstance, dataForThisModalInstance, NewProjectService, NewTaskService) {
 
     var vm = this;
 
@@ -1332,8 +1331,6 @@ app.controller('AddNewTaskModalController', ['$scope', '$uibModalInstance', 'dat
 
     vm.format = 'dd.MM.yyyy';
 
-//    vm.selectedProjects = [NewProjectService.projectPanels[0]];
-//
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
      ////////////////// Create New Task ///////////////////////////////////////////////////////////////////////////////
      */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1379,14 +1376,14 @@ app.controller('AddNewTaskModalController', ['$scope', '$uibModalInstance', 'dat
                     newTaskObject = {};
                 }
 
-                NewTaskService.setValue(newTasksArray);
+                NewTaskService.createTaskPanel(newTasksArray);
 
                 $uibModalInstance.close();
 
             }
             else
             {
-                for(var taskPanel of NewTaskService.taskPanels)
+                for(var taskPanel of NewTaskService.getTaskPanels())
                 {
 
                     if(!(taskPanel.projectName) && (taskPanel.name == new_task_params.name))
@@ -1402,7 +1399,7 @@ app.controller('AddNewTaskModalController', ['$scope', '$uibModalInstance', 'dat
                 newTaskObject.projectName = '';
                 newTaskObject.description = new_task_params.description;
                 newTasksArray.push(newTaskObject);
-                NewTaskService.setValue(newTasksArray);
+                NewTaskService.createTaskPanel(newTasksArray);
                 newTaskObject = {};
 
                 $uibModalInstance.close();
@@ -1437,7 +1434,7 @@ app.controller('AddNewTaskModalController', ['$scope', '$uibModalInstance', 'dat
 
 }]);
 
-app.controller('TaskEditModalInstanceController', ['$scope', '$uibModalInstance', 'dataForThisModalInstance', 'NewProjectService', 'NewTaskService', function ($scope, $uibModalInstance, dataForThisModalInstance, NewProjectService, NewTaskService) {
+app.controller('EditTaskModalInstanceController', ['$scope', '$uibModalInstance', 'dataForThisModalInstance', 'NewProjectService', 'NewTaskService', function ($scope, $uibModalInstance, dataForThisModalInstance, NewProjectService, NewTaskService) {
 
     var vm = this;
 
@@ -1505,7 +1502,7 @@ app.controller('TaskEditModalInstanceController', ['$scope', '$uibModalInstance'
 
 }]);
 
-app.controller('DocumentEditModalInstanceController', ['$scope', '$uibModalInstance', 'dataForThisModalInstance', 'NewProjectService', 'NewDocumentService', function ($scope, $uibModalInstance, dataForThisModalInstance, NewProjectService, NewDocumentService) {
+app.controller('EditDocumentModalInstanceController', ['$scope', '$uibModalInstance', 'dataForThisModalInstance', 'NewProjectService', 'NewDocumentService', function ($scope, $uibModalInstance, dataForThisModalInstance, NewProjectService, NewDocumentService) {
 
     var vm = this;
 
@@ -1573,7 +1570,7 @@ app.controller('DocumentEditModalInstanceController', ['$scope', '$uibModalInsta
 
 }]);
 
-app.controller('AddNewDocumentModalController', ['$scope', '$uibModalInstance', 'dataForThisModalInstance', 'NewProjectService', 'NewDocumentService', function ($scope, $uibModalInstance, dataForThisModalInstance, NewProjectService, NewDocumentService) {
+app.controller('NewDocumentModalController', ['$scope', '$uibModalInstance', 'dataForThisModalInstance', 'NewProjectService', 'NewDocumentService', function ($scope, $uibModalInstance, dataForThisModalInstance, NewProjectService, NewDocumentService) {
 
     var vm = this;
 
@@ -1619,8 +1616,6 @@ app.controller('AddNewDocumentModalController', ['$scope', '$uibModalInstance', 
 //
 //    vm.format = 'dd.MM.yyyy';
 
-//    vm.selectedProjects = [NewProjectService.projectPanels[0]];
-//
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
      ////////////////// Create New Document ///////////////////////////////////////////////////////////////////////////
      */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1665,14 +1660,14 @@ app.controller('AddNewDocumentModalController', ['$scope', '$uibModalInstance', 
 //                    newDocumentObject = {};
 //                }
 //
-//                NewDocumentService.setValue(newDocumentsArray);
+//                NewDocumentService.createDocumentPanel(newDocumentsArray);
 //
 //                $uibModalInstance.close();
 //
 //            }
 //            else
 //            {
-            for(var documentPanel of NewDocumentService.documentPanels)
+            for(var documentPanel of NewDocumentService.getDocumentPanels())
             {
                 if(!(documentPanel.projectName) && (documentPanel.name == new_document_params.name))
                 {
@@ -1687,7 +1682,7 @@ app.controller('AddNewDocumentModalController', ['$scope', '$uibModalInstance', 
             newDocumentObject.projectName = '';
             newDocumentObject.description = new_document_params.description;
             newDocumentsArray.push(newDocumentObject);
-            NewDocumentService.setValue(newDocumentsArray);
+            NewDocumentService.createDocumentPanel(newDocumentsArray);
             newDocumentObject = {};
 
             $uibModalInstance.close();

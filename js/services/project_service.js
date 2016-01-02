@@ -1,3 +1,4 @@
+"use strict";
 /**
  * Created by faizankhan on 11/8/2014.
  */
@@ -9,24 +10,34 @@ app.service('NewProjectService', function(){
     var projectPanels = [];
     var projectsIdArray = [];
 
-    var setValue = function(value){
+    var createProjectPanel = function(value)
+    {
+        "use strict";
+
         projectPanels.push(value);
     };
 
     var newProjectID = function()
     {
+        "use strict";
+
         var projectID = projectsIdArray.length;
         projectsIdArray.push(projectID);
 
         return projectID;
     };
 
-    var getValue = function(){
+    var getProjectPanels = function()
+    {
+        "use strict";
+
         return projectPanels;
     };
 
     var addTaskToProject = function(projName, taskObject)
     {
+        "use strict";
+
         var taskExistence = false;
 
         for(var projectPanel of projectPanels)
@@ -60,6 +71,8 @@ app.service('NewProjectService', function(){
 
     var addDocumentToProject = function(projName, documentObject)
     {
+        "use strict";
+
         var documentExistence = false;
 
         for(var projectPanel of projectPanels)
@@ -93,6 +106,8 @@ app.service('NewProjectService', function(){
 
     var addProjectToTask = function(tasksArray, projectName)
     {
+        "use strict";
+
         angular.forEach(tasksArray, function(value, index)
         {
             tasksArray[index].projectName = projectName;
@@ -101,6 +116,8 @@ app.service('NewProjectService', function(){
 
     var addProjectToDocument = function(documentsArray, projectName)
     {
+        "use strict";
+
         angular.forEach(documentsArray, function(value, index)
         {
             documentsArray[index].projectName = projectName;
@@ -109,6 +126,8 @@ app.service('NewProjectService', function(){
 
     var addDocumentsToProject = function(documentsArray, projectName)
     {
+        "use strict";
+
         angular.forEach(documentsArray, function(value, index)
         {
             documentsArray[index].projectName = projectName;
@@ -117,6 +136,8 @@ app.service('NewProjectService', function(){
 
     var deleteTasksFromProject = function(tasksToDelete, fromProject)
     {
+        "use strict";
+
         for(var project of projectPanels)
         {
             if(project.name == fromProject)
@@ -132,6 +153,8 @@ app.service('NewProjectService', function(){
 
     var deleteDocumentsFromProject = function(documentsToDelete, fromProject)
     {
+        "use strict";
+
         for(var project of projectPanels)
         {
             if(project.name == fromProject)
@@ -145,22 +168,10 @@ app.service('NewProjectService', function(){
         }
     };
 
-    var removeEntity = function(arr, attr, value){
-        var i = arr.length;
-        while(i--){
-            if( arr[i]
-                && arr[i].hasOwnProperty(attr)
-                && (arguments.length > 2 && arr[i][attr] === value ) ){
-
-                arr.splice(i,1);
-
-            }
-        }
-        return arr;
-    };
-
     var checkProjectExistence = function(projectName)
     {
+        "use strict";
+
         var projectAlreadyExists = false;
 
         for(var projectPanel of projectPanels)
@@ -182,6 +193,8 @@ app.service('NewProjectService', function(){
 
     var getTaskProject = function(projectName)
     {
+        "use strict";
+
         for(var project of projectPanels)
         {
             if(project.name == projectName)
@@ -193,6 +206,8 @@ app.service('NewProjectService', function(){
 
     var updateTasksInProject = function(projectName, updatedTasks)
     {
+        "use strict";
+
         for(var i=0; i<projectPanels.length; i++)
         {
             if(projectPanels[i].name == projectName)
@@ -213,6 +228,8 @@ app.service('NewProjectService', function(){
 
     var updateDocumentsInProject = function(projectName, updatedDocuments)
     {
+        "use strict";
+
         for(var i=0; i<projectPanels.length; i++)
         {
             if(projectPanels[i].name == projectName)
@@ -231,10 +248,26 @@ app.service('NewProjectService', function(){
         }
     };
 
+    var removeEntity = function(arr, attr, value)
+    {
+        "use strict";
+
+        var i = arr.length;
+        while(i--){
+            if( arr[i]
+                && arr[i].hasOwnProperty(attr)
+                && (arguments.length > 2 && arr[i][attr] === value ) ){
+
+                arr.splice(i,1);
+            }
+        }
+        return arr;
+    };
+
     return{
         newProjectID: newProjectID,
-        setValue: setValue,
-        getValue: getValue,
+        createProjectPanel: createProjectPanel,
+        getProjectPanels: getProjectPanels,
         addProjectToTask: addProjectToTask,
         addProjectToDocument: addProjectToDocument,
         addTaskToProject: addTaskToProject,
@@ -245,8 +278,7 @@ app.service('NewProjectService', function(){
         checkProjectExistence: checkProjectExistence,
         getTaskProject: getTaskProject,
         updateTasksInProject: updateTasksInProject,
-        updateDocumentsInProject: updateDocumentsInProject,
-        projectPanels: projectPanels
+        updateDocumentsInProject: updateDocumentsInProject
     };
 
 });
