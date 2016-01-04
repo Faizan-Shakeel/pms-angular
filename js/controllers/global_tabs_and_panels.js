@@ -1,10 +1,10 @@
 
 var app = angular.module('mainViewModule', ['ui.bootstrap', 'nsPopover']);
 
-app.controller('Main_View_Controller', ['$scope', 'NewProjectService', 'NewTaskService', 'NewDocumentService', function ($scope, NewProjectService, NewTaskService, NewDocumentService)
+app.controller('Main_View_Controller', ['$scope', 'NewProjectService', 'NewTaskService', 'NewDocumentService','mongoCrudService', function ($scope, NewProjectService, NewTaskService, NewDocumentService, mongoCrudService)
 {
+    init();
     var vm = this;
-
     ////////////////// ACCORDION //////////////////
 
     vm.oneAtATime = true;
@@ -186,6 +186,35 @@ app.controller('Main_View_Controller', ['$scope', 'NewProjectService', 'NewTaskS
     };
 
     ////////////////// TABS AND PANELS [END]//////////////////
+
+// ******* INIT FUNCTION TO LOAD DATA FROM DATABASE ********* //
+
+function init()
+{
+    var data = mongoCrudService.retrieveData().then(function(data)
+    {
+       for (var i in data)
+       {
+           console.log(data[i].project);
+           if (data[i].project)
+           {
+               vm.projectPanels.push(data[i].project);
+           }
+           if (data[i].tasks)
+           {
+               vm.taskPanels.push(data[i].tasks);
+           }
+           if (data[i].files)
+           {
+               vm.documentPanels.push(data[i].files);
+           }
+           if (data[i].users)
+           {
+               //vm.users
+           }
+     }
+    });
+}
 
 }]);
 
