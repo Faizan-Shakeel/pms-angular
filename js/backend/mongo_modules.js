@@ -13,35 +13,77 @@ var bcrypt = require('bcrypt-nodejs');
             //console.log(req.body.companyName);
             var createSchema = schema.schema('companyName');          
             var PmsCollection = db.model('PmsCollection', createSchema);
-            CompanyData.find({companyName:req.body.companyName},function(err, data)
+            PmsCollection.find({companyName:req.body.companyName},function(err, data)
             {
-                //console.log(data);
                 db.close();
+                console.log(data);
                 callback(data);
             });
         });
     };
 
 
-// -------- Create a new Entry in Database -------- //
-    var createNewData = function(req)
+// *********** CREATE NEW ENTRY IN DATABASE ************** //
+    var createNewData = function(req, callback)
     {
         var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
         db.once('open', function()
         {
             console.log(req.body);
-            var createSchema = schema.schema(req.body);
-            var CompanyData = db.model('CompanyData', createSchema);
-            var newEntry = new CompanyData(req.body);
-            newEntry.save(function()
+            for (var keys in req.body)
             {
-               console.log('entry saved');
+                if (keys != 'companyName')
+                {
+                    var createSchema = schema.schema(keys);
+                }
+            }
+            var PmsCollection = db.model('PmsCollection', createSchema);
+            var newEntry = new PmsCollection(req.body);
+            newEntry.save(function(err)
+            {
+                if (!err)
+                {
+                    console.log('entry saved');
+                    db.close();
+                    callback('entry saved successfully');
+                }
+                else
+                {
+                    callback(err);
+                }
             });
         });    
     };
 
-// *********** REGISTER NEW USER ************ //
+// *********** UPDATE AN ENRTY IN DATABASE ************** //
+var updateData = function(req, callback)
+{
+    var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
+    db.once('open', function()
+    {
+        //console.log(req.body);
+        var createSchema = schema.schema();
+        var PmsCollection = db.model('PmsCollection',createSchema);
+                    CompanyData.findOne({companyName:req.body.companyName},function(err,doc)
+                    {
+                        //console.log(doc);
+                        for (var keys in req.body)
+                        {
+                            console.log(doc[keys]);
+                        }
+                        res.send("hello");
+                        doc[keys] = req.body[keys];
+                        doc.save(function()
+                        {
+                            console.log('done');
+                            db.close();
+                            callback('Entry Updated Successfully');
+                        });               
+                    });
+    });
+}
 
+// *********** REGISTER NEW USER ************ //
 var registerUser = function(req, callback)
 {
     var hash = bcrypt.hashSync(req.body.users.password);
@@ -108,5 +150,6 @@ var loginUser = function(username, password, callback)
 
 exports.getData = getData;
 exports.createNewData = createNewData;
+exports.updateData = updateData;
 exports.registerUser = registerUser;
 exports.loginUser = loginUser;

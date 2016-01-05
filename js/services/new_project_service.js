@@ -4,13 +4,14 @@
 
 var app = angular.module('newProjectServiceModule', []);
 
-app.service('NewProjectService', function(){
+app.service('NewProjectService',['mongoCrudService', function(mongoCrudService){
 
     var projectPanels = [];
     var projectsIdArray = [];
 
     var setValue = function(value){
-        projectPanels.push(value);
+        projectPanels.push(value.project);
+        mongoCrudService.createNewEntry(value);
     };
 
     var newProjectID = function()
@@ -167,4 +168,4 @@ app.service('NewProjectService', function(){
         projectPanels: projectPanels
     };
 
-});
+}]);

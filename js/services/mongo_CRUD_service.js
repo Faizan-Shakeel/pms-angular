@@ -11,6 +11,7 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
         $rootScope.companyName = $localStorage.companyName;
     }
     
+    // ********* RETRIEVE DATA ASSOCIATED WITH LOGGED IN USER ******** //
         var retrieveData = function()
         {
             var deferred = $q.defer();
@@ -22,5 +23,28 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
             $http.post('/fetch',data).success(deferred.resolve);
             return deferred.promise;
         };
-    return { retrieveData: retrieveData};
+        
+    // ******** CREATE NEW ENRTY ********* //
+    var createNewEntry = function(data)
+    { 
+        var entry = {companyName: $rootScope.companyName};
+        for (var i in data)
+        {
+            entry[i] = data[i];
+        }
+        console.log(entry);
+//        $http.post('/create', entry).success(function(response)
+//        {
+//            console.log(response);
+//        })
+//                .error(function(err)
+//        {
+//            console.log(err);
+//        });
+    };
+    
+    
+    
+    return { retrieveData: retrieveData,
+             createNewEntry: createNewEntry};
 });

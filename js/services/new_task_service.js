@@ -4,7 +4,7 @@
 
 var app = angular.module('newTaskServiceModule', []);
 
-app.service('NewTaskService', function(){
+app.service('NewTaskService',['mongoCrudService' , function(mongoCrudService){
 
     var taskPanels = [];
     var tasksIdArray = [];
@@ -13,8 +13,9 @@ app.service('NewTaskService', function(){
 
         angular.forEach(newTasksArray, function(value, index){
             taskPanels.push(newTasksArray[index]);
+            mongoCrudService.createNewEntry(newTasksArray[index]);
         });
-
+        
     };
 
     var checkIfTaskIsAlreadyInSelectedProject = function(taskName, selectedProjects)
@@ -187,4 +188,4 @@ app.service('NewTaskService', function(){
         taskPanels: taskPanels
     };
 
-});
+}]);

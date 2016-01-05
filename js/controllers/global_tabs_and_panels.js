@@ -195,7 +195,6 @@ function init()
     {
        for (var i in data)
        {
-           console.log(data[i].project);
            if (data[i].project)
            {
                vm.projectPanels.push(data[i].project);

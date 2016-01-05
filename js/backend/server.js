@@ -129,82 +129,39 @@ passport.deserializeUser(function(user, done)
     done (null, user);
 });
 
-// -------- SESSION CHECKING -------- //
+// ************ SESSION CHECKING ************ //
 
 app.get('/loggedin',function(req, res)
 {
    res.send(req.isAuthenticated() ? req.user : '0'); 
 });
 
-// -------- Obtain Data from Database -------- //
+// *********** RETRIEVE DATA ASSOCIATED WITH LOGGED IN USER ************** //
 app.post('/fetch' , function(req,res)
 {
     console.log('request received');
-    var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
-    db.once('open', function()
+    mongoModules.getData(req, function(data)
     {
-        console.log(req.body.companyName);
-        var createSchema = schema.schema('companyName');          
-        var CompanyData = db.model('CompanyData', createSchema);
-        CompanyData.find({"companyName":req.body.companyName},function(err, data)
-        {
-            res.json(data);
-            db.close();
-        });
-    });
+        res.send(data);
+    });    
 });
 ////////////////////////////////////////////////
 
-// ------ Create new data entry in database ----- //
+// ************* CREATE NEW ENTRY IN DATABASE *************** //
 app.post('/create', function(req,res)
 {
-    res.send("data received");
-    var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
-    db.once('open', function()
+    mongoModules.createNewData(req, function(response)
     {
-        for (var key in req.body)
-        {
-            if (key != 'companyName' )
-            {
-                var createSchema = schema.schema(key);                
-                var CompanyData = db.model('CompanyData', createSchema);
-                var newEntry = new CompanyData(req.body);
-                newEntry.save(function()
-                {
-                   console.log('entry saved');
-                   //db.close();
-                });
-                delete db.models.CompanyData;
-            }
-        }        
+       res.send(response); 
     });
+    
 });
 //////////////////////////////////////////////////////
 
-// ------- Update entry/entries in database ------//
+// ************ UPDATE AN ENTRY IN DATABASE *************** //
 app.post('/update', function(req,res)
 {
-    var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
-    db.once('open', function()
-    {
-        //console.log(req.body);
-        var createSchema = schema.schema();
-        var CompanyData = db.model('CompanyData',createSchema);
-                    CompanyData.findOne({companyName:req.body.companyName},function(err,doc)
-                    {
-                        //console.log(doc);
-                        for (var keys in req.body)
-                        {
-                            console.log(doc[keys]);
-                        }
-                        res.send("hello");
-                        doc[keys] = req.body[keys];
-                        doc.save(function()
-                        {
-                            console.log('done');   
-                        });               
-                    });
-    });
+
 });
 ///////////////////////////////////////////////////
 

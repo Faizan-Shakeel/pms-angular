@@ -8,7 +8,7 @@ app.service('loginService',['$http', '$location', '$rootScope', '$q', function($
        {
            if (response != '0')
            {
-                console.log(response.user.companyName);
+                console.log('here ' + response.user.companyName);
                 $rootScope.currentUser = response.user;
                 $rootScope.companyName = response.user.companyName;
                 callback(response.user);
@@ -38,7 +38,6 @@ app.service('loginService',['$http', '$location', '$rootScope', '$q', function($
           
           $rootScope.errorMessage = null;
               deferred.resolve(user);
-              console.log(deferred.promise.$$state);
               if (deferred.promise.$$state.value !== '0')
               {
                   $location.url('/mainview');

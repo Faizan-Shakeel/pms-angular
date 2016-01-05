@@ -313,11 +313,13 @@ app.controller('ModalInstanceController', ['$scope', '$uibModal', '$uibModalInst
         NewProjectService.addDocumentsToProject(documentsArray, projectName);
 
         var new_project_params = {
+            project:{
             'id': NewProjectService.newProjectID(),
             'name': projectName,
             'status': 'Status New',
             'taskPanels': tasksArray,
             'documentPanels': documentsArray
+                    }
         };
 
         NewProjectService.setValue(new_project_params);
@@ -662,9 +664,11 @@ app.controller('AddNewTaskModalController', ['$scope', '$uibModalInstance', 'dat
         if(dataForThisModalInstance.isGlobal)
         {
             new_task_params = {
+                tasks:{
                 'name': taskName,
                 'status': 'Task Status',
                 'projectsArray': vm.selectedProjects
+                      }
             };
 
             var newTaskObject = {};
@@ -733,9 +737,11 @@ app.controller('AddNewTaskModalController', ['$scope', '$uibModalInstance', 'dat
             }
 
             new_task_params = {
+                tasks:{
                 'id': NewTaskService.newTaskID(),
                 'name': taskName,
                 'status': 'Task Status'
+                      }
             };
 
             $uibModalInstance.close(new_task_params);
@@ -772,9 +778,11 @@ app.controller('AddNewDocumentModalController', ['$scope', '$uibModalInstance', 
         }
 
         var new_document_params = {
+            files:{
             'id': NewDocumentService.newDocumentID(),
             'name': documentName,
             'status': 'Document Status'
+                  }
         };
 
         $uibModalInstance.close(new_document_params);

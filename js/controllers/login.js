@@ -9,7 +9,6 @@ app.controller('loginCtrl', ['loginService','$location','$rootScope', function(l
         {
            if ($rootScope.currentUser)
            {
-                console.log($rootScope.companyName);
                 $location.url('/mainview');
            }
         });               
