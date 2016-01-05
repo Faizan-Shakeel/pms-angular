@@ -72,15 +72,15 @@
                         </button>
 
                         <ul class="uib-dropdown-menu" role="menu" aria-labelledby="add-new-document-dropDown-button-in-project-modal">
-                            <li role="menuitem"><a href="#">Create New Documents</a></li>
+                            <li role="menuitem" ng-click="TaskModalVM.addNewDocumentModal()"><a href="#">Create New Document</a></li>
                             <li class="divider"></li>
-                            <li role="menuitem"><a href="#">Import Existing Documents</a></li>
+                            <li role="menuitem" ng-click="TaskModalVM.existingDocumentsModalInProjectModal()"><a href="#">Import Existing Documents</a></li>
                         </ul>
                     </div>
 
                     <div slim-scroll height="300px">
 
-                        <div class="panel panel-default" id="outer-panel-documents-in-new-project-modal" ng-repeat="documentPanel in ModalVM.documentPanels">
+                        <div class="panel panel-default" id="outer-panel-documents-in-new-project-modal" ng-repeat="documentPanel in TaskModalVM.documentPanels">
                             <div class="panel-body">
 
                                 <div class="panel panel-default" id="inner-panel-documents-in-new-project-modal">
@@ -91,18 +91,18 @@
 
                                 <div id="document-panel-content-in-new-project-modal">
                                     <p>
-                                    <h4>{{documentPanel.name}}</h4>
+                                    <h4>{{documentPanel.name}} <span class="col-lg-offset-8">ID: {{documentPanel.id}}</span> </h4>
                                     </p>
 
                                     <p>
                                         {{documentPanel.status}}
-                                    </p>
+                                        <span class="col-lg-offset-4">[ {{documentPanel.project}} ] [ {{documentPanel.task}} ]</span>                                    </p>
                                 </div>
 
                                 <div class="btn-group-vertical" id="documents-btn-grp-panel-in-new-project-modal">
                                     <button class="btn btn-default test-button-border"><i class="fa fa-info"></i></button>
-                                    <button class="btn btn-default" ng-click="ModalVM.editDocuments(documentPanel.name)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-default test-button-border" ng-click="ModalVM.deleteDocument(documentPanel.name)"><i class="fa fa-trash-o"></i></button>
+                                    <button class="btn btn-default" ng-click="TaskModalVM.editDocumentModal(documentPanel)"><i class="fa fa-edit"></i></button>
+                                    <button class="btn btn-default test-button-border" ng-click="TaskModalVM.deleteDocument(documentPanel)"><i class="fa fa-trash-o"></i></button>
                                 </div>
 
                             </div>
@@ -115,11 +115,11 @@
             <uib-tab heading="Users">
                 <div class="modal-new-user-tab-body">
 
-                    <button type="button" class="btn btn-default btn-circle-user-tab-project-modal btn-lg" uib-tooltip="Add User" tooltip-placement="right" ng-click="ModalVM.addNewTask()"><i class="fa fa-plus fa-lg addEntityIconColor"></i></button>
+                    <button type="button" class="btn btn-default btn-circle-user-tab-project-modal btn-lg" uib-tooltip="Add User" tooltip-placement="right" ng-click="TaskModalVM.addNewTask()"><i class="fa fa-plus fa-lg addEntityIconColor"></i></button>
 
                     <div slim-scroll height="300px">
 
-                        <div class="panel panel-default" id="outer-panel-users-in-new-project-modal" ng-repeat="userPanel in ModalVM.userPanels">
+                        <div class="panel panel-default" id="outer-panel-users-in-new-project-modal" ng-repeat="userPanel in TaskModalVM.userPanels">
                             <div class="panel-body">
 
                                 <div class="panel panel-default" id="inner-panel-users-in-new-project-modal">
@@ -140,8 +140,8 @@
 
                                 <div class="btn-group-vertical" id="users-btn-grp-panel-in-new-project-modal">
                                     <button class="btn btn-default test-button-border"><i class="fa fa-info"></i></button>
-                                    <button class="btn btn-default" ng-click="ModalVM.editUsers(userPanel.name)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-default test-button-border" ng-click="ModalVM.deleteUser(userPanel.name)"><i class="fa fa-trash-o"></i></button>
+                                    <button class="btn btn-default" ng-click="TaskModalVM.editUsers(userPanel.name)"><i class="fa fa-edit"></i></button>
+                                    <button class="btn btn-default test-button-border" ng-click="TaskModalVM.deleteUser(userPanel.name)"><i class="fa fa-trash-o"></i></button>
                                 </div>
 
                             </div>

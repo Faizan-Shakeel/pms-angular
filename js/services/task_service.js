@@ -3,9 +3,9 @@
  * Created by faizankhan on 11/8/2014.
  */
 
-var app = angular.module('newTaskServiceModule', []);
+var app = angular.module('taskServiceModule', []);
 
-app.service('NewTaskService', function(){
+app.service('TaskService', function(){
 
     var taskPanels = [];
     var tasksIdArray = [];
@@ -22,6 +22,7 @@ app.service('NewTaskService', function(){
     var checkTaskExistence = function(taskName, tasksArray)
     {
         "use strict";
+        //                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
 
         var taskAlreadyExists = false;
 
@@ -79,14 +80,15 @@ app.service('NewTaskService', function(){
     var deleteFloatingTasks = function(floatingTasks)
     {
         "use strict";
+        //                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
 
         for(var floatTask of floatingTasks)
         {
             for(var task of taskPanels)
             {
-                if(!(task.projectName) && (task.id == floatTask.id))
+                if(!(task.project) && (task.id == floatTask.id))
                 {
-                    removeEntity(taskPanels, 'projectName', task.projectName);
+                    removeEntity(taskPanels, 'id', task.id);
                 }
             }
         }
@@ -95,6 +97,7 @@ app.service('NewTaskService', function(){
     var deleteTask = function(tasksArray)
     {
         "use strict";
+        //                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
 
         angular.forEach(tasksArray, function(valueFromSpecificProject,indexGlobalList){
             angular.forEach(taskPanels, function(valueFromGlobalList,indexSpecificProject){
@@ -106,16 +109,17 @@ app.service('NewTaskService', function(){
         });
     };
 
-    function hasDuplicates(array)
+    var hasDuplicates = function(array)
     {
         "use strict";
 
         return (new Set(array)).size !== array.length;
-    }
+    };
 
     var removeProjectTasksFromExistingTasks = function(projectTasks, projectName)
     {
         "use strict";
+        //                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
 
         var filteredArray = [];
         var taskNotFound;
@@ -128,7 +132,7 @@ app.service('NewTaskService', function(){
             {
                 for(var projectTask of projectTasks)
                 {
-                    if((projectTask.name == task.name) || (task.projectName == projectName))
+                    if((projectTask.name == task.name) || (task.project == projectName))
                     {
                         taskNotFound = false;
                         break;
@@ -136,7 +140,7 @@ app.service('NewTaskService', function(){
                 }
             }
 
-            else if(task.projectName == projectName)
+            else if(task.project == projectName)
             {
                 taskNotFound = false;
             }
@@ -154,6 +158,7 @@ app.service('NewTaskService', function(){
     var updateTasks = function(updatedTasks, global)
     {
         "use strict";
+        //                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
 
         for(var i=0; i<updatedTasks.length; i++)
         {

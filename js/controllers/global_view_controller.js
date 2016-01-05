@@ -2,7 +2,7 @@
 
 var app = angular.module('mainViewModule', ['ui.bootstrap', 'nsPopover']);
 
-app.controller('Main_View_Controller', ['$scope', 'NewProjectService', 'NewTaskService', 'NewDocumentService', function ($scope, NewProjectService, NewTaskService, NewDocumentService)
+app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService', 'DocumentService', function ($scope, ProjectService, TaskService, DocumentService)
 {
     var vm = this;
 
@@ -210,55 +210,134 @@ app.controller('Main_View_Controller', ['$scope', 'NewProjectService', 'NewTaskS
      */////////////////////////////////////////////////////////////////////////////////////////////////
 
     vm.globalTabsBootstrapClass = 'col-lg-8 col-md-8 col-sm-8';
-    vm.projectPanels = NewProjectService.getProjectPanels();
-    vm.taskPanels = NewTaskService.getTaskPanels();
-    vm.documentPanels = NewDocumentService.getDocumentPanels();
+    vm.projectPanels = ProjectService.getProjectPanels();
+    vm.taskPanels = TaskService.getTaskPanels();
+    vm.documentPanels = DocumentService.getDocumentPanels();
 
-    vm.deleteProject = function(projectName)
+    vm.deleteProject = function(projectToDelete)
     {
         var selectedProjectTasksArray;
         var selectedProjectDocumentsArray;
 
         angular.forEach(vm.projectPanels, function(value,index){
 
-            if(value.name == projectName)
+            if(value.name == projectToDelete.name)
             {
-                selectedProjectTasksArray = vm.projectPanels[index].taskPanels;
-                selectedProjectDocumentsArray = vm.projectPanels[index].documentPanels;
+                selectedProjectTasksArray = vm.projectPanels[index].tasks;
+                selectedProjectDocumentsArray = vm.projectPanels[index].documents;
             }
         });
 
-        NewTaskService.deleteTask(selectedProjectTasksArray);
-        NewDocumentService.deleteDocument(selectedProjectDocumentsArray);
-        removeEntity(vm.projectPanels, 'name', projectName);
+        TaskService.deleteTask(selectedProjectTasksArray);
+        DocumentService.deleteDocument(selectedProjectDocumentsArray);
+        removeEntity(vm.projectPanels, 'id', projectToDelete.id);
 
     };
 
     vm.deleteTask = function(taskToDelete)
     {
-        removeEntity(NewTaskService.getTaskPanels(), 'id', taskToDelete.id);
+        var deletedTaskProject;
+        var selectedTaskDocumentsArray;
 
-        angular.forEach(vm.projectPanels, function(valueProject,indexProject){
-            angular.forEach(valueProject.taskPanels, function(valueTask,indexTask){
-                if(valueTask.id == taskToDelete.id)
-                {
-                    removeEntity(valueProject.taskPanels, 'id', taskToDelete.id);
-                }
-            });
+        angular.forEach(vm.taskPanels, function(value,index){
+
+            if(value.id == taskToDelete.id)
+            {
+                selectedTaskDocumentsArray = vm.taskPanels[index].documents;
+            }
         });
+
+//        console.log("selectedTaskDocumentsArray : " + JSON.stringify(selectedTaskDocumentsArray));
+
+        DocumentService.deleteDocument(selectedTaskDocumentsArray);
+
+        removeEntity(TaskService.getTaskPanels(), 'id', taskToDelete.id);
+
+//        angular.forEach(ProjectService.getProjectPanels(), function(valueProject,indexProject){
+//            angular.forEach(valueProject.tasks, function(valueTask,indexTask){
+//                if(valueTask.id == taskToDelete.id)
+//                {
+//                    removeEntity(valueProject.tasks, 'id', taskToDelete.id);
+//                }
+//            });
+//        });
+
+        for(var project of ProjectService.getProjectPanels())
+        {
+            for(var task of project.tasks)
+            {
+                if(task.id == taskToDelete.id)
+                {
+                    deletedTaskProject = project;
+                    removeEntity(project.tasks, 'id', taskToDelete.id);
+                    break;
+                }
+            }
+        }
+
+        if(deletedTaskProject)
+        {
+            for(var taskToDeleteDoc of selectedTaskDocumentsArray)
+            {
+                for(var document of deletedTaskProject.documents)
+                {
+                    if(document.id == taskToDeleteDoc.id)
+                    {
+                        removeEntity(deletedTaskProject.documents, 'id', taskToDeleteDoc.id);
+                    }
+                }
+            }
+        }
+
     };
 
     vm.deleteDocument = function(documentToDelete)
     {
-        removeEntity(NewDocumentService.getDocumentPanels(), 'id', documentToDelete.id);
+        removeEntity(DocumentService.getDocumentPanels(), 'id', documentToDelete.id);
+
         angular.forEach(vm.projectPanels, function(valueProject,indexProject){
-            angular.forEach(valueProject.documentPanels, function(valueDocument,indexDocument){
+            angular.forEach(valueProject.documents, function(valueDocument,indexDocument){
                 if(valueDocument.id == documentToDelete.id)
                 {
-                    removeEntity(valueProject.documentPanels, 'id', documentToDelete.id);
+                    removeEntity(valueProject.documents, 'id', documentToDelete.id);
                 }
             });
         });
+
+        angular.forEach(vm.taskPanels, function(valueTask,indexProject){
+            angular.forEach(valueTask.documents, function(valueDocument,indexDocument){
+                if(valueDocument.id == documentToDelete.id)
+                {
+                    removeEntity(valueTask.documents, 'id', documentToDelete.id);
+                }
+            });
+        });
+
+//        console.log(ProjectService.projectPanels);
+
+//        for(var project of ProjectService.projectPanels)
+//        {
+//            for(var doc of project.documents)
+//            {
+//                if(doc.id == documentToDelete.id)
+//                {
+//                    removeEntity(project.documents, 'id', documentToDelete.id);
+//                    break;
+//                }
+//            }
+//        }
+//
+//        for(var task of TaskService.taskPanels)
+//        {
+//            for(var doc of task.documents)
+//            {
+//                if(doc.id == documentToDelete.id)
+//                {
+//                    removeEntity(task.documents, 'id', documentToDelete.id);
+//                    break;
+//                }
+//            }
+//        }
     };
 
     var removeEntity = function(arr, attr, value){

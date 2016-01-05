@@ -230,7 +230,7 @@
                                 <div class="btn-group-vertical" id="btn-grp-panel">
                                     <button class="btn btn-default test-button-border"><i class="fa fa-info"></i></button>
                                     <button class="btn btn-default" ng-click="ModalVM.editProjectModal(projectPanel)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteProject(projectPanel.name)"><i class="fa fa-trash-o"></i></button>
+                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteProject(projectPanel)"><i class="fa fa-trash-o"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -257,7 +257,7 @@
 
                                     <p>
                                         {{taskPanel.status}}
-                                        <span class="col-lg-offset-7">{{taskPanel.projectName}}</span>
+                                        <span class="col-lg-offset-7">{{taskPanel.project}}</span>
                                     </p>
                                 </div>
 
@@ -291,7 +291,8 @@
 
                                     <p>
                                         {{documentPanel.status}}
-                                        <span class="col-lg-offset-7">{{documentPanel.projectName}}</span>
+                                        <span class="col-lg-offset-6">[ {{documentPanel.project}} ] [ {{documentPanel.task}} ]</span>
+                                        <!--<span class="col-lg-offset-7">{{documentPanel.task}}</span>-->
                                     </p>
                                 </div>
 
