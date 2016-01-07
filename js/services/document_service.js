@@ -122,19 +122,35 @@ app.service('DocumentService', function(){
         }
     };
 
-    var deleteFloatingDocuments = function(floatingDocuments)
+    var deleteFloatingDocuments = function(floatingDocuments, deleteByProperty)
     {
         "use strict";
         //                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
 
+        console.log("floatingDocuments : " + JSON.stringify(floatingDocuments));
+
         for(var floatDocument of floatingDocuments)
         {
+
             for(var document of documentPanels)
             {
                 if(!(document.project) && (document.id == floatDocument.id))
                 {
-//                    console.log("document.task : " + JSON.stringify(document.task));
-                    removeEntity(documentPanels, 'id', document.id);
+                    console.log("document : " + JSON.stringify(document));
+
+                    removeEntity(documentPanels, 'id', 'project', document.id, document.project);
+
+//                    if(deleteByProperty == 'id')
+//                    {
+//                        console.log("deleteByProperty : " + deleteByProperty);
+//                        removeEntity(documentPanels, 'id', document.id);
+//                    }
+//                    else if(deleteByProperty == 'project')
+//                    {
+//                        console.log("deleteByProperty : " + deleteByProperty);
+//                        removeEntity(documentPanels, 'project', document.project);
+//                    }
+
                 }
             }
         }
@@ -221,9 +237,9 @@ app.service('DocumentService', function(){
         "use strict";
 
         return (new Set(array)).size !== array.length;
-    }
+    };
 
-    var removeEntity = function(arr, attr, value)
+    var removeEntity = function(arr, attr, attr2, value, value2)
     {
         "use strict";
 
@@ -231,7 +247,7 @@ app.service('DocumentService', function(){
         while(i--){
             if( arr[i]
                 && arr[i].hasOwnProperty(attr)
-                && (arguments.length > 2 && arr[i][attr] === value ) ){
+                && (arguments.length > 2 && arr[i][attr] === value && arr[i][attr2] === value2) ){
 
                 arr.splice(i,1);
             }

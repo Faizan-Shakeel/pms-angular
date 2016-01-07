@@ -218,6 +218,15 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
     var vm = this;
     var floatingTasks = [];
     var floatingDocuments = [];
+    var deleteFloatingTaskByProperty;
+    var deleteFloatingDocumentByProperty;
+    var tasksToDelete = [];
+    var documentsToDelete = [];
+
+    var taskCreatedFlag = false;
+    var documentCreatedFlag = false;
+    var taskDeletedFlag = false;
+    var documentDeletedFlag = false;
     var taskUpdateFlag = false;
     var documentUpdateFlag = false;
     var documentAlreadyExists = false;
@@ -250,14 +259,75 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
      ////////////////// Create New Project ///////////////////////////////////////////////////////////////////////////
      *////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    vm.createOrUpdateProject = function(projectName) {
-
-        //        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
+    vm.createOrUpdateProject = function(projectName)
+    {
+//        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
 
         if(ProjectService.checkProjectExistence(projectName))
         {
             alert("Project " + "'" + projectName + "'" + " Already Exists");
             return;
+        }
+
+        if(taskCreatedFlag)
+        {
+            console.log("Task Created");
+
+            ProjectService.addProjectToTask(tasksArray, projectName);
+            TaskService.createTaskPanel(tasksArray);
+
+            for(var newTask of tasksArray)
+            {
+                ProjectService.addTaskToProject(projectName, newTask);
+            }
+
+            taskCreatedFlag = false;
+        }
+
+        if(documentCreatedFlag)
+        {
+            ProjectService.addProjectToDocument(documentsArray, projectName);
+            DocumentService.createDocumentPanel(documentsArray);
+
+            for(var newDocument of documentsArray)
+            {
+                ProjectService.addDocumentToProject(projectName, newDocument);
+            }
+
+            documentCreatedFlag = false;
+        }
+
+
+        if(taskDeletedFlag)
+        {
+//            ProjectService.deleteTasksFromProject(tasksToDelete, projectName);
+//            TaskService.deleteTaskGlobal(tasksToDelete, TaskService.getTaskPanels());
+//            TaskService.deleteTaskGlobal(tasksToDelete, tasksArray);
+
+            console.log("floatingTasks OUTSIDE: " + JSON.stringify(floatingTasks));
+
+            if(floatingTasks.length)
+            {
+                TaskService.deleteFloatingTasks(floatingTasks, deleteFloatingTaskByProperty);
+            }
+
+            taskDeletedFlag = false;
+        }
+
+        if(documentDeletedFlag)
+        {
+//            ProjectService.deleteDocumentsFromProject(documentsToDelete, projectName);
+//            DocumentService.deleteDocumentGlobal(documentsToDelete, DocumentService.getDocumentPanels());
+//            DocumentService.deleteDocumentGlobal(documentsToDelete, documentsArray);
+
+//            console.log("floatingDocuments OUTSIDE: " + JSON.stringify(floatingDocuments));
+
+            if(floatingDocuments.length)
+            {
+                DocumentService.deleteFloatingDocuments(floatingDocuments, deleteFloatingDocumentByProperty);
+            }
+
+            documentDeletedFlag = false;
         }
 
         ProjectService.addProjectToTask(tasksArray, projectName);
@@ -271,24 +341,9 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
             'documents': documentsArray
         };
 
-//        console.log("documentsArray : " + JSON.stringify(documentsArray));
-
         ProjectService.createProjectPanel(new_project_params);
-        TaskService.createTaskPanel(tasksArray);
-        DocumentService.createDocumentPanel(documentsArray);
-
-        if(floatingTasks.length)
-        {
-            TaskService.deleteFloatingTasks(floatingTasks);
-        }
-
-        if(floatingDocuments.length)
-        {
-            DocumentService.deleteFloatingDocuments(floatingDocuments);
-        }
 
         $uibModalInstance.close();
-
     };
 
     /*////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -327,62 +382,151 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
             //        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
 
             var new_tasks_obj = {};
-            var globalTaskPanels = JSON.parse(JSON.stringify(TaskService.getTaskPanels()));
+            var new_doc_obj = {};
+            var globalTasks = TaskService.getTaskPanels();
 
-            for(var i=0; i < selected_existing_tasks.length; i++)
+            for(var task of selected_existing_tasks)
             {
-                for(var j=0; j < globalTaskPanels.length; j++)
+                for(var taskPanel of globalTasks)
                 {
-                    if(selected_existing_tasks[i].id == globalTaskPanels[j].id)
+                    if(task.id == taskPanel.id)
                     {
-                        if(globalTaskPanels[j].project)
+                        if(vm.documentPanels.length)
                         {
-                            console.log("selected_existing_tasks[i] : params: " + JSON.stringify(selected_existing_tasks[i]));
+                            console.log("if(vm.documentPanels.length)");
 
-                            var bufferTaskObject = JSON.parse(JSON.stringify(selected_existing_tasks[i]));
-                            new_tasks_obj.id = TaskService.newTaskID();
-                            new_tasks_obj.name = bufferTaskObject.name;
-                            new_tasks_obj.status = bufferTaskObject.status;
-                            new_tasks_obj.project = bufferTaskObject.project;
-                            tasksArray.push(new_tasks_obj);
-                            vm.taskPanels.push(new_tasks_obj);
-                            new_tasks_obj = {};
-                        }
-                        else
-                        {
-//                            console.log("vm.documentPanels : " + JSON.stringify(vm.documentPanels));
-//                            console.log("task.documents : " + JSON.stringify(task.documents));
+//                            console.log("vm.documentPanels 0: " + JSON.stringify(vm.documentPanels));
 
-                            if(vm.documentPanels.length)
+                            documentAlreadyExists = DocumentService.chkTaskDocsInPrjDocsWithoutPrjName(task.documents, vm.documentPanels);
+
+                            if(documentAlreadyExists)
                             {
-                                documentAlreadyExists = DocumentService.chkTaskDocsInPrjDocsWithoutPrjName(selected_existing_tasks[i].documents, vm.documentPanels);
+                                alert("Document With Same Name Already Exists In This Project");
+                                return
+                            }
 
-                                if(documentAlreadyExists)
+                            for(var doc of task.documents)
+                            {
+                                if(task.project)
                                 {
-                                    alert("Document With Same Name Already Exists In This Project");
-                                    return
-                                }
+                                    console.log("Inside Loop IF");
 
-                                for(var doc of selected_existing_tasks[i].documents)
-                                {
-                                    vm.documentPanels.push(doc);
+                                    new_doc_obj = doc;
+                                    new_doc_obj.id = DocumentService.newDocumentID();
+//                                    vm.documentPanels.push(doc);
+                                    documentsArray.push(doc);
+                                    documentCreatedFlag = true;
                                 }
+                                else
+                                {
+                                    console.log("Inside Loop ELSE");
+
+//                                    vm.documentPanels.push(doc);
+                                    documentsArray.push(doc);
+                                    documentCreatedFlag = true;
+                                }
+//                                console.log("vm.documentPanels Loop: " + JSON.stringify(vm.documentPanels));
+                            }
+
+//                            console.log("vm.documentPanels 1: " + JSON.stringify(vm.documentPanels));
+
+                            if(taskPanel.project)
+                            {
+                                console.log("IINN 111");
+
+                                new_tasks_obj = task;
+                                new_tasks_obj.id = TaskService.newTaskID();
+                                tasksArray.push(new_tasks_obj);
+                                vm.taskPanels.push(new_tasks_obj);
+                                new_tasks_obj = {};
+                                taskCreatedFlag = true;
+                                vm.updateFlag = true;
                             }
                             else
                             {
-                                for(var doc of selected_existing_tasks[i].documents)
+//                                console.log("IINN 222");
+
+//                                console.log("vm.documentPanels 2 : " + JSON.stringify(vm.documentPanels));
+
+                                for(var doc of task.documents)
+                                {
+                                    floatingDocuments.push(doc);
+                                }
+
+                                floatingTasks.push(task);
+                                tasksArray.push(task);
+                                vm.taskPanels.push(task);
+                                taskCreatedFlag = true;
+                                taskDeletedFlag = true;
+                                documentDeletedFlag = true;
+                                deleteFloatingTaskByProperty = 'project';
+                                deleteFloatingDocumentByProperty = 'project';
+                                vm.updateFlag = true;
+                                console.log("IINN 333");
+//                                console.log("vm.documentPanels After : " + JSON.stringify(vm.documentPanels));
+                            }
+                        }
+                        else
+                        {
+                            console.log("else");
+
+                            for(var doc of task.documents)
+                            {
+                                if(task.project)
+                                {
+                                    new_doc_obj = doc;
+                                    new_doc_obj.id = DocumentService.newDocumentID();
+                                    vm.documentPanels.push(doc);
+                                    documentsArray.push(doc);
+                                    documentCreatedFlag = true;
+                                }
+                                else
                                 {
                                     vm.documentPanels.push(doc);
                                     documentsArray.push(doc);
+                                    documentCreatedFlag = true;
                                 }
                             }
 
-                            floatingTasks.push(selected_existing_tasks[i]);
-                            tasksArray.push(selected_existing_tasks[i]);
-                            vm.taskPanels.push(selected_existing_tasks[i]);
+                            if(taskPanel.project)
+                            {
+                                console.log("if(taskPanel.project)");
 
-//                            vm.documentPanels.push(task.documents);
+                                new_tasks_obj = task;
+                                new_tasks_obj.id = TaskService.newTaskID();
+                                tasksArray.push(new_tasks_obj);
+                                vm.taskPanels.push(new_tasks_obj);
+                                new_tasks_obj = {};
+                                taskCreatedFlag = true;
+                                vm.updateFlag = true;
+                            }
+                            else
+                            {
+                                console.log("if( [not] taskPanel.project)");
+
+                                floatingTasks.push(task);
+
+                                for(var doc of task.documents)
+                                {
+                                    floatingDocuments.push(doc);
+                                }
+
+//                                console.log("floatingDocuments [if not] : " + JSON.stringify(floatingDocuments));
+                                console.log("globalTasks : " + JSON.stringify(globalTasks));
+
+                                tasksArray.push(task);
+                                vm.taskPanels.push(task);
+                                taskCreatedFlag = true;
+                                taskDeletedFlag = true;
+                                documentDeletedFlag = true;
+                                deleteFloatingTaskByProperty = 'project';
+                                deleteFloatingDocumentByProperty = 'project';
+                                vm.updateFlag = true;
+                            }
                         }
+
+
+
                     }
                 }
             }
@@ -437,8 +581,9 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
                             new_documents_obj = document;
                             new_documents_obj.id = DocumentService.newDocumentID();
                             documentsArray.push(new_documents_obj);
-                            vm.documentPanels.push(new_documents_obj);
+//                            vm.documentPanels.push(new_documents_obj);
                             new_documents_obj = {};
+                            documentCreatedFlag = true;
                         }
                         else
                         {
@@ -446,7 +591,10 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
                             floatingDocuments.push(document);
                             console.log("floatingDocuments After 1: " + JSON.stringify(floatingDocuments));
                             documentsArray.push(document);
-                            vm.documentPanels.push(document);
+//                            vm.documentPanels.push(document);
+                            documentCreatedFlag = true;
+                            documentDeletedFlag = true;
+                            deleteFloatingDocumentByProperty = 'project';
                         }
                     }
                 }
@@ -506,6 +654,9 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
                 {
                     vm.documentPanels.push(doc);
                 }
+
+                documentCreatedFlag = true;
+
             }
             else
             {
@@ -514,11 +665,15 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
                     vm.documentPanels.push(doc);
                     documentsArray.push(doc);
                 }
+
+                documentCreatedFlag = true;
+
             }
 
             tasksArray.push(new_task_params);
 //            documentsArray
             vm.taskPanels.push(new_task_params);
+            taskCreatedFlag = true;
 //            vm.documentPanels.push(new_task_params.documents);
 
         }, function () {
@@ -707,6 +862,9 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
             documentsArray.push(new_document_params);
             vm.documentPanels = documentsArray;
 
+            documentCreatedFlag = true;
+
+
         }, function () {
 //            $log.info('Modal dismissed at: ' + new Date());
         });
@@ -735,12 +893,103 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
     var documentUpdateFlag = false;
     var taskDeletedFlag = false;
     var documentDeletedFlag = false;
+    var deleteFloatingTaskByProperty;
+    var deleteFloatingDocumentByProperty;
     vm.projectNameEditable = true;
     vm.modalHeading = 'Update Project';
     vm.modalType = 'Update';
     vm.projectName = dataForThisModalInstance.projectToEdit.name;
     vm.taskPanels = JSON.parse(JSON.stringify(dataForThisModalInstance.projectToEdit.tasks));
     vm.documentPanels = JSON.parse(JSON.stringify(dataForThisModalInstance.projectToEdit.documents));
+
+    /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ////////////////////// Update Project ///////////////////////////////////////////////////////////////////////////
+     *//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.createOrUpdateProject = function()
+    {
+//        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
+
+        if(taskDeletedFlag)
+        {
+            ProjectService.deleteTasksFromProject(tasksToDelete, dataForThisModalInstance.projectToEdit.name);
+            TaskService.deleteTaskGlobal(tasksToDelete, TaskService.getTaskPanels());
+            TaskService.deleteTaskGlobal(tasksToDelete, updatedTasksArray);
+
+//            console.log("floatingTasks OUTSIDE: " + JSON.stringify(floatingTasks));
+
+            if(floatingTasks.length)
+            {
+                TaskService.deleteFloatingTasks(floatingTasks, deleteFloatingTaskByProperty);
+            }
+
+            taskDeletedFlag = false;
+        }
+
+        if(documentDeletedFlag)
+        {
+            ProjectService.deleteDocumentsFromProject(documentsToDelete, dataForThisModalInstance.projectToEdit.name);
+            DocumentService.deleteDocumentGlobal(documentsToDelete, DocumentService.getDocumentPanels());
+            DocumentService.deleteDocumentGlobal(documentsToDelete, updatedDocumentsArray);
+
+//            console.log("floatingDocuments OUTSIDE: " + JSON.stringify(floatingDocuments));
+
+            if(floatingDocuments.length)
+            {
+                DocumentService.deleteFloatingDocuments(floatingDocuments, deleteFloatingDocumentByProperty);
+            }
+
+            documentDeletedFlag = false;
+        }
+
+        if(taskCreatedFlag)
+        {
+            ProjectService.addProjectToTask(updatedTasksArray, dataForThisModalInstance.projectToEdit.name);
+            TaskService.createTaskPanel(updatedTasksArray);
+
+            for(var newTask of updatedTasksArray)
+            {
+                ProjectService.addTaskToProject(dataForThisModalInstance.projectToEdit.name, newTask);
+            }
+
+            taskCreatedFlag = false;
+        }
+
+        if(documentCreatedFlag)
+        {
+            ProjectService.addProjectToDocument(updatedDocumentsArray, dataForThisModalInstance.projectToEdit.name);
+            DocumentService.createDocumentPanel(updatedDocumentsArray);
+
+            for(var newDocument of updatedDocumentsArray)
+            {
+                ProjectService.addDocumentToProject(dataForThisModalInstance.projectToEdit.name, newDocument);
+            }
+
+            documentCreatedFlag = false;
+        }
+
+        if(taskUpdateFlag)
+        {
+            ProjectService.updateTasksInProject(dataForThisModalInstance.projectToEdit.name, JSON.parse(JSON.stringify(vm.taskPanels)));
+            TaskService.updateTasks(JSON.parse(JSON.stringify(vm.taskPanels)), false);
+
+            taskUpdateFlag = false;
+        }
+
+        if(documentUpdateFlag)
+        {
+            ProjectService.updateDocumentsInProject(dataForThisModalInstance.projectToEdit.name, JSON.parse(JSON.stringify(vm.documentPanels)));
+            DocumentService.updateDocuments(JSON.parse(JSON.stringify(vm.documentPanels)), false);
+
+            documentUpdateFlag = false;
+        }
+
+        $uibModalInstance.close();
+    };
+
+    /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     /////////////////////// Update Project ///////////////////////////////////[E N D]//////////////////////////////////
+     *//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
      ////////////////// Modal For Creating Task  [ Update Project ] ///////////////////////////////////////////////////
@@ -940,95 +1189,180 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
         });
     };
 
-    /*////////////////////////////////////////////////////////////////////////////////////////////////////
-     /////////////////// Modal For Editing Document [ Update Project ] ////////////////////////////////[E N D]///////////////////
-     *///////////////////////////////////////////////////////////////////////////////////
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     /////////////////// Modal For Editing Document [ Update Project ] ////////////////////////////////[E N D]/////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-     ////////////////////// Update Project ///////////////////////////////////////////////////////////////////////////
-     *//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////// Modal For Importing Existing Tasks [ Update Project ] //////////////////////////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    vm.createOrUpdateProject = function()
+    vm.existingTasksModalInProjectModal = function()
     {
-//        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
+        var existingTasksModalInProjectModalInstance = $uibModal.open({
+            animation: false,
+            templateUrl: 'partials/existing_tasks_modal.html',
+            controller: 'ExistingTasksModalInstanceController',
+            controllerAs: 'AddExistingTasksModalVM',
+            windowClass: 'modals-style',
+            backdrop: 'static',
+            resolve: {
+                dataForThisModalInstance: function () {
+                    return {
+                        projectName: vm.projectName,
+                        tasksArray: JSON.parse(JSON.stringify(TaskService.getTaskPanels())),
+                        tasksInModal: JSON.parse(JSON.stringify(vm.taskPanels))
+                    };
+                }
+            }
+        });
 
-        if(taskDeletedFlag)
-        {
-            ProjectService.deleteTasksFromProject(tasksToDelete, dataForThisModalInstance.projectToEdit.name);
-            TaskService.deleteTaskGlobal(tasksToDelete, TaskService.getTaskPanels());
-            TaskService.deleteTaskGlobal(tasksToDelete, updatedTasksArray);
+        existingTasksModalInProjectModalInstance.result.then(function (selected_existing_tasks) {
 
-            if(floatingTasks.length)
+            //        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
+
+            var new_tasks_obj = {};
+            var new_doc_obj = {};
+
+            for(var task of selected_existing_tasks)
             {
-                TaskService.deleteFloatingTasks(floatingTasks);
+                for(var taskPanel of TaskService.getTaskPanels())
+                {
+                    if(task.id == taskPanel.id)
+                    {
+                        if(vm.documentPanels.length)
+                        {
+                            console.log("if(vm.documentPanels.length)");
+
+                            documentAlreadyExists = DocumentService.chkTaskDocsInPrjDocsWithoutPrjName(task.documents, vm.documentPanels);
+
+                            if(documentAlreadyExists)
+                            {
+                                alert("Document With Same Name Already Exists In This Project");
+                                return
+                            }
+
+                            for(var doc of task.documents)
+                            {
+                                if(task.project)
+                                {
+                                    new_doc_obj = doc;
+                                    new_doc_obj.id = DocumentService.newDocumentID();
+                                    vm.documentPanels.push(doc);
+                                    updatedDocumentsArray.push(doc);
+                                    documentCreatedFlag = true;
+                                }
+                                else
+                                {
+                                    vm.documentPanels.push(doc);
+                                    updatedDocumentsArray.push(doc);
+                                    documentCreatedFlag = true;
+                                }
+                            }
+
+                            if(taskPanel.project)
+                            {
+                                console.log("IINN 111");
+
+                                new_tasks_obj = task;
+                                new_tasks_obj.id = TaskService.newTaskID();
+                                updatedTasksArray.push(new_tasks_obj);
+                                vm.taskPanels.push(new_tasks_obj);
+                                new_tasks_obj = {};
+                                taskCreatedFlag = true;
+                                vm.updateFlag = true;
+                            }
+                            else
+                            {
+                                console.log("IINN 222");
+
+                                for(var doc of task.documents)
+                                {
+                                    floatingDocuments.push(doc);
+                                }
+
+                                floatingTasks.push(task);
+                                updatedTasksArray.push(task);
+                                vm.taskPanels.push(task);
+                                taskCreatedFlag = true;
+                                taskDeletedFlag = true;
+                                documentDeletedFlag = true;
+                                deleteFloatingTaskByProperty = 'id';
+                                deleteFloatingDocumentByProperty = 'id';
+                                vm.updateFlag = true;
+                            }
+                        }
+                        else
+                        {
+                            console.log("else");
+
+                            for(var doc of task.documents)
+                            {
+                                if(task.project)
+                                {
+                                    new_doc_obj = doc;
+                                    new_doc_obj.id = DocumentService.newDocumentID();
+                                    vm.documentPanels.push(doc);
+                                    updatedDocumentsArray.push(doc);
+                                    documentCreatedFlag = true;
+                                }
+                                else
+                                {
+                                    vm.documentPanels.push(doc);
+                                    updatedDocumentsArray.push(doc);
+                                    documentCreatedFlag = true;
+                                }
+                            }
+
+                            if(taskPanel.project)
+                            {
+                                console.log("if(taskPanel.project)");
+
+                                new_tasks_obj = task;
+                                new_tasks_obj.id = TaskService.newTaskID();
+                                updatedTasksArray.push(new_tasks_obj);
+                                vm.taskPanels.push(new_tasks_obj);
+                                new_tasks_obj = {};
+                                taskCreatedFlag = true;
+                                vm.updateFlag = true;
+                            }
+                            else
+                            {
+                                console.log("if( [not] taskPanel.project)");
+
+                                floatingTasks.push(task);
+
+                                for(var doc of task.documents)
+                                {
+                                    floatingDocuments.push(doc);
+                                }
+
+                                console.log("floatingDocuments [if not] : " + JSON.stringify(floatingDocuments));
+
+                                updatedTasksArray.push(task);
+                                vm.taskPanels.push(task);
+                                taskCreatedFlag = true;
+                                taskDeletedFlag = true;
+                                documentDeletedFlag = true;
+                                deleteFloatingTaskByProperty = 'id';
+                                deleteFloatingDocumentByProperty = 'id';
+                                vm.updateFlag = true;
+                            }
+                        }
+                    }
+                }
             }
 
-            taskDeletedFlag = false;
-        }
+        }, function () {
+//            $log.info('Modal dismissed at: ' + new Date());
+        });
 
-        if(documentDeletedFlag)
-        {
-            ProjectService.deleteDocumentsFromProject(documentsToDelete, dataForThisModalInstance.projectToEdit.name);
-            DocumentService.deleteDocumentGlobal(documentsToDelete, DocumentService.getDocumentPanels());
-            DocumentService.deleteDocumentGlobal(documentsToDelete, updatedDocumentsArray);
-
-            if(floatingDocuments.length)
-            {
-                DocumentService.deleteFloatingDocuments(floatingDocuments);
-            }
-
-            documentDeletedFlag = false;
-        }
-
-        if(taskCreatedFlag)
-        {
-            ProjectService.addProjectToTask(updatedTasksArray, dataForThisModalInstance.projectToEdit.name);
-            TaskService.createTaskPanel(updatedTasksArray);
-
-            for(var newTask of updatedTasksArray)
-            {
-                ProjectService.addTaskToProject(dataForThisModalInstance.projectToEdit.name, newTask);
-            }
-
-            taskCreatedFlag = false;
-        }
-
-        if(documentCreatedFlag)
-        {
-            ProjectService.addProjectToDocument(updatedDocumentsArray, dataForThisModalInstance.projectToEdit.name);
-            DocumentService.createDocumentPanel(updatedDocumentsArray);
-
-            for(var newDocument of updatedDocumentsArray)
-            {
-                ProjectService.addDocumentToProject(dataForThisModalInstance.projectToEdit.name, newDocument);
-            }
-
-            documentCreatedFlag = false;
-        }
-
-        if(taskUpdateFlag)
-        {
-            ProjectService.updateTasksInProject(dataForThisModalInstance.projectToEdit.name, JSON.parse(JSON.stringify(vm.taskPanels)));
-            TaskService.updateTasks(JSON.parse(JSON.stringify(vm.taskPanels)), false);
-
-            taskUpdateFlag = false;
-        }
-
-        if(documentUpdateFlag)
-        {
-            ProjectService.updateDocumentsInProject(dataForThisModalInstance.projectToEdit.name, JSON.parse(JSON.stringify(vm.documentPanels)));
-            DocumentService.updateDocuments(JSON.parse(JSON.stringify(vm.documentPanels)), false);
-
-            documentUpdateFlag = false;
-        }
-
-        $uibModalInstance.close();
     };
 
-    /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-     /////////////////////// Update Project ///////////////////////////////////[E N D]//////////////////////////////////
-     *//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////// Modal For Importing Existing Tasks [ Update Project ] //////////////////////////////// [E N D] /////
+     */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////
      /////////////////// Cancel Project Update /////////////////////////////////////////////////////////////////////
@@ -1078,148 +1412,6 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
      /////////////////// Delete Document [ Update Project ] //////////////////////////////////////[E N D]//////////////
      */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-     ///////////// Add From Existing Tasks [ Update Project ] /////////////////////////////////////////////////////////
-     */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    vm.existingTasksModalInProjectModal = function()
-    {
-        var existingTasksModalInProjectModalInstance = $uibModal.open({
-            animation: false,
-            templateUrl: 'partials/existing_tasks_modal.html',
-            controller: 'ExistingTasksModalInstanceController',
-            controllerAs: 'AddExistingTasksModalVM',
-            windowClass: 'modals-style',
-            backdrop: 'static',
-            resolve: {
-                dataForThisModalInstance: function () {
-                    return {
-                        projectName: vm.projectName,
-                        tasksArray: JSON.parse(JSON.stringify(TaskService.getTaskPanels())),
-                        tasksInModal: JSON.parse(JSON.stringify(vm.taskPanels))
-                    };
-                }
-            }
-        });
-
-        existingTasksModalInProjectModalInstance.result.then(function (selected_existing_tasks) {
-
-            //        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
-
-            var new_tasks_obj = {};
-
-            for(var task of selected_existing_tasks)
-            {
-                for(var taskPanel of TaskService.getTaskPanels())
-                {
-                    if(task.id == taskPanel.id)
-                    {
-                        if(vm.documentPanels.length)
-                        {
-                            documentAlreadyExists = DocumentService.chkTaskDocsInPrjDocsWithoutPrjName(task.documents, vm.documentPanels);
-
-                            if(documentAlreadyExists)
-                            {
-                                alert("Document With Same Name Already Exists In This Project");
-                                return
-                            }
-
-                            for(var doc of task.documents)
-                            {
-                                vm.documentPanels.push(doc);
-                                updatedDocumentsArray.push(doc);
-                                documentCreatedFlag = true;
-                            }
-
-                            if(taskPanel.project)
-                            {
-                                new_tasks_obj = task;
-                                new_tasks_obj.id = TaskService.newTaskID();
-                                updatedTasksArray.push(new_tasks_obj);
-                                vm.taskPanels.push(new_tasks_obj);
-                                new_tasks_obj = {};
-                                taskCreatedFlag = true;
-                                vm.updateFlag = true;
-                            }
-                            else
-                            {
-                                floatingTasks.push(task);
-                                floatingDocuments.push(doc);
-                                updatedTasksArray.push(task);
-                                vm.taskPanels.push(task);
-                                taskCreatedFlag = true;
-                                taskDeletedFlag = true;
-                                documentDeletedFlag = true;
-                                vm.updateFlag = true;
-                            }
-
-                        }
-                        else
-                        {
-                            for(var doc of task.documents)
-                            {
-                                vm.documentPanels.push(doc);
-                                updatedDocumentsArray.push(doc);
-                                documentCreatedFlag = true;
-                            }
-
-                            if(taskPanel.project)
-                            {
-                                new_tasks_obj = task;
-                                new_tasks_obj.id = TaskService.newTaskID();
-                                updatedTasksArray.push(new_tasks_obj);
-                                vm.taskPanels.push(new_tasks_obj);
-                                new_tasks_obj = {};
-                                taskCreatedFlag = true;
-                                vm.updateFlag = true;
-                            }
-                            else
-                            {
-                                floatingTasks.push(task);
-                                floatingDocuments.push(doc);
-                                updatedTasksArray.push(task);
-                                vm.taskPanels.push(task);
-                                taskCreatedFlag = true;
-                                taskDeletedFlag = true;
-                                documentDeletedFlag = true;
-                                vm.updateFlag = true;
-                            }
-
-                        }
-
-//                        if(taskPanel.project)
-//                        {
-//                            new_tasks_obj = task;
-//                            new_tasks_obj.id = TaskService.newTaskID();
-//                            updatedTasksArray.push(new_tasks_obj);
-//                            vm.taskPanels.push(new_tasks_obj);
-//                            new_tasks_obj = {};
-//                            taskCreatedFlag = true;
-//                            vm.updateFlag = true;
-//                        }
-//                        else
-//                        {
-//                            floatingTasks.push(task);
-//                            updatedTasksArray.push(task);
-//                            vm.taskPanels.push(task);
-//                            taskCreatedFlag = true;
-//                            taskDeletedFlag = true;
-//                            vm.updateFlag = true;
-//                        }
-
-                    }
-                }
-            }
-
-        }, function () {
-//            $log.info('Modal dismissed at: ' + new Date());
-        });
-
-    };
-
-    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-     ///////////// Add From Existing Tasks [ Update Project ] //////////////////////////////// [E N D] ////////////////
-     *////////////////////////////////////////////////////////////////////////////////
 
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
      ///////////// Add From Existing Documents [ Update Project ] /////////////////////////////////////////////////////

@@ -77,7 +77,7 @@ app.service('TaskService', function(){
         }
     };
 
-    var deleteFloatingTasks = function(floatingTasks)
+    var deleteFloatingTasks = function(floatingTasks, deleteByProperty)
     {
         "use strict";
         //                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
@@ -88,7 +88,24 @@ app.service('TaskService', function(){
             {
                 if(!(task.project) && (task.id == floatTask.id))
                 {
-                    removeEntity(taskPanels, 'id', task.id);
+                    console.log("task.id : " + JSON.stringify(task.id));
+                    console.log("floatTask.id : " + JSON.stringify(floatTask.id));
+                    console.log("task.project : " + JSON.stringify(task.project));
+                    console.log("floatTask.project : " + JSON.stringify(floatTask.project));
+
+                    removeEntity(taskPanels, 'id', 'project', task.id, task.project);
+
+//                    if(deleteByProperty == 'id')
+//                    {
+//                        console.log("deleteByProperty : " + deleteByProperty);
+//                        removeEntity(taskPanels, 'id', task.id);
+//                    }
+//                    else if(deleteByProperty == 'project')
+//                    {
+//                        console.log("deleteByProperty : " + deleteByProperty);
+//                        removeEntity(taskPanels, 'project', task.project);
+//                    }
+
                 }
             }
         }
@@ -176,7 +193,7 @@ app.service('TaskService', function(){
         }
     };
 
-    var removeEntity = function(arr, attr, value)
+    var removeEntity = function(arr, attr, attr2, value, value2)
     {
         "use strict";
 
@@ -184,7 +201,7 @@ app.service('TaskService', function(){
         while(i--){
             if( arr[i]
                 && arr[i].hasOwnProperty(attr)
-                && (arguments.length > 2 && arr[i][attr] === value ) ){
+                && (arguments.length > 2 && arr[i][attr] === value && arr[i][attr2] === value2) ){
 
                 arr.splice(i,1);
             }
