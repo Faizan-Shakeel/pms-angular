@@ -271,8 +271,6 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
 
         if(taskCreatedFlag)
         {
-            console.log("Task Created");
-
             ProjectService.addProjectToTask(tasksArray, projectName);
             TaskService.createTaskPanel(tasksArray);
 
@@ -297,15 +295,8 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
             documentCreatedFlag = false;
         }
 
-
         if(taskDeletedFlag)
         {
-//            ProjectService.deleteTasksFromProject(tasksToDelete, projectName);
-//            TaskService.deleteTaskGlobal(tasksToDelete, TaskService.getTaskPanels());
-//            TaskService.deleteTaskGlobal(tasksToDelete, tasksArray);
-
-            console.log("floatingTasks OUTSIDE: " + JSON.stringify(floatingTasks));
-
             if(floatingTasks.length)
             {
                 TaskService.deleteFloatingTasks(floatingTasks, deleteFloatingTaskByProperty);
@@ -316,12 +307,6 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
 
         if(documentDeletedFlag)
         {
-//            ProjectService.deleteDocumentsFromProject(documentsToDelete, projectName);
-//            DocumentService.deleteDocumentGlobal(documentsToDelete, DocumentService.getDocumentPanels());
-//            DocumentService.deleteDocumentGlobal(documentsToDelete, documentsArray);
-
-//            console.log("floatingDocuments OUTSIDE: " + JSON.stringify(floatingDocuments));
-
             if(floatingDocuments.length)
             {
                 DocumentService.deleteFloatingDocuments(floatingDocuments, deleteFloatingDocumentByProperty);
@@ -393,10 +378,6 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
                     {
                         if(vm.documentPanels.length)
                         {
-                            console.log("if(vm.documentPanels.length)");
-
-//                            console.log("vm.documentPanels 0: " + JSON.stringify(vm.documentPanels));
-
                             documentAlreadyExists = DocumentService.chkTaskDocsInPrjDocsWithoutPrjName(task.documents, vm.documentPanels);
 
                             if(documentAlreadyExists)
@@ -409,8 +390,6 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
                             {
                                 if(task.project)
                                 {
-                                    console.log("Inside Loop IF");
-
                                     new_doc_obj = doc;
                                     new_doc_obj.id = DocumentService.newDocumentID();
 //                                    vm.documentPanels.push(doc);
@@ -419,21 +398,14 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
                                 }
                                 else
                                 {
-                                    console.log("Inside Loop ELSE");
-
 //                                    vm.documentPanels.push(doc);
                                     documentsArray.push(doc);
                                     documentCreatedFlag = true;
                                 }
-//                                console.log("vm.documentPanels Loop: " + JSON.stringify(vm.documentPanels));
                             }
-
-//                            console.log("vm.documentPanels 1: " + JSON.stringify(vm.documentPanels));
 
                             if(taskPanel.project)
                             {
-                                console.log("IINN 111");
-
                                 new_tasks_obj = task;
                                 new_tasks_obj.id = TaskService.newTaskID();
                                 tasksArray.push(new_tasks_obj);
@@ -444,10 +416,6 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
                             }
                             else
                             {
-//                                console.log("IINN 222");
-
-//                                console.log("vm.documentPanels 2 : " + JSON.stringify(vm.documentPanels));
-
                                 for(var doc of task.documents)
                                 {
                                     floatingDocuments.push(doc);
@@ -462,14 +430,10 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
                                 deleteFloatingTaskByProperty = 'project';
                                 deleteFloatingDocumentByProperty = 'project';
                                 vm.updateFlag = true;
-                                console.log("IINN 333");
-//                                console.log("vm.documentPanels After : " + JSON.stringify(vm.documentPanels));
                             }
                         }
                         else
                         {
-                            console.log("else");
-
                             for(var doc of task.documents)
                             {
                                 if(task.project)
@@ -490,8 +454,6 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
 
                             if(taskPanel.project)
                             {
-                                console.log("if(taskPanel.project)");
-
                                 new_tasks_obj = task;
                                 new_tasks_obj.id = TaskService.newTaskID();
                                 tasksArray.push(new_tasks_obj);
@@ -502,17 +464,12 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
                             }
                             else
                             {
-                                console.log("if( [not] taskPanel.project)");
-
                                 floatingTasks.push(task);
 
                                 for(var doc of task.documents)
                                 {
                                     floatingDocuments.push(doc);
                                 }
-
-//                                console.log("floatingDocuments [if not] : " + JSON.stringify(floatingDocuments));
-                                console.log("globalTasks : " + JSON.stringify(globalTasks));
 
                                 tasksArray.push(task);
                                 vm.taskPanels.push(task);
@@ -524,9 +481,6 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
                                 vm.updateFlag = true;
                             }
                         }
-
-
-
                     }
                 }
             }
@@ -587,9 +541,7 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
                         }
                         else
                         {
-                            console.log("floatingDocuments Before 1: " + JSON.stringify(floatingDocuments));
                             floatingDocuments.push(document);
-                            console.log("floatingDocuments After 1: " + JSON.stringify(floatingDocuments));
                             documentsArray.push(document);
 //                            vm.documentPanels.push(document);
                             documentCreatedFlag = true;
@@ -671,13 +623,10 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
             }
 
             tasksArray.push(new_task_params);
-//            documentsArray
             vm.taskPanels.push(new_task_params);
             taskCreatedFlag = true;
-//            vm.documentPanels.push(new_task_params.documents);
 
         }, function () {
-//            $log.info('Modal dismissed at: ' + new Date());
         });
 
     };
@@ -805,10 +754,23 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
 
     vm.deleteTask = function(taskToDelete)
     {
-//        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
+        var modalDocuments = JSON.parse(JSON.stringify(vm.documentPanels));
+
+        for(var doc of modalDocuments)
+        {
+            if(doc.task == taskToDelete.name)
+            {
+                DocumentService.deleteDocumentModal(doc, vm.documentPanels);
+                DocumentService.deleteDocumentModal(doc, documentsArray);
+
+                documentDeletedFlag = true;
+            }
+        }
 
         TaskService.deleteTaskModal(taskToDelete, vm.taskPanels);
         TaskService.deleteTaskModal(taskToDelete, tasksArray);
+
+        taskDeletedFlag = true;
     };
 
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -826,6 +788,8 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
 
         DocumentService.deleteDocumentModal(documentToDelete, vm.documentPanels);
         DocumentService.deleteDocumentModal(documentToDelete, documentsArray);
+
+        documentDeletedFlag = true;
     };
 
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -866,7 +830,6 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
 
 
         }, function () {
-//            $log.info('Modal dismissed at: ' + new Date());
         });
 
     };
@@ -916,8 +879,6 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
             TaskService.deleteTaskGlobal(tasksToDelete, TaskService.getTaskPanels());
             TaskService.deleteTaskGlobal(tasksToDelete, updatedTasksArray);
 
-//            console.log("floatingTasks OUTSIDE: " + JSON.stringify(floatingTasks));
-
             if(floatingTasks.length)
             {
                 TaskService.deleteFloatingTasks(floatingTasks, deleteFloatingTaskByProperty);
@@ -929,10 +890,9 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
         if(documentDeletedFlag)
         {
             ProjectService.deleteDocumentsFromProject(documentsToDelete, dataForThisModalInstance.projectToEdit.name);
+            TaskService.deleteDocumentsFromTask(documentsToDelete, JSON.parse(JSON.stringify(vm.taskPanels)));
             DocumentService.deleteDocumentGlobal(documentsToDelete, DocumentService.getDocumentPanels());
             DocumentService.deleteDocumentGlobal(documentsToDelete, updatedDocumentsArray);
-
-//            console.log("floatingDocuments OUTSIDE: " + JSON.stringify(floatingDocuments));
 
             if(floatingDocuments.length)
             {
@@ -1052,7 +1012,6 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
             vm.updateFlag = true;
 
         }, function () {
-//            $log.info('Modal dismissed at: ' + new Date());
         });
 
     };
@@ -1233,8 +1192,6 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
                     {
                         if(vm.documentPanels.length)
                         {
-                            console.log("if(vm.documentPanels.length)");
-
                             documentAlreadyExists = DocumentService.chkTaskDocsInPrjDocsWithoutPrjName(task.documents, vm.documentPanels);
 
                             if(documentAlreadyExists)
@@ -1263,8 +1220,6 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
 
                             if(taskPanel.project)
                             {
-                                console.log("IINN 111");
-
                                 new_tasks_obj = task;
                                 new_tasks_obj.id = TaskService.newTaskID();
                                 updatedTasksArray.push(new_tasks_obj);
@@ -1275,8 +1230,6 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
                             }
                             else
                             {
-                                console.log("IINN 222");
-
                                 for(var doc of task.documents)
                                 {
                                     floatingDocuments.push(doc);
@@ -1295,8 +1248,6 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
                         }
                         else
                         {
-                            console.log("else");
-
                             for(var doc of task.documents)
                             {
                                 if(task.project)
@@ -1317,8 +1268,6 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
 
                             if(taskPanel.project)
                             {
-                                console.log("if(taskPanel.project)");
-
                                 new_tasks_obj = task;
                                 new_tasks_obj.id = TaskService.newTaskID();
                                 updatedTasksArray.push(new_tasks_obj);
@@ -1329,16 +1278,12 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
                             }
                             else
                             {
-                                console.log("if( [not] taskPanel.project)");
-
                                 floatingTasks.push(task);
 
                                 for(var doc of task.documents)
                                 {
                                     floatingDocuments.push(doc);
                                 }
-
-                                console.log("floatingDocuments [if not] : " + JSON.stringify(floatingDocuments));
 
                                 updatedTasksArray.push(task);
                                 vm.taskPanels.push(task);
@@ -1355,7 +1300,6 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
             }
 
         }, function () {
-//            $log.info('Modal dismissed at: ' + new Date());
         });
 
     };
@@ -1384,6 +1328,19 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
     {
 //        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
 
+        var modalDocuments = JSON.parse(JSON.stringify(vm.documentPanels));
+
+        for(var doc of modalDocuments)
+        {
+            if(doc.task == taskToDelete.name)
+            {
+                DocumentService.deleteDocumentModal(doc, vm.documentPanels);
+                DocumentService.deleteDocumentModal(doc, updatedDocumentsArray);
+
+                documentDeletedFlag = true;
+            }
+        }
+
         tasksToDelete.push(taskToDelete);
         TaskService.deleteTaskModal(taskToDelete, vm.taskPanels);
         taskDeletedFlag = true;
@@ -1403,6 +1360,7 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
         //        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
 
         documentsToDelete.push(documentToDelete);
+
         DocumentService.deleteDocumentModal(documentToDelete, vm.documentPanels);
         documentDeletedFlag = true;
         vm.updateFlag = true;
@@ -1449,8 +1407,6 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
                 {
                     if(document.id == documentPanel.id)
                     {
-//                        console.log("document : " + JSON.stringify(document));
-
                         if(documentPanel.project)
                         {
                             new_documents_obj = document;
@@ -1470,15 +1426,11 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
                             documentDeletedFlag = true;
                             vm.updateFlag = true;
                         }
-
-                        console.log("updatedDocumentsArray : " + JSON.stringify(updatedDocumentsArray));
-
                     }
                 }
             }
 
         }, function () {
-//            $log.info('Modal dismissed at: ' + new Date());
         });
 
     };
@@ -1735,7 +1687,6 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
             vm.documentPanels = documentsArray;
 
         }, function () {
-//            $log.info('Modal dismissed at: ' + new Date());
         });
 
     };
@@ -1820,7 +1771,6 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
                                 docWithNewId.name = bufferDoc.name;
                                 docWithNewId.status = bufferDoc.status;
                                 docWithNewId.project = bufferDoc.project;
-//                                docWithNewId.task = taskName;
 
                                 updatedIdDocs.push(docWithNewId);
 

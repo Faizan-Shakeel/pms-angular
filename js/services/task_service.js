@@ -64,7 +64,7 @@ app.service('TaskService', function(){
     {
         "use strict";
 
-        removeEntity(modalTasksArray, 'id', selectedTaskToDelete.id);
+        removeEntity(modalTasksArray, 'id', 'project', selectedTaskToDelete.id, selectedTaskToDelete.project);
     };
 
     var deleteTaskGlobal = function(tasksToDelete, deleteFrom)
@@ -73,7 +73,38 @@ app.service('TaskService', function(){
 
         for(var task of tasksToDelete)
         {
-            removeEntity(deleteFrom, 'id', task.id);
+            removeEntity(deleteFrom, 'id', 'project', task.id, task.project);
+        }
+    };
+
+    var deleteDocumentsFromTask = function(documentsToDelete, modalTasks)
+    {
+        var deleteFromTaskID;
+
+        for(var doc of documentsToDelete)
+        {
+            if(doc.task)
+            {
+                for(var mTask of modalTasks)
+                {
+                    if(mTask.name == doc.task)
+                    {
+                        deleteFromTaskID = mTask.id;
+                        break;
+                    }
+                }
+            }
+
+            if(deleteFromTaskID != null)
+            {
+                for(var task of taskPanels)
+                {
+                    if(task.id == deleteFromTaskID)
+                    {
+                        removeEntity(task.documents, 'id', 'project', doc.id, doc.project);
+                    }
+                }
+            }
         }
     };
 
@@ -88,24 +119,7 @@ app.service('TaskService', function(){
             {
                 if(!(task.project) && (task.id == floatTask.id))
                 {
-                    console.log("task.id : " + JSON.stringify(task.id));
-                    console.log("floatTask.id : " + JSON.stringify(floatTask.id));
-                    console.log("task.project : " + JSON.stringify(task.project));
-                    console.log("floatTask.project : " + JSON.stringify(floatTask.project));
-
                     removeEntity(taskPanels, 'id', 'project', task.id, task.project);
-
-//                    if(deleteByProperty == 'id')
-//                    {
-//                        console.log("deleteByProperty : " + deleteByProperty);
-//                        removeEntity(taskPanels, 'id', task.id);
-//                    }
-//                    else if(deleteByProperty == 'project')
-//                    {
-//                        console.log("deleteByProperty : " + deleteByProperty);
-//                        removeEntity(taskPanels, 'project', task.project);
-//                    }
-
                 }
             }
         }
@@ -120,7 +134,7 @@ app.service('TaskService', function(){
             angular.forEach(taskPanels, function(valueFromGlobalList,indexSpecificProject){
                 if(valueFromGlobalList.id == valueFromSpecificProject.id)
                 {
-                    taskPanels = removeEntity(taskPanels, 'id', valueFromGlobalList.id);
+                    taskPanels = removeEntity(taskPanels, 'id', 'project', valueFromGlobalList.id, valueFromGlobalList.project);
                 }
             });
         });
@@ -217,6 +231,7 @@ app.service('TaskService', function(){
         deleteTask: deleteTask,
         deleteTaskModal: deleteTaskModal,
         deleteTaskGlobal: deleteTaskGlobal,
+        deleteDocumentsFromTask: deleteDocumentsFromTask,
         deleteFloatingTasks: deleteFloatingTasks,
         hasDuplicates: hasDuplicates,
         removeProjectTasksFromExistingTasks: removeProjectTasksFromExistingTasks,

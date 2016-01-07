@@ -95,7 +95,7 @@ app.service('DocumentService', function(){
             angular.forEach(documentPanels, function(valueFromSpecificProject,indexSpecificProject){
                 if(valueFromGlobalList.id == valueFromSpecificProject.id)
                 {
-                    documentPanels = removeEntity(documentPanels, 'id', valueFromGlobalList.id);
+                    documentPanels = removeEntity(documentPanels, 'id', 'project', valueFromGlobalList.id, valueFromGlobalList.project);
                 }
             });
         });
@@ -106,7 +106,7 @@ app.service('DocumentService', function(){
         "use strict";
         //                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
 
-        removeEntity(modalDocumentsArray, 'id', selectedDocumentToDelete.id);
+        removeEntity(modalDocumentsArray, 'id', 'project', selectedDocumentToDelete.id, selectedDocumentToDelete.project);
     };
 
     var deleteDocumentGlobal = function(documentsToDelete, deleteFrom)
@@ -116,9 +116,7 @@ app.service('DocumentService', function(){
 
         for(var document of documentsToDelete)
         {
-            console.log("document.id : " + JSON.stringify(document.id));
-
-            removeEntity(deleteFrom, 'id', document.id);
+            removeEntity(deleteFrom, 'id', 'project', document.id, document.project);
         }
     };
 
@@ -127,8 +125,6 @@ app.service('DocumentService', function(){
         "use strict";
         //                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
 
-        console.log("floatingDocuments : " + JSON.stringify(floatingDocuments));
-
         for(var floatDocument of floatingDocuments)
         {
 
@@ -136,21 +132,7 @@ app.service('DocumentService', function(){
             {
                 if(!(document.project) && (document.id == floatDocument.id))
                 {
-                    console.log("document : " + JSON.stringify(document));
-
                     removeEntity(documentPanels, 'id', 'project', document.id, document.project);
-
-//                    if(deleteByProperty == 'id')
-//                    {
-//                        console.log("deleteByProperty : " + deleteByProperty);
-//                        removeEntity(documentPanels, 'id', document.id);
-//                    }
-//                    else if(deleteByProperty == 'project')
-//                    {
-//                        console.log("deleteByProperty : " + deleteByProperty);
-//                        removeEntity(documentPanels, 'project', document.project);
-//                    }
-
                 }
             }
         }
