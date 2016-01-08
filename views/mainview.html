@@ -1,13 +1,12 @@
-<!------------------------------------------------------------ MAIN CONTAINER (Write No HTML Outside) -----------------------------------------------------------------START-->
 <div class="container-full-width" ng-controller="Main_View_Controller as MainViewVM" ng-cloak>
 
 <!-------------------------------------------------------------------- Navigation Bar Fixed Top -----------------------------------------------------------------------START-->
-    <div ng-controller="ModalDemoController as ModalVM">
+    <div ng-controller="ModalsController as ModalVM">
 
         <nav class="navbar navbar-default navbar-fixed-top" id="navbar-bottom-margin" role="navigation">
 
             <header class="navbar-header">
-                <a class="navbar-brand" href="#/mainview" id="application-logo">PMS</a>
+                <a class="navbar-brand" href="#" id="application-logo">PMS</a>
             </header>
 
             <div class="collapse navbar-collapse col-lg-offset-2" id="bs-example-navbar-collapse-1">
@@ -58,7 +57,7 @@
         <div class="row hidden-xs" id="test-second-custom-bar">
 
             <div class="col-lg-2 col-md-2 col-sm-2" id="123">
-                <button class="btn btn-default" id="menu-opener">Menu <span class="glyphicon glyphicon-book" id="icon-main-options-color"></span></button>
+                <button class="btn btn-default" id="menu-opener" ng-click="MainViewVM.switchAccordionVisibility()">Menu <span class="glyphicon glyphicon-book" id="icon-main-options-color"></span></button>
             </div>
 
             <div class="col-lg-3 col-md-4 col-sm-5 common-class">
@@ -87,7 +86,7 @@
             <!--</div>-->
 
             <div class="col-lg-2 col-md-2 col-sm-2 pull-right">
-                <button class="btn btn-default" id="chatting-list-opener">Work Together <span class="glyphicon glyphicon-comment" id="icon-chat-list-color"></span></button>
+                <button class="btn btn-default" id="chatting-list-opener" ng-click="MainViewVM.switchChatPanelVisibility()">Work Together <span class="glyphicon glyphicon-comment" id="icon-chat-list-color"></span></button>
             </div>
 
         </div>
@@ -99,7 +98,7 @@
 
         <div class="row" id="third-row">
 
-        <div class="col-lg-2 col-md-2 col-sm-2">
+        <div class="col-lg-2 col-md-2 col-sm-2" ng-hide="MainViewVM.accordionVisibility">
 
             <uib-accordion close-others="MainViewVM.oneAtATime">
                 <uib-accordion-group is-open="MainViewVM.status.isFirstOpen">
@@ -112,7 +111,7 @@
 
                         <a href="#/mainview" id="project-popover" class="btn btn-default center-block" ng-click="ModalVM.newProjectModal()"><i class="fa fa-bar-chart-o pull-left" id="test1"></i>Create Project</a>
                         <a href="#/mainview" id="task-popover" class="btn btn-default center-block" ng-click="ModalVM.newTaskModal()"><i class="fa fa-tasks pull-left" id="test2"></i>Create Task</a>
-                        <a href="#/mainview" id="file-popover" class="btn btn-default center-block" ng-click="ModalVM.newDocumentModal()"><i class="fa fa-files-o pull-left" id="test3"></i>Create File</a>
+                        <a href="#/mainview" id="file-popover" class="btn btn-default center-block" ng-click="ModalVM.newDocumentModal()"><i class="fa fa-files-o pull-left" id="test3"></i>Create Document</a>
                         <a href="#/mainview" id="user-popover" class="btn btn-default center-block" ng-click="ModalVM.newUserModal()"><i class="fa fa-users pull-left" id="test4"></i>Create User</a>
 
                     </div>
@@ -166,7 +165,8 @@
         </div>
 
 
-        <div class="col-lg-8 col-md-8 col-sm-8 testTabsArea">
+        <!--<div class="col-lg-8 col-md-8 col-sm-8">-->
+        <div class="{{MainViewVM.globalTabsBootstrapClass}}">
             <uib-tabset justified="true">
 
                 <uib-tab heading="Projects" active="MainViewVM.active.Projects">
@@ -194,15 +194,12 @@
 
                                 <div class="btn-group-vertical" id="btn-grp-panel">
                                     <button class="btn btn-default test-button-border"><i class="fa fa-info"></i></button>
-                                    <button class="btn btn-default" ng-click="ModalVM.editProject(projectPanel)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteProject(projectPanel.name)"><i class="fa fa-trash-o"></i></button>
+                                    <button class="btn btn-default" ng-click="ModalVM.editProjectModal(projectPanel)"><i class="fa fa-edit"></i></button>
+                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteProject(projectPanel.name, projectPanel.id)"><i class="fa fa-trash-o"></i></button>
                                 </div>
-
                             </div>
                         </div>
-
                     </div>
-
                 </uib-tab>
 
                 <uib-tab heading="Tasks" active="MainViewVM.active.Tasks">
@@ -220,7 +217,7 @@
 
                                 <div id="task-panel-content-in-new-project-modal">
                                     <p>
-                                    <h4>{{taskPanel.name}} <span class="col-lg-offset-8">ID: {{taskPanel.id}}</span></h4>
+                                    <h4>{{taskPanel.name}} <span class="col-lg-offset-8">ID: {{taskPanel.tasks.id}}</span></h4>
                                     </p>
 
                                     <p>
@@ -231,15 +228,12 @@
 
                                 <div class="btn-group-vertical" id="tasks-btn-grp-panel-in-new-project-modal">
                                     <button class="btn btn-default test-button-border"><i class="fa fa-info"></i></button>
-                                    <button class="btn btn-default" ng-click="ModalVM.editTask(taskPanel.name)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteTask(taskPanel.id)"><i class="fa fa-trash-o"></i></button>
+                                    <button class="btn btn-default" ng-click="ModalVM.editTaskModal(taskPanel)"><i class="fa fa-edit"></i></button>
+                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteTask(taskPanel)"><i class="fa fa-trash-o"></i></button>
                                 </div>
-
                             </div>
                         </div>
-
                     </div>
-
                 </uib-tab>
 
                 <uib-tab heading="Documents" active="MainViewVM.active.Documents">
@@ -257,27 +251,24 @@
 
                                 <div id="document-panel-content-in-new-project-modal">
                                     <p>
-                                    <h4>{{documentPanel.name}}</h4>
+                                    <h4>{{documentPanel.name}} <span class="col-lg-offset-8">ID: {{documentPanel.id}} </span> </h4>
                                     </p>
 
                                     <p>
                                         {{documentPanel.status}}
+                                        <span class="col-lg-offset-7">{{documentPanel.projectName}}</span>
                                     </p>
                                 </div>
 
                                 <div class="btn-group-vertical" id="documents-btn-grp-panel-in-new-project-modal">
                                     <button class="btn btn-default test-button-border"><i class="fa fa-info"></i></button>
-                                    <button class="btn btn-default" ng-click="ModalVM.editDocument(documentPanel.name)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteDocument(documentPanel.id)"><i class="fa fa-trash-o"></i></button>
+                                    <button class="btn btn-default" ng-click="ModalVM.editDocumentModal(documentPanel)"><i class="fa fa-edit"></i></button>
+                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteDocument(documentPanel)"><i class="fa fa-trash-o"></i></button>
                                 </div>
-
                             </div>
                         </div>
-
                     </div>
-
                 </uib-tab>
-
 
                 <uib-tab heading="Users" active="MainViewVM.active.Users">
                     <div slim-scroll height="500px">
@@ -306,19 +297,29 @@
                                     <button class="btn btn-default" ng-click="ModalVM.editUser(userPanel.name)"><i class="fa fa-edit"></i></button>
                                     <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteUser(userPanel.id)"><i class="fa fa-trash-o"></i></button>
                                 </div>
-
                             </div>
                         </div>
-
                     </div>
-
                 </uib-tab>
             </uib-tabset>
 
         </div>
 
         <!-------------------------------------------------------------------------- Chat Box --------------------------------------------------------------------------------START-->
-        <!--<ng-include src="'chat-box.html'"></ng-include>-->
+
+        <!--<div class="chatting-box">-->
+            <!--<irontec-simple-chat-->
+                    <!--messages="MainViewVM.messages"-->
+                    <!--username="MainViewVM.username"-->
+                    <!--input-placeholder-text="You can write here"-->
+                    <!--submit-button-text="Send"-->
+                    <!--title="Super Awesome Chat"-->
+                    <!--theme="material"-->
+                    <!--submit-function="MainViewVM.sendMessage"-->
+                    <!--visible="MainViewVM.visible"-->
+                    <!--expand-on-new="MainViewVM.expandOnNew">-->
+            <!--</irontec-simple-chat>-->
+        <!--</div>-->
         <!-------------------------------------------------------------------------- Chat Box -------------------------------------------------------------------------------------END-->
 
 
@@ -328,12 +329,13 @@
 
 
         <!------------------------------------------------------------------------ Chatting List -----------------------------------------------------------------------START-->
-        <aside class="col-lg-2 col-md-2 col-sm-2" id="chatting-list-fixed">
+        <aside class="col-lg-2 col-md-2 col-sm-2" id="chatting-list-fixed" ng-hide="MainViewVM.chatPanelVisibility">
             <div class="panel panel-default" id="chatting-list-panel">
                 <div class="panel-heading" id="chat-panel-heading">Chat</div>
 
                 <ul class="list-group" id="chat-ul" slim-scroll height="500px">
 
+                    <!--<li ng-repeat="user in MainViewVM.users" class="list-group-item" ng-click="MainViewVM.visible = !MainViewVM.visible"><i id="onlineUserIcon" class={{user.status}}></i>{{user.name}}</li>-->
                     <li ng-repeat="user in MainViewVM.users" class="list-group-item"><i id="onlineUserIcon" class={{user.status}}></i>{{user.name}}</li>
 
                 </ul>

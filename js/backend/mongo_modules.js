@@ -16,7 +16,6 @@ var bcrypt = require('bcrypt-nodejs');
             PmsCollection.find({companyName:req.body.companyName},function(err, data)
             {
                 db.close();
-                console.log(data);
                 callback(data);
             });
         });
@@ -29,7 +28,7 @@ var bcrypt = require('bcrypt-nodejs');
         var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
         db.once('open', function()
         {
-            console.log(req.body);
+            //console.log(req.body);
             for (var keys in req.body)
             {
                 if (keys != 'companyName')
@@ -39,6 +38,7 @@ var bcrypt = require('bcrypt-nodejs');
             }
             var PmsCollection = db.model('PmsCollection', createSchema);
             var newEntry = new PmsCollection(req.body);
+            console.log(newEntry);
             newEntry.save(function(err)
             {
                 if (!err)
@@ -64,14 +64,13 @@ var updateData = function(req, callback)
         //console.log(req.body);
         var createSchema = schema.schema();
         var PmsCollection = db.model('PmsCollection',createSchema);
-                    CompanyData.findOne({companyName:req.body.companyName},function(err,doc)
+                    PmsCollection.findOne({companyName:req.body.companyName},function(err,doc)
                     {
                         //console.log(doc);
                         for (var keys in req.body)
                         {
                             console.log(doc[keys]);
                         }
-                        res.send("hello");
                         doc[keys] = req.body[keys];
                         doc.save(function()
                         {
@@ -81,7 +80,79 @@ var updateData = function(req, callback)
                         });               
                     });
     });
-}
+};
+
+// *********** DELETE AN ENTRY FROM DATABASE *************** //
+var deleteData = function(req, callback)
+{
+    var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
+    db.once('open', function()
+    {
+        var createSchema = schema.schema('companyName');
+        var PmsCollection = db.model('PmsCollection',createSchema);
+
+            if (req.body.id.indexOf('p') !== -1)
+            {
+                PmsCollection.remove({'project.id':req.body.id},function(err,removed)
+                {
+                    if (!err)
+                    {
+                        db.close();
+                        callback(removed);
+                    }
+                    else
+                    {
+                        callback(err);
+                    }
+                });
+            }
+            else if (req.body.id.indexOf('t') !== -1)
+            {
+                PmsCollection.remove({'tasks.id':req.body.id},function(err,removed)
+                {
+                    if (!err)
+                    {
+                        db.close();
+                        callback(removed);
+                    }
+                    else
+                    {
+                        callback(err);
+                    }
+                });
+            }
+            else if (req.body.id.indexOf('f') !== -1)
+            {
+                PmsCollection.remove({'files.id':req.body.id},function(err,removed)
+                {
+                    if (!err)
+                    {
+                        db.close();
+                        callback(removed);
+                    }
+                    else
+                    {
+                        callback(err);
+                    }
+                });
+            }
+            else if (req.body.id.indexOf('u') !== -1)
+            {
+                PmsCollection.remove({'project.id':req.body.id},function(err,removed)
+                {
+                    if (!err)
+                    {
+                        db.close();
+                        callback(removed);
+                    }
+                    else
+                    {
+                        callback(err);
+                    }
+                });                
+            }
+    });    
+};
 
 // *********** REGISTER NEW USER ************ //
 var registerUser = function(req, callback)
@@ -100,7 +171,7 @@ var registerUser = function(req, callback)
           {
               db.close();
               console.log('error occured');
-              callback(err)
+              callback(err);
           }
           else
           {
@@ -124,12 +195,14 @@ var loginUser = function(username, password, callback)
        {
           if (err)
           {
+              db.close();
               console.log(err);
               callback('err');
           }
           else if (!data)
           {
               //console.log('no record found');
+              db.close();
               callback('noRec');
           }
           else if (data)
@@ -137,10 +210,12 @@ var loginUser = function(username, password, callback)
               var checkPassword = bcrypt.compareSync(password, data.users.password);
               if (checkPassword)
               {
+                  db.close();
                   callback(data);
               }
               else
               {
+                  db.close();
                   callback('0');
               }
           }
@@ -151,5 +226,6 @@ var loginUser = function(username, password, callback)
 exports.getData = getData;
 exports.createNewData = createNewData;
 exports.updateData = updateData;
+exports.deleteData = deleteData;
 exports.registerUser = registerUser;
 exports.loginUser = loginUser;

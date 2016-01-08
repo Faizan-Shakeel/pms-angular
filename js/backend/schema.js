@@ -15,6 +15,7 @@ function schema(userKeys)
                                 name: String,
                                 status: String,
                                 description: String,
+                                id: String,
                                 createDate: {type: Date, default: Date.now},
                                 dateModified: {type: Date, default: Date.now},
                                 createdBy: String,
@@ -38,6 +39,7 @@ function schema(userKeys)
                                 name: String,
                                 targetDate: {type: Date, default: Date.now},
                                 description: String,
+                                id: String,
                                 project: String,
                                 status: String,
                                 endDate: {type: Date, default: Date.now},
@@ -58,6 +60,7 @@ function schema(userKeys)
                             {
                                 name: String,
                                 description: String,
+                                id: String,
                                 size: Number,
                                 type: String,
                                 createDate: {type: Date, default: Date.now},
@@ -74,6 +77,7 @@ function schema(userKeys)
                             {
                                 name: String,
                                 email: String,
+                                id: String,
                                 position: String,
                                 imageUrl: String,
                                 password: String,

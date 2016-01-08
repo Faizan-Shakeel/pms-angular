@@ -1,0 +1,43 @@
+<div>
+
+    <div class="modal-header">
+        <h4 class="modal-title text-center">{{DocumentModalVM.modalHeading}}</h4>
+    </div>
+
+    <div class="modal-body">
+        <div class="modal-new-document-form">
+
+            <br/>
+
+            <form name="addNewDocumentValidationForm" class="form-horizontal" ng-submit="addNewDocumentValidationForm.$valid && DocumentModalVM.documentUpdateFlag && DocumentModalVM.createOrUpdateDocument(DocumentModalVM.documentName, DocumentModalVM.documentDescription)" novalidate>
+                <div class="form-group" ng-class="{ 'has-error': addNewDocumentValidationForm.documentName.$touched && addNewDocumentValidationForm.documentName.$invalid }">
+                    <label for="documentName" class="col-lg-2 col-md-2 col-sm-2 control-label">Name</label>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">
+                        <input type="text" class="form-control" id="documentName" name="documentName" placeholder="Document Name" ng-model="DocumentModalVM.documentName" required="" ng-disabled="DocumentModalVM.documentNameEditable"/>
+
+                        <div class="help-block" ng-messages="addNewDocumentValidationForm.documentName.$error" ng-show="addNewDocumentValidationForm.documentName.$touched">
+                            <p ng-message="required">Name is required.</p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="documentDescription" class="col-lg-2 col-md-2 col-sm-2 control-label">Document Description</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-lg-offset-1">
+                        <textarea class="form-control documentModalTextAreaForDescription" id="documentDescription" ng-model="DocumentModalVM.documentDescription" placeholder="Document Description" ng-change="DocumentModalVM.documentUpdateDetected()"></textarea>
+                    </div>
+                </div>
+
+                <input type="submit" id="submit-new-document-form" class="hidden" />
+
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <label for="submit-new-document-form" class="btn btn-primary" ng-disabled="addNewDocumentValidationForm.$invalid">{{DocumentModalVM.modalType}}</label>
+        <button type="button" class="btn btn-warning" ng-click="DocumentModalVM.cancelModal()">Cancel</button>
+    </div>
+
+</div>

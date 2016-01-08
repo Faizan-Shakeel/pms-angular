@@ -18,8 +18,7 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
             //console.log(deferred);
             var data = {
                 companyName: $rootScope.companyName
-            };
-
+            };;
             $http.post('/fetch',data).success(deferred.resolve);
             return deferred.promise;
         };
@@ -33,18 +32,32 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
             entry[i] = data[i];
         }
         console.log(entry);
-//        $http.post('/create', entry).success(function(response)
-//        {
-//            console.log(response);
-//        })
-//                .error(function(err)
-//        {
-//            console.log(err);
-//        });
+        $http.post('/create', entry).success(function(response)
+        {
+            console.log(response);
+        })
+                .error(function(err)
+        {
+            console.log(err);
+        });
     };
     
+    // ********** DELETE DATA ********* //
     
+    var deleteData = function(id)
+    {
+        var data = {id: id};
+        $http.post('/delete', data).success(function(response)
+        {
+            console.log(response);
+        })
+                .error(function(err)
+        {
+            console.log(err); 
+        });
+    }
     
     return { retrieveData: retrieveData,
-             createNewEntry: createNewEntry};
+             createNewEntry: createNewEntry,
+             deleteData: deleteData};
 });

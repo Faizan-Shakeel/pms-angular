@@ -1,13 +1,11 @@
-/**
- * Created by faizankhan on 10/27/2014.
- */
+"use strict";
 
 var app = angular.module('pmsAngular', [
 
     'ngRoute',
     'mainViewModule',
     'slimScrollModule',
-    'newProjectGlobalModule',
+    'modalsModule',
     'newProjectServiceModule',
     'newTaskServiceModule',
     'newDocumentServiceModule',
@@ -17,9 +15,12 @@ var app = angular.module('pmsAngular', [
     'mongoCrudServiceModule',
     'loginServiceModule',
     'loginModule',
-    'registrationModule',
     'registrationServiceModule',
-    'registrationModule'
+    'registrationModule',
+//    'luegg.directives',
+    'irontec.simpleChat',
+    //'newProjectGlobalModule'
+
 ]);
 
  app.config(['$routeProvider','$httpProvider', function($routeProvider, $httpProvider) {

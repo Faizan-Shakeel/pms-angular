@@ -165,11 +165,13 @@ app.post('/update', function(req,res)
 });
 ///////////////////////////////////////////////////
 
-// ------- Delete entry/entries in database ------//
+// *********** DELETE DATA FROM DATABASE *********** //
 app.post('/delete' , function(req,res)
-{
-
-    
+{  
+    mongoModules.deleteData(req, function(response)
+    {
+       res.send(response); 
+    });    
 });
 ///////////////////////////////////////////////////
 
