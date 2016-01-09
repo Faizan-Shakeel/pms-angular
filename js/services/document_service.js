@@ -138,6 +138,20 @@ app.service('DocumentService', function(){
         }
     };
 
+    var deleteDocumentsFromModalTask = function(docToDelete, modalTasks)
+    {
+        if(docToDelete.task)
+        {
+            for (var task of modalTasks)
+            {
+                if(task.name == docToDelete.task)
+                {
+                    removeEntity(task.documents, 'id', 'project', docToDelete.id, docToDelete.project);
+                }
+            }
+        }
+    };
+
     var addTaskToDocument = function(documentsArray, taskName)
     {
         "use strict";
@@ -247,6 +261,7 @@ app.service('DocumentService', function(){
         deleteDocumentModal: deleteDocumentModal,
         deleteDocumentGlobal: deleteDocumentGlobal,
         deleteFloatingDocuments: deleteFloatingDocuments,
+        deleteDocumentsFromModalTask: deleteDocumentsFromModalTask,
         hasDuplicates: hasDuplicates,
         addTaskToDocument: addTaskToDocument,
         updateDocuments: updateDocuments,
