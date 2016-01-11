@@ -43,7 +43,6 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
     };
     
     // ********** DELETE DATA ********* //
-    
     var deleteData = function(id)
     {
         var data = {id: id};
@@ -57,7 +56,23 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
         });
     }
     
+    // ********* UPDATE DATA ******** //
+    var updateData = function(id, data)
+    {
+        var entry = {id: id, data: data};
+        console.log(entry);
+        $http.post('/update', entry).success(function(response)
+        {
+            console.log(response);
+        })
+                .error(function(err)
+        {
+            console.log(err); 
+        });
+    };
+    
     return { retrieveData: retrieveData,
              createNewEntry: createNewEntry,
-             deleteData: deleteData};
+             deleteData: deleteData,
+             updateData: updateData};
 });

@@ -1,0 +1,63 @@
+function ShortestPath(strArr) { 
+
+  var abc = str;
+  var ln = abc.length;
+  var a = abc[0];
+  var in_node = abc[1];
+  var fi_node = abc[a];
+  var temp_str = "";
+  var flag = 0;
+  
+  var temp_arr_in = [];
+  var temp_arr_fi = [];
+  
+  
+  for (i=a+1; i<ln; i++)
+  {
+	temp_str = abc[i];
+    if (temp_str.indexOf(in_node) && temp_str.indexOf(fi_node) !== -1)
+    {
+      strArr = temp_str;
+      flag = 1;
+      break;
+    }
+    
+    else if (temp_str.indexOf(in_node) !== -1)
+      temp_arr_in.push(temp_str);
+    
+    else if (temp_str.indexOf(fi_node) !== -1)
+      temp_arr_fi.push(temp_str);       
+  }
+  
+  
+  
+  if (flag != 1)
+  {
+    
+  
+  return strArr; 
+         
+}
+   
+// keep this function call here 
+// to see how to enter arguments in JavaScript scroll down
+ShortestPath(readline());                            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                            
+                            
+                            
+  

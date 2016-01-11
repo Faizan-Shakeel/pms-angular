@@ -9,12 +9,14 @@
 
             <br/>
 
-            <form name="addNewDocumentValidationForm" class="form-horizontal" ng-submit="addNewDocumentValidationForm.$valid && DocumentModalVM.documentUpdateFlag && DocumentModalVM.createOrUpdateDocument(DocumentModalVM.documentName, DocumentModalVM.documentDescription)" novalidate>
+            <form name="addNewDocumentValidationForm" class="form-horizontal" ng-submit="addNewDocumentValidationForm.$valid && DocumentModalVM.documentUpdateFlag && DocumentModalVM.createOrUpdateDocument(DocumentModalVM.documentName, DocumentModalVM.documentDescription, DocumentModalVM.file)" novalidate>
                 <div class="form-group" ng-class="{ 'has-error': addNewDocumentValidationForm.documentName.$touched && addNewDocumentValidationForm.documentName.$invalid }">
                     <label for="documentName" class="col-lg-2 col-md-2 col-sm-2 control-label">Name</label>
                     <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">
                         <input type="text" class="form-control" id="documentName" name="documentName" placeholder="Document Name" ng-model="DocumentModalVM.documentName" required="" ng-disabled="DocumentModalVM.documentNameEditable"/>
-
+                        
+                        <input type="file" ngf-select ng-model="DocumentModalVM.file" name="file">
+                            
                         <div class="help-block" ng-messages="addNewDocumentValidationForm.documentName.$error" ng-show="addNewDocumentValidationForm.documentName.$touched">
                             <p ng-message="required">Name is required.</p>
                         </div>

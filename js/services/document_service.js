@@ -1,8 +1,11 @@
 "use strict";
+/**
+ * Created by faizankhan on 11/8/2014.
+ */
 
-var app = angular.module('newDocumentServiceModule', []);
+var app = angular.module('documentServiceModule', []);
 
-app.service('NewDocumentService', function(){
+app.service('DocumentService',['mongoCrudService', function(mongoCrudService){
 
     var documentPanels = [];
     var documentsIdArray = [];
@@ -12,13 +15,17 @@ app.service('NewDocumentService', function(){
         "use strict";
 
         angular.forEach(newDocumentObject, function(value, index){
-            documentPanels.push(newDocumentObject[index]);
+            newDocumentObject[index] = {documents: newDocumentObject[index]};
+            documentPanels.push(newDocumentObject[index].documents);
+            console.log(newDocumentObject[index]);
+            mongoCrudService.createNewEntry(newDocumentObject[index]);
         });
     };
 
     var checkDocumentExistence = function(documentName, documentsArray)
     {
         "use strict";
+//                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
 
         var documentAlreadyExists = false;
 
@@ -39,11 +46,38 @@ app.service('NewDocumentService', function(){
 
     };
 
+    var chkTaskDocsInPrjDocsWithoutPrjName = function(taskDocs, modalDocs)
+    {
+        "use strict";
+        //                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
+
+        var documentAlreadyExists = false;
+
+        for(var tDoc of taskDocs)
+        {
+            for(var mDoc of modalDocs)
+            {
+                if(tDoc.name == mDoc.name)
+                {
+                    documentAlreadyExists = true;
+                    break;
+                }
+                else
+                {
+                    documentAlreadyExists = false;
+                }
+            }
+        }
+
+        return documentAlreadyExists;
+
+    };
+
     var newDocumentID = function()
     {
         "use strict";
 
-        var documentID = documentsIdArray.length;
+        var documentID = documentsIdArray.length + 'd';
         documentsIdArray.push(documentID);
 
         return documentID;
@@ -58,12 +92,14 @@ app.service('NewDocumentService', function(){
     var deleteDocument = function(documentsArray)
     {
         "use strict";
+        //                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
 
         angular.forEach(documentsArray, function(valueFromGlobalList,indexGlobalList){
             angular.forEach(documentPanels, function(valueFromSpecificProject,indexSpecificProject){
                 if(valueFromGlobalList.id == valueFromSpecificProject.id)
                 {
-                    documentPanels = removeEntity(documentPanels, 'id', valueFromGlobalList.id);
+                    console.log('this focument called');
+                    documentPanels = removeEntity(documentPanels, 'id', 'project', valueFromGlobalList.id, valueFromGlobalList.project);
                 }
             });
         });
@@ -72,39 +108,55 @@ app.service('NewDocumentService', function(){
     var deleteDocumentModal = function(selectedDocumentToDelete, modalDocumentsArray)
     {
         "use strict";
+        //                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
 
-        removeEntity(modalDocumentsArray, 'id', selectedDocumentToDelete.id);
+        removeEntity(modalDocumentsArray, 'id', 'project', selectedDocumentToDelete.id, selectedDocumentToDelete.project);
     };
 
     var deleteDocumentGlobal = function(documentsToDelete, deleteFrom)
     {
         "use strict";
+        //                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
 
         for(var document of documentsToDelete)
         {
-            removeEntity(deleteFrom, 'id', document.id);
+            removeEntity(deleteFrom, 'id', 'project', document.id, document.project);
         }
     };
 
-    var deleteFloatingDocuments = function(floatingDocuments)
+    var deleteFloatingDocuments = function(floatingDocuments, deleteByProperty)
     {
         "use strict";
+        //                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
 
         for(var floatDocument of floatingDocuments)
         {
+
             for(var document of documentPanels)
             {
-                if(!(document.projectName) && (document.id == floatDocument.id))
+                if(!(document.project) && (document.id == floatDocument.id))
                 {
-                    removeEntity(documentPanels, 'projectName', document.projectName);
+                    removeEntity(documentPanels, 'id', 'project', document.id, document.project);
                 }
             }
         }
     };
 
+    var addTaskToDocument = function(documentsArray, taskName)
+    {
+        "use strict";
+        //                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
+
+        angular.forEach(documentsArray, function(value, index)
+        {
+            documentsArray[index].task = taskName;
+        });
+    };
+
     var updateDocuments = function(updatedDocuments, global)
     {
         "use strict";
+        //                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
 
         for(var i=0; i<updatedDocuments.length; i++)
         {
@@ -122,9 +174,10 @@ app.service('NewDocumentService', function(){
         }
     };
 
-    var removeProjectDocumentsFromExistingDocuments = function(projectDocuments, projectName)
+    var removePrjDocsFromExistingDocs = function(projectDocuments, projectName)
     {
         "use strict";
+        //                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
 
         var filteredArray = [];
         var documentNotFound;
@@ -137,7 +190,7 @@ app.service('NewDocumentService', function(){
             {
                 for(var projectDocument of projectDocuments)
                 {
-                    if((projectDocument.name == document.name) || (document.projectName == projectName))
+                    if((projectDocument.name == document.name) || (document.project == projectName) || (document.task))
                     {
                         documentNotFound = false;
                         break;
@@ -145,7 +198,12 @@ app.service('NewDocumentService', function(){
                 }
             }
 
-            else if(document.projectName == projectName)
+            else if(document.project == projectName)
+            {
+                documentNotFound = false;
+            }
+
+            else if(document.task)
             {
                 documentNotFound = false;
             }
@@ -154,21 +212,20 @@ app.service('NewDocumentService', function(){
             {
                 filteredArray.push(document);
             }
-
         }
 
         return filteredArray;
 
     };
 
-    function hasDuplicates(array)
+    var hasDuplicates = function(array)
     {
         "use strict";
 
         return (new Set(array)).size !== array.length;
-    }
+    };
 
-    var removeEntity = function(arr, attr, value)
+    var removeEntity = function(arr, attr, attr2, value, value2)
     {
         "use strict";
 
@@ -176,10 +233,9 @@ app.service('NewDocumentService', function(){
         while(i--){
             if( arr[i]
                 && arr[i].hasOwnProperty(attr)
-                && (arguments.length > 2 && arr[i][attr] === value ) ){
+                && (arguments.length > 2 && arr[i][attr] === value && arr[i][attr2] === value2) ){
 
                 arr.splice(i,1);
-
             }
         }
         return arr;
@@ -188,6 +244,7 @@ app.service('NewDocumentService', function(){
     return{
         newDocumentID: newDocumentID,
         checkDocumentExistence: checkDocumentExistence,
+        chkTaskDocsInPrjDocsWithoutPrjName: chkTaskDocsInPrjDocsWithoutPrjName,
         createDocumentPanel: createDocumentPanel,
         getDocumentPanels: getDocumentPanels,
         deleteDocument: deleteDocument,
@@ -195,8 +252,9 @@ app.service('NewDocumentService', function(){
         deleteDocumentGlobal: deleteDocumentGlobal,
         deleteFloatingDocuments: deleteFloatingDocuments,
         hasDuplicates: hasDuplicates,
+        addTaskToDocument: addTaskToDocument,
         updateDocuments: updateDocuments,
-        removeProjectDocumentsFromExistingDocuments: removeProjectDocumentsFromExistingDocuments
+        removePrjDocsFromExistingDocs: removePrjDocsFromExistingDocs
     };
 
-});
+}]);

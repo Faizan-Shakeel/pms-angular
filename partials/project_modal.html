@@ -73,7 +73,7 @@
                         </button>
 
                         <ul class="uib-dropdown-menu" role="menu" aria-labelledby="add-new-task-dropDown-button-in-project-modal">
-                           <li role="menuitem" ng-click="ModalVM.addNewTaskModal()"><a href="#/mainview">Create New Task</a></li>
+                            <li role="menuitem" ng-click="ModalVM.addNewTaskModal()"><a href="#/mainview">Create New Task</a></li>
                             <li class="divider"></li>
                             <li role="menuitem" ng-click="ModalVM.existingTasksModalInProjectModal()"><a href="#/mainview">Import Existing Tasks</a></li>
                         </ul>
@@ -122,11 +122,9 @@
                         </button>
 
                         <ul class="uib-dropdown-menu" role="menu" aria-labelledby="add-new-document-dropDown-button-in-project-modal">
-
                             <li role="menuitem" ng-click="ModalVM.addNewDocumentModal()"><a href="#/mainview">Create New Documents</a></li>
                             <li class="divider"></li>
                             <li role="menuitem" ng-click="ModalVM.existingDocumentsModalInProjectModal()"><a href="#/mainview">Import Existing Documents</a></li>
-
                         </ul>
                     </div>
 
@@ -148,7 +146,7 @@
 
                                     <p>
                                         {{documentPanel.status}}
-                                    </p>
+                                        <span class="col-lg-offset-4">[ {{documentPanel.project}} ] [ {{documentPanel.task}} ]</span>                                    </p>
                                 </div>
 
                                 <div class="btn-group-vertical" id="documents-btn-grp-panel-in-new-project-modal">

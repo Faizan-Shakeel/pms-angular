@@ -6,8 +6,8 @@ function schema(userKeys)
             {
                 companyName: String                
             });
-    
-    var schemaProject = new mongoose.Schema(
+    var Schema = mongoose.Schema;
+    var schemaProject = new Schema(
                { 
                     companyName: String,
                     project:
@@ -23,12 +23,12 @@ function schema(userKeys)
                                 endDate: {type: Date, default: Date.now},
                                 noOfUsers: Number,
                                 noOfTasks: Number,
-                                noOfFiles: Number,
+                                noOfDocuments: Number,
                                 estimatedBudget: Number,
                                 targetDate: {type: Date, default: Date.now},
-                                files: [{name: String}],
-                                users: [{name: String}],
-                                tasks: [{name: String}]
+                                documents: [Schema.Types.Mixed],
+                                users: [Schema.Types.Mixed],
+                                tasks: [Schema.Types.Mixed]
                             }
                 });
     var schemaTasks = new mongoose.Schema(
@@ -41,34 +41,38 @@ function schema(userKeys)
                                 description: String,
                                 id: String,
                                 project: String,
+                                projectId: String,
                                 status: String,
                                 endDate: {type: Date, default: Date.now},
                                 dateModified: {type: Date, default: Date.now},
                                 createdBy: String,
                                 lastModifiedBy: String,
                                 noOfUsers: Number,
-                                numberOfFiles: Number,
+                                numberOfDocuments: Number,
                                 createDate: {type: Date, default: Date.now},
-                                users: [{name: String}],
-                                files: [{name: String}],
+                                users: [Schema.Types.Mixed],
+                                documents: [Schema.Types.Mixed]
                             }
             });
-    var schemaFiles = new mongoose.Schema(
+    var schemaDocuments = new mongoose.Schema(
             {
                     companyName: String,
-                    files:
-                            {
-                                name: String,
-                                description: String,
-                                id: String,
-                                size: Number,
-                                type: String,
-                                createDate: {type: Date, default: Date.now},
-                                createdBy: String,
-                                project: String,
-                                tasks: String,
-                                url: String
-                            }
+                    documents:
+                                {
+                                    name: {type: String},
+                                    description: {type: String},
+                                    id: {type: String},
+                                    fileSize: {type: Number},
+                                    fileType: {type: String},
+                                    status: String,
+                                    createDate: {type: Date, default: Date.now},
+                                    createdBy: String,
+                                    project: String,
+                                    projectId: String,
+                                    task: String,
+                                    taskId: String,
+                                    url: String
+                                }
             });
     var schemaUsers = new mongoose.Schema(
             {       
@@ -97,9 +101,9 @@ function schema(userKeys)
     {
         return schemaTasks;
     }
-    if (userKeys == 'files')
+    if (userKeys == 'documents')
     {
-        return schemaFiles;
+        return schemaDocuments;
     }
     if (userKeys == 'users')
     {

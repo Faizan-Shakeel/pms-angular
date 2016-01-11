@@ -139,7 +139,6 @@ app.get('/loggedin',function(req, res)
 // *********** RETRIEVE DATA ASSOCIATED WITH LOGGED IN USER ************** //
 app.post('/fetch' , function(req,res)
 {
-    console.log('request received');
     mongoModules.getData(req, function(data)
     {
         res.send(data);
@@ -154,14 +153,16 @@ app.post('/create', function(req,res)
     {
        res.send(response); 
     });
-    
 });
 //////////////////////////////////////////////////////
 
 // ************ UPDATE AN ENTRY IN DATABASE *************** //
 app.post('/update', function(req,res)
 {
-
+    mongoModules.updateData(req, function(response)
+    {
+        res.send(response);
+    });
 });
 ///////////////////////////////////////////////////
 
@@ -175,7 +176,7 @@ app.post('/delete' , function(req,res)
 });
 ///////////////////////////////////////////////////
 
-///////////------ File Upload -------- /////////////////////
+// ********** FILE UPLOAD  ********** //
 
 app.post('/uploads',function(req,res)
 {

@@ -1,12 +1,10 @@
-<div class="container-full-width" ng-controller="Main_View_Controller as MainViewVM" ng-cloak>
-
-<!-------------------------------------------------------------------- Navigation Bar Fixed Top -----------------------------------------------------------------------START-->
-    <div ng-controller="ModalsController as ModalVM">
+<div class="container-full-width" ng-controller="Main_View_Controller as MainViewVM" ng-cloak>    
+<div ng-controller="ModalsController as ModalVM">
 
         <nav class="navbar navbar-default navbar-fixed-top" id="navbar-bottom-margin" role="navigation">
 
             <header class="navbar-header">
-                <a class="navbar-brand" href="#" id="application-logo">PMS</a>
+                <a class="navbar-brand" href="#/mainview" id="application-logo">PMS</a>
             </header>
 
             <div class="collapse navbar-collapse col-lg-offset-2" id="bs-example-navbar-collapse-1">
@@ -37,7 +35,7 @@
                 </div>
 
                 <div class="navbar-btn navbar-right" id="signed-in-user">
-                    <span id="signed-in-user-id">online.user@gmail.com</span>
+                    <span id="signed-in-user-id">{{currentUser.users.email}}</span>
                     <img class="open img-rounded" id="signed-in-user-pic" ng-src="images/Original_Size/user.png" alt="" ns-popover ns-popover-template="partials/popover.html" ns-popover-timeout=-1 ns-popover-trigger="click" ns-popover-placement="bottom|right" ns-popover="MainViewVM.displayPopover"/>
                 </div>
 
@@ -195,7 +193,7 @@
                                 <div class="btn-group-vertical" id="btn-grp-panel">
                                     <button class="btn btn-default test-button-border"><i class="fa fa-info"></i></button>
                                     <button class="btn btn-default" ng-click="ModalVM.editProjectModal(projectPanel)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteProject(projectPanel.name, projectPanel.id)"><i class="fa fa-trash-o"></i></button>
+                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteProject(projectPanel)"><i class="fa fa-trash-o"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -217,12 +215,12 @@
 
                                 <div id="task-panel-content-in-new-project-modal">
                                     <p>
-                                    <h4>{{taskPanel.name}} <span class="col-lg-offset-8">ID: {{taskPanel.tasks.id}}</span></h4>
+                                    <h4>{{taskPanel.name}} <span class="col-lg-offset-8">ID: {{taskPanel.id}}</span></h4>
                                     </p>
 
                                     <p>
                                         {{taskPanel.status}}
-                                        <span class="col-lg-offset-7">{{taskPanel.projectName}}</span>
+                                        <span class="col-lg-offset-7">{{taskPanel.project}}</span>
                                     </p>
                                 </div>
 
@@ -256,7 +254,8 @@
 
                                     <p>
                                         {{documentPanel.status}}
-                                        <span class="col-lg-offset-7">{{documentPanel.projectName}}</span>
+                                        <span class="col-lg-offset-6">[ {{documentPanel.project}} ] [ {{documentPanel.task}} ]</span>
+                                        <!--<span class="col-lg-offset-7">{{documentPanel.task}}</span>-->
                                     </p>
                                 </div>
 

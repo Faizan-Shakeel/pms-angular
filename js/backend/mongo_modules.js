@@ -13,7 +13,8 @@ var bcrypt = require('bcrypt-nodejs');
             //console.log(req.body.companyName);
             var createSchema = schema.schema('companyName');          
             var PmsCollection = db.model('PmsCollection', createSchema);
-            PmsCollection.find({companyName:req.body.companyName},function(err, data)
+            var query = {companyName: req.body.companyName};
+            PmsCollection.find(query,function(err, data)
             {
                 db.close();
                 callback(data);
@@ -28,7 +29,8 @@ var bcrypt = require('bcrypt-nodejs');
         var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
         db.once('open', function()
         {
-            //console.log(req.body);
+            console.log('create data called');
+            console.log(req.body);
             for (var keys in req.body)
             {
                 if (keys != 'companyName')
@@ -39,16 +41,18 @@ var bcrypt = require('bcrypt-nodejs');
             var PmsCollection = db.model('PmsCollection', createSchema);
             var newEntry = new PmsCollection(req.body);
             console.log(newEntry);
-            newEntry.save(function(err)
+            newEntry.save(function(err, doc)
             {
                 if (!err)
                 {
-                    console.log('entry saved');
                     db.close();
                     callback('entry saved successfully');
                 }
                 else
                 {
+                    db.close();
+                    console.log('error occured');
+                    console.log(doc);
                     callback(err);
                 }
             });
@@ -60,25 +64,49 @@ var updateData = function(req, callback)
 {
     var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
     db.once('open', function()
-    {
-        //console.log(req.body);
-        var createSchema = schema.schema();
-        var PmsCollection = db.model('PmsCollection',createSchema);
-                    PmsCollection.findOne({companyName:req.body.companyName},function(err,doc)
-                    {
-                        //console.log(doc);
-                        for (var keys in req.body)
-                        {
-                            console.log(doc[keys]);
-                        }
-                        doc[keys] = req.body[keys];
-                        doc.save(function()
-                        {
-                            console.log('done');
-                            db.close();
-                            callback('Entry Updated Successfully');
-                        });               
-                    });
+    { 
+        var schemaKey;
+        var idTag;
+        var query = {};
+        
+        var updateEntry = function(req, schemaKey, idTag)
+        {
+            var createSchema = schema.schema(schemaKey);
+            var PmsCollection = db.model('PmsCollection',createSchema);
+            query[idTag] = req.body.id;
+            //var options = {upsert: false};
+            console.log(req.body.data);
+            PmsCollection.findOneAndUpdate(query, req.body.data, function(err, doc)
+            {
+                if (!err)
+                {
+                    //console.log(doc);
+                    db.close();
+                    callback('Data Updated Successfully');
+                }
+                else
+                {
+                    callback(err);
+                }
+            });
+        };
+    
+        if (req.body.id[1] == 'p')
+        { 
+            updateEntry(req, schemaKey = 'project', idTag = 'project.id');
+        }
+        else if (req.body.id[1] == 't')
+        {
+            updateEntry(req, schemaKey = 'tasks', idTag = 'tasks.id');
+        }
+        else if (req.body.id[1] == 'd')
+        {
+            updateEntry(req, schemaKey = 'documents', idTag = 'documents.id');
+        }
+        else if (req.body.idp[1] == 'u')
+        {
+            updateEntry(req, schemaKey = 'users', idTag = 'users.id');
+        }
     });
 };
 
@@ -91,7 +119,7 @@ var deleteData = function(req, callback)
         var createSchema = schema.schema('companyName');
         var PmsCollection = db.model('PmsCollection',createSchema);
 
-            if (req.body.id.indexOf('p') !== -1)
+            if (req.body.id[1] == 'p')
             {
                 PmsCollection.remove({'project.id':req.body.id},function(err,removed)
                 {
@@ -106,7 +134,7 @@ var deleteData = function(req, callback)
                     }
                 });
             }
-            else if (req.body.id.indexOf('t') !== -1)
+            else if (req.body.id[1] == 't')
             {
                 PmsCollection.remove({'tasks.id':req.body.id},function(err,removed)
                 {
@@ -121,9 +149,9 @@ var deleteData = function(req, callback)
                     }
                 });
             }
-            else if (req.body.id.indexOf('f') !== -1)
+            else if (req.body.id.indexOf('d') !== -1)
             {
-                PmsCollection.remove({'files.id':req.body.id},function(err,removed)
+                PmsCollection.remove({'documents.id':req.body.id},function(err,removed)
                 {
                     if (!err)
                     {

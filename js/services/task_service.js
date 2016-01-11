@@ -3,55 +3,34 @@
  * Created by faizankhan on 11/8/2014.
  */
 
-var app = angular.module('newTaskServiceModule', []);
+var app = angular.module('taskServiceModule', ['ngStorage']);
 
-app.service('NewTaskService',['mongoCrudService' , function(mongoCrudService){
+app.service('TaskService', ['mongoCrudService', function(mongoCrudService, $localStorage){
 
     var taskPanels = [];
     var tasksIdArray = [];
-    
+
     var createTaskPanel = function(newTasksArray)
     {
         "use strict";
 
         angular.forEach(newTasksArray, function(value, index){
-            taskPanels.push(newTasksArray[index]);
             newTasksArray[index] = {tasks: newTasksArray[index]};
+            taskPanels.push(newTasksArray[index].tasks);
             console.log(newTasksArray[index]);
             mongoCrudService.createNewEntry(newTasksArray[index]);
+//            console.log(taskPanels);
+//            if (newTasksArray[index].tasks.projectId)
+//            {
+//                mongoCrudService.updateData(newTasksArray[index].tasks.projectId, {'project.tasks': taskPanels});
+//            }
         });
-        
-    };
-
-    var checkIfTaskIsAlreadyInSelectedProject = function(taskName, selectedProjects)
-    {
-        var taskAlreadyExists = false;
-    };
-
-    var checkTaskExistenceGlobal = function(taskName, tasksArrayGlobal)
-    {
-        var taskAlreadyExists = false;
-
-        for(var task of tasksArrayGlobal)
-        {
-            if(task.name == taskName)
-            {
-                taskAlreadyExists = true;
-                break;
-            }
-            else
-            {
-                taskAlreadyExists = false;
-            }
-        }
-
-        return taskAlreadyExists;
-
     };
 
     var checkTaskExistence = function(taskName, tasksArray)
     {
         "use strict";
+        //                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
 
         var taskAlreadyExists = false;
 
@@ -76,9 +55,8 @@ app.service('NewTaskService',['mongoCrudService' , function(mongoCrudService){
     {
         "use strict";
 
-        var taskID = taskPanels.length + 't';
+        var taskID = tasksIdArray.length + 't';       
         tasksIdArray.push(taskID);
-
         return taskID;
     };
 
@@ -92,10 +70,7 @@ app.service('NewTaskService',['mongoCrudService' , function(mongoCrudService){
     var deleteTaskModal = function(selectedTaskToDelete, modalTasksArray)
     {
         "use strict";
-        
-
-        removeEntity(modalTasksArray, 'id', selectedTaskToDelete.id);
-        
+        removeEntity(modalTasksArray, 'id', 'project', selectedTaskToDelete.id, selectedTaskToDelete.project);
     };
 
     var deleteTaskGlobal = function(tasksToDelete, deleteFrom)
@@ -104,21 +79,53 @@ app.service('NewTaskService',['mongoCrudService' , function(mongoCrudService){
 
         for(var task of tasksToDelete)
         {
-            removeEntity(deleteFrom, 'id', task.id);
-            //mongoCrudService.delete(task.id);
+            removeEntity(deleteFrom, 'id', 'project', task.id, task.project);
         }
     };
 
-    var deleteFloatingTasks = function(floatingTasks)
+    var deleteDocumentsFromTask = function(documentsToDelete, modalTasks)
+    {
+        var deleteFromTaskID;
+
+        for(var doc of documentsToDelete)
+        {
+            if(doc.task)
+            {
+                for(var mTask of modalTasks)
+                {
+                    if(mTask.name == doc.task)
+                    {
+                        deleteFromTaskID = mTask.id;
+                        break;
+                    }
+                }
+            }
+
+            if(deleteFromTaskID != null)
+            {
+                for(var task of taskPanels)
+                {
+                    if(task.id == deleteFromTaskID)
+                    {
+                        removeEntity(task.documents, 'id', 'project', doc.id, doc.project);
+                    }
+                }
+            }
+        }
+    };
+
+    var deleteFloatingTasks = function(floatingTasks, deleteByProperty)
     {
         "use strict";
+        //                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
+
         for(var floatTask of floatingTasks)
         {
             for(var task of taskPanels)
             {
-                if(!(task.projectName) && (task.id == floatTask.id))
+                if(!(task.project) && (task.id == floatTask.id))
                 {
-                    removeEntity(taskPanels, 'projectName', task.projectName);
+                    removeEntity(taskPanels, 'id', 'project', task.id, task.project);
                 }
             }
         }
@@ -127,27 +134,29 @@ app.service('NewTaskService',['mongoCrudService' , function(mongoCrudService){
     var deleteTask = function(tasksArray)
     {
         "use strict";
-
+        //                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
         angular.forEach(tasksArray, function(valueFromSpecificProject,indexGlobalList){
             angular.forEach(taskPanels, function(valueFromGlobalList,indexSpecificProject){
                 if(valueFromGlobalList.id == valueFromSpecificProject.id)
                 {
-                    taskPanels = removeEntity(taskPanels, 'id', valueFromGlobalList.id);
+                    taskPanels = removeEntity(taskPanels, 'id', 'project', valueFromGlobalList.id, valueFromGlobalList.project);
                 }
             });
         });
     };
 
-    function hasDuplicates(array)
+    var hasDuplicates = function(array)
     {
         "use strict";
 
         return (new Set(array)).size !== array.length;
-    }
+    };
 
     var removeProjectTasksFromExistingTasks = function(projectTasks, projectName)
     {
         "use strict";
+        //                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
+
         var filteredArray = [];
         var taskNotFound;
 
@@ -159,7 +168,7 @@ app.service('NewTaskService',['mongoCrudService' , function(mongoCrudService){
             {
                 for(var projectTask of projectTasks)
                 {
-                    if((projectTask.name == task.name) || (task.projectName == projectName))
+                    if((projectTask.name == task.name) || (task.project == projectName))
                     {
                         taskNotFound = false;
                         break;
@@ -167,7 +176,7 @@ app.service('NewTaskService',['mongoCrudService' , function(mongoCrudService){
                 }
             }
 
-            else if(task.projectName == projectName)
+            else if(task.project == projectName)
             {
                 taskNotFound = false;
             }
@@ -185,6 +194,7 @@ app.service('NewTaskService',['mongoCrudService' , function(mongoCrudService){
     var updateTasks = function(updatedTasks, global)
     {
         "use strict";
+        //                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
 
         for(var i=0; i<updatedTasks.length; i++)
         {
@@ -202,14 +212,15 @@ app.service('NewTaskService',['mongoCrudService' , function(mongoCrudService){
         }
     };
 
-    var removeEntity = function(arr, attr, value)
+    var removeEntity = function(arr, attr, attr2, value, value2)
     {
         "use strict";
+
         var i = arr.length;
         while(i--){
             if( arr[i]
                 && arr[i].hasOwnProperty(attr)
-                && (arguments.length > 2 && arr[i][attr] === value ) ){
+                && (arguments.length > 2 && arr[i][attr] === value && arr[i][attr2] === value2) ){
 
                 arr.splice(i,1);
             }
@@ -225,6 +236,7 @@ app.service('NewTaskService',['mongoCrudService' , function(mongoCrudService){
         deleteTask: deleteTask,
         deleteTaskModal: deleteTaskModal,
         deleteTaskGlobal: deleteTaskGlobal,
+        deleteDocumentsFromTask: deleteDocumentsFromTask,
         deleteFloatingTasks: deleteFloatingTasks,
         hasDuplicates: hasDuplicates,
         removeProjectTasksFromExistingTasks: removeProjectTasksFromExistingTasks,

@@ -6,9 +6,9 @@ var app = angular.module('pmsAngular', [
     'mainViewModule',
     'slimScrollModule',
     'modalsModule',
-    'newProjectServiceModule',
-    'newTaskServiceModule',
-    'newDocumentServiceModule',
+    'projectServiceModule',
+    'taskServiceModule',
+    'documentServiceModule',
     'ui.utils.masks',
     'ngMessages',
     'btorfs.multiselect',
@@ -18,9 +18,7 @@ var app = angular.module('pmsAngular', [
     'registrationServiceModule',
     'registrationModule',
 //    'luegg.directives',
-    'irontec.simpleChat',
-    //'newProjectGlobalModule'
-
+    'irontec.simpleChat'
 ]);
 
  app.config(['$routeProvider','$httpProvider', function($routeProvider, $httpProvider) {

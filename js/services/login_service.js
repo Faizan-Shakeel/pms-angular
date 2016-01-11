@@ -1,6 +1,6 @@
-var app = angular.module('loginServiceModule',[]);
+var app = angular.module('loginServiceModule',['ngStorage']);
 
-app.service('loginService',['$http', '$location', '$rootScope', '$q', function($http, $location, $rootScope, $q)
+app.service('loginService',['$http', '$location', '$rootScope', '$q', '$localStorage', function($http, $location, $rootScope, $q, $localStorage)
 {
    var login = function(user, callback)
    {
@@ -8,8 +8,8 @@ app.service('loginService',['$http', '$location', '$rootScope', '$q', function($
        {
            if (response != '0')
            {
-                console.log('here ' + response.user.companyName);
                 $rootScope.currentUser = response.user;
+                $localStorage.currentUser = response.user;
                 $rootScope.companyName = response.user.companyName;
                 callback(response.user);
            }
@@ -25,6 +25,7 @@ app.service('loginService',['$http', '$location', '$rootScope', '$q', function($
        $http.post('/logout').success(function()
        {
            $rootScope.currentUser = null;
+           $localStorage.currentUser = null;
            callback();
        });
    };
