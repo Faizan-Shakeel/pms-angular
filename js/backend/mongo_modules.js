@@ -30,7 +30,6 @@ var bcrypt = require('bcrypt-nodejs');
         db.once('open', function()
         {
             console.log('create data called');
-            console.log(req.body);
             for (var keys in req.body)
             {
                 if (keys != 'companyName')
@@ -40,8 +39,7 @@ var bcrypt = require('bcrypt-nodejs');
             }
             var PmsCollection = db.model('PmsCollection', createSchema);
             var newEntry = new PmsCollection(req.body);
-            console.log(newEntry);
-            newEntry.save(function(err, doc)
+            newEntry.save(function(err)
             {
                 if (!err)
                 {
@@ -52,7 +50,6 @@ var bcrypt = require('bcrypt-nodejs');
                 {
                     db.close();
                     console.log('error occured');
-                    console.log(doc);
                     callback(err);
                 }
             });
@@ -118,8 +115,8 @@ var deleteData = function(req, callback)
     {
         var createSchema = schema.schema('companyName');
         var PmsCollection = db.model('PmsCollection',createSchema);
-
-            if (req.body.id[1] == 'p')
+        
+            if (req.body.id.indexOf('p') !== -1)
             {
                 PmsCollection.remove({'project.id':req.body.id},function(err,removed)
                 {
@@ -130,11 +127,12 @@ var deleteData = function(req, callback)
                     }
                     else
                     {
+                        db.close();
                         callback(err);
                     }
                 });
             }
-            else if (req.body.id[1] == 't')
+            else if (req.body.id.indexOf('t') !== -1)
             {
                 PmsCollection.remove({'tasks.id':req.body.id},function(err,removed)
                 {
@@ -145,6 +143,7 @@ var deleteData = function(req, callback)
                     }
                     else
                     {
+                        db.close();
                         callback(err);
                     }
                 });
@@ -160,6 +159,7 @@ var deleteData = function(req, callback)
                     }
                     else
                     {
+                        db.close();
                         callback(err);
                     }
                 });
@@ -175,6 +175,7 @@ var deleteData = function(req, callback)
                     }
                     else
                     {
+                        db.close();
                         callback(err);
                     }
                 });                

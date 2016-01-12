@@ -229,38 +229,14 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
 
             if(value.name == projectToDelete.name)
             {
-                    for (var i=0; i<vm.projectPanels[index].tasks.length; i++)
-                    {
-                        selectedProjectTasksArray = vm.projectPanels[index].tasks;
-                        selectedProjectDocumentsArray = vm.projectPanels[index].documents;
-                    }
+                selectedProjectTasksArray = vm.projectPanels[index].tasks;
+                selectedProjectDocumentsArray = vm.projectPanels[index].documents;
+                //console.log(selectedProjectTasksArray);
             }
         });
         TaskService.deleteTask(selectedProjectTasksArray);
         DocumentService.deleteDocument(selectedProjectDocumentsArray);
-        // * Delete Project and then ensure it's associated tasks are also 
-        //   being deleted
         mongoCrudService.deleteData(projectToDelete.id);
-        if (selectedProjectTasksArray)
-        {console.log(selectedProjectTasksArray);
-            for (var i=0; i<selectedProjectTasksArray.length; i++)
-            {
-                mongoCrudService.deleteData(selectedProjectTasksArray[i].tasks.id);
-            }
-        }
-        //////////////////////////////////////////////////////////////////
-        
-        // * Delete Project and then ensure it's associated documents are also 
-        //   being deleted *
-        mongoCrudService.deleteData(projectToDelete.id);
-        if (selectedProjectDocumentsArray)
-        {
-            for (var i=0; i<selectedProjectDocumentsArray.length; i++)
-            {
-                mongoCrudService.deleteData(selectedProjectDocumentsArray[i].documents.id);
-            }
-        }
-        //////////////////////////////////////////////////////////////////
         
         removeEntity(vm.projectPanels, 'id', projectToDelete.id);
 
@@ -268,10 +244,11 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
 
     vm.deleteTask = function(taskToDelete)
     {
-
+        //console.log('delete task called in controller global view');
+        //console.log(taskToDelete.id);
         var deletedTaskProject;
         var selectedTaskDocumentsArray;
-
+        
         angular.forEach(vm.taskPanels, function(value,index){
 
             if(value.id == taskToDelete.id)
@@ -279,19 +256,19 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
                 selectedTaskDocumentsArray = vm.taskPanels[index].documents;
             }
         });
-
+        
+        mongoCrudService.deleteData(taskToDelete.id);
 //        console.log("selectedTaskDocumentsArray : " + JSON.stringify(selectedTaskDocumentsArray));
  
         // * Delete Task and then ensure that any associated documents are also
         //   being deleted. *
-        mongoCrudService.deleteData(taskToDelete.id);
-        if (selectedTaskDocumentsArray)
-        {
-            for (var i=0; i<selectedTaskDocumentsArray.length; i++)
-            {
-                mongoCrudService.deleteData(selectedTaskDocumentsArray[i].documents.id)
-            }                
-        }
+//        if (selectedTaskDocumentsArray)
+//        {
+//            for (var i=0; i<selectedTaskDocumentsArray.length; i++)
+//            {
+//                mongoCrudService.deleteData(selectedTaskDocumentsArray[i].documents.id)
+//            }                
+//        }
         ////////////////////////////////////////////////////////////////////////
         
         DocumentService.deleteDocument(selectedTaskDocumentsArray);
@@ -348,8 +325,6 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
             });
         });
         
-        mongoCrudService.deleteData(documentToDelete.id);
-        
         angular.forEach(vm.taskPanels, function(valueTask,indexProject){
             angular.forEach(valueTask.documents, function(valueDocument,indexDocument){
                 if(valueDocument.id == documentToDelete.id)
@@ -358,7 +333,8 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
                 }
             });
         });
-
+                
+        mongoCrudService.deleteData(documentToDelete.id);
 //        console.log(ProjectService.projectPanels);
 
 //        for(var project of ProjectService.projectPanels)

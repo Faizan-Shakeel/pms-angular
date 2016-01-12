@@ -5,7 +5,7 @@
 
 var app = angular.module('taskServiceModule', ['ngStorage']);
 
-app.service('TaskService', ['mongoCrudService', function(mongoCrudService, $localStorage){
+app.service('TaskService', ['mongoCrudService','$localStorage', function(mongoCrudService, $localStorage){
 
     var taskPanels = [];
     var tasksIdArray = [];
@@ -13,17 +13,13 @@ app.service('TaskService', ['mongoCrudService', function(mongoCrudService, $loca
     var createTaskPanel = function(newTasksArray)
     {
         "use strict";
-
+        var taskValues = {};
         angular.forEach(newTasksArray, function(value, index){
-            newTasksArray[index] = {tasks: newTasksArray[index]};
-            taskPanels.push(newTasksArray[index].tasks);
+            //newTasksArray[index] = {tasks: newTasksArray[index]};
+            taskPanels.push(newTasksArray[index]);
             console.log(newTasksArray[index]);
-            mongoCrudService.createNewEntry(newTasksArray[index]);
-//            console.log(taskPanels);
-//            if (newTasksArray[index].tasks.projectId)
-//            {
-//                mongoCrudService.updateData(newTasksArray[index].tasks.projectId, {'project.tasks': taskPanels});
-//            }
+            taskValues = {tasks: newTasksArray[index]}
+            mongoCrudService.createNewEntry(taskValues);
         });
     };
 
@@ -54,9 +50,13 @@ app.service('TaskService', ['mongoCrudService', function(mongoCrudService, $loca
     var newTaskID = function()
     {
         "use strict";
-
+        if ($localStorage.tasksIdArray)
+        {
+            tasksIdArray = $localStorage.tasksIdArray.slice();
+        }
         var taskID = tasksIdArray.length + 't';       
         tasksIdArray.push(taskID);
+        $localStorage.tasksIdArray = tasksIdArray.slice();
         return taskID;
     };
 
@@ -135,11 +135,15 @@ app.service('TaskService', ['mongoCrudService', function(mongoCrudService, $loca
     {
         "use strict";
         //                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
+
         angular.forEach(tasksArray, function(valueFromSpecificProject,indexGlobalList){
             angular.forEach(taskPanels, function(valueFromGlobalList,indexSpecificProject){
                 if(valueFromGlobalList.id == valueFromSpecificProject.id)
                 {
+                    console.log('task deletion called');
+                    console.log(valueFromGlobalList.id);
                     taskPanels = removeEntity(taskPanels, 'id', 'project', valueFromGlobalList.id, valueFromGlobalList.project);
+                    mongoCrudService.deleteData(valueFromGlobalList.id);
                 }
             });
         });

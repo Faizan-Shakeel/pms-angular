@@ -1,8 +1,8 @@
 "use strict";
 
-var app = angular.module('projectServiceModule', []);
+var app = angular.module('projectServiceModule', ['ngStorage']);
 
-app.service('ProjectService', ['mongoCrudService', function(mongoCrudService){
+app.service('ProjectService', ['mongoCrudService', '$localStorage', function(mongoCrudService, $localStorage){
 
     var projectPanels = [];
     var projectsIdArray = [];
@@ -19,9 +19,13 @@ app.service('ProjectService', ['mongoCrudService', function(mongoCrudService){
     var newProjectID = function()
     {
         "use strict";
-
+        if ($localStorage.projectsIdArray)
+        {
+            projectsIdArray = $localStorage.projectsIdArray.slice();
+        }
         var projectID = projectPanels.length + 'p';
         projectsIdArray.push(projectID);
+        $localStorage.projectsIdArray = projectsIdArray.slice();
         return projectID;
     };
 
@@ -98,8 +102,8 @@ app.service('ProjectService', ['mongoCrudService', function(mongoCrudService){
                 projectPanel.tasks.push(taskObject);
 //                 * Calling this function to update this entry in 
 //                   project's tasks array in database
-              //console.log()
-                mongoCrudService.updateData(projectPanel.id, {'project.tasks': projectPanel.tasks[0]});
+                console.log(projectPanel.tasks);
+                mongoCrudService.updateData(projectPanel.id, {'project.tasks': projectPanel.tasks});
                 break;
             }
         }
@@ -131,6 +135,9 @@ app.service('ProjectService', ['mongoCrudService', function(mongoCrudService){
         angular.forEach(tasksArray, function(value, index)
         {
             tasksArray[index].project = projectName;
+            console.log('add project to task called');
+            console.log(tasksArray);
+            
         });
     };
 
@@ -150,18 +157,20 @@ app.service('ProjectService', ['mongoCrudService', function(mongoCrudService){
         "use strict";
 
 //                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
-
         for(var project of projectPanels)
         {
             if(project.name == fromProject)
             {
                 for(var task of tasksToDelete)
                 {
-                    console.log(project.tasks.projectId);
+
+                    console.log('deleteTasksFromProject called');
                     removeEntity(project.tasks, 'id', task.id);
+                    mongoCrudService.deleteData(task.id);
+                    mongoCrudService.updateData(project.id, project.tasks);
                 }
 //                break;
-                //mongoCrudService.updateData()
+
             }
         }
     };
@@ -180,6 +189,8 @@ app.service('ProjectService', ['mongoCrudService', function(mongoCrudService){
                 for(var document of documentsToDelete)
                 {
                     removeEntity(project.documents, 'id', document.id);
+                    mongoCrudService.deleteData(document.id);
+                    mongoCrudService.updateData(project.id, project.documents);
                 }
 //                break;
             }

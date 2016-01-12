@@ -9,16 +9,16 @@ app.service('DocumentService',['mongoCrudService', function(mongoCrudService){
 
     var documentPanels = [];
     var documentsIdArray = [];
-
+    var documentValues = {};
     var createDocumentPanel = function(newDocumentObject)
     {
         "use strict";
 
         angular.forEach(newDocumentObject, function(value, index){
-            newDocumentObject[index] = {documents: newDocumentObject[index]};
-            documentPanels.push(newDocumentObject[index].documents);
+            documentPanels.push(newDocumentObject[index]);
             console.log(newDocumentObject[index]);
-            mongoCrudService.createNewEntry(newDocumentObject[index]);
+            documentValues = {documents: newDocumentObject[index]};
+            mongoCrudService.createNewEntry(documentValues);
         });
     };
 
@@ -99,7 +99,9 @@ app.service('DocumentService',['mongoCrudService', function(mongoCrudService){
                 if(valueFromGlobalList.id == valueFromSpecificProject.id)
                 {
                     console.log('this focument called');
+                    console.log(valueFromGlobalList.id);
                     documentPanels = removeEntity(documentPanels, 'id', 'project', valueFromGlobalList.id, valueFromGlobalList.project);
+                    mongoCrudService.deleteData(valueFromGlobalList.id);
                 }
             });
         });
