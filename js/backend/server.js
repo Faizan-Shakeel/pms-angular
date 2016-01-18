@@ -11,7 +11,7 @@ var mongoModules = require('./mongo_modules');
 var passport = require('passport');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
-var MongoStore  = require('connect-mongo')(session);
+//var MongoStore  = require('connect-mongo')(session);
 var LocalStrategy = require('passport-local').Strategy;
 
 var app = express();
@@ -47,28 +47,6 @@ app.use(session({secret: 'this is secret',
 app.use(passport.initialize());
 app.use(passport.session());
 
-
-//app.use(multer({dest:'./uploads', 
-//    rename: function(fieldname,filename)
-//    {
-//        return filename+Date.now();
-//    },
-//    onFileUploadStart: function(file)
-//    {
-//        console.log(file.originalname + ' is starting ...');
-//    },
-//    onFileUploadComplete: function(file)
-//    {
-//        console.log(file.filename + ' uploading complete');
-//        done = true;
-//    }
-// }));
-
-
-//app.get('/',function(req,res)
-//{
-//   res.sendFile(__dirname + 'index.html'); 
-//});
 
 // ****** INITIALIZING PASSPORT LOCAL STRATEGY ******** //
 

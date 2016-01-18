@@ -95,28 +95,21 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
     var usersArray = [];
     var usersObject = {};
 
-//    for(var i=0; i<10; i++)
-//    {
-//        usersObject.name = 'User Name';
-//        usersObject.status = '';
-//        usersArray.push(usersObject);
-//        usersObject = {};
-//    }
     vm.users = [];
-    //vm.users = usersPanelsArray;
+    vm.title = 'Lets Chat';
+    vm.submitButtonText = 'send';
     var selectedUserObject = {};
     vm.selectedUser = function(selectedUser)
     {
         vm.messages.length = 0;
         selectedUserObject = selectedUser;
+        vm.title = selectedUserObject.name; 
         vm.username = $localStorage.currentUser.users.email;
-        console.log('dasdasdhere' + vm.username);
         var selectedMessages = chatService.selectChat(selectedUserObject,chatMessagesArray, $localStorage.currentUser.users.email);
         for (var i=0; i<selectedMessages.length; i++)
         {
             vm.messages.push(selectedMessages[i]);                      
         }
-        console.log(vm.messages);
             vm.visible = !vm.visible;
     };
 //    vm.scrollBarConfig = {
@@ -156,19 +149,17 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
             var socket = io();
             var chatMessagesArray = [];
             vm.messages = [];
-            //vm.username = 'olnline ';
             vm.username = $localStorage.currentUser.users.email;
             vm.visible = false;
             chatSocket.emit('user-email', {'username': $localStorage.currentUser.users.email});
 
-            vm.sendMessage = function(message, username) {
-                if(message && message !== '' && username) {
-        //            vm.messages.push({
-        //                'username': username,
-        //                'content': message
-        //            });
-                console.log(selectedUserObject.email);
-                chatSocket.emit('message', {'username': username, 'content': message, 'receiverEmail': selectedUserObject.email});
+            vm.sendMessage = function(message, username) 
+            {
+
+                if(message && message !== '' && username) 
+                {
+                    vm.title = selectedUserObject.name;
+                    chatSocket.emit('message', {'username': username, 'content': message, 'receiverEmail': selectedUserObject.email});
                 }
             };
             vm.expandOnNew = true;
@@ -177,28 +168,15 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
             {
                if (msg)
                {
-                   //console.log(msg);
-                   //vm.messages.push(msg);                   
                    chatMessagesArray = chatService.chatMessages(msg);
-                   //console.log(chatMessagesArray);
-                   //console.log(selectedUserObject);
-//                   if (selectedUserObject.email == msg.receiverEmail)
-//                   {
-                       var selectedMessages = chatService.selectChat(selectedUserObject, chatMessagesArray, $localStorage.currentUser.users.email);
-                       console.log(selectedMessages);
-                       vm.messages.length = 0;
-                       for (var i=0; i<selectedMessages.length; i++)
+                   var selectedMessages = chatService.selectChat(selectedUserObject, chatMessagesArray, $localStorage.currentUser.users.email);
+                   console.log(selectedMessages);
+                   vm.messages.length = 0;
+                   for (var i=0; i<selectedMessages.length; i++)
                        {
-                            vm.messages.push(selectedMessages[i]);
+                           vm.messages.push(selectedMessages[i]);
                        }
-                       //vm.username = 'online user';
-//                   }
-//                   else
-//                   {
-//                       vm.messages.length = 0;
-//                   }
                    msg = {};
-                   console.log('here ' + vm.messages);
                }
             });
 
@@ -308,20 +286,7 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
             }
         });
         
-        mongoCrudService.deleteData(taskToDelete.id);
-//        console.log("selectedTaskDocumentsArray : " + JSON.stringify(selectedTaskDocumentsArray));
- 
-        // * Delete Task and then ensure that any associated documents are also
-        //   being deleted. *
-//        if (selectedTaskDocumentsArray)
-//        {
-//            for (var i=0; i<selectedTaskDocumentsArray.length; i++)
-//            {
-//                mongoCrudService.deleteData(selectedTaskDocumentsArray[i].documents.id)
-//            }                
-//        }
-        ////////////////////////////////////////////////////////////////////////
-        
+        mongoCrudService.deleteData(taskToDelete.id); 
         DocumentService.deleteDocument(selectedTaskDocumentsArray);
         removeEntity(TaskService.getTaskPanels(), 'id', taskToDelete.id);
 
@@ -465,6 +430,5 @@ function init()
         }
     });
 }
-
 }]);
 

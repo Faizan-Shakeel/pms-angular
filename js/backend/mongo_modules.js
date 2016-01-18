@@ -83,6 +83,7 @@ var updateData = function(req, callback)
                 }
                 else
                 {
+                    db.close();
                     callback(err);
                 }
             });
@@ -225,12 +226,10 @@ var loginUser = function(username, password, callback)
           if (err)
           {
               db.close();
-              console.log(err);
               callback('err');
           }
           else if (!data)
           {
-              //console.log('no record found');
               db.close();
               callback('noRec');
           }
