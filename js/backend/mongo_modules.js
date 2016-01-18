@@ -88,19 +88,19 @@ var updateData = function(req, callback)
             });
         };
     
-        if (req.body.id[1] == 'p')
+        if (req.body.id.indexOf('p') !== -1)
         { 
             updateEntry(req, schemaKey = 'project', idTag = 'project.id');
         }
-        else if (req.body.id[1] == 't')
+        else if (req.body.id.indexOf('t') !== -1)
         {
             updateEntry(req, schemaKey = 'tasks', idTag = 'tasks.id');
         }
-        else if (req.body.id[1] == 'd')
+        else if (req.body.id.indexOf('d') !== -1)
         {
             updateEntry(req, schemaKey = 'documents', idTag = 'documents.id');
         }
-        else if (req.body.idp[1] == 'u')
+        else if (req.body.id.indexOf('u') !== -1)
         {
             updateEntry(req, schemaKey = 'users', idTag = 'users.id');
         }

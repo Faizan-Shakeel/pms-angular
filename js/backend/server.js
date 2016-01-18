@@ -15,17 +15,18 @@ var MongoStore  = require('connect-mongo')(session);
 var LocalStrategy = require('passport-local').Strategy;
 
 var app = express();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
-var transporter = nodemailer.createTransport({
-    service: 'Yahoo',
-    auth: {
-        user: 'write your email address here',
-        pass: 'password here'
-    }
-});
+// *** THIS FEATURE IS UNDER DEVELOPMENT *** //
+//var transporter = nodemailer.createTransport({
+//    service: 'Yahoo',
+//    auth: {
+//        user: 'write your email address here',
+//        pass: 'password here'
+//    }
+//});
 
-//var db = mongoose.connect('mongodb://127.0.0.1/pms');
-//var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
 app.use(express.static(__dirname + '/../../../pms-angular'));
 
 app.use(multiparty());
@@ -187,37 +188,37 @@ app.post('/uploads',function(req,res)
        fs.writeFile(newPath, data, function()
        {
            console.log('file uploading complete');
+           res.send('success');
        });
     });
-    res.send('success');
 });
 
-//////////////////////////////////////////////////////////
+///////////////////////////////////////////
 
-////// --------------- Send Email ------------ /////////////
+// *********** SEND EMAIL (UNDER DEVELOPMENT ******** //
 
-app.post('/sendemail', function(req,res)
-{
-       var mailOptions = {
-        from: 'ghost_stalker323@yahoo.com',
-        to: req.body.receiverEmail,
-        subject: req.body.subject,
-        text: req.body.text
-    };
-    console.log(req.body.receiverEmail);
-    transporter.sendMail(mailOptions,function(err, info)
-    {
-        if (err)
-        {
-            console.log('error sending mail ' + err);
-        }
-        else
-        {
-            console.log('mail sent');
-        }            
-    });
-   res.send('email data received');
-});
+//app.post('/sendemail', function(req,res)
+//{
+//       var mailOptions = {
+//        from: 'ghost_stalker323@yahoo.com',
+//        to: req.body.receiverEmail,
+//        subject: req.body.subject,
+//        text: req.body.text
+//    };
+//    console.log(req.body.receiverEmail);
+//    transporter.sendMail(mailOptions,function(err, info)
+//    {
+//        if (err)
+//        {
+//            console.log('error sending mail ' + err);
+//        }
+//        else
+//        {
+//            console.log('mail sent');
+//        }            
+//    });
+//   res.send('email data received');
+//});
 
 ////////////////////////////////////////////////////////////
 
@@ -225,16 +226,74 @@ app.post('/sendemail', function(req,res)
 
 app.post('/register',function(req,res)
 {
-//    console.log(req.body);
-//    res.send('check');
     mongoModules.registerUser(req, function(data)
     {
         res.send(data);
     });
 });
 
+///////////////////////////////////////////////?
+
+// ************** CHAT FUNCTIONALITY **************** //
+
+var clientIdArray = [];
+io.on('connection',function(socket)
+{
+    socket.on('user-email', function(userData)
+    { 
+        var checker = 0;
+        if (clientIdArray.length == 0)
+        {
+            clientIdArray.push({'username': userData.username, 'clientId': socket.id});
+        }
+
+        else
+        {
+            for (var i=0; i<clientIdArray.length; i++)
+            {
+                if (clientIdArray[i].username == userData.username)
+                {
+                   clientIdArray[i].clientId = socket.id;
+                   checker++;
+                   break;
+                }
+            }
+            if (checker === 0)
+            {
+                clientIdArray.push({'username': userData.username, 'clientId': socket.id});
+            }
+        }
+       console.log(clientIdArray);
+    });
+    
+    socket.on('message', function(msg)
+    {
+            var sender = clientIdArray.filter(function(key)
+            {
+                return key.username == msg.username;
+            });
+            var receiver = clientIdArray.filter(function(key)
+            {
+                return key.username == msg.receiverEmail;
+            });
+            console.log(sender);
+            console.log(receiver);
+            io.sockets.to(sender[0].clientId).emit('broadcast', msg);
+            io.sockets.to(receiver[0].clientId).emit('broadcast', msg);
+    });
+    
+    socket.on('disconnect', function()
+    {
+        console.log('client disconnected');
+        //clientIdArray.length = 0;
+    });
+        
+});
+
+/////////////////////////////////////////////////////////
+
 // ---- Listen for incoming connections at port 3000 -- //
-app.listen(3000,function()
+http.listen(3000,function()
 {
     console.log('server at 3000');
 });

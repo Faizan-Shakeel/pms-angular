@@ -62,7 +62,7 @@ function schema(userKeys)
                                     name: {type: String},
                                     description: {type: String},
                                     id: {type: String},
-                                    fileSize: {type: Number},
+                                    fileSize: {type: String},
                                     fileType: {type: String},
                                     status: String,
                                     createDate: {type: Date, default: Date.now},

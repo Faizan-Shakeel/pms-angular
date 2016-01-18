@@ -249,9 +249,9 @@
 
                                 <div id="document-panel-content-in-new-project-modal">
                                     <p>
-                                    <h4>{{documentPanel.name}} <span class="col-lg-offset-8">ID: {{documentPanel.id}} </span> </h4>
+                                    <h4>{{documentPanel.name}} <span class="col-lg-offset-8">ID: {{documentPanel.id}} </span><a href="{{documentPanel.url}}"> Download or View File</a> </h4>
                                     </p>
-
+                                    
                                     <p>
                                         {{documentPanel.status}}
                                         <span class="col-lg-offset-6">[ {{documentPanel.project}} ] [ {{documentPanel.task}} ]</span>
@@ -301,24 +301,22 @@
                     </div>
                 </uib-tab>
             </uib-tabset>
-
+            <irontec-simple-chat
+                        messages="MainViewVM.messages"
+                        username="MainViewVM.username"
+                        input-placeholder-text="You can write here"
+                        submit-button-text="{{MainViewVM.submitButtonText}}"
+                        title="{{MainViewVM.title}}"
+                        theme="material"
+                        submit-function="MainViewVM.sendMessage"
+                        visible="MainViewVM.visible"
+                        expand-on-new="{{MainViewVM.expandOnNew}}">
+                </irontec-simple-chat>
         </div>
 
         <!-------------------------------------------------------------------------- Chat Box --------------------------------------------------------------------------------START-->
+                
 
-        <!--<div class="chatting-box">-->
-            <!--<irontec-simple-chat-->
-                    <!--messages="MainViewVM.messages"-->
-                    <!--username="MainViewVM.username"-->
-                    <!--input-placeholder-text="You can write here"-->
-                    <!--submit-button-text="Send"-->
-                    <!--title="Super Awesome Chat"-->
-                    <!--theme="material"-->
-                    <!--submit-function="MainViewVM.sendMessage"-->
-                    <!--visible="MainViewVM.visible"-->
-                    <!--expand-on-new="MainViewVM.expandOnNew">-->
-            <!--</irontec-simple-chat>-->
-        <!--</div>-->
         <!-------------------------------------------------------------------------- Chat Box -------------------------------------------------------------------------------------END-->
 
 
@@ -335,8 +333,7 @@
                 <ul class="list-group" id="chat-ul" slim-scroll height="500px">
 
                     <!--<li ng-repeat="user in MainViewVM.users" class="list-group-item" ng-click="MainViewVM.visible = !MainViewVM.visible"><i id="onlineUserIcon" class={{user.status}}></i>{{user.name}}</li>-->
-                    <li ng-repeat="user in MainViewVM.users" class="list-group-item"><i id="onlineUserIcon" class={{user.status}}></i>{{user.name}}</li>
-
+                    <li ng-repeat="user in MainViewVM.users" class="list-group-item" ng-click="MainViewVM.selectedUser(user)"><i id="onlineUserIcon" class={{user.status}}></i>{{user.name}}</li>
                 </ul>
 
             </div>

@@ -2059,6 +2059,7 @@ app.controller('CreateDocumentModalInstanceController', ['$scope', '$uibModalIns
                alert ("Document Saved Successfully");
             });
         }
+        uploadFile(fileData);
         //uploadFile(fileData);
         /////////UPLOADING FILE COMPLETE ///
         ///////////////////////////////////
@@ -2090,6 +2091,9 @@ app.controller('CreateDocumentModalInstanceController', ['$scope', '$uibModalIns
             newDocumentObject.project = '';
             newDocumentObject.task = '';
             newDocumentObject.description = new_document_params.description;
+            newDocumentObject.url = "js/backend/uploads/" + vm.file.name;
+            newDocumentObject.fileSize = vm.file.size + ' bytes';
+            newDocumentObject.fileType = vm.file.type;
             newDocumentsArray.push(newDocumentObject);
             DocumentService.createDocumentPanel(newDocumentsArray);
             newDocumentObject = {};

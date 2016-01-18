@@ -41,6 +41,7 @@ app.service('loginService',['$http', '$location', '$rootScope', '$q', '$localSto
               deferred.resolve(user);
               if (deferred.promise.$$state.value !== '0')
               {
+                  $rootScope.currentUser = $localStorage.currentUser;                  
                   $location.url('/mainview');
               }
               else

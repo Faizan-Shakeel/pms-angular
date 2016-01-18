@@ -9,6 +9,12 @@
     bottom: -46px;
 }
 
+.chatapp{
+    width: 200px;
+    height: 100px;
+    background-position: right;
+}
+
 
 .chat
 {

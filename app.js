@@ -18,7 +18,10 @@ var app = angular.module('pmsAngular', [
     'registrationServiceModule',
     'registrationModule',
 //    'luegg.directives',
-    'irontec.simpleChat'
+    'irontec.simpleChat',
+    'btford.socket-io',
+    'chatSocketServiceModule',
+    'chatServiceModule'
 ]);
 
  app.config(['$routeProvider','$httpProvider', function($routeProvider, $httpProvider) {
