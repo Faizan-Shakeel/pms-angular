@@ -34,7 +34,7 @@ FEATURES (Implemented):
 
 * Emailing.
 
-FEATURES (Remaining):
+FEATURES (Under Development):
 
 * User access control.
 
