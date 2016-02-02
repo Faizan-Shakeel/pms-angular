@@ -15,7 +15,9 @@ app.service('loginService',['$http', '$location', '$rootScope', '$q', '$localSto
            }
            else
            {
+               console.log(response);
                alert('wrong credentials');
+               
            }
        });
    };

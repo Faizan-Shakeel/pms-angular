@@ -10,14 +10,27 @@ var bcrypt = require('bcrypt-nodejs');
         var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
         db.once('open', function()
         {
-            //console.log(req.body.companyName);
             var createSchema = schema.schema('companyName');          
             var PmsCollection = db.model('PmsCollection', createSchema);
             var query = {companyName: req.body.companyName};
             PmsCollection.find(query,function(err, data)
             {
-                db.close();
-                callback(data);
+                if (!err)
+                {
+                    for (var i in data)
+                    {
+                        if (data[i]._doc.users)
+                        {
+                            delete data[i]._doc.users.password;
+                        }
+                    }
+                    db.close();
+                    callback(data);
+                }
+                else
+                {
+                    callback(err);
+                }
             });
         });
     };
@@ -29,7 +42,6 @@ var bcrypt = require('bcrypt-nodejs');
         var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
         db.once('open', function()
         {
-            console.log('create data called');
             for (var keys in req.body)
             {
                 if (keys != 'companyName')
@@ -107,6 +119,37 @@ var updateData = function(req, callback)
         }
     });
 };
+
+/////////////TEMPORARY CHAT STORAGE MODULE ///////////////////////
+
+var updateUser = function(req, callback)
+{
+    var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
+    db.once('open', function()
+    { 
+            var createSchema = schema.schema('users');
+            var PmsCollection = db.model('PmsCollection',createSchema);
+            console.log(req.body);
+            PmsCollection.findOneAndUpdate({'users.email':req.body.userEmail}, {'users.chatData':req.body.chatData}, function(err, doc)
+            {
+                if (!err)
+                {
+                    //console.log(doc);
+                    db.close();
+                    callback('Chat stored Successfully');
+                }
+                else
+                {
+                    db.close();
+                    callback(err);
+                }
+            });
+    });
+};
+/////////////////////////////////////////////////////////////////
+
+
+
 
 // *********** DELETE AN ENTRY FROM DATABASE *************** //
 var deleteData = function(req, callback)
@@ -257,3 +300,4 @@ exports.updateData = updateData;
 exports.deleteData = deleteData;
 exports.registerUser = registerUser;
 exports.loginUser = loginUser;
+exports.updateUser = updateUser;

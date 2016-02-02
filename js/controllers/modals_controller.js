@@ -1955,7 +1955,7 @@ app.controller('EditTaskModalInstanceController', ['$scope', '$uibModalInstance'
 
 }]);
 
-app.controller('EditDocumentModalInstanceController', ['$scope', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'DocumentService', function ($scope, $uibModalInstance, dataForThisModalInstance, ProjectService, DocumentService, Upload) {
+app.controller('EditDocumentModalInstanceController', ['$scope', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'DocumentService', function ($scope, $uibModalInstance, dataForThisModalInstance, ProjectService, DocumentService) {
 
     var vm = this;
 
@@ -2046,21 +2046,36 @@ app.controller('CreateDocumentModalInstanceController', ['$scope', '$uibModalIns
         console.log('document creation function called');
         //////////// UPLOADING FILE //////////
         /////////////////////////////////////
-        var uploadFile = function(file)    
+        var fileExtension = '';
+        var uploadFile = function(documentName,file)    
         {
             console.log('trying to upload file');
             file.upload = Upload.upload({
                 url: '/uploads',
                 method: 'POST',
-                data: {file: file}
+                data: {'file': file, documentName: documentName}
             }).success(function(res)
             {
                console.log(res);
                alert ("Document Saved Successfully");
             });
         }
-        uploadFile(fileData);
-        //uploadFile(fileData);
+        
+        if (documentName && fileData)
+        {
+           uploadFile(documentName , fileData);  
+           
+            //* Here we are extracting the extension of the file *//
+            for (var i = vm.file.name.length - 1; i>=0; i--)
+            {
+                fileExtension = vm.file.name[i] + fileExtension;
+                if (vm.file.name[i] == '.')
+                {
+                    break;
+                }
+            }
+        }
+                
         /////////UPLOADING FILE COMPLETE ///
         ///////////////////////////////////
         
@@ -2086,12 +2101,12 @@ app.controller('CreateDocumentModalInstanceController', ['$scope', '$uibModalIns
             }
 
             newDocumentObject.id = DocumentService.newDocumentID();
-            newDocumentObject.name = new_document_params.name;
+            newDocumentObject.name = new_document_params.name + fileExtension;
             newDocumentObject.status = "Waiting For Approval";
             newDocumentObject.project = '';
             newDocumentObject.task = '';
             newDocumentObject.description = new_document_params.description;
-            newDocumentObject.url = "js/backend/uploads/" + vm.file.name;
+            newDocumentObject.url = "js/backend/uploads/" + new_document_params.name + fileExtension;
             newDocumentObject.fileSize = vm.file.size + ' bytes';
             newDocumentObject.fileType = vm.file.type;
             newDocumentsArray.push(newDocumentObject);
@@ -2118,7 +2133,7 @@ app.controller('CreateDocumentModalInstanceController', ['$scope', '$uibModalIns
 
             new_document_params = {
                 'id': DocumentService.newDocumentID(),
-                'name': documentName,
+                'name': documentName + fileExtension,
                 'status': 'Document Status',
                 'project': '',
                 'task': '',

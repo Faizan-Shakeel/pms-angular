@@ -102,6 +102,7 @@ app.service('DocumentService',['mongoCrudService', function(mongoCrudService){
                     console.log(valueFromGlobalList.id);
                     documentPanels = removeEntity(documentPanels, 'id', 'project', valueFromGlobalList.id, valueFromGlobalList.project);
                     mongoCrudService.deleteData(valueFromGlobalList.id);
+                    mongoCrudService.deleteFile(valueFromGlobalList.name);
                 }
             });
         });

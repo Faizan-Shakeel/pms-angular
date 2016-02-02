@@ -18,6 +18,7 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
+var port = process.env.PORT || 3000;
 // *** THIS FEATURE IS UNDER DEVELOPMENT *** //
 //var transporter = nodemailer.createTransport({
 //    service: 'Yahoo',
@@ -55,16 +56,16 @@ app.post('/login', passport.authenticate('local', {
     failureRedirect: '/loginFailure'
 }));
 
-app.get('/loginSuccess', function(req, res, next)
+app.get('/loginSuccess', function(req, res)
 {
    var response = {user: req.user};
-   //console.log(response);
+   //console.log(req);
    res.send(response); 
 });
 
-app.get('/loginFailure', function(req, res, next)
+app.get('/loginFailure', function(req, res)
 {
-   //console.log(req.body);
+   console.log(req.result);
    res.send('0'); 
 });
 
@@ -155,14 +156,44 @@ app.post('/delete' , function(req,res)
 });
 ///////////////////////////////////////////////////
 
+// ************ FILE DETELE *********** //
+app.post('/deleteFile', function(req, res)
+{
+    console.log(req.body.fileUrl);
+    fs.unlink(req.body.fileUrl, function(err)
+    {
+        if (err) 
+        {
+            res.send(err);
+        }
+        else
+        {
+            console.log('successfully deleted');
+            res.send('successfully deleted');
+        }
+    });
+});
+    
+
+//////////////////////////////////////////
+
 // ********** FILE UPLOAD  ********** //
 
 app.post('/uploads',function(req,res)
 {
-    console.log(req.files.file);
+    var fileExtension = '';
+    for (var i = req.files.file.name.length - 1; i>=0; i--)
+       {
+           fileExtension = req.files.file.name[i] + fileExtension;
+           if (req.files.file.name[i] == '.')
+           {
+               break;
+           }
+       }
+    console.log(fileExtension);   
     fs.readFile(req.files.file.path, function(err, data)
-    {
-       var newPath = __dirname + "/uploads/" + req.files.file.name;
+    {       
+       var newPath = __dirname + "/uploads/" + req.body.documentName + fileExtension;
        fs.writeFile(newPath, data, function()
        {
            console.log('file uploading complete');
@@ -220,16 +251,21 @@ io.on('connection',function(socket)
     socket.on('user-email', function(userData)
     { 
         var checker = 0;
+        // * Here we are associating user's socket ID with his email ID
         if (clientIdArray.length == 0)
         {
-            clientIdArray.push({'username': userData.username, 'clientId': socket.id});
+            clientIdArray.push({'userEmail': userData.userEmail, 'clientId': socket.id});
         }
 
         else
         {
+            // * If the value of checker increases here, it means that the user
+            //   aleary exists so we just replace his old socket Id with new one.
+            //   If the checker is zero, it means user was not in the list so 
+            //   we will add that user.
             for (var i=0; i<clientIdArray.length; i++)
             {
-                if (clientIdArray[i].username == userData.username)
+                if (clientIdArray[i].userEmail == userData.userEmail)
                 {
                    clientIdArray[i].clientId = socket.id;
                    checker++;
@@ -238,26 +274,31 @@ io.on('connection',function(socket)
             }
             if (checker === 0)
             {
-                clientIdArray.push({'username': userData.username, 'clientId': socket.id});
+                clientIdArray.push({'userEmail': userData.userEmail, 'clientId': socket.id});
             }
         }
-       console.log(clientIdArray);
     });
     
     socket.on('message', function(msg)
     {
+        // * Find the socket ID of sender and receiver via using 
+        //   their respective email IDs
             var sender = clientIdArray.filter(function(key)
             {
-                return key.username == msg.username;
+                return key.userEmail == msg.userEmail;
             });
             var receiver = clientIdArray.filter(function(key)
             {
-                return key.username == msg.receiverEmail;
+                return key.userEmail == msg.receiverEmail;
             });
-            console.log(sender);
-            console.log(receiver);
             io.sockets.to(sender[0].clientId).emit('broadcast', msg);
-            io.sockets.to(receiver[0].clientId).emit('broadcast', msg);
+            // * If receiver is logged in, send him the message. Otherwise, no
+            //   need to emit. He will receive the messages when he signs-in. *
+            if (receiver[0])
+            {
+                console.log('receiver emit called');
+                io.sockets.to(receiver[0].clientId).emit('broadcast', msg);
+            }
     });
     
     socket.on('disconnect', function()
@@ -268,11 +309,22 @@ io.on('connection',function(socket)
         
 });
 
+////////// TEMOPORARY USER CHAT STORAGE MODULE ///////////
+
+app.post('/updateUser', function(req,res)
+{
+    mongoModules.updateUser(req, function(data)
+    {
+        res.send(data);        
+    });
+
+});
+
 /////////////////////////////////////////////////////////
 
 // ---- Listen for incoming connections at port 3000 -- //
-http.listen(3000,function()
+http.listen(port,function()
 {
-    console.log('server at 3000');
+    console.log('server at ' + port);
 });
 ////////////////////////////////////////////////////

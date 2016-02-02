@@ -85,7 +85,8 @@ function schema(userKeys)
                                 position: String,
                                 imageUrl: String,
                                 password: String,
-                                projectAndRole: String
+                                projectAndRole: String,
+                                chatData: [Schema.Types.Mixed]
                             }
             });
             
