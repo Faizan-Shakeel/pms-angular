@@ -84,7 +84,7 @@ var updateData = function(req, callback)
             var PmsCollection = db.model('PmsCollection',createSchema);
             query[idTag] = req.body.id;
             //var options = {upsert: false};
-            console.log(req.body.data);
+            //console.log(req.body.data);
             PmsCollection.findOneAndUpdate(query, req.body.data, function(err, doc)
             {
                 if (!err)
@@ -126,17 +126,32 @@ var updateUser = function(req, callback)
 {
     var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
     db.once('open', function()
-    { 
+    {
             var createSchema = schema.schema('users');
             var PmsCollection = db.model('PmsCollection',createSchema);
-            console.log(req.body);
-            PmsCollection.findOneAndUpdate({'users.email':req.body.userEmail}, {'users.chatData':req.body.chatData}, function(err, doc)
+            console.log(req.emailID);
+            PmsCollection.findOne({'users.email': req.emailID}, function(err, doc)
             {
                 if (!err)
                 {
-                    //console.log(doc);
-                    db.close();
-                    callback('Chat stored Successfully');
+
+                    doc.users.chatData.push(req.data);
+                    //console.log(doc.users.chatData);
+                    doc.save(function(error, data)
+                    {
+                    if (error)
+                    {
+                        console.log(error);
+                        db.close();
+                    }
+                    else
+                    {
+                        //console.log(data);
+                        callback('Chat stored Successfully');
+                        db.close();
+                    }
+                    });
+                                        
                 }
                 else
                 {
@@ -148,8 +163,32 @@ var updateUser = function(req, callback)
 };
 /////////////////////////////////////////////////////////////////
 
+// ************** RETRIEVE CHAT DATA ****************//
 
-
+var retrieveChat = function(req, callback)
+{
+    var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
+    db.once('open', function()
+    {
+        var createSchema = schema.schema('users');
+        var PmsCollection = db.model('PmsCollection',createSchema);
+        PmsCollection.findOne({'users.email': req.body.userEmail}, function(err,data)
+        {
+            if (!err)
+            {
+                callback(data);
+                db.close();
+            }
+            else
+            {
+                callback(err);
+                db.close();
+            }
+        });
+    });
+};
+    
+///////////////////////////////////////////////////////
 
 // *********** DELETE AN ENTRY FROM DATABASE *************** //
 var deleteData = function(req, callback)
@@ -301,3 +340,4 @@ exports.deleteData = deleteData;
 exports.registerUser = registerUser;
 exports.loginUser = loginUser;
 exports.updateUser = updateUser;
+exports.retrieveChat = retrieveChat;

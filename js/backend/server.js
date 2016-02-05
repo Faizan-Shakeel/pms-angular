@@ -241,7 +241,20 @@ app.post('/register',function(req,res)
     });
 });
 
-///////////////////////////////////////////////?
+////////////////////////////////////////////////
+
+// ************ RETRIEVE CHAT DATA ************ //
+
+app.post('/retrieveChat', function(req,res)
+{
+    console.log(req.body);
+    mongoModules.retrieveChat(req, function(chatData)
+    {
+        res.send(chatData);
+    });
+});
+
+/////////////////////////////////////////////////
 
 // ************** CHAT FUNCTIONALITY **************** //
 
@@ -296,14 +309,25 @@ io.on('connection',function(socket)
             //   need to emit. He will receive the messages when he signs-in. *
             if (receiver[0])
             {
-                console.log('receiver emit called');
+                //console.log('receiver emit called');
                 io.sockets.to(receiver[0].clientId).emit('broadcast', msg);
             }
+            mongoModules.updateUser({emailID: msg.userEmail, data: msg}, function(response)
+            {
+                console.log(response);                
+            });
+            //console.log(msg.userEmail);
+            mongoModules.updateUser({emailID: msg.receiverEmail, data: msg}, function(response)
+            {
+                console.log(response);
+            });
+            //console.log(msg.receiverEmail);
+                
     });
     
     socket.on('disconnect', function()
     {
-        console.log('client disconnected');
+        //console.log('client disconnected');
         //clientIdArray.length = 0;
     });
         

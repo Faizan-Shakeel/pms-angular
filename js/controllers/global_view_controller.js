@@ -86,35 +86,51 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
      *//////////////////////////////////////////////////////////////////////////////////////////////////
 
     vm.chatPanelVisibility = false;
+    var checkMsgStatus = function()
+    {
+        for (var i=0; i<vm.users.length; i++)
+        {
+            var checker = $localStorage.currentUser.users.unreadMessageFlag.filter(function(findFlag)
+            {
+                return findFlag.userEmail == vm.users[i].email;                           
+            });
+            
+            if (checker.length != 0)
+            {
+                    vm.users[i].name = vm.users[i].name + '(1)';
+            }
+            else
+            {
+                //vm.checkMsgStatusClass = 'text-danger';
+            }
+        }
+    }
+    
 
     var online = 'fa fa-circle-o';
     var offline = '';
     var usersArray = [];
     var usersObject = {};
-
     vm.users = [];
     var selectedMessages = [];
     vm.submitButtonText = 'send';
     vm.title = 'Lets Talk';
     var selectedUserObject = {};
+    
     vm.selectedUser = function(selectedUser)
     {
         vm.messages.length = 0;
         selectedUserObject = selectedUser;
-        selectedMessages.length = 0;
-
-            var tempMessagesArray = chatService.selectChat(selectedUserObject, selectedUserObject.chatData, $localStorage.currentUser.users.email);
-            for (var i=0; i<tempMessagesArray.length; i++)
-            {
-                selectedMessages.push(tempMessagesArray[i]);
-            }
-            tempMessagesArray.length = 0;
-            //selectedMessages = selectedUserObject.chatData.slice();
-            for (var i=0; i<selectedMessages.length; i++)
-            {
-                vm.messages.push(selectedMessages[i]); 
-            }
-
+        
+            mongoCrudService.retrieveChat(selectedUserObject.email).then(function(retrievedChatData)
+            {console.log(retrievedChatData.users.chatData);
+                var selectedMessages = chatService.selectChat(selectedUserObject, retrievedChatData.users.chatData, $localStorage.currentUser.users.email);
+                for (var i=0; i<selectedMessages.length; i++)
+                {
+                    vm.messages.push(selectedMessages[i]);
+                }
+            });
+            
             vm.visible = !vm.visible;
     };
 //    vm.scrollBarConfig = {
@@ -152,17 +168,15 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
         // ********* SIMPLE CHAT APPLICATION MODULE ******* //
 
             var socket = io();
-            var chatMessagesArray = [];
             vm.messages = [];
             vm.username = $localStorage.currentUser.users.name;
             vm.visible = false;
             chatSocket.emit('user-email', {'userEmail': $localStorage.currentUser.users.email});
-
+            
             vm.sendMessage = function(message, username) 
             {
                 if(message && message !== '' && username) 
                 {
-                    //vm.title = selectedUserObject.name;
                     chatSocket.emit('message', {'username': $localStorage.currentUser.users.name, 'userEmail': $localStorage.currentUser.users.email, 'content': message, 'receiverEmail': selectedUserObject.email});
                 }
             };
@@ -172,20 +186,16 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
                if (msg)
                {
                    vm.messages.length = 0;
-
-                   selectedMessages.push(msg);
+                   selectedUserObject.chatData.push(msg);
+                   console.log(selectedUserObject.chatData);   
+                   var selectedMessages = chatService.selectChat(selectedUserObject, selectedUserObject.chatData, $localStorage.currentUser.users.email);
 
                    for (var i=0; i<selectedMessages.length; i++)
                    {
                        vm.messages.push(selectedMessages[i]);
-                       //vm.username = $localStorage.currentUser.users.name;
                    }
-                   selectedUserObject.chatData.push(msg);
-                   $localStorage.currentUser.users.chatData.push(msg);
-                   console.log(selectedUserObject.chatData)
+                  
                    msg = {};
-                   mongoCrudService.updateUser(selectedUserObject.email, selectedUserObject.chatData);
-                   mongoCrudService.updateUser($localStorage.currentUser.users.email, $localStorage.currentUser.users.chatData);                   
                }
             });
 
@@ -437,11 +447,12 @@ function init()
                    vm.users.push(data[i].users);
                }
                if (data[i].users.email == $localStorage.currentUser.users.email)
-               {
-                   $localStorage.currentUser.users.chatData = data[i].users.chatData.slice();
+               {                   
+                    $localStorage.currentUser.users.chatData = data[i].users.chatData.slice();                       
                }
            }           
         }
+        //checkMsgStatus();
     });
 }
 }]);

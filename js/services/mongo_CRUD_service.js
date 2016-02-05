@@ -100,11 +100,22 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
         });
     };
  
+    // FUNCTION TO RETRIEVE CHAT DATA //
+    var retrieveChat = function(userEmail) 
+    {
+        var deferred = $q.defer();
+        var data = {userEmail: userEmail};
+        $http.post('/retrieveChat', data).success(deferred.resolve);
+        return deferred.promise;
+    };
+    
+    
     
     return { retrieveData: retrieveData,
              createNewEntry: createNewEntry,
              deleteData: deleteData,
              deleteFile: deleteFile,
              updateData: updateData,
-             updateUser: updateUser};
+             updateUser: updateUser,
+             retrieveChat: retrieveChat};
 });

@@ -86,7 +86,8 @@ function schema(userKeys)
                                 imageUrl: String,
                                 password: String,
                                 projectAndRole: String,
-                                chatData: [Schema.Types.Mixed]
+                                chatData: [Schema.Types.Mixed],
+                                unreadMessageFlag: [Schema.Types.Mixed]
                             }
             });
             

@@ -1,18 +1,7 @@
 var app = angular.module('chatServiceModule',[]);
 
 app.service('chatService', function()
-{
-    var userMessagesObject = [];
-    
-    // * The "chatMessages" function stores all the chat messages along with 
-    //   chatters' emails. This will later be used to retrieve the chat history
-    //   and show it to respective users. *
-    var chatMessages = function(message)
-    {
-        userMessagesObject.push({username: message.username, userEmail: message.userEmail, receiverEmail: message.receiverEmail, content: message.content});
-        return userMessagesObject;
-    };
-    
+{   
     var testArray = [];
     // * The "selectChat" function requires three paramaters, the
     //   selectedUserObject which contains the email Id of the person the
@@ -30,10 +19,8 @@ app.service('chatService', function()
                 testArray.push(userMessagesObject[i]);
             }
         }
-        //console.log(testArray);
         return testArray;
     };
 
-        return ({chatMessages: chatMessages,
-                 selectChat: selectChat});
+        return ({selectChat: selectChat});
 });
