@@ -309,20 +309,20 @@ io.on('connection',function(socket)
             //   need to emit. He will receive the messages when he signs-in. *
             if (receiver[0])
             {
-                //console.log('receiver emit called');
                 io.sockets.to(receiver[0].clientId).emit('broadcast', msg);
             }
-            mongoModules.updateUser({emailID: msg.userEmail, data: msg}, function(response)
+            mongoModules.updateUser({emailID: msg.userEmail, msg: msg}, function(response)
             {
                 console.log(response);                
             });
-            //console.log(msg.userEmail);
-            mongoModules.updateUser({emailID: msg.receiverEmail, data: msg}, function(response)
+            mongoModules.updateUser({emailID: msg.receiverEmail, msg: msg}, function(response)
             {
                 console.log(response);
             });
-            //console.log(msg.receiverEmail);
-                
+//            mongoModules.updateChatFlag({emailID: msg.receiverEmail, senderEmail: msg.userEmail, msgFlag: '1'}, function(response)
+//            {
+//                console.log(response);
+//            });
     });
     
     socket.on('disconnect', function()
@@ -331,6 +331,16 @@ io.on('connection',function(socket)
         //clientIdArray.length = 0;
     });
         
+});
+
+////////////// UPDATE CHAT FLAG //////////////////
+
+app.post('/updateChatFlag', function(req, res)
+{
+    mongoModules.updateChatFlag(req, function(response)
+    {
+        res.send(response);
+    })
 });
 
 ////////// TEMOPORARY USER CHAT STORAGE MODULE ///////////

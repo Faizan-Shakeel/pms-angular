@@ -86,25 +86,7 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
      *//////////////////////////////////////////////////////////////////////////////////////////////////
 
     vm.chatPanelVisibility = false;
-    var checkMsgStatus = function()
-    {
-        for (var i=0; i<vm.users.length; i++)
-        {
-            var checker = $localStorage.currentUser.users.unreadMessageFlag.filter(function(findFlag)
-            {
-                return findFlag.userEmail == vm.users[i].email;                           
-            });
-            
-            if (checker.length != 0)
-            {
-                    vm.users[i].name = vm.users[i].name + '(1)';
-            }
-            else
-            {
-                //vm.checkMsgStatusClass = 'text-danger';
-            }
-        }
-    }
+
     
 
     var online = 'fa fa-circle-o';
@@ -123,12 +105,21 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
         selectedUserObject = selectedUser;
         
             mongoCrudService.retrieveChat(selectedUserObject.email).then(function(retrievedChatData)
-            {console.log(retrievedChatData.users.chatData);
+            {
                 var selectedMessages = chatService.selectChat(selectedUserObject, retrievedChatData.users.chatData, $localStorage.currentUser.users.email);
                 for (var i=0; i<selectedMessages.length; i++)
                 {
                     vm.messages.push(selectedMessages[i]);
                 }
+                
+                var findMsgFlag = $localStorage.currentUser.users.unreadMessageFlag.indexOf(selectedUserObject.email);
+                if (findMsgFlag != -1)
+                {
+                    $localStorage.currentUser.users.unreadMessageFlag.splice(findMsgFlag, 1);
+                    selectedUserObject.name = selectedUserObject.name.replace('(1)','');
+                    console.log($localStorage.currentUser.users);
+                    mongoCrudService.updateChatFlag($localStorage.currentUser.users);
+                }                
             });
             
             vm.visible = !vm.visible;
@@ -179,6 +170,13 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
                 {
                     chatSocket.emit('message', {'username': $localStorage.currentUser.users.name, 'userEmail': $localStorage.currentUser.users.email, 'content': message, 'receiverEmail': selectedUserObject.email});
                 }
+                
+                var findMsgFlag = selectedUserObject.unreadMessageFlag.indexOf($localStorage.currentUser.users.email);
+                if (findMsgFlag == -1)
+                {
+                    selectedUserObject.unreadMessageFlag.push($localStorage.currentUser.users.email);
+                    mongoCrudService.updateChatFlag(selectedUserObject);
+                }
             };
             vm.expandOnNew = true;
             $scope.$on('socket:broadcast', function(event, msg)
@@ -186,15 +184,18 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
                if (msg)
                {
                    vm.messages.length = 0;
-                   selectedUserObject.chatData.push(msg);
-                   console.log(selectedUserObject.chatData);   
-                   var selectedMessages = chatService.selectChat(selectedUserObject, selectedUserObject.chatData, $localStorage.currentUser.users.email);
-
-                   for (var i=0; i<selectedMessages.length; i++)
+                   
+                   if (selectedUserObject.chatData)
                    {
-                       vm.messages.push(selectedMessages[i]);
+                        selectedUserObject.chatData.push(msg);
+                   
+                        var selectedMessages = chatService.selectChat(selectedUserObject, selectedUserObject.chatData, $localStorage.currentUser.users.email);
+
+                        for (var i=0; i<selectedMessages.length; i++)
+                        {
+                            vm.messages.push(selectedMessages[i]);
+                        }
                    }
-                  
                    msg = {};
                }
             });
@@ -446,13 +447,13 @@ function init()
                {
                    vm.users.push(data[i].users);
                }
-               if (data[i].users.email == $localStorage.currentUser.users.email)
+               else if (data[i].users.email == $localStorage.currentUser.users.email)
                {                   
-                    $localStorage.currentUser.users.chatData = data[i].users.chatData.slice();                       
+                    $localStorage.currentUser.users = data[i].users;                       
                }
            }           
         }
-        //checkMsgStatus();
+        vm.users = chatService.checkMsgStatus(vm.users);
     });
 }
 }]);

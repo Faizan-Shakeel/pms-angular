@@ -89,7 +89,7 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
     // TEMPORARY FUNCTION TO STORE USER CHAT, WILL REMOVE WHEN USER MODULE IS COMPLETED
     var updateUser = function(userEmail, data)
     {
-        var entry = {userEmail: userEmail, 'chatData': data};
+        var entry = {'userEmail': userEmail, 'chatData': data};
         $http.post('/updateUser', entry).success(function(response)
         {
             console.log(response);
@@ -100,7 +100,23 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
         });
     };
  
-    // FUNCTION TO RETRIEVE CHAT DATA //
+    // **** UPDATE CHAT MESSAGE FLAG TO NOTIFY USERS OF UNREAD MESSAGES **** //
+ 
+    var updateChatFlag = function(userObject)
+    {
+        var data = {userObject: userObject};
+        $http.post('/updateChatFlag', data).success(function(response)
+        {
+            console.log(response);
+        })
+                .error(function(err)
+        {
+            console.log(err);
+        });
+    };
+ 
+ 
+    // ******  FUNCTION TO RETRIEVE CHAT DATA ***** //
     var retrieveChat = function(userEmail) 
     {
         var deferred = $q.defer();
@@ -117,5 +133,6 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
              deleteFile: deleteFile,
              updateData: updateData,
              updateUser: updateUser,
+             updateChatFlag: updateChatFlag,
              retrieveChat: retrieveChat};
 });

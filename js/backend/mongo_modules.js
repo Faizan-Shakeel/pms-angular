@@ -129,14 +129,11 @@ var updateUser = function(req, callback)
     {
             var createSchema = schema.schema('users');
             var PmsCollection = db.model('PmsCollection',createSchema);
-            console.log(req.emailID);
             PmsCollection.findOne({'users.email': req.emailID}, function(err, doc)
             {
                 if (!err)
                 {
-
-                    doc.users.chatData.push(req.data);
-                    //console.log(doc.users.chatData);
+                    doc.users.chatData.push(req.msg);                        
                     doc.save(function(error, data)
                     {
                     if (error)
@@ -162,6 +159,49 @@ var updateUser = function(req, callback)
     });
 };
 /////////////////////////////////////////////////////////////////
+
+// **** UPDATE CHAT MESSAGE FLAG TO NOTIFY USERS OF UNREAD MESSAGES **** //
+
+var updateChatFlag = function(req, callback)
+{
+    var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
+    db.once('open', function()
+    {
+        console.log(req.body.userObject.email);
+        var createSchema = schema.schema('users');
+        var PmsCollection = db.model('PmsCollection',createSchema);
+        PmsCollection.findOne({'users.email':req.body.userObject.email}, function(err, doc)
+        {
+            if (!err)
+            {
+                //console.log(doc);
+                doc.users.unreadMessageFlag = req.body.userObject.unreadMessageFlag.slice();
+                doc.save(function(error, data)
+                {
+                    if (!error)
+                    {
+                        console.log(data);
+                        db.close();
+                        callback('message flag updated');
+                    }
+                    else
+                    {
+                        console.log(error);
+                        db.close();
+                        callback(error);
+                    }
+                });
+            }
+            else
+            {
+                db.close();
+                callback(err);
+            }
+        });
+    });
+};
+
+///////////////////////////////////////////////////////////////////////////
 
 // ************** RETRIEVE CHAT DATA ****************//
 
@@ -341,3 +381,4 @@ exports.registerUser = registerUser;
 exports.loginUser = loginUser;
 exports.updateUser = updateUser;
 exports.retrieveChat = retrieveChat;
+exports.updateChatFlag = updateChatFlag;
