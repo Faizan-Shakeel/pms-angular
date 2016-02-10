@@ -199,8 +199,6 @@
             </uib-accordion>
         </div>
 
-
-        <!--<div class="col-lg-8 col-md-8 col-sm-8">-->
         <div class="{{MainViewVM.globalTabsBootstrapClass}}">
             <uib-tabset justified="true">
 
@@ -337,23 +335,39 @@
                         </div>
                     </div>
                 </uib-tab>
+
             </uib-tabset>
+
+            <!--<div class="chat-box">-->
+                <irontec-simple-chat
+                        messages="MainViewVM.messages"
+                        username="MainViewVM.username"
+                        input-placeholder-text="You can write here"
+                        submit-button-text="{{MainViewVM.submitButtonText}}"
+                        title="{{MainViewVM.title}}"
+                        theme="material"
+                        submit-function="MainViewVM.sendMessage"
+                        visible="MainViewVM.visible"
+                        expand-on-new="{{MainViewVM.expandOnNew}}">
+                </irontec-simple-chat>
+            <!--</div>-->
 
         </div>
 
+
         <!-------------------------------------------------------------------------- Chat Box --------------------------------------------------------------------------------START-->
 
-        <!--<div class="chatting-box">-->
+        <!--<div class="chat-box">-->
             <!--<irontec-simple-chat-->
                     <!--messages="MainViewVM.messages"-->
                     <!--username="MainViewVM.username"-->
                     <!--input-placeholder-text="You can write here"-->
-                    <!--submit-button-text="Send"-->
-                    <!--title="Super Awesome Chat"-->
+                    <!--submit-button-text="{{MainViewVM.submitButtonText}}"-->
+                    <!--title="{{MainViewVM.title}}"-->
                     <!--theme="material"-->
                     <!--submit-function="MainViewVM.sendMessage"-->
                     <!--visible="MainViewVM.visible"-->
-                    <!--expand-on-new="MainViewVM.expandOnNew">-->
+                    <!--expand-on-new="{{MainViewVM.expandOnNew}}">-->
             <!--</irontec-simple-chat>-->
         <!--</div>-->
         <!-------------------------------------------------------------------------- Chat Box -------------------------------------------------------------------------------------END-->
@@ -363,16 +377,17 @@
         <!--<ng-include src="'context-menu.html'"></ng-include>-->
         <!------------------------------------------------------------------------ Context Menu --------------------------------------------------------------------------END-->
 
-
         <!------------------------------------------------------------------------ Chatting List -----------------------------------------------------------------------START-->
         <aside class="col-lg-2 col-md-2 col-sm-2" id="chatting-list-fixed" ng-hide="MainViewVM.chatPanelVisibility">
+
             <div class="panel panel-default" id="chatting-list-panel">
                 <div class="panel-heading" id="chat-panel-heading">Chat</div>
 
                 <ul class="list-group" id="chat-ul" slim-scroll height="500px">
 
+                    <li ng-repeat="user in MainViewVM.users" class="list-group-item" ng-click="MainViewVM.selectedUser(user)"><i id="onlineUserIcon" class={{user.status}}></i>{{user.name}}</li>
                     <!--<li ng-repeat="user in MainViewVM.users" class="list-group-item" ng-click="MainViewVM.visible = !MainViewVM.visible"><i id="onlineUserIcon" class={{user.status}}></i>{{user.name}}</li>-->
-                    <li ng-repeat="user in MainViewVM.users" class="list-group-item"><i id="onlineUserIcon" class={{user.status}}></i>{{user.name}}</li>
+                    <!--<li ng-repeat="user in MainViewVM.users" class="list-group-item"><i id="onlineUserIcon" class={{user.status}}></i>{{user.name}}</li>-->
 
                 </ul>
 

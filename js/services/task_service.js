@@ -77,6 +77,25 @@ app.service('TaskService', function(){
         }
     };
 
+    var delDocFromTask = function(docToDelete)
+    {
+        "use strict";
+//                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
+
+        for(var task of taskPanels)
+        {
+            for(var doc of task.documents)
+            {
+                if(doc.id == docToDelete.id)
+                {
+                    removeEntity(task.documents, 'id', 'project', docToDelete.id, docToDelete.project);
+                    return task;
+//                    break;
+                }
+            }
+        }
+    };
+
     var deleteDocumentsFromTask = function(documentsToDelete, modalTasks)
     {
         var deleteFromTaskID;
@@ -108,7 +127,7 @@ app.service('TaskService', function(){
         }
     };
 
-    var deleteFloatingTasks = function(floatingTasks, deleteByProperty)
+    var deleteFloatingTasks = function(floatingTasks)
     {
         "use strict";
         //                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
@@ -215,6 +234,7 @@ app.service('TaskService', function(){
         while(i--){
             if( arr[i]
                 && arr[i].hasOwnProperty(attr)
+                && arr[i].hasOwnProperty(attr2)
                 && (arguments.length > 2 && arr[i][attr] === value && arr[i][attr2] === value2) ){
 
                 arr.splice(i,1);
@@ -223,15 +243,31 @@ app.service('TaskService', function(){
         return arr;
     };
 
+    var addDocumentToTask = function(taskID, documentObject)
+    {
+        "use strict";
+//                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
+
+        for(var taskPanel of taskPanels)
+        {
+            if (taskPanel.id == taskID)
+            {
+                taskPanel.documents.push(documentObject);
+            }
+        }
+    };
+
     return{
         newTaskID: newTaskID,
         checkTaskExistence: checkTaskExistence,
         createTaskPanel: createTaskPanel,
         getTaskPanels: getTaskPanels,
+        addDocumentToTask: addDocumentToTask,
         deleteTask: deleteTask,
         deleteTaskModal: deleteTaskModal,
         deleteTaskGlobal: deleteTaskGlobal,
         deleteDocumentsFromTask: deleteDocumentsFromTask,
+        delDocFromTask: delDocFromTask,
         deleteFloatingTasks: deleteFloatingTasks,
         hasDuplicates: hasDuplicates,
         removeProjectTasksFromExistingTasks: removeProjectTasksFromExistingTasks,

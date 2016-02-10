@@ -100,6 +100,11 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
 
     vm.users = usersArray;
 
+    vm.selectedUser = function(selectedUser)
+    {
+        vm.visible = !vm.visible;
+    };
+
 //    vm.scrollBarConfig = {
 //        autoResize: true // If true, will listen for DOM elements being added or removed inside the scroll container
 //    };
@@ -132,18 +137,20 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
         }
     };
 
-//    vm.messages = [];
-//    vm.username = 'Online User';
-//    vm.visible = false;
-//
-//    vm.sendMessage = function(message, username) {
-//        if(message && message !== '' && username) {
-//            vm.messages.push({
-//                'username': username,
-//                'content': message
-//            });
-//        }
-//    };
+    vm.messages = [];
+    vm.username = 'Online User';
+    vm.visible = false;
+    vm.title = 'Chatting With';
+    vm.submitButtonText = 'Send';
+
+    vm.sendMessage = function(message, username) {
+        if(message && message !== '' && username) {
+            vm.messages.push({
+                'username': username,
+                'content': message
+            });
+        }
+    };
 //    vm.expandOnNew = true;
 
     /*//////////////////////////////////////////////////////////////////////////////////////////////////
@@ -247,20 +254,9 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
             }
         });
 
-//        console.log("selectedTaskDocumentsArray : " + JSON.stringify(selectedTaskDocumentsArray));
-
         DocumentService.deleteDocument(selectedTaskDocumentsArray);
 
         removeEntity(TaskService.getTaskPanels(), 'id', taskToDelete.id);
-
-//        angular.forEach(ProjectService.getProjectPanels(), function(valueProject,indexProject){
-//            angular.forEach(valueProject.tasks, function(valueTask,indexTask){
-//                if(valueTask.id == taskToDelete.id)
-//                {
-//                    removeEntity(valueProject.tasks, 'id', taskToDelete.id);
-//                }
-//            });
-//        });
 
         for(var project of ProjectService.getProjectPanels())
         {
@@ -295,57 +291,31 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
     {
         removeEntity(DocumentService.getDocumentPanels(), 'id', documentToDelete.id);
 
-        angular.forEach(vm.projectPanels, function(valueProject,indexProject){
-            angular.forEach(valueProject.documents, function(valueDocument,indexDocument){
-                if(valueDocument.id == documentToDelete.id)
-                {
-                    removeEntity(valueProject.documents, 'id', documentToDelete.id);
-                }
-            });
-        });
+        if(documentToDelete.task)
+        {
+            var updatedTask = TaskService.delDocFromTask(documentToDelete);
+        }
 
-        angular.forEach(vm.taskPanels, function(valueTask,indexProject){
-            angular.forEach(valueTask.documents, function(valueDocument,indexDocument){
-                if(valueDocument.id == documentToDelete.id)
-                {
-                    removeEntity(valueTask.documents, 'id', documentToDelete.id);
-                }
-            });
-        });
+        if(documentToDelete.project)
+        {
+            ProjectService.delDocFromProject(documentToDelete);
 
-//        console.log(ProjectService.projectPanels);
-
-//        for(var project of ProjectService.projectPanels)
-//        {
-//            for(var doc of project.documents)
-//            {
-//                if(doc.id == documentToDelete.id)
-//                {
-//                    removeEntity(project.documents, 'id', documentToDelete.id);
-//                    break;
-//                }
-//            }
-//        }
-//
-//        for(var task of TaskService.taskPanels)
-//        {
-//            for(var doc of task.documents)
-//            {
-//                if(doc.id == documentToDelete.id)
-//                {
-//                    removeEntity(task.documents, 'id', documentToDelete.id);
-//                    break;
-//                }
-//            }
-//        }
+            if(updatedTask)
+            {
+                ProjectService.updateTasksInProject(documentToDelete.project, JSON.parse(JSON.stringify([updatedTask])));
+            }
+        }
     };
 
     var removeEntity = function(arr, attr, value){
         var i = arr.length;
         while(i--){
             if( arr[i]
+                && arr[i].hasOwnProperty(attr)
                 && (arr[i][attr] === value) ){
+
                 arr.splice(i,1);
+
             }
         }
         return arr;

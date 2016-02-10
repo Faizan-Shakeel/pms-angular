@@ -51,12 +51,6 @@
     text-align: center;
 }
 
-#chat-ul
-{
-    /*height: 584px;*/
-    /*overflow: hidden;*/
-}
-
 #chat-ul li
 {
     height: 50px;
@@ -155,6 +149,28 @@
     height: 400px;
 }
 
+/*#test-zindex*/
+/*{*/
+    /*position: relative;*/
+    /*z-index: 10;*/
+/*}*/
 
 
+/*.chat-box*/
+/*{*/
+    /*position: absolute;*/
+    /*width: 300px;*/
+    /*height: 400px;*/
+    /*bottom: 0;*/
+    /*right: 55px;*/
+/*}*/
 
+
+.chat-window
+{
+    position: absolute;
+    width: 300px;
+    height: 400px;
+    bottom: 0;
+    right: 15px;
+}

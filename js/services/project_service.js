@@ -173,6 +173,24 @@ app.service('ProjectService', function(){
         }
     };
 
+    var delDocFromProject = function(docToDelete)
+    {
+        "use strict";
+//                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
+
+        for(var project of projectPanels)
+        {
+            for(var doc of project.documents)
+            {
+                if(doc.id == docToDelete.id)
+                {
+                    removeEntity(project.documents, 'id', docToDelete.id);
+                    break;
+                }
+            }
+        }
+    };
+
     var checkProjectExistence = function(projectName)
     {
         "use strict";
@@ -257,6 +275,26 @@ app.service('ProjectService', function(){
         }
     };
 
+    var checkDocumentExistenceInTaskProject = function(docName, taskProject)
+    {
+        for(var project of projectPanels)
+        {
+            if(project.name == taskProject)
+            {
+                for(var doc of project.documents)
+                {
+                    if(doc.name == docName)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+
+    };
+
     var removeEntity = function(arr, attr, value)
     {
         "use strict";
@@ -268,6 +306,7 @@ app.service('ProjectService', function(){
                 && (arguments.length > 2 && arr[i][attr] === value ) ){
 
                 arr.splice(i,1);
+
             }
         }
         return arr;
@@ -285,10 +324,12 @@ app.service('ProjectService', function(){
         addDocumentToProject: addDocumentToProject,
         deleteTasksFromProject: deleteTasksFromProject,
         deleteDocumentsFromProject: deleteDocumentsFromProject,
+        delDocFromProject: delDocFromProject,
         checkProjectExistence: checkProjectExistence,
         getTaskProject: getTaskProject,
         updateTasksInProject: updateTasksInProject,
-        updateDocumentsInProject: updateDocumentsInProject
+        updateDocumentsInProject: updateDocumentsInProject,
+        checkDocumentExistenceInTaskProject: checkDocumentExistenceInTaskProject
     };
 
 });

@@ -57,6 +57,7 @@ app.service('DocumentService', function(){
                 if(tDoc.name == mDoc.name)
                 {
                     documentAlreadyExists = true;
+                    return {status: documentAlreadyExists, existingDocument: mDoc.name};
                     break;
                 }
                 else
@@ -120,7 +121,7 @@ app.service('DocumentService', function(){
         }
     };
 
-    var deleteFloatingDocuments = function(floatingDocuments, deleteByProperty)
+    var deleteFloatingDocuments = function(floatingDocuments)
     {
         "use strict";
         //                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
@@ -140,6 +141,8 @@ app.service('DocumentService', function(){
 
     var deleteDocumentsFromModalTask = function(docToDelete, modalTasks)
     {
+        var documentDeletedFlag = false;
+
         if(docToDelete.task)
         {
             for (var task of modalTasks)
@@ -147,9 +150,13 @@ app.service('DocumentService', function(){
                 if(task.name == docToDelete.task)
                 {
                     removeEntity(task.documents, 'id', 'project', docToDelete.id, docToDelete.project);
+                    documentDeletedFlag = true;
                 }
             }
         }
+
+        return documentDeletedFlag;
+
     };
 
     var addTaskToDocument = function(documentsArray, taskName)
