@@ -133,7 +133,11 @@ app.service('DocumentService', function(){
             {
                 if(!(document.project) && (document.id == floatDocument.id))
                 {
+                    console.log("documentPanels : " + JSON.stringify(documentPanels));
+
                     removeEntity(documentPanels, 'id', 'project', document.id, document.project);
+
+                    console.log("documentPanels : " + JSON.stringify(documentPanels));
                 }
             }
         }
@@ -203,10 +207,16 @@ app.service('DocumentService', function(){
         {
             documentNotFound = true;
 
+            console.log("document" + JSON.stringify(document));
+
             if(projectDocuments.length)
             {
+                console.log("TTWWOO");
+
                 for(var projectDocument of projectDocuments)
                 {
+                    console.log("TTHHRREE");
+
                     if((projectDocument.name == document.name) || (document.project == projectName) || (document.task))
                     {
                         documentNotFound = false;
@@ -217,10 +227,64 @@ app.service('DocumentService', function(){
 
             else if(document.project == projectName)
             {
+                console.log("FFOOUURR");
+
                 documentNotFound = false;
             }
 
             else if(document.task)
+            {
+                documentNotFound = false;
+            }
+
+            if(documentNotFound)
+            {
+                filteredArray.push(document);
+            }
+        }
+
+        return filteredArray;
+
+    };
+
+    var removeTaskDocsFromExistingDocs = function(taskDocuments, taskName)
+    {
+        "use strict";
+        //                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
+
+        var filteredArray = [];
+        var documentNotFound;
+
+        for(var document of documentPanels)
+        {
+            documentNotFound = true;
+
+            console.log("document" + JSON.stringify(document));
+
+            if(taskDocuments.length)
+            {
+                console.log("TTWWOO");
+
+                for(var taskDoc of taskDocuments)
+                {
+                    console.log("TTHHRREE");
+
+                    if((taskDoc.name == document.name) || (document.task == taskName) || (document.project))
+                    {
+                        documentNotFound = false;
+                        break;
+                    }
+                }
+            }
+
+            else if(document.task == taskName)
+            {
+                console.log("FFOOUURR");
+
+                documentNotFound = false;
+            }
+
+            else if(document.project)
             {
                 documentNotFound = false;
             }
@@ -272,7 +336,8 @@ app.service('DocumentService', function(){
         hasDuplicates: hasDuplicates,
         addTaskToDocument: addTaskToDocument,
         updateDocuments: updateDocuments,
-        removePrjDocsFromExistingDocs: removePrjDocsFromExistingDocs
+        removePrjDocsFromExistingDocs: removePrjDocsFromExistingDocs,
+        removeTaskDocsFromExistingDocs: removeTaskDocsFromExistingDocs
     };
 
 });

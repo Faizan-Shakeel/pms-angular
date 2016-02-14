@@ -248,11 +248,15 @@ app.service('TaskService', function(){
         "use strict";
 //                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
 
-        for(var taskPanel of taskPanels)
+        for(var task of taskPanels)
         {
-            if (taskPanel.id == taskID)
+            if (task.id == taskID)
             {
-                taskPanel.documents.push(documentObject);
+                console.log("task : " + JSON.stringify(task));
+
+                task.documents.push(documentObject);
+
+                console.log("task : " + JSON.stringify(task));
             }
         }
     };
