@@ -226,6 +226,26 @@ app.service('TaskService', function(){
         }
     };
 
+    var updateDocumentsInTask = function(updatedDocuments)
+    {
+        "use strict";
+//                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
+
+        for(var i=0; i<taskPanels.length; i++)
+        {
+            for (var k = 0; k < taskPanels[i].documents.length; k++)
+            {
+                for (var j = 0; j < updatedDocuments.length; j++)
+                {
+                    if(taskPanels[i].documents[k].id == updatedDocuments[j].id)
+                    {
+                        taskPanels[i].documents[k] = updatedDocuments[j];
+                    }
+                }
+            }
+        }
+    };
+
     var removeEntity = function(arr, attr, attr2, value, value2)
     {
         "use strict";
@@ -275,7 +295,8 @@ app.service('TaskService', function(){
         deleteFloatingTasks: deleteFloatingTasks,
         hasDuplicates: hasDuplicates,
         removeProjectTasksFromExistingTasks: removeProjectTasksFromExistingTasks,
-        updateTasks: updateTasks
+        updateTasks: updateTasks,
+        updateDocumentsInTask: updateDocumentsInTask
     };
 
 });

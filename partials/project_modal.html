@@ -15,7 +15,7 @@
 
                     <br/>
 
-                    <form name="validatedForm" class="form-horizontal" ng-submit="validatedForm.$valid && ModalVM.updateFlag && ModalVM.createOrUpdateProject(ModalVM.projectName)" novalidate>
+                    <form name="validatedForm" class="form-horizontal" ng-submit="validatedForm.$valid && ModalVM.updateFlag && ModalVM.createOrUpdateProject(ModalVM)" novalidate>
                         <div class="form-group" ng-class="{ 'has-error': validatedForm.userName.$touched && validatedForm.userName.$invalid }">
                             <label for="userName" class="col-lg-2 col-md-2 col-sm-2 control-label">Name</label>
                             <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">

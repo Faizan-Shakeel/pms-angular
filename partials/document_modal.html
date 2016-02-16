@@ -9,7 +9,7 @@
 
             <br/>
 
-            <form name="addNewDocumentValidationForm" class="form-horizontal" ng-submit="addNewDocumentValidationForm.$valid && DocumentModalVM.documentUpdateFlag && DocumentModalVM.createOrUpdateDocument(DocumentModalVM.documentName, DocumentModalVM.documentDescription)" novalidate>
+            <form name="addNewDocumentValidationForm" class="form-horizontal" ng-submit="addNewDocumentValidationForm.$valid && DocumentModalVM.documentUpdateFlag && DocumentModalVM.createOrUpdateDocument(DocumentModalVM)" novalidate>
                 <div class="form-group" ng-class="{ 'has-error': addNewDocumentValidationForm.documentName.$touched && addNewDocumentValidationForm.documentName.$invalid }">
                     <label for="documentName" class="col-lg-2 col-md-2 col-sm-2 control-label">Name</label>
                     <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">

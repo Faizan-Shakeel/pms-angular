@@ -10,11 +10,11 @@ app.service('ProjectService', function(){
     var projectPanels = [];
     var projectsIdArray = [];
 
-    var createProjectPanel = function(value)
+    var createProjectPanel = function(project_params)
     {
         "use strict";
 
-        projectPanels.push(value);
+        projectPanels.push(project_params);
     };
 
     var newProjectID = function()
@@ -295,6 +295,39 @@ app.service('ProjectService', function(){
 
     };
 
+    var deleteTaskAndDocumentsFromProject = function(taskToDelete, selectedTaskDocumentsArray)
+    {
+        var deletedTaskProject;
+
+        for(var project of projectPanels)
+        {
+            for(var task of project.tasks)
+            {
+                if(task.id == taskToDelete.id)
+                {
+                    deletedTaskProject = project;
+                    removeEntity(project.tasks, 'id', taskToDelete.id);
+                    break;
+                }
+            }
+        }
+
+        if(deletedTaskProject)
+        {
+            for(var taskToDeleteDoc of selectedTaskDocumentsArray)
+            {
+                for(var document of deletedTaskProject.documents)
+                {
+                    if(document.id == taskToDeleteDoc.id)
+                    {
+                        removeEntity(deletedTaskProject.documents, 'id', taskToDeleteDoc.id);
+                    }
+                }
+            }
+        }
+    };
+
+
     var removeEntity = function(arr, attr, value)
     {
         "use strict";
@@ -325,6 +358,7 @@ app.service('ProjectService', function(){
         deleteTasksFromProject: deleteTasksFromProject,
         deleteDocumentsFromProject: deleteDocumentsFromProject,
         delDocFromProject: delDocFromProject,
+        deleteTaskAndDocumentsFromProject: deleteTaskAndDocumentsFromProject,
         checkProjectExistence: checkProjectExistence,
         getTaskProject: getTaskProject,
         updateTasksInProject: updateTasksInProject,

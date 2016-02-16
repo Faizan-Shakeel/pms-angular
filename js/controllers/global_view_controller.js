@@ -247,7 +247,6 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
         var selectedTaskDocumentsArray;
 
         angular.forEach(vm.taskPanels, function(value,index){
-
             if(value.id == taskToDelete.id)
             {
                 selectedTaskDocumentsArray = vm.taskPanels[index].documents;
@@ -255,36 +254,8 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
         });
 
         DocumentService.deleteDocument(selectedTaskDocumentsArray);
-
         removeEntity(TaskService.getTaskPanels(), 'id', taskToDelete.id);
-
-        for(var project of ProjectService.getProjectPanels())
-        {
-            for(var task of project.tasks)
-            {
-                if(task.id == taskToDelete.id)
-                {
-                    deletedTaskProject = project;
-                    removeEntity(project.tasks, 'id', taskToDelete.id);
-                    break;
-                }
-            }
-        }
-
-        if(deletedTaskProject)
-        {
-            for(var taskToDeleteDoc of selectedTaskDocumentsArray)
-            {
-                for(var document of deletedTaskProject.documents)
-                {
-                    if(document.id == taskToDeleteDoc.id)
-                    {
-                        removeEntity(deletedTaskProject.documents, 'id', taskToDeleteDoc.id);
-                    }
-                }
-            }
-        }
-
+        ProjectService.deleteTaskAndDocumentsFromProject(taskToDelete, selectedTaskDocumentsArray);
     };
 
     vm.deleteDocument = function(documentToDelete)
