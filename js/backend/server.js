@@ -3,6 +3,7 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var multiparty = require('connect-multiparty');
 var fs = require('fs');
+var Grid = require('gridfs-stream');
 var multipartyMiddleware = multiparty();
 var nodemailer = require('nodemailer');
 var router = express.Router();
@@ -48,8 +49,9 @@ app.use(session({secret: 'this is secret',
 app.use(passport.initialize());
 app.use(passport.session());
 
-
+//////////////////////////////////////////////////////////
 // ****** INITIALIZING PASSPORT LOCAL STRATEGY ******** //
+/////////////////////////////////////////////////////////
 
 app.post('/login', passport.authenticate('local', {
     successRedirect: '/loginSuccess',
@@ -59,7 +61,6 @@ app.post('/login', passport.authenticate('local', {
 app.get('/loginSuccess', function(req, res)
 {
    var response = {user: req.user};
-   //console.log(req);
    res.send(response); 
 });
 
@@ -70,12 +71,13 @@ app.get('/loginFailure', function(req, res)
 });
 
 
+//////////////////////////////////////////////
 // ******* CONFIGURING PASSPORT JS ******** //
+//////////////////////////////////////////////
 
 passport.use(new LocalStrategy({usernameField: 'email', passwordField: 'password'},
         function(username, password, done)
 {
-    //console.log(username);
     mongoModules.loginUser(username, password, function(result)
     {
         if (result === '0')
@@ -109,14 +111,20 @@ passport.deserializeUser(function(user, done)
     done (null, user);
 });
 
+
+////////////////////////////////////////////////
 // ************ SESSION CHECKING ************ //
+////////////////////////////////////////////////
 
 app.get('/loggedin',function(req, res)
 {
    res.send(req.isAuthenticated() ? req.user : '0'); 
 });
 
+
+/////////////////////////////////////////////////////////////////////////////
 // *********** RETRIEVE DATA ASSOCIATED WITH LOGGED IN USER ************** //
+/////////////////////////////////////////////////////////////////////////////
 app.post('/fetch' , function(req,res)
 {
     mongoModules.getData(req, function(data)
@@ -124,9 +132,11 @@ app.post('/fetch' , function(req,res)
         res.send(data);
     });    
 });
-////////////////////////////////////////////////
 
+
+////////////////////////////////////////////////////////////////
 // ************* CREATE NEW ENTRY IN DATABASE *************** //
+////////////////////////////////////////////////////////////////
 app.post('/create', function(req,res)
 {
     mongoModules.createNewData(req, function(response)
@@ -134,19 +144,23 @@ app.post('/create', function(req,res)
        res.send(response); 
     });
 });
-//////////////////////////////////////////////////////
 
+
+//////////////////////////////////////////////////////////////
 // ************ UPDATE AN ENTRY IN DATABASE *************** //
+//////////////////////////////////////////////////////////////
 app.post('/update', function(req,res)
-{
+{        
     mongoModules.updateData(req, function(response)
     {
         res.send(response);
     });
 });
-///////////////////////////////////////////////////
 
+
+///////////////////////////////////////////////////////
 // *********** DELETE DATA FROM DATABASE *********** //
+//////////////////////////////////////////////////////
 app.post('/delete' , function(req,res)
 {  
     mongoModules.deleteData(req, function(response)
@@ -154,58 +168,79 @@ app.post('/delete' , function(req,res)
        res.send(response); 
     });    
 });
-///////////////////////////////////////////////////
 
-// ************ FILE DETELE *********** //
+
+/////////////////////////////////////////////////////
+// ********* DELETE FILE FROM DATABASE *********** //
+/////////////////////////////////////////////////////
 app.post('/deleteFile', function(req, res)
 {
-    console.log(req.body.fileUrl);
-    fs.unlink(req.body.fileUrl, function(err)
+    mongoModules.deleteFiles(req, function(response)
     {
-        if (err) 
-        {
-            res.send(err);
-        }
-        else
-        {
-            console.log('successfully deleted');
-            res.send('successfully deleted');
-        }
+        res.send(response);
     });
 });
     
 
-//////////////////////////////////////////
-
-// ********** FILE UPLOAD  ********** //
-
+///////////////////////////////////////////////////
+// ********** UPLOAD FILE VIA GRIDFS  ********** //
+///////////////////////////////////////////////////
 app.post('/uploads',function(req,res)
 {
-    var fileExtension = '';
-    for (var i = req.files.file.name.length - 1; i>=0; i--)
-       {
-           fileExtension = req.files.file.name[i] + fileExtension;
-           if (req.files.file.name[i] == '.')
-           {
-               break;
-           }
-       }
-    console.log(fileExtension);   
-    fs.readFile(req.files.file.path, function(err, data)
-    {       
-       var newPath = __dirname + "/uploads/" + req.body.documentName + fileExtension;
-       fs.writeFile(newPath, data, function()
-       {
-           console.log('file uploading complete');
-           res.send('success');
-       });
+    mongoModules.uploadFiles(req,function(response)
+    {
+        res.send(response);
     });
 });
 
-///////////////////////////////////////////
 
-// *********** SEND EMAIL (UNDER DEVELOPMENT ******** //
+////////////////////////////////////////////////////
+// ********** DOWNLOAD FILE FROM GRIDFS ********* //
+////////////////////////////////////////////////////
+app.post('/downloadFile', function(req, res)
+{
+    mongoModules.downloadFiles(req, res);
+   //  {
+   //      res.send(response);
+   //      console.log(res);
+   //      var path = 'uploads/' + req.body.fileName;
+   //      fs.unlink(path, function()
+   //      {
+   //          console.log('temporary file removed');
+   //      });                    
+   // });
 
+    // var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
+    // db.once('open', function()
+    // {
+    //     var gfs = Grid(db.db, mongoose.mongo);
+    //     var readstream = gfs.createReadStream(
+    //     {
+    //         filename: req.body.fileName
+    //     });
+
+    //     readstream.pipe(res);
+
+    //     readstream.on('error', function(err)
+    //     {
+    //         console.log('error occured');
+    //         db.close();
+    //     });
+
+    //     readstream.on('end', function()
+    //     {
+    //         db.close();
+    //         console.log(res);
+    //     })
+    // });
+
+
+});
+
+
+/////////////////////////////////////////////////////////
+// *********** SEND EMAIL (UNDER DEVELOPMENT) ******** //
+/////////////////////////////////////////////////////////
 //app.post('/sendemail', function(req,res)
 //{
 //       var mailOptions = {
@@ -229,10 +264,10 @@ app.post('/uploads',function(req,res)
 //   res.send('email data received');
 //});
 
-////////////////////////////////////////////////////////////
 
+////////////////////////////////////////////////
 // *********** REGISTER NEW USER ************ //
-
+////////////////////////////////////////////////
 app.post('/register',function(req,res)
 {
     mongoModules.registerUser(req, function(data)
@@ -241,10 +276,12 @@ app.post('/register',function(req,res)
     });
 });
 
-////////////////////////////////////////////////
-
+//////////////////////////////////////////////////
 // ************ RETRIEVE CHAT DATA ************ //
-
+//////////////////////////////////////////////////
+//** The purpose of this function is to retrieve
+//   the chat data associated with the logged-in
+//   user. **
 app.post('/retrieveChat', function(req,res)
 {
     console.log(req.body);
@@ -254,17 +291,20 @@ app.post('/retrieveChat', function(req,res)
     });
 });
 
-/////////////////////////////////////////////////
 
+////////////////////////////////////////////////////////
 // ************** CHAT FUNCTIONALITY **************** //
-
+////////////////////////////////////////////////////////
 var clientIdArray = [];
 io.on('connection',function(socket)
 {
     socket.on('user-email', function(userData)
     { 
         var checker = 0;
-        // * Here we are associating user's socket ID with his email ID
+        //** Here we are associating user's socket ID with his email ID.
+        //   If the length of clientIdArray is zero, it means there is 
+        //   currently no user in the array so we associte the userEmail 
+        //   with socket ID and push it in the array. **
         if (clientIdArray.length == 0)
         {
             clientIdArray.push({'userEmail': userData.userEmail, 'clientId': socket.id});
@@ -272,10 +312,11 @@ io.on('connection',function(socket)
 
         else
         {
-            // * If the value of checker increases here, it means that the user
-            //   aleary exists so we just replace his old socket Id with new one.
-            //   If the checker is zero, it means user was not in the list so 
-            //   we will add that user.
+            //** Here, we first check whether the userEmail is already present in
+            //   the clientIdArray or not. If the value of checker increases here, 
+            //   it means that the userEmail aleary exists in the array so we just 
+            //   replace his old socket Id with new one. If the checker is zero,
+            //   it means user was not in the array so we will add that user. **
             for (var i=0; i<clientIdArray.length; i++)
             {
                 if (clientIdArray[i].userEmail == userData.userEmail)
@@ -294,8 +335,8 @@ io.on('connection',function(socket)
     
     socket.on('message', function(msg)
     {
-        // * Find the socket ID of sender and receiver via using 
-        //   their respective email IDs
+        //** Find the socket ID of sender and receiver via using 
+        //   their respective email IDs from the clientIdArray. **
             var sender = clientIdArray.filter(function(key)
             {
                 return key.userEmail == msg.userEmail;
@@ -305,8 +346,9 @@ io.on('connection',function(socket)
                 return key.userEmail == msg.receiverEmail;
             });
             io.sockets.to(sender[0].clientId).emit('broadcast', msg);
-            // * If receiver is logged in, send him the message. Otherwise, no
-            //   need to emit. He will receive the messages when he signs-in. *
+
+            //** If receiver is logged in, send him the message. Otherwise, no
+            //   need to emit. He will receive the messages when he signs-in.**
             if (receiver[0])
             {
                 io.sockets.to(receiver[0].clientId).emit('broadcast', msg);
@@ -319,22 +361,19 @@ io.on('connection',function(socket)
             {
                 console.log(response);
             });
-//            mongoModules.updateChatFlag({emailID: msg.receiverEmail, senderEmail: msg.userEmail, msgFlag: '1'}, function(response)
-//            {
-//                console.log(response);
-//            });
     });
     
     socket.on('disconnect', function()
     {
-        //console.log('client disconnected');
-        //clientIdArray.length = 0;
+        console.log('client disconnected');
     });
         
 });
 
-////////////// UPDATE CHAT FLAG //////////////////
 
+//////////////////////////////////////////////////
+//*********** UPDATE CHAT FLAG *****************//
+//////////////////////////////////////////////////
 app.post('/updateChatFlag', function(req, res)
 {
     mongoModules.updateChatFlag(req, function(response)
@@ -343,8 +382,10 @@ app.post('/updateChatFlag', function(req, res)
     })
 });
 
-////////// TEMOPORARY USER CHAT STORAGE MODULE ///////////
 
+///////////////////////////////////////////////
+//********** CHAT STORAGE MODULE ************//
+///////////////////////////////////////////////
 app.post('/updateUser', function(req,res)
 {
     mongoModules.updateUser(req, function(data)
@@ -354,11 +395,11 @@ app.post('/updateUser', function(req,res)
 
 });
 
-/////////////////////////////////////////////////////////
 
-// ---- Listen for incoming connections at port 3000 -- //
+/////////////////////////////////////////////////////////////////////
+// *** Listen for incoming connections at port (default: 3000) *** //
+/////////////////////////////////////////////////////////////////////
 http.listen(port,function()
 {
     console.log('server at ' + port);
 });
-////////////////////////////////////////////////////

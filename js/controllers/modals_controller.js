@@ -2036,6 +2036,7 @@ app.controller('CreateDocumentModalInstanceController', ['$scope', '$uibModalIns
     vm.modalType = 'Create';
     vm.modalHeading = 'Create New Document';
 
+
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
      ////////////////// Create New Document ///////////////////////////////////////////////////////////////////////////
      */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2046,38 +2047,44 @@ app.controller('CreateDocumentModalInstanceController', ['$scope', '$uibModalIns
         console.log('document creation function called');
         //////////// UPLOADING FILE //////////
         /////////////////////////////////////
-        var fileExtension = '';
-        var uploadFile = function(documentName,file)    
-        {
-            console.log('trying to upload file');
-            file.upload = Upload.upload({
-                url: '/uploads',
-                method: 'POST',
-                data: {'file': file, documentName: documentName}
-            }).success(function(res)
-            {
-               console.log(res);
-               alert ("Document Saved Successfully");
-            });
-        }
-        
-        if (documentName && fileData)
-        {
-           uploadFile(documentName , fileData);  
+        // var extractFileExtension = function(file)
+        // {
+        //     //** Here we are extracting the extension of the file. **
+        //     var fileExtension = '';
+        //     for (var i = file.length - 1; i>=0; i--)
+        //     {
+        //         fileExtension = file[i] + fileExtension;
+        //         if (file[i] == '.')
+        //         {
+        //             break;
+        //         }
+        //     }
+        //     return fileExtension;
+        // }
+
+        DocumentService.uploadFile(documentName , fileData);
+
+
+        // if (documentName && fileData)
+        // {
+        //     console.log('file upload called');
+        //    uploadFile(documentName , fileData);  
            
-            //* Here we are extracting the extension of the file *//
-            for (var i = vm.file.name.length - 1; i>=0; i--)
-            {
-                fileExtension = vm.file.name[i] + fileExtension;
-                if (vm.file.name[i] == '.')
-                {
-                    break;
-                }
-            }
-        }
+        //     //* Here we are extracting the extension of the file *//
+        //     for (var i = vm.file.name.length - 1; i>=0; i--)
+        //     {
+        //         fileExtension = vm.file.name[i] + fileExtension;
+        //         if (vm.file.name[i] == '.')
+        //         {
+        //             break;
+        //         }
+        //     }
+        // }
                 
+        ////////////////////////////////////       
         /////////UPLOADING FILE COMPLETE ///
         ///////////////////////////////////
+
         
         if(dataForThisModalInstance.isGlobal)
         {
@@ -2099,14 +2106,14 @@ app.controller('CreateDocumentModalInstanceController', ['$scope', '$uibModalIns
                     return;
                 }
             }
-
+            var fileExtension = DocumentService.extractFileExtension(fileData.name);
             newDocumentObject.id = DocumentService.newDocumentID();
-            newDocumentObject.name = new_document_params.name + fileExtension;
+            newDocumentObject.name = new_document_params.name;
             newDocumentObject.status = "Waiting For Approval";
             newDocumentObject.project = '';
             newDocumentObject.task = '';
             newDocumentObject.description = new_document_params.description;
-            newDocumentObject.url = "js/backend/uploads/" + new_document_params.name + fileExtension;
+            newDocumentObject.url = new_document_params.name + fileExtension;
             newDocumentObject.fileSize = vm.file.size + ' bytes';
             newDocumentObject.fileType = vm.file.type;
             newDocumentsArray.push(newDocumentObject);

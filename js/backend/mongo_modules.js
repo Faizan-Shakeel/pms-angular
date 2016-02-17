@@ -1,10 +1,13 @@
 var mongoose = require('mongoose');
 var schema = require('./schema');
 var bcrypt = require('bcrypt-nodejs');
+var Grid = require('gridfs-stream');
+var fs = require('fs');
 
 
-
+/////////////////////////////////////////////////////////////////////////////
 // ********* RETRIEVE ALL DATA ASSOCIATED WITH THE LOGGED IN USER ******** //
+/////////////////////////////////////////////////////////////////////////////
     var getData = function(req, callback)
     {
         var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
@@ -18,7 +21,9 @@ var bcrypt = require('bcrypt-nodejs');
                 if (!err)
                 {
                     for (var i in data)
-                    {
+                    {   
+                        //** Here, we ensure that users' list we send back
+                        //   to client doesn't include passwords of users. **
                         if (data[i]._doc.users)
                         {
                             delete data[i]._doc.users.password;
@@ -36,7 +41,9 @@ var bcrypt = require('bcrypt-nodejs');
     };
 
 
+/////////////////////////////////////////////////////////////
 // *********** CREATE NEW ENTRY IN DATABASE ************** //
+/////////////////////////////////////////////////////////////
     var createNewData = function(req, callback)
     {
         var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
@@ -61,14 +68,16 @@ var bcrypt = require('bcrypt-nodejs');
                 else
                 {
                     db.close();
-                    console.log('error occured');
                     callback(err);
                 }
             });
         });    
     };
 
+
+////////////////////////////////////////////////////////////
 // *********** UPDATE AN ENRTY IN DATABASE ************** //
+////////////////////////////////////////////////////////////
 var updateData = function(req, callback)
 {
     var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
@@ -83,13 +92,12 @@ var updateData = function(req, callback)
             var createSchema = schema.schema(schemaKey);
             var PmsCollection = db.model('PmsCollection',createSchema);
             query[idTag] = req.body.id;
+            console.log(query);
             //var options = {upsert: false};
-            //console.log(req.body.data);
             PmsCollection.findOneAndUpdate(query, req.body.data, function(err, doc)
             {
                 if (!err)
                 {
-                    //console.log(doc);
                     db.close();
                     callback('Data Updated Successfully');
                 }
@@ -120,8 +128,10 @@ var updateData = function(req, callback)
     });
 };
 
-/////////////TEMPORARY CHAT STORAGE MODULE ///////////////////////
 
+//////////////////////////////////////////////////////////
+//************** CHAT STORAGE MODULE *******************//
+//////////////////////////////////////////////////////////
 var updateUser = function(req, callback)
 {
     var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
@@ -143,9 +153,8 @@ var updateUser = function(req, callback)
                     }
                     else
                     {
-                        //console.log(data);
-                        callback('Chat stored Successfully');
                         db.close();
+                        callback('Chat stored Successfully');
                     }
                     });
                                         
@@ -158,10 +167,17 @@ var updateUser = function(req, callback)
             });
     });
 };
-/////////////////////////////////////////////////////////////////
 
-// **** UPDATE CHAT MESSAGE FLAG TO NOTIFY USERS OF UNREAD MESSAGES **** //
 
+////////////////////////////////////////////////////
+// ********** UPDATE CHAT MESSAGE FLAG ********** //
+////////////////////////////////////////////////////
+//** The purpose of this function is to update the
+//   chat message flag which will be used to check
+//   whether the user has any unread messages or not
+//   when he logs in. Also, when the user reads his
+//   messages, the flag will be updated to show that
+//   there are no more unread messages.
 var updateChatFlag = function(req, callback)
 {
     var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
@@ -174,7 +190,6 @@ var updateChatFlag = function(req, callback)
         {
             if (!err)
             {
-                //console.log(doc);
                 doc.users.unreadMessageFlag = req.body.userObject.unreadMessageFlag.slice();
                 doc.save(function(error, data)
                 {
@@ -201,10 +216,10 @@ var updateChatFlag = function(req, callback)
     });
 };
 
-///////////////////////////////////////////////////////////////////////////
 
+///////////////////////////////////////////////////////
 // ************** RETRIEVE CHAT DATA ****************//
-
+///////////////////////////////////////////////////////
 var retrieveChat = function(req, callback)
 {
     var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
@@ -227,10 +242,11 @@ var retrieveChat = function(req, callback)
         });
     });
 };
-    
-///////////////////////////////////////////////////////
 
+
+///////////////////////////////////////////////////////////////
 // *********** DELETE AN ENTRY FROM DATABASE *************** //
+///////////////////////////////////////////////////////////////
 var deleteData = function(req, callback)
 {
     var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
@@ -306,7 +322,106 @@ var deleteData = function(req, callback)
     });    
 };
 
+
+////////////////////////////////////////////////
+// ************* UPLOAD FILES *************** //
+////////////////////////////////////////////////
+var uploadFiles = function(req, callback)
+{
+    console.log(req.body);
+    var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
+    db.once('open', function()
+    {
+        var gfs = Grid(db.db, mongoose.mongo);
+        var writestream = gfs.createWriteStream({
+            filename: req.body.documentName
+        });
+        fs.createReadStream(req.files.file.path).pipe(writestream);
+
+        writestream.on('close', function()
+        {
+            db.close();
+            callback('Success');                
+        });
+
+
+    });
+};
+
+
+////////////////////////////////////////////////
+// ************** DOWNLOAD FILES ************ //
+////////////////////////////////////////////////
+var downloadFiles = function(req, res)
+{
+    var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
+    db.once('open', function()
+    {
+        console.log(req.body.fileName);
+        var gfs = Grid(db.db, mongoose.mongo);
+        var readstream = gfs.createReadStream(
+        {
+            filename: req.body.fileName
+        });
+
+        readstream.pipe(res);
+
+        readstream.on('error', function(err)
+        {
+            console.log(err);
+            db.close();
+        });
+
+        readstream.on('end', function()
+        {
+            db.close();
+        });
+    });
+};
+
+
+////////////////////////////////////////////////
+// ************** DELETE FILES ************** //
+////////////////////////////////////////////////
+var deleteFiles = function(req, callback)
+{
+    console.log(req.body.fileName);
+    var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
+    db.once('open', function()
+    {
+        var collection = db.collection('fs.files');
+        collection.findOne({'filename': req.body.fileName}, function(error, obj)
+        {
+            if (!error)
+            {
+                var gfs = Grid(db.db, mongoose.mongo);
+                gfs.remove(obj, function(err)
+                {
+                    if (!err)
+                    {
+                        db.close();
+                        callback('File Successfully Deleted');
+                    }
+                    else
+                    {
+                        db.close();
+                        callback(err);                
+                    }
+                });
+            }
+            else
+            {
+                db.close();
+                callback(error);
+            }
+        })
+    });
+}
+
+
+////////////////////////////////////////////////
 // *********** REGISTER NEW USER ************ //
+////////////////////////////////////////////////
 var registerUser = function(req, callback)
 {
     var hash = bcrypt.hashSync(req.body.users.password);
@@ -334,8 +449,10 @@ var registerUser = function(req, callback)
     });
 };
 
-// **************** LOGIN USER **************** //
 
+//////////////////////////////////////////////////
+// **************** LOGIN USER **************** //
+//////////////////////////////////////////////////
 var loginUser = function(username, password, callback)
 {
     var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
@@ -382,3 +499,6 @@ exports.loginUser = loginUser;
 exports.updateUser = updateUser;
 exports.retrieveChat = retrieveChat;
 exports.updateChatFlag = updateChatFlag;
+exports.uploadFiles = uploadFiles;
+exports.deleteFiles = deleteFiles;
+exports.downloadFiles = downloadFiles;

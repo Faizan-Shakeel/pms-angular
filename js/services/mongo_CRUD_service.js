@@ -1,3 +1,6 @@
+//** This file contains functions that will communicate with the server to 
+//   perform CRUD operations. **
+
 var app = angular.module('mongoCrudServiceModule', ['ngStorage']);
 
 app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
@@ -11,7 +14,9 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
         $rootScope.companyName = $localStorage.companyName;
     }
     
+    /////////////////////////////////////////////////////////////////////
     // ********* RETRIEVE DATA ASSOCIATED WITH LOGGED IN USER ******** //
+    /////////////////////////////////////////////////////////////////////
         var retrieveData = function()
         {
             var deferred = $q.defer();
@@ -23,7 +28,9 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
             return deferred.promise;
         };
         
+    /////////////////////////////////////////   
     // ******** CREATE NEW ENRTY ********* //
+    /////////////////////////////////////////
     var createNewEntry = function(data)
     { 
         var entry = {companyName: $rootScope.companyName};
@@ -31,7 +38,6 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
         {
             entry[i] = data[i];
         }
-        console.log(entry);
         $http.post('/create', entry).success(function(response)
         {
             console.log(response);
@@ -42,7 +48,10 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
         });
     };
     
+
+    //////////////////////////////////////
     // ********** DELETE DATA ********* //
+    /////////////////////////////////////
     var deleteData = function(id)
     {
         var data = {id: id};
@@ -56,12 +65,13 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
         });
     };
     
+
+    ////////////////////////////////////
     // ******** DELETE FILE ********* //
-    
+    ////////////////////////////////////
     var deleteFile = function(fileName)
     {
-        var fileUrl = 'uploads/' + fileName;
-        var data = {fileUrl: fileUrl};
+        var data = {fileName: fileName};
         $http.post('/deleteFile', data).success(function(response)
         {
             console.log(response);
@@ -71,8 +81,25 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
             console.log(err);
         });
     };
+
+
+    ///////////////////////////////////////////
+    // ************ DOWNLOAD FILE ********** //
+    ///////////////////////////////////////////
+    var downloadFile = function(fileMeta, callback)
+    {
+        var data = {fileName: fileMeta.url};
+        $http.post('/downloadFile', data, {responseType: 'arraybuffer'}).success(function(streamData)
+            {
+                var file = new Blob([streamData], {type: fileMeta.fileType});
+                var fileUrl = URL.createObjectURL(file);
+                callback(fileUrl);
+            });
+    };
     
+    /////////////////////////////////////
     // ********* UPDATE DATA ******** //
+    ////////////////////////////////////
     var updateData = function(id, data)
     {
         var entry = {id: id, data: data};
@@ -86,7 +113,10 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
         });
     };
     
-    // TEMPORARY FUNCTION TO STORE USER CHAT, WILL REMOVE WHEN USER MODULE IS COMPLETED
+
+    ////////////////////////////////////////////////////
+    // *********** CHAT STORAGE FUNCTION *********** //
+    ///////////////////////////////////////////////////
     var updateUser = function(userEmail, data)
     {
         var entry = {'userEmail': userEmail, 'chatData': data};
@@ -100,8 +130,12 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
         });
     };
  
-    // **** UPDATE CHAT MESSAGE FLAG TO NOTIFY USERS OF UNREAD MESSAGES **** //
- 
+
+    ////////////////////////////////////////////////////////
+    // *********** UPDATE CHAT MESSAGE FLAG  *********** //
+    ///////////////////////////////////////////////////////
+    //** The purpose of this function is to check whether 
+    //   there was any message while the user was offline.
     var updateChatFlag = function(userObject)
     {
         var data = {userObject: userObject};
@@ -115,8 +149,10 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
         });
     };
  
- 
+    
+    //////////////////////////////////////////////////
     // ******  FUNCTION TO RETRIEVE CHAT DATA ***** //
+    //////////////////////////////////////////////////
     var retrieveChat = function(userEmail) 
     {
         var deferred = $q.defer();
@@ -131,6 +167,7 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
              createNewEntry: createNewEntry,
              deleteData: deleteData,
              deleteFile: deleteFile,
+             downloadFile: downloadFile,
              updateData: updateData,
              updateUser: updateUser,
              updateChatFlag: updateChatFlag,

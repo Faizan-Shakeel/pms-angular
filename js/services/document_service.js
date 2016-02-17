@@ -3,9 +3,9 @@
  * Created by faizankhan on 11/8/2014.
  */
 
-var app = angular.module('documentServiceModule', []);
+var app = angular.module('documentServiceModule', ['ngFileUpload']);
 
-app.service('DocumentService',['mongoCrudService', function(mongoCrudService){
+app.service('DocumentService',['mongoCrudService', 'Upload', function(mongoCrudService, Upload){
 
     var documentPanels = [];
     var documentsIdArray = [];
@@ -244,6 +244,36 @@ app.service('DocumentService',['mongoCrudService', function(mongoCrudService){
         return arr;
     };
 
+    var extractFileExtension = function(file)
+    {
+        //** Here we are extracting the extension of the file. **
+        var fileExtension = '';
+        for (var i = file.length - 1; i>=0; i--)
+        {
+            fileExtension = file[i] + fileExtension;
+            if (file[i] == '.')
+            {
+                break;
+            }
+        }
+        return fileExtension;
+    }
+
+    var uploadFile = function(documentName,file)    
+    {
+        var fileExtension = extractFileExtension(file.name);
+        documentName = documentName + fileExtension;
+        file.upload = Upload.upload({
+            url: '/uploads',
+            method: 'POST',
+            data: {'file': file, documentName: documentName}
+        }).success(function(res)
+        {
+           console.log(res);
+           alert ("Document Saved Successfully");
+        });
+    }
+
     return{
         newDocumentID: newDocumentID,
         checkDocumentExistence: checkDocumentExistence,
@@ -257,7 +287,9 @@ app.service('DocumentService',['mongoCrudService', function(mongoCrudService){
         hasDuplicates: hasDuplicates,
         addTaskToDocument: addTaskToDocument,
         updateDocuments: updateDocuments,
-        removePrjDocsFromExistingDocs: removePrjDocsFromExistingDocs
+        removePrjDocsFromExistingDocs: removePrjDocsFromExistingDocs,
+        extractFileExtension: extractFileExtension,
+        uploadFile: uploadFile
     };
 
 }]);

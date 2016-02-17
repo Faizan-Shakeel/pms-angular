@@ -81,53 +81,71 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
      */////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+    ///////////////////////////////////
+    //////// DOWNLOADING FILE ////////
+    //////////////////////////////////
+
+    vm.downloadFile = function(documentMeta)
+    {
+        console.log(documentMeta);
+        var file = '';
+        mongoCrudService.downloadFile(documentMeta, function(file)
+        {
+            window.open(file);
+        })
+    }
+
+    ////////////////////////////////////
+    ////// DOWNLOADING FILE [END] //////
+    ////////////////////////////////////
+
     /*//////////////////////////////////////////////////////////////////////////////////////////////////
      ////////////////// CHATTING PANEL /////////////////////////////////////////////////////////////////
      *//////////////////////////////////////////////////////////////////////////////////////////////////
 
     vm.chatPanelVisibility = false;
-
-    
-
     var online = 'fa fa-circle-o';
     var offline = '';
-    var usersArray = [];
-    var usersObject = {};
     vm.users = [];
-    var selectedMessages = [];
     vm.submitButtonText = 'send';
-    vm.title = 'Lets Talk';
     var selectedUserObject = {};
-    
+    vm.title = 'Chat';
     vm.selectedUser = function(selectedUser)
     {
+        //** When user clicks on a person's name in chat list, that person's
+        //   data would then be passed to selectedUserObject. **
         vm.messages.length = 0;
         selectedUserObject = selectedUser;
         
-            mongoCrudService.retrieveChat(selectedUserObject.email).then(function(retrievedChatData)
+            mongoCrudService.retrieveChat($localStorage.currentUser.users.email).then(function(retrievedChatData)
             {
+                //** After retrieving the chat data, select the communication between
+                //   logged-in user and selected user. **
                 var selectedMessages = chatService.selectChat(selectedUserObject, retrievedChatData.users.chatData, $localStorage.currentUser.users.email);
                 for (var i=0; i<selectedMessages.length; i++)
                 {
                     vm.messages.push(selectedMessages[i]);
                 }
                 
+                //** If there was any message from the selected user, the message flag must
+                //   be up. Clear this flag as the logged-in user has read the messages.
                 var findMsgFlag = $localStorage.currentUser.users.unreadMessageFlag.indexOf(selectedUserObject.email);
                 if (findMsgFlag != -1)
                 {
                     $localStorage.currentUser.users.unreadMessageFlag.splice(findMsgFlag, 1);
                     selectedUserObject.name = selectedUserObject.name.replace('(1)','');
-                    console.log($localStorage.currentUser.users);
                     mongoCrudService.updateChatFlag($localStorage.currentUser.users);
                 }                
             });
             
+            selectedUserObject.name = selectedUserObject.name.replace('(1)', '');            
             vm.visible = !vm.visible;
+            
+
     };
 //    vm.scrollBarConfig = {
 //        autoResize: true // If true, will listen for DOM elements being added or removed inside the scroll container
 //    };
-
     vm.switchChatPanelVisibility = function()
     {
         vm.chatPanelVisibility = !vm.chatPanelVisibility;
@@ -162,6 +180,8 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
             vm.messages = [];
             vm.username = $localStorage.currentUser.users.name;
             vm.visible = false;
+            //** When the user logges-in, send his emailID to server so that his
+            //   socketID can be associated with his emailID. **
             chatSocket.emit('user-email', {'userEmail': $localStorage.currentUser.users.email});
             
             vm.sendMessage = function(message, username) 
@@ -170,21 +190,34 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
                 {
                     chatSocket.emit('message', {'username': $localStorage.currentUser.users.name, 'userEmail': $localStorage.currentUser.users.email, 'content': message, 'receiverEmail': selectedUserObject.email});
                 }
-                
+
                 var findMsgFlag = selectedUserObject.unreadMessageFlag.indexOf($localStorage.currentUser.users.email);
                 if (findMsgFlag == -1)
                 {
                     selectedUserObject.unreadMessageFlag.push($localStorage.currentUser.users.email);
                     mongoCrudService.updateChatFlag(selectedUserObject);
+                    console.log(selectedUserObject);
                 }
+                
             };
+
             vm.expandOnNew = true;
             $scope.$on('socket:broadcast', function(event, msg)
             {
                if (msg)
                {
+                   for (var i=0; i<vm.users.length; i++)
+                   {
+                       if (msg.userEmail == vm.users[i].email && msg.receiverEmail == $localStorage.currentUser.users.email)
+                       {
+                           if (vm.visible == false)
+                           {
+                               vm.users[i].name = vm.users[i].name + '(1)';                               
+                           }
+                       }
+                   }
                    vm.messages.length = 0;
-                   
+
                    if (selectedUserObject.chatData)
                    {
                         selectedUserObject.chatData.push(msg);
@@ -293,8 +326,6 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
 
     vm.deleteTask = function(taskToDelete)
     {
-        //console.log('delete task called in controller global view');
-        //console.log(taskToDelete.id);
         var deletedTaskProject;
         var selectedTaskDocumentsArray;
         
@@ -378,7 +409,7 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
         });
                 
         mongoCrudService.deleteData(documentToDelete.id);
-        mongoCrudService.deleteFile(documentToDelete.name);
+        mongoCrudService.deleteFile(documentToDelete.url);
 //        console.log(ProjectService.projectPanels);
 
 //        for(var project of ProjectService.projectPanels)
@@ -425,7 +456,7 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
 
 function init()
 {
-    var data = mongoCrudService.retrieveData().then(function(data)
+    mongoCrudService.retrieveData().then(function(data)
     {
        for (var i in data)
        {
