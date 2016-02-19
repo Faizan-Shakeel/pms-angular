@@ -13,8 +13,8 @@ var app = angular.module('pmsAngular', [
     'documentServiceModule',
     'ui.utils.masks',
     'ngMessages',
-    'btorfs.multiselect',
+    'btorfs.multiselect'
 //    'luegg.directives',
-    'irontec.simpleChat'
+//    'irontec.simpleChat'
 
 ]);

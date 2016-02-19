@@ -15,13 +15,13 @@
 
                     <br/>
 
-                    <form name="validatedForm" class="form-horizontal" ng-submit="validatedForm.$valid && ModalVM.updateFlag && ModalVM.createOrUpdateProject(ModalVM)" novalidate>
-                        <div class="form-group" ng-class="{ 'has-error': validatedForm.userName.$touched && validatedForm.userName.$invalid }">
-                            <label for="userName" class="col-lg-2 col-md-2 col-sm-2 control-label">Name</label>
+                    <form name="validatedForm" class="form-horizontal" ng-submit="validatedForm.$valid && (validatedForm.projectBudget.$dirty || validatedForm.projectTargetEndDate.$dirty || validatedForm.projectStatus.$dirty || validatedForm.projectDescription.$dirty || ModalVM.updateFlag) && ModalVM.createOrUpdateProject(ModalVM)" novalidate>
+                        <div class="form-group" ng-class="{ 'has-error': validatedForm.projectName.$touched && validatedForm.projectName.$invalid }">
+                            <label for="projectName" class="col-lg-2 col-md-2 col-sm-2 control-label">Name</label>
                             <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">
-                                <input type="text" class="form-control" id="userName" name="userName" placeholder="Name" ng-model="ModalVM.projectName" required="" ng-disabled="ModalVM.projectNameEditable"/>
+                                <input type="text" class="form-control" id="projectName" name="projectName" placeholder="Name" ng-model="ModalVM.projectName" required="" ng-disabled="ModalVM.projectNameEditable"/>
 
-                                <div class="help-block" ng-messages="validatedForm.userName.$error" ng-show="validatedForm.userName.$touched">
+                                <div class="help-block" ng-messages="validatedForm.projectName.$error" ng-show="validatedForm.projectName.$touched">
                                     <p ng-message="required">Name is required.</p>
                                 </div>
                             </div>
@@ -30,17 +30,17 @@
                         <div class="form-group">
                             <label for="projectBudget" class="col-lg-2 col-md-2 col-sm-2 control-label">Budget</label>
                             <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">
-                                <input id="projectBudget" class="form-control" type="text" name="field" ng-model="money" ui-money-mask placeholder="Budget" />
+                                <input id="projectBudget" class="form-control" type="text" name="projectBudget" ng-model="ModalVM.projectBudget" ui-money-mask placeholder="Budget" />
                             </div>
                         </div>
 
                         <div class="form-group">
 
-                            <label for="projectDate" class="col-lg-2 col-md-2 col-sm-2 control-label">Target Date</label>
+                            <label for="projectTargetEndDate" class="col-lg-2 col-md-2 col-sm-2 control-label">Target Date</label>
 
                             <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">
                                 <p class="input-group">
-                                    <input type="text" id="projectDate" class="form-control" uib-datepicker-popup="{{ModalVM.format}}" is-open="ModalVM.status.opened" ng-model="ModalVM.projectDate" close-text="Close" placeholder="Target Date"/>
+                                    <input type="text" id="projectTargetEndDate" class="form-control" name="projectTargetEndDate" uib-datepicker-popup="{{ModalVM.format}}" is-open="ModalVM.status.opened" ng-model="ModalVM.projectTargetEndDate" close-text="Close" placeholder="Target End Date"/>
                                     <span class="input-group-btn">
                                         <button type="button" class="btn btn-default" ng-click="ModalVM.openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                                     </span>
@@ -48,10 +48,19 @@
                             </div>
                         </div>
 
+                        <div class="form-group" ng-show="ModalVM.statusVisibility">
+                            <label for="projectStatus" class="col-lg-2 col-md-2 col-sm-2 control-label">Status</label>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">
+                                <select id="projectStatus" class="form-control" name="projectStatus" ng-model="ModalVM.selectedStatus">
+                                    <option ng-repeat="projectStatus in ModalVM.statuses">{{projectStatus.status}}</option>
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="form-group">
-                            <label for="projectDescription" class="col-lg-2 col-md-2 col-sm-2 control-label">Project Description</label>
+                            <label for="projectDescription" class="col-lg-2 col-md-2 col-sm-2 control-label">Description</label>
                             <div class="col-lg-8 col-md-8 col-sm-8 col-lg-offset-1">
-                                <textarea class="form-control projectModalTextAreaForDescription" id="projectDescription" ng-model="string" placeholder="Project Description"></textarea>
+                                <textarea class="form-control projectModalTextAreaForDescription" id="projectDescription" name="projectDescription" ng-model="ModalVM.projectDescription" placeholder="Project Description"></textarea>
                             </div>
                         </div>
 

@@ -17,6 +17,27 @@ app.service('ProjectService', function(){
         projectPanels.push(project_params);
     };
 
+    var updatedProjectParams = function(updated_project)
+    {
+        for(var projectToUpdate of projectPanels)
+        {
+            if(projectToUpdate.id == updated_project.id)
+            {
+                projectToUpdate.budget = updated_project.budget;
+                projectToUpdate.targetEndDate = updated_project.targetEndDate;
+                projectToUpdate.description = updated_project.description;
+                projectToUpdate.status = updated_project.status;
+                projectToUpdate.modifiedDate = updated_project.modifiedDate;
+                projectToUpdate.lastModifiedBy = updated_project.lastModifiedBy;
+                projectToUpdate.numberOfTasks = updated_project.numberOfTasks;
+                projectToUpdate.numberOfDocuments = updated_project.numberOfDocuments;
+                projectToUpdate.numberOfUsers = updated_project.numberOfUsers;
+
+                break;
+            }
+        }
+    };
+
     var newProjectID = function()
     {
         "use strict";
@@ -348,6 +369,7 @@ app.service('ProjectService', function(){
     return{
         newProjectID: newProjectID,
         createProjectPanel: createProjectPanel,
+        updatedProjectParams: updatedProjectParams,
         getProjectPanels: getProjectPanels,
         addProjectToTask: addProjectToTask,
         addProjectToDocument: addProjectToDocument,

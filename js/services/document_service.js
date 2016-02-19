@@ -19,6 +19,19 @@ app.service('DocumentService', function(){
         });
     };
 
+    var updatedDocumentParams = function(updated_document)
+    {
+        for(var documentToUpdate of documentPanels)
+        {
+            if(documentToUpdate.id == updated_document.id)
+            {
+                documentToUpdate.description = updated_document.description;
+
+                break;
+            }
+        }
+    };
+
     var checkDocumentExistence = function(documentName, documentsArray)
     {
         "use strict";
@@ -327,6 +340,7 @@ app.service('DocumentService', function(){
         checkDocumentExistence: checkDocumentExistence,
         chkTaskDocsInPrjDocsWithoutPrjName: chkTaskDocsInPrjDocsWithoutPrjName,
         createDocumentPanel: createDocumentPanel,
+        updatedDocumentParams: updatedDocumentParams,
         getDocumentPanels: getDocumentPanels,
         deleteDocument: deleteDocument,
         deleteDocumentModal: deleteDocumentModal,

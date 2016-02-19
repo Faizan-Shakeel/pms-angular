@@ -14,7 +14,7 @@
 
                     <br/>
 
-                    <form name="addNewTaskValidationForm" class="form-horizontal" ng-submit="addNewTaskValidationForm.$valid && TaskModalVM.taskUpdateFlag && TaskModalVM.createOrUpdateTask(TaskModalVM)" novalidate>
+                    <form name="addNewTaskValidationForm" class="form-horizontal" ng-submit="addNewTaskValidationForm.$valid && (addNewTaskValidationForm.taskTargetEndDate.$dirty || addNewTaskValidationForm.taskStatus.$dirty || addNewTaskValidationForm.taskDescription.$dirty || TaskModalVM.taskUpdateFlag) && TaskModalVM.createOrUpdateTask(TaskModalVM)" novalidate>
                         <div class="form-group" ng-class="{ 'has-error': addNewTaskValidationForm.taskName.$touched && addNewTaskValidationForm.taskName.$invalid }">
                             <label for="taskName" class="col-lg-2 col-md-2 col-sm-2 control-label">Name</label>
                             <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">
@@ -33,7 +33,7 @@
 
                             <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">
                                 <p class="input-group">
-                                    <input type="text" id="taskDate" class="form-control" uib-datepicker-popup="{{TaskModalVM.format}}" is-open="TaskModalVM.status.opened" ng-model="TaskModalVM.taskDate" close-text="Close" placeholder="Target Date"/>
+                                    <input type="text" id="taskDate" class="form-control" name="taskTargetEndDate" uib-datepicker-popup="{{TaskModalVM.format}}" is-open="TaskModalVM.status.opened" ng-model="TaskModalVM.taskTargetEndDate" close-text="Close" placeholder="Target Date"/>
                                     <span class="input-group-btn">
                                         <button type="button" class="btn btn-default" ng-click="TaskModalVM.openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                                     </span>
@@ -41,10 +41,19 @@
                             </div>
                         </div>
 
+                        <div class="form-group" ng-show="TaskModalVM.statusVisibility">
+                            <label for="taskStatus" class="col-lg-2 col-md-2 col-sm-2 control-label">Status</label>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">
+                                <select id="taskStatus" class="form-control" name="taskStatus" ng-model="TaskModalVM.selectedStatus">
+                                    <option ng-repeat="taskStatus in TaskModalVM.statuses">{{taskStatus.status}}</option>
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="form-group">
-                            <label for="taskDescription" class="col-lg-2 col-md-2 col-sm-2 control-label">Task Description</label>
+                            <label for="taskDescription" class="col-lg-2 col-md-2 col-sm-2 control-label">Description</label>
                             <div class="col-lg-8 col-md-8 col-sm-8 col-lg-offset-1">
-                                <textarea class="form-control taskModalTextAreaForDescription" id="taskDescription" ng-model="TaskModalVM.taskDescription" placeholder="Task Description" ng-change="TaskModalVM.taskUpdateDetected()"></textarea>
+                                <textarea class="form-control taskModalTextAreaForDescription" id="taskDescription" name="taskDescription" ng-model="TaskModalVM.taskDescription" placeholder="Task Description" ng-change="TaskModalVM.taskUpdateDetected()"></textarea>
                             </div>
                         </div>
 

@@ -12,8 +12,8 @@
     <link rel="stylesheet" href="font-awesome-4.0.3/css/font-awesome.min.css">
     <link href="css/Third-Party-CSS/bootstrap-tour.min.css" rel="stylesheet">
     <link href="css/Third-Party-CSS/popbox.css" rel="stylesheet">
-    <link rel="stylesheet" href="bower_components/angular-bootstrap-simple-chat/src/css/style.css">
-    <link rel="stylesheet" href="bower_components/angular-bootstrap-simple-chat/src/css/themes.css">
+    <!--<link rel="stylesheet" href="bower_components/angular-bootstrap-simple-chat/src/css/style.css">-->
+    <!--<link rel="stylesheet" href="bower_components/angular-bootstrap-simple-chat/src/css/themes.css">-->
 
     <!--Third Party Styles-->
 
@@ -121,7 +121,7 @@
             <!--</div>-->
 
             <div class="col-lg-2 col-md-2 col-sm-2 pull-right">
-                <button class="btn btn-default" id="chatting-list-opener" ng-click="MainViewVM.switchChatPanelVisibility()">Work Together <span class="glyphicon glyphicon-comment" id="icon-chat-list-color"></span></button>
+                <button class="btn btn-default" id="chatting-list-opener" ng-click="MainViewVM.switchChatPanelVisibility()">Colleagues <span class="glyphicon glyphicon-comment" id="icon-chat-list-color"></span></button>
             </div>
 
         </div>
@@ -226,7 +226,7 @@
                                 </div>
 
                                 <div class="btn-group-vertical" id="btn-grp-panel">
-                                    <button class="btn btn-default test-button-border"><i class="fa fa-info"></i></button>
+                                    <button class="btn btn-default test-button-border" ng-click="ModalVM.infoProjectModal(projectPanel)"><i class="fa fa-info"></i></button>
                                     <button class="btn btn-default" ng-click="ModalVM.editProjectModal(projectPanel)"><i class="fa fa-edit"></i></button>
                                     <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteProject(projectPanel)"><i class="fa fa-trash-o"></i></button>
                                 </div>
@@ -260,7 +260,7 @@
                                 </div>
 
                                 <div class="btn-group-vertical" id="tasks-btn-grp-panel-in-new-project-modal">
-                                    <button class="btn btn-default test-button-border"><i class="fa fa-info"></i></button>
+                                    <button class="btn btn-default test-button-border" ng-click="ModalVM.infoTaskModal(taskPanel)"><i class="fa fa-info"></i></button>
                                     <button class="btn btn-default" ng-click="ModalVM.editTaskModal(taskPanel)"><i class="fa fa-edit"></i></button>
                                     <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteTask(taskPanel)"><i class="fa fa-trash-o"></i></button>
                                 </div>
@@ -414,14 +414,14 @@
 
 <!--Third Party-->
 
-<!--<script src="http://code.jquery.com/jquery-latest.min.js"></script>-->
-<script src="js/Third-Party-JS/jquery-1.11.3.min.js"></script>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<!--<script src="js/Third-Party-JS/jquery-1.11.3.min.js"></script>-->
 <script src="js/Third-Party-JS/bootstrap.min.js"></script>
-<!--[if lt IE 9]><script src="js/Third-Party-JS/html5shiv.js"><![endif]-->
-<script src="js/Third-Party-JS/bootstrap-tour.min.js"></script>
-<script src="js/Third-Party-JS/respond.js"></script>
+<!--[if lt IE 9]><!--<script src="js/Third-Party-JS/html5shiv.js">--><![endif]-->
+<!--<script src="js/Third-Party-JS/bootstrap-tour.min.js"></script>-->
+<!--<script src="js/Third-Party-JS/respond.js"></script>-->
 <script src="js/Third-Party-JS/jquery.slimscroll.js"></script>
-<script src="js/Third-Party-JS/jquery.validate.min.js"></script>
+<!--<script src="js/Third-Party-JS/jquery.validate.min.js"></script>-->
 <script type="text/javascript" src="js/Third-Party-JS/angular.min.js"></script>
 <script type="text/javascript" src="i18n/angular-locale_de-de.js"></script>
 <script type="text/javascript" src="js/Third-Party-JS/ui-bootstrap-tpls-0.14.3.min.js"></script>
@@ -430,8 +430,8 @@
 <script src="bower_components/angular-input-masks/angular-input-masks-standalone.min.js"></script>
 <script src="bower_components/angular-messages/angular-messages.min.js"></script>
 <script src="bower_components/angular-bootstrap-multiselect/dist/angular-bootstrap-multiselect.min.js"></script>
-<script src="bower_components/lodash/dist/lodash.min.js"></script>
-<script src="bower_components/angular-bootstrap-simple-chat/src/scripts/index.js"></script>
+<!--<script src="bower_components/lodash/dist/lodash.min.js"></script>-->
+<!--<script src="bower_components/angular-bootstrap-simple-chat/src/scripts/index.js"></script>-->
 
 
 <!--Directives-->

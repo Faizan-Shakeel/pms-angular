@@ -19,6 +19,25 @@ app.service('TaskService', function(){
         });
     };
 
+    var updatedTaskParams = function(updated_task)
+    {
+        for(var taskToUpdate of taskPanels)
+        {
+            if(taskToUpdate.id == updated_task.id)
+            {
+                taskToUpdate.targetEndDate = updated_task.targetEndDate;
+                taskToUpdate.description = updated_task.description;
+                taskToUpdate.status = updated_task.status;
+                taskToUpdate.modifiedDate = updated_task.modifiedDate;
+                taskToUpdate.lastModifiedBy = updated_task.lastModifiedBy;
+                taskToUpdate.numberOfDocuments = updated_task.numberOfDocuments;
+                taskToUpdate.numberOfUsers = updated_task.numberOfUsers;
+
+                break;
+            }
+        }
+    };
+
     var checkTaskExistence = function(taskName, tasksArray)
     {
         "use strict";
@@ -285,6 +304,7 @@ app.service('TaskService', function(){
         newTaskID: newTaskID,
         checkTaskExistence: checkTaskExistence,
         createTaskPanel: createTaskPanel,
+        updatedTaskParams: updatedTaskParams,
         getTaskPanels: getTaskPanels,
         addDocumentToTask: addDocumentToTask,
         deleteTask: deleteTask,
