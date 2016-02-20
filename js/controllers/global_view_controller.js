@@ -2,7 +2,7 @@
 
 var app = angular.module('mainViewModule', ['ui.bootstrap', 'nsPopover']);
 
-app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService', 'DocumentService', function ($scope, ProjectService, TaskService, DocumentService)
+app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService', 'DocumentService', 'UserService', function ($scope, ProjectService, TaskService, DocumentService, UserService)
 {
     var vm = this;
 
@@ -220,6 +220,7 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
     vm.projectPanels = ProjectService.getProjectPanels();
     vm.taskPanels = TaskService.getTaskPanels();
     vm.documentPanels = DocumentService.getDocumentPanels();
+    vm.userPanels = UserService.getUserPanels();
 
     vm.deleteProject = function(projectToDelete)
     {

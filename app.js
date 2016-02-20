@@ -11,6 +11,7 @@ var app = angular.module('pmsAngular', [
     'projectServiceModule',
     'taskServiceModule',
     'documentServiceModule',
+    'userServiceModule',
     'ui.utils.masks',
     'ngMessages',
     'btorfs.multiselect'

@@ -295,7 +295,7 @@
                                 </div>
 
                                 <div class="btn-group-vertical" id="documents-btn-grp-panel-in-new-project-modal">
-                                    <button class="btn btn-default test-button-border"><i class="fa fa-info"></i></button>
+                                    <button class="btn btn-default test-button-border" ng-click="ModalVM.infoDocumentModal(documentPanel)"><i class="fa fa-info"></i></button>
                                     <button class="btn btn-default" ng-click="ModalVM.editDocumentModal(documentPanel)"><i class="fa fa-edit"></i></button>
                                     <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteDocument(documentPanel)"><i class="fa fa-trash-o"></i></button>
                                 </div>
@@ -322,7 +322,7 @@
                                     </p>
 
                                     <p>
-                                        {{userPanel.status}}
+                                        {{userPanel.email}}
                                     </p>
                                 </div>
 
@@ -448,6 +448,7 @@
 <script type="text/javascript" src="js/services/project_service.js"></script>
 <script type="text/javascript" src="js/services/task_service.js"></script>
 <script type="text/javascript" src="js/services/document_service.js"></script>
+<script type="text/javascript" src="js/services/user_service.js"></script>
 
 <script type="text/javascript" src="app.js"></script>
 

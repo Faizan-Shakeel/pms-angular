@@ -38,16 +38,16 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-lg-2 col-md-2 col-sm-2 control-label">Description</label>
+                            <label class="col-lg-2 col-md-2 col-sm-2 control-label">Project</label>
                             <div class="col-sm-10">
-                                <p class="form-control-static">{{TaskModalVM.taskDescription}}</p>
+                                <p class="form-control-static">{{TaskModalVM.taskProject}}</p>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-lg-2 col-md-2 col-sm-2 control-label">Project</label>
+                            <label class="col-lg-2 col-md-2 col-sm-2 control-label">Description</label>
                             <div class="col-sm-10">
-                                <p class="form-control-static">{{TaskModalVM.taskProject}}</p>
+                                <p class="form-control-static">{{TaskModalVM.taskDescription}}</p>
                             </div>
                         </div>
 
@@ -60,7 +60,7 @@
                     <div slim-scroll height="310px">
                         <div class="panel panel-default" ng-repeat="documentPanel in TaskModalVM.documentPanels">
                             <div class="panel-body text-center">
-                                {{documentPanel.name}}
+                                <a href="" ng-click="TaskModalVM.infoDocumentModal(documentPanel)">{{documentPanel.name}}</a>
                             </div>
                         </div>
                     </div>

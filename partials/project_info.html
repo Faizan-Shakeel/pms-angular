@@ -15,7 +15,7 @@
 
                     <br/>
 
-                    <form name="validatedForm" class="form-horizontal" ng-submit="validatedForm.$valid && (validatedForm.projectBudget.$dirty || validatedForm.projectTargetEndDate.$dirty || validatedForm.projectStatus.$dirty || validatedForm.projectDescription.$dirty || ModalVM.updateFlag) && ModalVM.createOrUpdateProject(ModalVM)" novalidate>
+                    <form class="form-horizontal">
                         <div class="form-group">
                             <label class="col-lg-2 col-md-2 col-sm-2 control-label">Name</label>
                             <div class="col-sm-10">
@@ -60,7 +60,7 @@
                     <div slim-scroll height="310px">
                         <div class="panel panel-default" ng-repeat="taskPanel in ModalVM.taskPanels">
                             <div class="panel-body text-center">
-                                {{taskPanel.name}}
+                                <a href="" ng-click="ModalVM.infoTaskModal(taskPanel)">{{taskPanel.name}}</a>
                             </div>
                         </div>
                     </div>
@@ -72,7 +72,7 @@
                     <div slim-scroll height="310px">
                         <div class="panel panel-default" ng-repeat="documentPanel in ModalVM.documentPanels">
                             <div class="panel-body text-center">
-                                {{documentPanel.name}}
+                                <a href="" ng-click="ModalVM.infoDocumentModal(documentPanel)">{{documentPanel.name}}</a>
                             </div>
                         </div>
                     </div>
