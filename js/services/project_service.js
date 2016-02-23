@@ -55,6 +55,17 @@ app.service('ProjectService', function(){
         return projectPanels;
     };
 
+    var getProjectByName = function(projectName)
+    {
+        for(var projectGlobal of projectPanels)
+        {
+            if(projectGlobal.name == projectName)
+            {
+                return projectGlobal;
+            }
+        }
+    };
+
     var checkTaskInProject = function(projName, taskObject)
     {
         "use strict";
@@ -105,6 +116,20 @@ app.service('ProjectService', function(){
         return {status: false};
     };
 
+//    var addProjectToUser = function(usersArray, projectName)
+//    {
+//        for(var userModal of usersArray)
+//        {
+//            for(var projectGlobal of projectPanels)
+//            {
+//                if(projectGlobal.name == projectName)
+//                {
+//                    projectGlobal.users.push(userModal);
+//                }
+//            }
+//        }
+//    };
+
     var addTaskToProject = function(projName, taskObject)
     {
         "use strict";
@@ -132,6 +157,34 @@ app.service('ProjectService', function(){
             if (projectPanel.name == projName)
             {
                 projectPanel.documents.push(documentObject);
+            }
+        }
+    };
+
+    var addUserToProject = function(projectName, userObject)
+    {
+        "use strict";
+//                        console.log("Global Docs AFTER : " + JSON.stringify(UserService.getUserPanels()));
+
+        for(var projectGlobal of projectPanels)
+        {
+            var userAlreadyExistsInProject = false;
+
+            if (projectGlobal.name == projectName)
+            {
+                for(var userProject of projectGlobal.users)
+                {
+                    if(userProject.email == userObject.email)
+                    {
+                        userAlreadyExistsInProject = true;
+                    }
+                }
+
+                if(!userAlreadyExistsInProject)
+                {
+                    projectGlobal.users.push(userObject);
+                }
+
             }
         }
     };
@@ -371,12 +424,15 @@ app.service('ProjectService', function(){
         createProjectPanel: createProjectPanel,
         updatedProjectParams: updatedProjectParams,
         getProjectPanels: getProjectPanels,
+        getProjectByName: getProjectByName,
         addProjectToTask: addProjectToTask,
         addProjectToDocument: addProjectToDocument,
         checkTaskInProject: checkTaskInProject,
         checkDocumentInProject: checkDocumentInProject,
+//        addProjectToUser: addProjectToUser,
         addTaskToProject: addTaskToProject,
         addDocumentToProject: addDocumentToProject,
+        addUserToProject: addUserToProject,
         deleteTasksFromProject: deleteTasksFromProject,
         deleteDocumentsFromProject: deleteDocumentsFromProject,
         delDocFromProject: delDocFromProject,

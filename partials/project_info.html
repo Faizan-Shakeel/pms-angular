@@ -84,7 +84,7 @@
                     <div slim-scroll height="310px">
                         <div class="panel panel-default" ng-repeat="userPanel in ModalVM.userPanels">
                             <div class="panel-body text-center">
-                                {{userPanel.name}}
+                                <a href="" ng-click="ModalVM.infoUserModal(userPanel)">{{userPanel.name}}</a>
                             </div>
                         </div>
                     </div>

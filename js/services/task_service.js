@@ -79,6 +79,17 @@ app.service('TaskService', function(){
         return taskPanels;
     };
 
+    var getTaskById = function(taskId)
+    {
+        for(var taskGlobal of taskPanels)
+        {
+            if(taskGlobal.id == taskId)
+            {
+                return taskGlobal;
+            }
+        }
+    };
+
     var deleteTaskModal = function(selectedTaskToDelete, modalTasksArray)
     {
         "use strict";
@@ -306,6 +317,7 @@ app.service('TaskService', function(){
         createTaskPanel: createTaskPanel,
         updatedTaskParams: updatedTaskParams,
         getTaskPanels: getTaskPanels,
+        getTaskById: getTaskById,
         addDocumentToTask: addDocumentToTask,
         deleteTask: deleteTask,
         deleteTaskModal: deleteTaskModal,

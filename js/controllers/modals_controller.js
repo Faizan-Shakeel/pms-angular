@@ -2,7 +2,7 @@
 
 var app = angular.module('modalsModule', ['ui.bootstrap']);
 
-app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'ProjectService','TaskService', '$log', function ($scope, $rootScope, $uibModal, ProjectService ,TaskService, $log) {
+app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'ProjectService','TaskService', function ($scope, $rootScope, $uibModal, ProjectService ,TaskService) {
 
     var vm = this;
 
@@ -11,6 +11,8 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
      */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     vm.infoProjectModal = function (projectInfo) {
+
+        console.log("projectInfo Global : " + JSON.stringify(projectInfo));
 
         var editProjectModalInstance = $uibModal.open({
             animation: false,
@@ -107,6 +109,40 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
      *////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
 
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////// Modal For User Info ///////// [ Global ] ///////////////////////////////////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.infoUserModal = function (userInfo) {
+
+        var editUserModalInstance = $uibModal.open({
+            animation: false,
+            templateUrl: 'partials/user_info.html',
+            controller: 'InfoUserModalInstanceController',
+            controllerAs: 'UserModalVM',
+            windowClass: 'modals-style',
+            backdrop: 'static',
+            resolve: {
+                dataForThisModalInstance: function(){
+                    return{
+                        userInfo: JSON.parse(JSON.stringify(userInfo))
+                    };
+                }
+            }
+        });
+
+        editUserModalInstance.result.then(function ()
+        {
+
+        }, function () {
+
+        });
+    };
+
+    /*////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+     ///////////////// Modal For User Info /////// [ Global ] ////////////////////////////////// [E N D] //////////////
+     *////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////// Modal For Creating Project /////// [ Global ] //////////////////////////////////////////////////
     *//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -129,7 +165,6 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
         newProjectModalInstance.result.then(function () {
 
         }, function () {
-//            $log.info('Modal dismissed at: ' + new Date());
         });
     };
 
@@ -358,15 +393,19 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
 
 }]);
 
-app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'ProjectService', 'TaskService', 'DocumentService', '$log', function ($scope, $uibModal, $uibModalInstance, ProjectService, TaskService, DocumentService, $log) {
+app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'ProjectService', 'TaskService', 'DocumentService', 'UserService', function ($scope, $uibModal, $uibModalInstance, ProjectService, TaskService, DocumentService, UserService) {
 
     var vm = this;
     var floatingTasks = [];
     var floatingDocuments = [];
     var tasksArray = [];
     var documentsArray = [];
+    var usersArray = [];
+    var usersExtractedIds = [];
     var taskCreatedFlag = false;
     var documentCreatedFlag = false;
+    var userCreatedFlag = false;
+    var userDeletedFlag = false;
     var taskDeletedFlag = false;
     var documentDeletedFlag = false;
     var documentAlreadyExists = false;
@@ -375,6 +414,7 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
     vm.projectNameEditable = false;
     vm.taskPanels = [];
     vm.documentPanels = [];
+    vm.userPanels = [];
     vm.statusVisibility = false;
 
 // Datepicker
@@ -450,6 +490,13 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
             documentCreatedFlag = false;
         }
 
+        if(userCreatedFlag)
+        {
+            UserService.addProjectToUser(usersArray, projectName);
+
+            userCreatedFlag = false;
+        }
+
         if(taskDeletedFlag)
         {
             if(floatingTasks.length)
@@ -487,12 +534,19 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
             'numberOfUsers': '',
             'tasks': tasksArray,
             'documents': documentsArray,
-            'users': ''
+            'users': []
         };
+
+        for(var user of usersArray)
+        {
+            new_project_params.users.push({id: user.id, name: user.name, email: user.email});
+        }
 
         console.log("new_project_params : " + JSON.stringify(new_project_params));
 
         ProjectService.createProjectPanel(new_project_params);
+
+//        console.log("Test User Object : " + JSON.stringify(UserService.getUserByEmail(usersArray[0].email)));
 
         $uibModalInstance.close();
     };
@@ -534,6 +588,7 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
 
             var new_tasks_obj = {};
             var new_doc_obj = {};
+            var userNotFound;
             var globalTasks = TaskService.getTaskPanels();
 
             for(var task of selected_existing_tasks)
@@ -645,10 +700,34 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
                         }
                     }
                 }
+
+                if(task.users.length)
+                {
+                    for(var userImportedTask of task.users)
+                    {
+                        userNotFound = true;
+
+                        for(var userProject of vm.userPanels)
+                        {
+                            if(userImportedTask.email == userProject.email)
+                            {
+                                userNotFound = false;
+                            }
+                        }
+
+                        if(userNotFound)
+                        {
+                            vm.userPanels.push(userImportedTask);
+                            usersArray.push(userImportedTask);
+
+                            userCreatedFlag = true;
+                        }
+                    }
+                }
+
             }
 
         }, function () {
-//            $log.info('Modal dismissed at: ' + new Date());
         });
 
     };
@@ -715,7 +794,6 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
             }
 
         }, function () {
-//            $log.info('Modal dismissed at: ' + new Date());
         });
 
     };
@@ -746,7 +824,8 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
                         triggeredFrom: 'Create Project',
                         projectsArray: projectsArray,
                         tasksArray: JSON.parse(JSON.stringify(vm.taskPanels)),
-                        docsInProjectModal: JSON.parse(JSON.stringify(vm.documentPanels))
+                        docsInProjectModal: JSON.parse(JSON.stringify(vm.documentPanels)),
+                        usersInProjectModal: JSON.parse(JSON.stringify(vm.userPanels))
                     };
                 }
             }
@@ -1052,9 +1131,9 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
      //////////////// Assign Project To Users [ Create Project ] //////////////////////////////////////////////////////////
      */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    vm.existingUsersModalInProjectModal = function()
+    vm.addExistingUsersModal = function()
     {
-        var existingUsersModalInProjectModalInstance = $uibModal.open({
+        var addExistingUsersModalInstance = $uibModal.open({
             animation: false,
             templateUrl: 'partials/existing_users_modal.html',
             controller: 'ExistingUsersModalInstanceController',
@@ -1072,47 +1151,24 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
             }
         });
 
-        existingUsersModalInProjectModalInstance.result.then(function (selected_existing_users) {
+        addExistingUsersModalInstance.result.then(function (selected_existing_users) {
 
             //        console.log("Global Docs AFTER : " + JSON.stringify(UserService));
 
-//            var new_users_obj = {};
-//
-//            for(var user of selected_existing_users)
-//            {
-//                for(var userPanel of UserService.getUserPanels())
-//                {
-//                    if(user.id == userPanel.id)
-//                    {
-//                        if(userPanel.project)
-//                        {
-//                            new_users_obj = user;
-//                            new_users_obj.id = UserService.newUserID();
-//                            usersArray.push(new_users_obj);
-//                            vm.userPanels.push(new_users_obj);
-//                            new_users_obj = {};
-//                            userCreatedFlag = true;
-//                        }
-//                        else
-//                        {
-//                            floatingUsers.push(user);
-//                            usersArray.push(user);
-//                            vm.userPanels.push(user);
-//                            userCreatedFlag = true;
-//                            userDeletedFlag = true;
-//                        }
-//                    }
-//                }
-//            }
+            for(var user of selected_existing_users)
+            {
+                usersArray.push(user);
+                vm.userPanels.push(user);
+                userCreatedFlag = true;
+            }
 
         }, function () {
-//            $log.info('Modal dismissed at: ' + new Date());
         });
 
     };
 
     /*/////////////////////////////////////////////////////////////////////////////////////////////// [E N D] /////////
-     //////////////// Assign Project To Users [ Create Project ] /////////////////////////////////////// [E N D] /////////
+     //////////////// Assign Project To Users [ Create Project ] /////////////////////////////////////// [E N D] //////
      */////////////////////////////////////////////////////////////////////////////////////////////// [E N D] /////////
 
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1182,30 +1238,54 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
      ///////////////// Modal For Document Info /////// [ Create Project ] ////////////////////// [E N D] //////////////
      *////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
 
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////// Modal For User Info ///////// [ Create Project ] /////////////////////////////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.infoUserModal = function (userInfo) {
+
+        var editUserModalInstance = $uibModal.open({
+            animation: false,
+            templateUrl: 'partials/user_info.html',
+            controller: 'InfoUserModalInstanceController',
+            controllerAs: 'UserModalVM',
+            windowClass: 'modals-style',
+            backdrop: 'static',
+            resolve: {
+                dataForThisModalInstance: function(){
+                    return{
+                        userInfo: JSON.parse(JSON.stringify(userInfo))
+                    };
+                }
+            }
+        });
+
+        editUserModalInstance.result.then(function ()
+        {
+
+        }, function () {
+
+        });
+    };
+
+    /*////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+     ///////////////// Modal For User Info /////// [ Create Project ] //////////////////////////// [E N D] //////////////
+     *////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+
 }]);
 
-app.controller('InfoProjectModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'TaskService', 'DocumentService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, ProjectService, TaskService, DocumentService) {
+app.controller('InfoProjectModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'TaskService', 'DocumentService', 'UserService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, ProjectService, TaskService, DocumentService, UserService) {
 
     var vm = this;
     var projectInfo = dataForThisModalInstance.projectInfo;
 
-    vm.projectNameEditable = true;
-    vm.modalHeading = 'Update Project';
-    vm.modalType = 'Update';
     vm.projectName = projectInfo.name;
     vm.projectBudget = projectInfo.budget;
-
-    if(projectInfo.targetEndDate != undefined)
-    {
-        vm.projectTargetEndDate = new Date(projectInfo.targetEndDate);
-    }
-
-    console.log("D A T E : " + vm.projectTargetEndDate);
-
     vm.projectDescription = projectInfo.description;
     vm.taskPanels = projectInfo.tasks;
     vm.documentPanels = projectInfo.documents;
-//    vm.userPanels = JSON.parse(JSON.stringify(projectToEdit.users));
+    vm.userPanels = JSON.parse(JSON.stringify(projectInfo.users));
+
     vm.cancel = function () {
         $uibModalInstance.dismiss('cancel');
     };
@@ -1277,9 +1357,45 @@ app.controller('InfoProjectModalInstanceController', ['$scope', '$uibModal', '$u
      ///////////////// Modal For Document Info /////// [ Project Info ] //////////////////////// [E N D] //////////////
      *////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
 
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////// Modal For User Info ///////// [ Project Info ] /////////////////////////////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.infoUserModal = function (userInfo) {
+
+        userInfo = UserService.getUserByEmail(userInfo.email);
+
+        var editUserModalInstance = $uibModal.open({
+            animation: false,
+            templateUrl: 'partials/user_info.html',
+            controller: 'InfoUserModalInstanceController',
+            controllerAs: 'UserModalVM',
+            windowClass: 'modals-style',
+            backdrop: 'static',
+            resolve: {
+                dataForThisModalInstance: function(){
+                    return{
+                        userInfo: JSON.parse(JSON.stringify(userInfo))
+                    };
+                }
+            }
+        });
+
+        editUserModalInstance.result.then(function ()
+        {
+
+        }, function () {
+
+        });
+    };
+
+    /*////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+     ///////////////// Modal For User Info /////// [ Project Info ] //////////////////////////// [E N D] //////////////
+     *////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+
 }]);
 
-app.controller('InfoTaskModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance) {
+app.controller('InfoTaskModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'UserService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, UserService) {
 
     var vm = this;
     var taskInfo = dataForThisModalInstance.taskInfo;
@@ -1295,7 +1411,7 @@ app.controller('InfoTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
 
     vm.taskDescription = taskInfo.description;
     vm.documentPanels = JSON.parse(JSON.stringify(taskInfo.documents));
-//    vm.userPanels = JSON.parse(JSON.stringify(taskInfo.users));
+    vm.userPanels = JSON.parse(JSON.stringify(taskInfo.users));
 
     vm.cancel = function () {
         $uibModalInstance.dismiss('cancel');
@@ -1335,6 +1451,42 @@ app.controller('InfoTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
      ///////////////// Modal For Document Info ////// [ Task Info ] //////////////////////////// [E N D] //////////////
      *////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
 
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////// Modal For User Info ///////// [ Task Info ] ////////////////////////////////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.infoUserModal = function (userInfo) {
+
+        userInfo = UserService.getUserByEmail(userInfo.email);
+
+        var editUserModalInstance = $uibModal.open({
+            animation: false,
+            templateUrl: 'partials/user_info.html',
+            controller: 'InfoUserModalInstanceController',
+            controllerAs: 'UserModalVM',
+            windowClass: 'modals-style',
+            backdrop: 'static',
+            resolve: {
+                dataForThisModalInstance: function(){
+                    return{
+                        userInfo: JSON.parse(JSON.stringify(userInfo))
+                    };
+                }
+            }
+        });
+
+        editUserModalInstance.result.then(function ()
+        {
+
+        }, function () {
+
+        });
+    };
+
+    /*////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+     ///////////////// Modal For User Info /////// [ Task Info ] /////////////////////////////// [E N D] //////////////
+     *////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+
 }]);
 
 app.controller('InfoDocumentModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'DocumentService', 'TaskService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, ProjectService, DocumentService, TaskService) {
@@ -1353,12 +1505,142 @@ app.controller('InfoDocumentModalInstanceController', ['$scope', '$uibModal', '$
 
 }]);
 
-app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'TaskService', 'DocumentService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, ProjectService, TaskService, DocumentService) {
+app.controller('InfoUserModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'UserService', 'TaskService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, ProjectService, UserService, TaskService) {
+
+    var vm = this;
+    var userInfo = dataForThisModalInstance.userInfo;
+
+    vm.userName = userInfo.name;
+    vm.userEmail = userInfo.email;
+    vm.userDesignation = userInfo.designation;
+
+    vm.projectPanels = userInfo.projects;
+    vm.taskPanels = userInfo.tasks;
+    vm.documentPanels = userInfo.documents;
+
+    console.log("userInfo : " + JSON.stringify(userInfo));
+
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////// Modal For Project Info /////// [ User Info ] ///////////////////////////////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.infoProjectModal = function (projectInfo) {
+
+        projectInfo = ProjectService.getProjectByName(projectInfo.name);
+
+        console.log("projectInfo : " + JSON.stringify(projectInfo));
+
+        var editProjectModalInstance = $uibModal.open({
+            animation: false,
+            templateUrl: 'partials/project_info.html',
+            controller: 'InfoProjectModalInstanceController',
+            controllerAs: 'ModalVM',
+            windowClass: 'modals-style',
+            backdrop: 'static',
+            resolve: {
+                dataForThisModalInstance: function(){
+                    return{
+                        projectInfo: JSON.parse(JSON.stringify(projectInfo))
+                    };
+                }
+            }
+        });
+
+        editProjectModalInstance.result.then(function ()
+        {
+
+        }, function () {
+
+        });
+    };
+    /*////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+     ///////////////// Modal For Project Info /////// [ User Info ] //////////////////////////// [E N D] //////////////
+     *////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////// Modal For Task Info ////////// [ User Info ] ///////////////////////////////////////////////////
+     *//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.infoTaskModal = function (taskInfo) {
+
+        taskInfo = TaskService.getTaskById(taskInfo.id);
+
+        console.log("taskInfo : " + JSON.stringify(taskInfo));
+
+        var editTaskModalInstance = $uibModal.open({
+            animation: false,
+            templateUrl: 'partials/task_info.html',
+            controller: 'InfoTaskModalInstanceController',
+            controllerAs: 'TaskModalVM',
+            windowClass: 'modals-style',
+            backdrop: 'static',
+            resolve: {
+                dataForThisModalInstance: function(){
+                    return{
+                        taskInfo: JSON.parse(JSON.stringify(taskInfo))
+                    };
+                }
+            }
+        });
+
+        editTaskModalInstance.result.then(function ()
+        {
+
+        }, function () {
+
+        });
+    };
+    /*////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+     ///////////////// Modal For Task Info /////// [ User Info ] /////////////////////////////// [E N D] //////////////
+     *////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////// Modal For Document Info ///////// [ User Info ] ////////////////////////////////////////////////
+     *//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.infoDocumentModal = function (documentInfo) {
+
+        var editDocumentModalInstance = $uibModal.open({
+            animation: false,
+            templateUrl: 'partials/document_info.html',
+            controller: 'InfoDocumentModalInstanceController',
+            controllerAs: 'DocumentModalVM',
+            windowClass: 'modals-style',
+            backdrop: 'static',
+            resolve: {
+                dataForThisModalInstance: function(){
+                    return{
+                        documentInfo: JSON.parse(JSON.stringify(documentInfo))
+                    };
+                }
+            }
+        });
+
+        editDocumentModalInstance.result.then(function ()
+        {
+
+        }, function () {
+
+        });
+    };
+
+    /*////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+     ///////////////// Modal For Document Info /////// [ User Info ] /////////////////////////// [E N D] //////////////
+     *////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+
+    vm.cancel = function () {
+        $uibModalInstance.dismiss('cancel');
+    };
+
+}]);
+
+app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'TaskService', 'DocumentService', 'UserService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, ProjectService, TaskService, DocumentService, UserService) {
 
     var vm = this;
     var newTasksArray = [];
     var updatedTasksArray = [];
     var newDocumentsArray = [];
+    var newUsersArray = [];
     var updatedDocumentsArray = [];
     var tasksToDelete = [];
     var documentsToDelete = [];
@@ -1366,6 +1648,7 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
     var floatingDocuments = [];
     var taskCreatedFlag = false;
     var documentCreatedFlag = false;
+    var userCreatedFlag = false;
     var documentAlreadyExists = false;
     var taskUpdateFlag = false;
     var documentUpdateFlag = false;
@@ -1387,7 +1670,11 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
     vm.projectDescription = projectToEdit.description;
     vm.taskPanels = JSON.parse(JSON.stringify(projectToEdit.tasks));
     vm.documentPanels = JSON.parse(JSON.stringify(projectToEdit.documents));
-    vm.userPanels = JSON.parse(JSON.stringify(projectToEdit.users));
+
+    var projectUsers = UserService.getProjectUsers(projectToEdit.users);
+
+    vm.userPanels = JSON.parse(JSON.stringify(projectUsers));
+
     vm.statuses = [
         {'status': 'Pending Approval'},
         {'status': 'Approved'},
@@ -1481,6 +1768,20 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
             }
 
             documentCreatedFlag = false;
+        }
+
+        if(userCreatedFlag)
+        {
+            UserService.addProjectToUser(newUsersArray, projectToEdit.name);
+
+            var projectToUpdate = ProjectService.getProjectByName(projectToEdit.name);
+
+            for(var user of newUsersArray)
+            {
+                projectToUpdate.users.push({id: user.id, name: user.name, email: user.email});
+            }
+
+            userCreatedFlag = false;
         }
 
         if(taskUpdateFlag)
@@ -1655,6 +1956,54 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
     /*////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
      ////////////////// Modal For Creating Document [ Update Project ] ///////////////////////// [E N D] //////////////
      *////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     //////////////// Assign Project To Users [ Update Project ] //////////////////////////////////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.addExistingUsersModal = function()
+    {
+        var addExistingUsersModalInstance = $uibModal.open({
+            animation: false,
+            templateUrl: 'partials/existing_users_modal.html',
+            controller: 'ExistingUsersModalInstanceController',
+            controllerAs: 'AddExistingUsersModalVM',
+            windowClass: 'modals-style',
+            backdrop: 'static',
+            resolve: {
+                dataForThisModalInstance: function () {
+                    return {
+                        triggeredFrom: "Create Project",
+                        usersArray: JSON.parse(JSON.stringify(UserService.getUserPanels())),
+                        usersInModal: JSON.parse(JSON.stringify(vm.userPanels))
+                    };
+                }
+            }
+        });
+
+        addExistingUsersModalInstance.result.then(function (selected_existing_users) {
+
+            //        console.log("Global Docs AFTER : " + JSON.stringify(UserService));
+
+            var new_users_obj = {};
+
+            for(var user of selected_existing_users)
+            {
+                newUsersArray.push(user);
+                vm.userPanels.push(user);
+                userCreatedFlag = true;
+                vm.updateFlag = true;
+
+            }
+
+        }, function () {
+        });
+
+    };
+
+    /*/////////////////////////////////////////////////////////////////////////////////////////////// [E N D] /////////
+     //////////////// Assign Project To Users [ Update Project ] //////////////////////////////////// [E N D] /////////
+     */////////////////////////////////////////////////////////////////////////////////////////////// [E N D] /////////
 
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
      /////////////////// Modal For Editing Task [ Update Project ] ////////////////////////////////////////////////////
@@ -1836,6 +2185,7 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
 
             var new_tasks_obj = {};
             var new_doc_obj = {};
+            var userNotFound;
 
             for(var task of selected_existing_tasks)
             {
@@ -1946,6 +2296,31 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
                         }
                     }
                 }
+
+                if(task.users.length)
+                {
+                    for(var userImportedTask of task.users)
+                    {
+                        userNotFound = true;
+
+                        for(var userProject of vm.userPanels)
+                        {
+                            if(userImportedTask.email == userProject.email)
+                            {
+                                userNotFound = false;
+                            }
+                        }
+
+                        if(userNotFound)
+                        {
+                            vm.userPanels.push(userImportedTask);
+                            newUsersArray.push(userImportedTask);
+
+                            userCreatedFlag = true;
+                        }
+                    }
+                }
+
             }
 
         }, function () {
@@ -2163,6 +2538,40 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
      ///////////////// Modal For Document Info /////// [ Project Info ] //////////////////////// [E N D] //////////////
      *////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
 
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////// Modal For User Info ///////// [ Project Info ] /////////////////////////////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.infoUserModal = function (userInfo) {
+
+        var editUserModalInstance = $uibModal.open({
+            animation: false,
+            templateUrl: 'partials/user_info.html',
+            controller: 'InfoUserModalInstanceController',
+            controllerAs: 'UserModalVM',
+            windowClass: 'modals-style',
+            backdrop: 'static',
+            resolve: {
+                dataForThisModalInstance: function(){
+                    return{
+                        userInfo: JSON.parse(JSON.stringify(userInfo))
+                    };
+                }
+            }
+        });
+
+        editUserModalInstance.result.then(function ()
+        {
+
+        }, function () {
+
+        });
+    };
+
+    /*////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+     ///////////////// Modal For User Info /////// [ Project Info ] //////////////////////////// [E N D] //////////////
+     *////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+
 }]);
 
 app.controller('ExistingTasksModalInstanceController', ['$scope', '$uibModalInstance', 'dataForThisModalInstance', 'TaskService', function ($scope, $uibModalInstance, dataForThisModalInstance, TaskService) {
@@ -2170,7 +2579,7 @@ app.controller('ExistingTasksModalInstanceController', ['$scope', '$uibModalInst
     var vm = this;
     var noTasks = false;
 
-    vm.modalHeading = 'Import Tasks of Project';
+    vm.modalHeading = 'Import Tasks';
 
     if(dataForThisModalInstance.tasksArray.length > 10)
     {
@@ -2256,7 +2665,7 @@ app.controller('ExistingDocumentsModalInstanceController', ['$scope', '$uibModal
     var trigFrom = dataForThisModalInstance.triggeredFrom;
     var inside = dataForThisModalInstance.inside;
 
-    vm.modalHeading = 'Import Documents of Project';
+    vm.modalHeading = 'Import Documents';
 
     if(dataForThisModalInstance.documentsArray.length==0)
     {
@@ -2494,19 +2903,21 @@ app.controller('ExistingDocumentsModalInstanceController', ['$scope', '$uibModal
 
 }]);
 
-app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'TaskService', 'DocumentService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, ProjectService, TaskService, DocumentService) {
+app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'TaskService', 'DocumentService', 'UserService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, ProjectService, TaskService, DocumentService, UserService) {
 
     var vm = this;
     var documentsArray = [];
-    var modifiedDocuments = [];
     var usersArray = [];
+    var modifiedDocuments = [];
     var floatingDocuments = [];
     var documentsToDelete = [];
     var documentCreatedFlag = false;
+    var userCreatedFlag = false;
     var documentDeletedFlag = false;
     var documentUpdateFlag = false;
 
     vm.documentPanels = [];
+    vm.userPanels = [];
 
     vm.taskUpdateFlag = true;
 
@@ -2559,6 +2970,9 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
     vm.createOrUpdateTask = function(task_params) {
 
         var taskName = task_params.taskName;
+
+        console.log("task_params : " + JSON.stringify(task_params));
+
         var taskTargetEndDate;
 
         if(task_params.taskTargetEndDate != undefined)
@@ -2569,9 +2983,6 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
         var taskStatus = 'Pending Approval';
         var taskDescription = task_params.taskDescription;
 
-        console.log("taskTargetEndDate : " + JSON.stringify(task_params));
-        console.log("taskTargetEndDate : " + JSON.stringify(taskTargetEndDate));
-
         if(dataForThisModalInstance.isGlobal)
         {
             new_task_params = {
@@ -2581,8 +2992,6 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
                 'projectsArray': vm.selectedProjects,
                 'description': taskDescription
             };
-
-            console.log("new_task_params : " + JSON.stringify(new_task_params));
 
             var newTaskObject = {};
             var newTasksArray = [];
@@ -2605,17 +3014,31 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
 
                 for(var project of new_task_params.projectsArray)
                 {
+                    var userObject;
                     var updatedIdDocs = [];
                     var docIdUpdatedFlag = false;
 
                     newTaskObject.id = TaskService.newTaskID();
+
+                    if(userCreatedFlag)
+                    {
+                        UserService.addProjectToUser(usersArray, project.name);
+                        UserService.addTaskToUser(usersArray, newTaskObject.id, taskName);
+                    }
+
                     newTaskObject.name = new_task_params.name;
                     newTaskObject.targetEndDate = new_task_params.targetEndDate;
                     newTaskObject.status = "Pending Approval";
                     newTaskObject.project = project.name;
                     newTaskObject.description = new_task_params.description;
                     newTaskObject.documents = documentsArray;
-                    newTaskObject.users = usersArray;
+                    newTaskObject.users = [];
+                    for(var user of usersArray)
+                    {
+                        newTaskObject.users.push({id: user.id, name: user.name, email: user.email});
+                        userObject = {id: user.id, name: user.name, email: user.email};
+                        ProjectService.addUserToProject(project.name, userObject);
+                    }
 
                     taskAlreadyExistsInProject = ProjectService.checkTaskInProject(newTaskObject.project, newTaskObject);
 
@@ -2706,13 +3129,26 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
                 }
 
                 newTaskObject.id = TaskService.newTaskID();
+
+                if(userCreatedFlag)
+                {
+                    UserService.addTaskToUser(usersArray, newTaskObject.id, taskName);
+                    userCreatedFlag = false;
+                }
+
                 newTaskObject.name = new_task_params.name;
                 newTaskObject.targetEndDate = new_task_params.targetEndDate;
                 newTaskObject.status = new_task_params.status;
                 newTaskObject.project = '';
                 newTaskObject.description = new_task_params.description;
                 newTaskObject.documents = documentsArray;
+                newTaskObject.users = [];
+                for(var user of usersArray)
+                {
+                    newTaskObject.users.push({id: user.id, name: user.name, email: user.email});
+                }
                 newTasksArray.push(newTaskObject);
+
                 TaskService.createTaskPanel(newTasksArray);
                 DocumentService.createDocumentPanel(documentsArray);
 
@@ -2791,6 +3227,54 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
     /*//////////////////////////////////////////////////////////////////////////////////////////// [E N D] ////////////
      ////////////////// Add New Document Modal  [ Create Task ] ////////////////////////////////// [E N D] ////////////
      *//////////////////////////////////////////////////////////////////////////////////////////// [E N D] ////////////
+
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////// Assign Task To Users [ Create Task ] ///////////////////////////////////////////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.addExistingUsersModal = function()
+    {
+        var addExistingUsersModalInstance = $uibModal.open({
+            animation: false,
+            templateUrl: 'partials/existing_users_modal.html',
+            controller: 'ExistingUsersModalInstanceController',
+            controllerAs: 'AddExistingUsersModalVM',
+            windowClass: 'modals-style',
+            backdrop: 'static',
+            resolve: {
+                dataForThisModalInstance: function () {
+                    return {
+                        triggeredFrom: "Create Task",
+                        inside: dataForThisModalInstance.triggeredFrom,
+                        usersArray: JSON.parse(JSON.stringify(UserService.getUserPanels())),
+                        usersInModal: JSON.parse(JSON.stringify(vm.userPanels)),
+                        docsInProjectModal: dataForThisModalInstance.docsInProjectModal
+                    };
+                }
+            }
+        });
+
+        addExistingUsersModalInstance.result.then(function (selected_existing_users) {
+
+            //        console.log("Global Docs AFTER : " + JSON.stringify(UserService));
+
+            var new_users_obj = {};
+
+            for(var selectedDoc of selected_existing_users)
+            {
+                usersArray.push(selectedDoc);
+                vm.userPanels.push(selectedDoc);
+
+                userCreatedFlag = true;
+            }
+        }, function () {
+        });
+
+    };
+
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////// [E N D] /////
+     ///////////// Assign Task To Users [ Create Task ] ///////////////////////////////////////////////// [E N D] /////
+     */////////////////////////////////////////////////////////////////////////////////////////////////// [E N D] /////
 
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
      /////////////////// Modal For Editing Document [ Create Task ] ///////////////////////////////////////////////////
@@ -2965,20 +3449,58 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
      ///////////////// Modal For Document Info /////// [ Create Task ] ////////////////////// [E N D] //////////////
      *////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
 
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////// Modal For User Info ///////// [ Create Task ] /////////////////////////////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.infoUserModal = function (userInfo) {
+
+        var editUserModalInstance = $uibModal.open({
+            animation: false,
+            templateUrl: 'partials/user_info.html',
+            controller: 'InfoUserModalInstanceController',
+            controllerAs: 'UserModalVM',
+            windowClass: 'modals-style',
+            backdrop: 'static',
+            resolve: {
+                dataForThisModalInstance: function(){
+                    return{
+                        userInfo: JSON.parse(JSON.stringify(userInfo))
+                    };
+                }
+            }
+        });
+
+        editUserModalInstance.result.then(function ()
+        {
+
+        }, function () {
+
+        });
+    };
+
+    /*////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+     ///////////////// Modal For User Info /////// [ Create Task ] //////////////////////////// [E N D] //////////////
+     *////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+
     vm.cancelModal = function () {
         $uibModalInstance.dismiss('cancel');
     };
 
 }]);
 
-app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'TaskService', 'DocumentService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, ProjectService, TaskService, DocumentService) {
+app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'TaskService', 'DocumentService', 'UserService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, ProjectService, TaskService, DocumentService, UserService) {
 
     var vm = this;
     var updatedDocumentsArray = [];
+    var updatedUsersArray = [];
     var modifiedDocuments = [];
     var documentDeletedFlag = false;
+    var userDeletedFlag = false;
     var documentCreatedFlag = false;
+    var userCreatedFlag = false;
     var documentUpdateFlag = false;
+    var userUpdateFlag = false;
     var documentsToDelete = [];
     var floatingDocuments = [];
     var taskToEdit = dataForThisModalInstance.taskToEdit;
@@ -2996,7 +3518,10 @@ app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
     vm.taskStatus = taskToEdit.status;
     vm.taskDescription = taskToEdit.description;
     vm.documentPanels = taskToEdit.documents;
-    vm.userPanels = taskToEdit.users;
+
+    var taskUsers = UserService.getTaskUsers(taskToEdit.users);
+
+    vm.userPanels = JSON.parse(JSON.stringify(taskUsers));
 
     vm.modalType = 'Update';
     vm.modalHeading = 'Update Task';
@@ -3008,6 +3533,7 @@ app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
         {'status': 'Completed'},
         {'status': 'Closed'}
     ];
+
     vm.selectedStatus = taskToEdit.status;
     vm.statusVisibility = true;
 
@@ -3039,6 +3565,8 @@ app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
 //        console.log("task_params : " + JSON.stringify(task_params));
 
         var updated_task = {};
+        var userObject;
+        var userAddedToTask = false;
 
         taskToEdit.targetEndDate = new Date(task_params.taskTargetEndDate);
         taskToEdit.status = task_params.selectedStatus;
@@ -3104,11 +3632,36 @@ app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
                 documentUpdateFlag = false;
             }
 
+            if(userCreatedFlag)
+            {
+                UserService.addTaskToUser(updatedUsersArray, taskToEdit.id, taskToEdit.name);
+                for(var user of updatedUsersArray)
+                {
+                    taskToEdit.users.push({id: user.id, name: user.name, email: user.email});
+                    userAddedToTask = true;
+                }
+            }
+
             updated_task = TaskService.updateTasks([taskToEdit], true);
 
             if(updated_task.project)
             {
                 ProjectService.updateTasksInProject(updated_task.project, [updated_task]);
+
+                if(userAddedToTask)
+                {
+                    UserService.addProjectToUser(updatedUsersArray, updated_task.project);
+
+                    var projectToUpdate = ProjectService.getProjectByName(updated_task.project);
+
+                    for(var user of updatedUsersArray)
+                    {
+//                        projectToUpdate.users.push({id: user.id, name: user.name, email: user.email});
+                        userObject = {id: user.id, name: user.name, email: user.email};
+                        ProjectService.addUserToProject(updated_task.project, userObject);
+                    }
+
+                }
             }
         }
         else if(dataForThisModalInstance.triggeredFrom == "Create Project")
@@ -3281,7 +3834,58 @@ app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
      */////////////////////////////////////////////////////////////////////////////////////////////////// [E N D] /////
 
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-     /////////////////// Modal For Editing Document [ Update Task ] ////////////////////////////////////////////////
+     ///////////// Add From Existing Users [ Update Task ] ////////////////////////////////////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.addExistingUsersModal = function()
+    {
+        var addExistingUsersModal = $uibModal.open({
+            animation: false,
+            templateUrl: 'partials/existing_users_modal.html',
+            controller: 'ExistingUsersModalInstanceController',
+            controllerAs: 'AddExistingUsersModalVM',
+            windowClass: 'modals-style',
+            backdrop: 'static',
+            resolve: {
+                dataForThisModalInstance: function () {
+                    return {
+                        triggeredFrom: "Update Task",
+                        inside: dataForThisModalInstance.triggeredFrom,
+                        projectName: vm.projectName,
+                        usersArray: JSON.parse(JSON.stringify(UserService.getUserPanels())),
+                        usersInModal: JSON.parse(JSON.stringify(vm.userPanels)),
+                        taskName: dataForThisModalInstance.taskToEdit.name,
+                        taskProject: taskProject,
+                        docsInProjectModal: dataForThisModalInstance.docsInProjectModal
+                    };
+                }
+            }
+        });
+
+        addExistingUsersModal.result.then(function (selected_existing_users) {
+
+            //        console.log("Global Docs AFTER : " + JSON.stringify(UserService));
+
+            var new_users_obj = {};
+
+            for(var selectedDoc of selected_existing_users)
+            {
+                updatedUsersArray.push(selectedDoc);
+                vm.userPanels.push(selectedDoc);
+                userCreatedFlag = true;
+                vm.taskUpdateFlag = true;
+            }
+        }, function () {
+        });
+
+    };
+
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////// [E N D] /////
+     ///////////// Add From Existing Users [ Update Task ] ////////////////////////////////////////// [E N D] /////
+     */////////////////////////////////////////////////////////////////////////////////////////////////// [E N D] /////
+
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     /////////////////// Modal For Editing Document [ Update Task ] ///////////////////////////////////////////////////
      */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     vm.editDocumentModal = function (documentToEdit) {
@@ -3397,6 +4001,40 @@ app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
 
     /*////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
      ///////////////// Modal For Document Info /////// [ Update Task ] ///////////////////////// [E N D] //////////////
+     *////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////// Modal For User Info ///////// [ Update Task ] /////////////////////////////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.infoUserModal = function (userInfo) {
+
+        var editUserModalInstance = $uibModal.open({
+            animation: false,
+            templateUrl: 'partials/user_info.html',
+            controller: 'InfoUserModalInstanceController',
+            controllerAs: 'UserModalVM',
+            windowClass: 'modals-style',
+            backdrop: 'static',
+            resolve: {
+                dataForThisModalInstance: function(){
+                    return{
+                        userInfo: JSON.parse(JSON.stringify(userInfo))
+                    };
+                }
+            }
+        });
+
+        editUserModalInstance.result.then(function ()
+        {
+
+        }, function () {
+
+        });
+    };
+
+    /*////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+     ///////////////// Modal For User Info /////// [ Update Task ] //////////////////////////// [E N D] //////////////
      *////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
 
 }]);
@@ -3662,6 +4300,7 @@ app.controller('CreateUserModalInstanceController', ['$scope', '$uibModalInstanc
 
     var vm = this;
     var new_user_params = '';
+    var newUsersArray = [];
 
     vm.userUpdateFlag = true;
 
@@ -3672,18 +4311,15 @@ app.controller('CreateUserModalInstanceController', ['$scope', '$uibModalInstanc
 
         //        console.log("Global Docs AFTER : " + JSON.stringify(UserService));
 
-        var userName = user_params.userName;
-        var userEmail = user_params.userEmail;
-        var userDesignation = user_params.userDesignation;
-
         new_user_params = {
-            'name': userName,
-            'email': userEmail,
-            'designation': userDesignation
+            'id': UserService.newUserID(),
+            'name': user_params.userName,
+            'email': user_params.userEmail,
+            'designation': user_params.userDesignation,
+            'projects': [],
+            'tasks': [],
+            'documents': []
         };
-
-        var newUserObject = {};
-        var newUsersArray = [];
 
         for (var userPanel of UserService.getUserPanels())
         {
@@ -3694,15 +4330,8 @@ app.controller('CreateUserModalInstanceController', ['$scope', '$uibModalInstanc
             }
         }
 
-        newUserObject.id = UserService.newUserID();
-        newUserObject.name = new_user_params.name;
-        newUserObject.email = new_user_params.email;
-        newUserObject.designation = new_user_params.designation;
-        newUsersArray.push(newUserObject);
-
+        newUsersArray.push(new_user_params);
         UserService.createUserPanel(newUsersArray);
-        newUserObject = {};
-
         $uibModalInstance.close();
     };
 
@@ -3719,7 +4348,7 @@ app.controller('ExistingUsersModalInstanceController', ['$scope', '$uibModalInst
     var trigFrom = dataForThisModalInstance.triggeredFrom;
     var inside = dataForThisModalInstance.inside;
 
-    vm.modalHeading = 'Import Users of Project';
+    vm.modalHeading = 'Add Users';
 
     if(dataForThisModalInstance.usersArray.length==0)
     {
@@ -3731,17 +4360,20 @@ app.controller('ExistingUsersModalInstanceController', ['$scope', '$uibModalInst
 
         noUsers = true;
     }
+
     if(inside == "Create Task Global")
     {
-        vm.existingUsersOptions = UserService.removeTaskDocsFromExistingDocs(dataForThisModalInstance.usersInModal);
+        vm.existingUsersOptions = UserService.removeUsersExistingInProjectOrTask(dataForThisModalInstance.usersInModal);
     }
     else if(inside == "Update Task Global")
     {
-        vm.existingUsersOptions = UserService.removeTaskDocsFromExistingDocs(dataForThisModalInstance.usersInModal, dataForThisModalInstance.taskName);
+        vm.existingUsersOptions = UserService.removeUsersExistingInProjectOrTask(dataForThisModalInstance.usersInModal);
     }
     else if(trigFrom == "Create Project")
     {
-        vm.existingUsersOptions = UserService.removePrjDocsFromExistingDocs(dataForThisModalInstance.usersInModal);
+        vm.existingUsersOptions = UserService.removeUsersExistingInProjectOrTask(dataForThisModalInstance.usersInModal);
+
+//        console.log("vm.existingUsersOptions : " + JSON.stringify(vm.existingUsersOptions));
     }
     else if(trigFrom == "Update Project")
     {
@@ -3749,7 +4381,7 @@ app.controller('ExistingUsersModalInstanceController', ['$scope', '$uibModalInst
     }
     else if(inside == "Create Project" || inside == "Update Project")
     {
-        vm.existingUsersOptions = UserService.removePrjDocsFromExistingDocs(dataForThisModalInstance.docsInProjectModal, dataForThisModalInstance.projectName);
+        vm.existingUsersOptions = UserService.removePrjDocsFromExistingDocs(dataForThisModalInstance.usersInProjectModal, dataForThisModalInstance.projectName);
     }
 
     if(vm.existingUsersOptions.length > 10)
@@ -3762,12 +4394,13 @@ app.controller('ExistingUsersModalInstanceController', ['$scope', '$uibModalInst
     }
 
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-     ////////////////// Create Existing User //////////////////////////////////////////////////////////////////////
+     ////////////////// Create Existing User //////////////////////////////////////////////////////////////////////////
      */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     vm.addExistingUsersInProject = function() {
 
         //        console.log("Global Docs AFTER : " + JSON.stringify(UserService));
+
         if(inside == "Create Task Global" || inside == "Update Task Global")
         {
             console.log("trigFrom 0: " + trigFrom);
@@ -3775,33 +4408,7 @@ app.controller('ExistingUsersModalInstanceController', ['$scope', '$uibModalInst
 
             if((vm.selectedExistingUsers) && (!noUsers))
             {
-                if(vm.selectedExistingUsers.length > 1)
-                {
-                    var userNamesArray = [];
-
-                    for(var user of vm.selectedExistingUsers)
-                    {
-                        userNamesArray.push(user.name);
-                    }
-
-                    if(UserService.hasDuplicates(userNamesArray))
-                    {
-                        alert("A Project Can Not Have Users With Same Names");
-                        return;
-                    }
-                }
-
-                for(var user of vm.selectedExistingUsers)
-                {
-                    for(var userModal of dataForThisModalInstance.usersInModal)
-                    {
-                        if(user.name == userModal.name)
-                        {
-                            alert("User '" + user.name + "' Already Exists In This Project");
-                            return;
-                        }
-                    }
-                }
+//                console.log("vm.selectedExistingUsers: " + JSON.stringify(vm.selectedExistingUsers));
 
                 $uibModalInstance.close(vm.selectedExistingUsers);
             }
@@ -3813,34 +4420,6 @@ app.controller('ExistingUsersModalInstanceController', ['$scope', '$uibModalInst
 
             if((vm.selectedExistingUsers) && (!noUsers))
             {
-                if(vm.selectedExistingUsers.length > 1)
-                {
-                    var userNamesArray = [];
-
-                    for(var user of vm.selectedExistingUsers)
-                    {
-                        userNamesArray.push(user.name);
-                    }
-
-                    if(UserService.hasDuplicates(userNamesArray))
-                    {
-                        alert("A Project Can Not Have Users With Same Names");
-                        return;
-                    }
-                }
-
-                for(var user of vm.selectedExistingUsers)
-                {
-                    for(var userModal of dataForThisModalInstance.usersInModal)
-                    {
-                        if(user.name == userModal.name)
-                        {
-                            alert("User '" + user.name + "' Already Exists In This Project");
-                            return;
-                        }
-                    }
-                }
-
                 $uibModalInstance.close(vm.selectedExistingUsers);
             }
         }
@@ -3849,100 +4428,14 @@ app.controller('ExistingUsersModalInstanceController', ['$scope', '$uibModalInst
             console.log("trigFrom 2: " + trigFrom);
             console.log("inside 2: " + inside);
 
-            if((vm.selectedExistingUsers) && (!noUsers))
-            {
-                if(vm.selectedExistingUsers.length > 1)
-                {
-                    var userNamesArray = [];
-
-                    for(var user of vm.selectedExistingUsers)
-                    {
-                        userNamesArray.push(user.name);
-                    }
-
-                    if(UserService.hasDuplicates(userNamesArray))
-                    {
-                        alert("A Project Can Not Have Users With Same Names");
-                        return;
-                    }
-                }
-
-                for(var user of vm.selectedExistingUsers)
-                {
-                    for(var userModal of dataForThisModalInstance.usersInModal)
-                    {
-                        if(user.name == userModal.name)
-                        {
-                            alert("User '" + user.name + "' Already Exists In This Project");
-                            return;
-                        }
-                    }
-                }
-
-                for(var selectedExtDoc of vm.selectedExistingUsers)
-                {
-                    for(var docInPrjModal of dataForThisModalInstance.docsInProjectModal)
-                    {
-                        if(selectedExtDoc.name == docInPrjModal.name)
-                        {
-                            alert("User '" + selectedExtDoc.name + "' Already Exists In This Project");
-                            return;
-                        }
-                    }
-                }
-
-                $uibModalInstance.close(vm.selectedExistingUsers);
-            }
+            $uibModalInstance.close(vm.selectedExistingUsers);
         }
         else if((trigFrom == "Create Task" || trigFrom == "Update Task") && (inside == "Update Project"))
         {
             console.log("trigFrom 3: " + trigFrom);
             console.log("inside 3: " + inside);
 
-            if((vm.selectedExistingUsers) && (!noUsers))
-            {
-                if(vm.selectedExistingUsers.length > 1)
-                {
-                    var userNamesArray = [];
-
-                    for(var user of vm.selectedExistingUsers)
-                    {
-                        userNamesArray.push(user.name);
-                    }
-
-                    if(UserService.hasDuplicates(userNamesArray))
-                    {
-                        alert("A Project Can Not Have Users With Same Names");
-                        return;
-                    }
-                }
-
-                for(var user of vm.selectedExistingUsers)
-                {
-                    for(var userModal of dataForThisModalInstance.usersInModal)
-                    {
-                        if(user.name == userModal.name)
-                        {
-                            alert("User '" + user.name + "' Already Exists In This Project");
-                            return;
-                        }
-                    }
-                }
-
-                for(var selectedExtDoc of vm.selectedExistingUsers)
-                {
-                    for(var docInPrjModal of dataForThisModalInstance.docsInProjectModal)
-                    {
-                        if(selectedExtDoc.name == docInPrjModal.name)
-                        {
-                            alert("User '" + selectedExtDoc.name + "' Already Exists In This Project");
-                            return;
-                        }
-                    }
-                }
-
-                $uibModalInstance.close(vm.selectedExistingUsers);
-            }
+            $uibModalInstance.close(vm.selectedExistingUsers);
         }
 
     };

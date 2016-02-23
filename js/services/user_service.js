@@ -14,10 +14,22 @@ app.service('UserService', function(){
     {
         "use strict";
 
+//        newUserObject = [{
+//            'id': 0,
+//            'name': 'User 1',
+//            'email': 'user1@gmail.com',
+//            'designation': '',
+//            'projects': [],
+//            'tasks': [],
+//            'documents': []
+//        }];
+
         angular.forEach(newUserObject, function(value, index){
             userPanels.push(newUserObject[index]);
         });
     };
+
+//    createUserPanel();
 
     var updatedUserParams = function(updated_user)
     {
@@ -100,6 +112,68 @@ app.service('UserService', function(){
         return userPanels;
     };
 
+    var getUserByEmail = function(userEmail)
+    {
+        for(var userGlobal of userPanels)
+        {
+            if(userGlobal.email == userEmail)
+            {
+                return userGlobal;
+            }
+        }
+    };
+
+    var getUserById = function(userId)
+    {
+        for(var userGlobal of userPanels)
+        {
+            if(userGlobal.id == userId)
+            {
+                return userGlobal;
+            }
+        }
+    };
+
+//    console.log("User Info : " + JSON.stringify(getUserById(0)));
+
+    var getProjectUsers = function(projectUsersIds)
+    {
+        var projectUsersArray = [];
+
+        for(var userGlobal of userPanels)
+        {
+            for(var projectUser of projectUsersIds)
+            {
+                if(projectUser.id == userGlobal.id)
+                {
+                    projectUsersArray.push(userGlobal);
+                }
+            }
+        }
+
+        return projectUsersArray;
+
+    };
+
+    var getTaskUsers = function(taskUsersIds)
+    {
+        var taskUsersArray = [];
+
+        for(var userGlobal of userPanels)
+        {
+            for(var taskUser of taskUsersIds)
+            {
+                if(taskUser.id == userGlobal.id)
+                {
+                    taskUsersArray.push(userGlobal);
+                }
+            }
+        }
+
+        return taskUsersArray;
+
+    };
+
     var deleteUser = function(usersArray)
     {
         "use strict";
@@ -176,15 +250,94 @@ app.service('UserService', function(){
 
     };
 
-    var addTaskToUser = function(usersArray, taskName)
+    var addProjectToUser = function(usersArray, projectName)
     {
         "use strict";
         //                        console.log("Global Docs AFTER : " + JSON.stringify(UserService.getUserPanels()));
 
-        angular.forEach(usersArray, function(value, index)
+        var userToUpdate;
+        var projectNameObject = {name: projectName};
+
+        for(var userModal of usersArray)
         {
-            usersArray[index].task = taskName;
-        });
+            var projectAlreadyExistsInUser = false;
+
+            for(var userGlobal of userPanels)
+            {
+                if(userModal.email == userGlobal.email)
+                {
+                    userToUpdate = userGlobal;
+                    break;
+                }
+            }
+
+            if(userToUpdate)
+            {
+                for(var userProject of userToUpdate.projects)
+                {
+                    if(userProject.name == projectName)
+                    {
+                        projectAlreadyExistsInUser = true;
+                    }
+                }
+
+                if(!projectAlreadyExistsInUser)
+                {
+                    userToUpdate.projects.push(projectNameObject);
+                }
+            }
+
+        }
+
+//        if(userToUpdate)
+//        {
+//            for(var userProject of userToUpdate.projects)
+//            {
+//                if(userProject.name == projectName)
+//                {
+//                    projectAlreadyExistsInUser = true;
+//                }
+//            }
+//
+//            if(!projectAlreadyExistsInUser)
+//            {
+//                userToUpdate.projects.push(projectNameObject);
+//            }
+//        }
+
+//        for(var userGlobal of userPanels)
+//        {
+//            for(var userModal of usersArray)
+//            {
+//                if(userModal.email == userGlobal.email)
+//                {
+//                    userModal.projects.push(projectNameObject);
+//                    userGlobal.projects.push(projectNameObject);
+//                }
+//            }
+//        }
+
+    };
+
+    var addTaskToUser = function(usersArray, taskId, taskName)
+    {
+        "use strict";
+        //                        console.log("Global Docs AFTER : " + JSON.stringify(UserService.getUserPanels()));
+
+        var taskIdObject = {id: taskId, name: taskName};
+
+        for(var userGlobal of userPanels)
+        {
+            for(var userModal of usersArray)
+            {
+                if(userModal.email == userGlobal.email)
+                {
+//                    userModal.tasks.push(taskIdObject);
+                    userGlobal.tasks.push(taskIdObject);
+                }
+            }
+        }
+
     };
 
     var updateUsers = function(updatedUsers, global)
@@ -253,6 +406,34 @@ app.service('UserService', function(){
             if(userNotFound)
             {
                 filteredArray.push(user);
+            }
+        }
+
+        return filteredArray;
+
+    };
+
+    var removeUsersExistingInProjectOrTask = function(usersInModal)
+    {
+        var filteredArray = [];
+        var userNotFound;
+
+        for(var userGlobal of userPanels)
+        {
+            userNotFound = true;
+
+            for(var userModal of usersInModal)
+            {
+                if(userModal.email == userGlobal.email)
+                {
+                    userNotFound = false;
+                    break;
+                }
+            }
+
+            if(userNotFound)
+            {
+                filteredArray.push(userGlobal);
             }
         }
 
@@ -342,16 +523,22 @@ app.service('UserService', function(){
         createUserPanel: createUserPanel,
         updatedUserParams: updatedUserParams,
         getUserPanels: getUserPanels,
+        getUserByEmail: getUserByEmail,
+        getUserById: getUserById,
+        getProjectUsers: getProjectUsers,
+        getTaskUsers: getTaskUsers,
         deleteUser: deleteUser,
         deleteUserModal: deleteUserModal,
         deleteUserGlobal: deleteUserGlobal,
         deleteFloatingUsers: deleteFloatingUsers,
         deleteUsersFromModalTask: deleteUsersFromModalTask,
         hasDuplicates: hasDuplicates,
+        addProjectToUser: addProjectToUser,
         addTaskToUser: addTaskToUser,
         updateUsers: updateUsers,
         removePrjDocsFromExistingDocs: removePrjDocsFromExistingDocs,
-        removeTaskDocsFromExistingDocs: removeTaskDocsFromExistingDocs
+        removeTaskDocsFromExistingDocs: removeTaskDocsFromExistingDocs,
+        removeUsersExistingInProjectOrTask: removeUsersExistingInProjectOrTask
     };
 
 });
