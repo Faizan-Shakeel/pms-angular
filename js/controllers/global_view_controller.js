@@ -226,6 +226,7 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
     {
         var selectedProjectTasksArray;
         var selectedProjectDocumentsArray;
+        var selectedProjectUsersArray;
 
         angular.forEach(vm.projectPanels, function(value,index){
 
@@ -233,11 +234,19 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
             {
                 selectedProjectTasksArray = vm.projectPanels[index].tasks;
                 selectedProjectDocumentsArray = vm.projectPanels[index].documents;
+                selectedProjectUsersArray = vm.projectPanels[index].users;
             }
         });
 
+        for(var task of selectedProjectTasksArray)
+        {
+            UserService.deleteTaskFromUser(task.users, task.id);
+        }
+
         TaskService.deleteTask(selectedProjectTasksArray);
         DocumentService.deleteDocument(selectedProjectDocumentsArray);
+        UserService.deleteProjectFromUser(selectedProjectUsersArray, projectToDelete.name);
+
         removeEntity(vm.projectPanels, 'id', projectToDelete.id);
 
     };
@@ -246,17 +255,21 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
     {
         var deletedTaskProject;
         var selectedTaskDocumentsArray;
+        var selectedTaskUsersArray;
 
         angular.forEach(vm.taskPanels, function(value,index){
             if(value.id == taskToDelete.id)
             {
                 selectedTaskDocumentsArray = vm.taskPanels[index].documents;
+                selectedTaskUsersArray = vm.taskPanels[index].users;
             }
         });
 
         DocumentService.deleteDocument(selectedTaskDocumentsArray);
         removeEntity(TaskService.getTaskPanels(), 'id', taskToDelete.id);
         ProjectService.deleteTaskAndDocumentsFromProject(taskToDelete, selectedTaskDocumentsArray);
+        UserService.deleteTaskFromUser(selectedTaskUsersArray, taskToDelete.id);
+
     };
 
     vm.deleteDocument = function(documentToDelete)
@@ -277,6 +290,16 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
                 ProjectService.updateTasksInProject(documentToDelete.project, JSON.parse(JSON.stringify([updatedTask])));
             }
         }
+    };
+
+    vm.deleteUser = function(userToDelete)
+    {
+        removeEntity(UserService.getUserPanels(), 'id', userToDelete.id);
+
+        TaskService.deleteUserFromTasks(userToDelete);
+
+        ProjectService.deleteUsersFromProjects(userToDelete);
+
     };
 
     var removeEntity = function(arr, attr, value){

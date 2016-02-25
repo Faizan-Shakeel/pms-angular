@@ -12,7 +12,7 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
 
     vm.infoProjectModal = function (projectInfo) {
 
-        console.log("projectInfo Global : " + JSON.stringify(projectInfo));
+//        console.log("projectInfo Global : " + JSON.stringify(projectInfo));
 
         var editProjectModalInstance = $uibModal.open({
             animation: false,
@@ -402,6 +402,7 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
     var documentsArray = [];
     var usersArray = [];
     var usersExtractedIds = [];
+    var tasksToBeAddedInUser = [];
     var taskCreatedFlag = false;
     var documentCreatedFlag = false;
     var userCreatedFlag = false;
@@ -439,6 +440,7 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
 
     vm.createOrUpdateProject = function(project_params)
     {
+        var projectId = ProjectService.newProjectID();
         var projectName = project_params.projectName;
         var projectBudget = project_params.projectBudget;
         var projectTargetEndDate;
@@ -450,7 +452,7 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
 
         var projectDescription = project_params.projectDescription;
 
-        console.log("projectTargetEndDate : " + JSON.stringify(project_params.projectTargetEndDate));
+//        console.log("projectTargetEndDate : " + JSON.stringify(project_params.projectTargetEndDate));
 
         if(ProjectService.checkProjectExistence(projectName))
         {
@@ -492,8 +494,15 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
 
         if(userCreatedFlag)
         {
-            UserService.addProjectToUser(usersArray, projectName);
+            UserService.addProjectToUser(usersArray, projectId, projectName);
 
+            if(tasksToBeAddedInUser.length)
+            {
+                for(var userToAddToTask of tasksToBeAddedInUser)
+                {
+                    UserService.addTaskToUser(userToAddToTask.usersArray, userToAddToTask.id, userToAddToTask.taskName);
+                }
+            }
             userCreatedFlag = false;
         }
 
@@ -518,7 +527,7 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
         }
 
         var new_project_params = {
-            'id': ProjectService.newProjectID(),
+            'id': projectId,
             'name': projectName,
             'budget': projectBudget,
             'targetEndDate': projectTargetEndDate,
@@ -542,7 +551,7 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
             new_project_params.users.push({id: user.id, name: user.name, email: user.email});
         }
 
-        console.log("new_project_params : " + JSON.stringify(new_project_params));
+//        console.log("new_project_params : " + JSON.stringify(new_project_params));
 
         ProjectService.createProjectPanel(new_project_params);
 
@@ -824,19 +833,21 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
                         triggeredFrom: 'Create Project',
                         projectsArray: projectsArray,
                         tasksArray: JSON.parse(JSON.stringify(vm.taskPanels)),
-                        docsInProjectModal: JSON.parse(JSON.stringify(vm.documentPanels)),
-                        usersInProjectModal: JSON.parse(JSON.stringify(vm.userPanels))
+                        docsInProjectModal: JSON.parse(JSON.stringify(vm.documentPanels))
+//                        usersInProjectModal: JSON.parse(JSON.stringify(vm.userPanels))
                     };
                 }
             }
         });
 
-        addNewTaskModalInstance.result.then(function (updTaskParams_floatingDocs) {
+        addNewTaskModalInstance.result.then(function (result) {
 
-//            console.log("new_task_params.documents OUTSIDE : " + JSON.stringify(new_task_params.documents));
+//            console.log("new_task_params : " + JSON.stringify(result));
 
-            var new_task_params = updTaskParams_floatingDocs.new_task_params;
-            var floatingDocsFromTaskModal = updTaskParams_floatingDocs.floatingDocuments;
+            var new_task_params = result.new_task_params;
+            var floatingDocsFromTaskModal = result.floatingDocuments;
+            var usersCreatedInTask = result.tasksToBeAddedInUser.usersArray;
+            tasksToBeAddedInUser.push(result.tasksToBeAddedInUser);
 
             if(vm.documentPanels.length)
             {
@@ -875,6 +886,26 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
                 documentDeletedFlag = true;
             }
 
+            if(usersCreatedInTask.length)
+            {
+                for(var userFromTsk of usersCreatedInTask)
+                {
+                    new_task_params.users.push(userFromTsk);
+                }
+            }
+
+            var newUsers = UserService.checkUsersExistence(new_task_params.users, vm.userPanels);
+
+            if(newUsers.length)
+            {
+                for(var user of newUsers)
+                {
+                    vm.userPanels.push(user);
+                    usersArray.push(user);
+                    userCreatedFlag = true;
+                }
+            }
+
             tasksArray.push(new_task_params);
             vm.taskPanels.push(new_task_params);
             taskCreatedFlag = true;
@@ -908,16 +939,21 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
                         triggeredFrom: 'Create Project',
                         taskToEdit: JSON.parse(JSON.stringify(taskToEdit)),
                         docsInProjectModal: JSON.parse(JSON.stringify(vm.documentPanels))
+//                        usersInProjectModal: JSON.parse(JSON.stringify(vm.userPanels))
                     };
                 }
             }
         });
 
-        editTaskModalInstance.result.then(function (updatedTask_deletedDocs_floatingTasks)
+        editTaskModalInstance.result.then(function (result)
         {
-            var updated_task = updatedTask_deletedDocs_floatingTasks.updated_task;
-            var docsDeletedFromTaskUpdateModal = updatedTask_deletedDocs_floatingTasks.documentsToDelete;
-            var floatingDocsFromTaskUpdateModal = updatedTask_deletedDocs_floatingTasks.floatingDocuments;
+//            console.log("result : " + JSON.stringify(result));
+
+            var updated_task = result.updated_task;
+            var docsDeletedFromTaskUpdateModal = result.documentsToDelete;
+            var floatingDocsFromTaskUpdateModal = result.floatingDocuments;
+            var usersCreatedInTask = result.tasksToBeAddedInUser.usersArray;
+            tasksToBeAddedInUser.push(result.tasksToBeAddedInUser);
 
             for(var i=0; i<vm.taskPanels.length; i++)
             {
@@ -934,7 +970,6 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
                 if(tasksArray[i].id == updated_task.id)
                 {
                     tasksArray[i] = updated_task;
-//                    vm.updateFlag = true;
                     break;
                 }
             }
@@ -948,8 +983,6 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
                     documentCreatedFlag = true;
                 }
             }
-
-//            console.log("docsDeletedFromTaskUpdateModal : " + JSON.stringify(docsDeletedFromTaskUpdateModal));
 
             if(docsDeletedFromTaskUpdateModal.length)
             {
@@ -971,6 +1004,26 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
             {
                 floatingDocuments.push(floatDocFromTask);
                 documentDeletedFlag = true;
+            }
+
+            if(usersCreatedInTask.length)
+            {
+                for(var userUpdTsk of usersCreatedInTask)
+                {
+                    updated_task.users.push(userUpdTsk);
+                }
+            }
+
+            var newUsers = UserService.checkUsersExistence(updated_task.users, vm.userPanels);
+
+            if(newUsers.length)
+            {
+                for(var user of newUsers)
+                {
+                    vm.userPanels.push(user);
+                    usersArray.push(user);
+                    userCreatedFlag = true;
+                }
             }
 
         }, function () {
@@ -1087,6 +1140,21 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
      ////////////////// Delete Document [ Create Project ] /////////////////////////////////// [E N D] ////////////////
      *//////////////////////////////////////////////////////////////////////////////////////// [E N D] ////////////////
 
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ////////////////// Delete User [ Create Project ] ////////////////////////////////////////////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.deleteUser = function(userToDelete)
+    {
+        UserService.deleteUserModal(userToDelete, vm.userPanels);
+        UserService.deleteUserModal(userToDelete, usersArray);
+
+        userDeletedFlag = true;
+    };
+
+    /*//////////////////////////////////////////////////////////////////////////////////////// [E N D] ////////////////
+     ////////////////// Delete User [ Create Project ] /////////////////////////////////////// [E N D] ////////////////
+     *//////////////////////////////////////////////////////////////////////////////////////// [E N D] ////////////////
 
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
      ////////////////// Add New Document Modal [ Create Project ] /////////////////////////////////////////////////////
@@ -1518,7 +1586,7 @@ app.controller('InfoUserModalInstanceController', ['$scope', '$uibModal', '$uibM
     vm.taskPanels = userInfo.tasks;
     vm.documentPanels = userInfo.documents;
 
-    console.log("userInfo : " + JSON.stringify(userInfo));
+//    console.log("userInfo : " + JSON.stringify(userInfo));
 
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
      ///////////////// Modal For Project Info /////// [ User Info ] ///////////////////////////////////////////////////
@@ -1528,7 +1596,7 @@ app.controller('InfoUserModalInstanceController', ['$scope', '$uibModal', '$uibM
 
         projectInfo = ProjectService.getProjectByName(projectInfo.name);
 
-        console.log("projectInfo : " + JSON.stringify(projectInfo));
+//        console.log("projectInfo : " + JSON.stringify(projectInfo));
 
         var editProjectModalInstance = $uibModal.open({
             animation: false,
@@ -1565,7 +1633,7 @@ app.controller('InfoUserModalInstanceController', ['$scope', '$uibModal', '$uibM
 
         taskInfo = TaskService.getTaskById(taskInfo.id);
 
-        console.log("taskInfo : " + JSON.stringify(taskInfo));
+//        console.log("taskInfo : " + JSON.stringify(taskInfo));
 
         var editTaskModalInstance = $uibModal.open({
             animation: false,
@@ -1642,8 +1710,10 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
     var newDocumentsArray = [];
     var newUsersArray = [];
     var updatedDocumentsArray = [];
+    var tasksToBeAddedInUser = [];
     var tasksToDelete = [];
     var documentsToDelete = [];
+    var usersToDelete = [];
     var floatingTasks = [];
     var floatingDocuments = [];
     var taskCreatedFlag = false;
@@ -1654,6 +1724,7 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
     var documentUpdateFlag = false;
     var taskDeletedFlag = false;
     var documentDeletedFlag = false;
+    var userDeletedFlag = false;
     var projectToEdit = dataForThisModalInstance.projectToEdit;
 
     vm.projectNameEditable = true;
@@ -1772,8 +1843,8 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
 
         if(userCreatedFlag)
         {
-            UserService.addProjectToUser(newUsersArray, projectToEdit.name);
-
+            var projectId = ProjectService.getProjectId(projectToEdit.name);
+            UserService.addProjectToUser(newUsersArray, projectId, projectToEdit.name);
             var projectToUpdate = ProjectService.getProjectByName(projectToEdit.name);
 
             for(var user of newUsersArray)
@@ -1781,7 +1852,21 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
                 projectToUpdate.users.push({id: user.id, name: user.name, email: user.email});
             }
 
+            if(tasksToBeAddedInUser.length)
+            {
+                for(var userToAddToTask of tasksToBeAddedInUser)
+                {
+                    UserService.addTaskToUser(userToAddToTask.usersArray, userToAddToTask.id, userToAddToTask.taskName);
+                }
+            }
+
             userCreatedFlag = false;
+        }
+
+        if(userDeletedFlag)
+        {
+            ProjectService.deleteUsersFromProjects(usersToDelete, projectToEdit.name);
+            UserService.deleteProjectFromUser(usersToDelete, projectToEdit.name);
         }
 
         if(taskUpdateFlag)
@@ -1857,6 +1942,7 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
                         projectsArray: JSON.parse(JSON.stringify(ProjectService.getProjectPanels())),
                         tasksArray: JSON.parse(JSON.stringify(vm.taskPanels)),
                         docsInProjectModal: JSON.parse(JSON.stringify(vm.documentPanels))
+//                        usersInProjectModal: JSON.parse(JSON.stringify(vm.userPanels))
                     };
                 }
             }
@@ -1864,10 +1950,13 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
 
         addNewTaskModalInstance.result.then(function (result) {
 
-            //        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService));
+//            console.log("result : " + JSON.stringify(result));
 
             var new_task_params = result.new_task_params;
             var floatingDocsFromTaskModal = result.floatingDocuments;
+
+            var usersCreatedInTask = result.tasksToBeAddedInUser.usersArray;
+            tasksToBeAddedInUser.push(result.tasksToBeAddedInUser);
 
             if(vm.documentPanels.length)
             {
@@ -1901,6 +1990,52 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
                 floatingDocuments.push(floatDocFromTask);
                 documentDeletedFlag = true;
             }
+
+            if(usersCreatedInTask.length)
+            {
+                for(var userFromTsk of usersCreatedInTask)
+                {
+                    new_task_params.users.push(userFromTsk);
+                }
+            }
+
+            var newUsers = UserService.checkUsersExistence(new_task_params.users, vm.userPanels);
+
+            if(newUsers.length)
+            {
+                for(var user of newUsers)
+                {
+                    vm.userPanels.push(user);
+                    newUsersArray.push(user);
+                    userCreatedFlag = true;
+                }
+            }
+
+//            if(new_task_params.users.length)
+//            {
+//                for(var user of new_task_params.users)
+//                {
+//                    if(vm.userPanels.length)
+//                    {
+//                        for(var userModal of vm.userPanels)
+//                        {
+//                            if(userModal.email != user.email)
+//                            {
+//                                vm.userPanels.push(user);
+//                                newUsersArray.push(user);
+//
+//                                userCreatedFlag = true;
+//                            }
+//                        }
+//                    }
+//                    else
+//                    {
+//                        vm.userPanels.push(user);
+//                        newUsersArray.push(user);
+//                        userCreatedFlag = true;
+//                    }
+//                }
+//            }
 
             newTasksArray.push(new_task_params);
             vm.taskPanels.push(new_task_params);
@@ -2025,6 +2160,7 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
                         triggeredFrom: 'Update Project',
                         taskToEdit: JSON.parse(JSON.stringify(taskToEdit)),
                         docsInProjectModal: JSON.parse(JSON.stringify(vm.documentPanels))
+//                        usersInProjectModal: JSON.parse(JSON.stringify(vm.userPanels))
                     };
                 }
             }
@@ -2032,12 +2168,15 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
 
         editTaskModalInstance.result.then(function (changes)
         {
-            //        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService));
+//            console.log("changes : " + JSON.stringify(changes));
 
             var updated_task = changes.updated_task;
             var docsDeletedFromTaskUpdateModal = changes.documentsToDelete;
             var floatingDocsFromTaskModal = changes.floatingDocuments;
             var modifiedDocuments = changes.modifiedDocuments;
+
+            var usersCreatedInTask = changes.tasksToBeAddedInUser.usersArray;
+            tasksToBeAddedInUser.push(changes.tasksToBeAddedInUser);
 
             for(var i=0; i<vm.taskPanels.length; i++)
             {
@@ -2078,8 +2217,6 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
                 }
             }
 
-//            console.log("floatingDocsFromTaskModal : " + JSON.stringify(floatingDocsFromTaskModal));
-
             for(var floatDocFromTask of floatingDocsFromTaskModal)
             {
                 floatingDocuments.push(floatDocFromTask);
@@ -2095,8 +2232,27 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
                         vm.documentPanels[i] = modifiedDocuments[j];
                         documentUpdateFlag = true;
                         vm.updateFlag = true;
-//                        break;
                     }
+                }
+            }
+
+            if(usersCreatedInTask.length)
+            {
+                for(var userFromTsk of usersCreatedInTask)
+                {
+                    updated_task.users.push(userFromTsk);
+                }
+            }
+
+            var newUsers = UserService.checkUsersExistence(updated_task.users, vm.userPanels);
+
+            if(newUsers.length)
+            {
+                for(var user of newUsers)
+                {
+                    vm.userPanels.push(user);
+                    newUsersArray.push(user);
+                    userCreatedFlag = true;
                 }
             }
 
@@ -2401,6 +2557,27 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
      /////////////////// Delete Document [ Update Project ] ////////////////////////////////////////////// [E N D] ////
      *//////////////////////////////////////////////////////////////////////////////////////////////////// [E N D] ////
 
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ////////////////// Delete User [ Update Project ] ////////////////////////////////////////////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.deleteUser = function(userToDelete)
+    {
+        //        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService));
+
+        usersToDelete.push(userToDelete);
+
+        UserService.deleteUserModal(userToDelete, vm.userPanels);
+//        UserService.deleteDocumentsFromModalTask(documentToDelete, tasksArray);
+
+        userDeletedFlag = true;
+        vm.updateFlag = true;
+
+    };
+
+    /*//////////////////////////////////////////////////////////////////////////////////////// [E N D] ////////////////
+     ////////////////// Delete User [ Update Project ] /////////////////////////////////////// [E N D] ////////////////
+     *//////////////////////////////////////////////////////////////////////////////////////// [E N D] ////////////////
 
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
      ///////////// Add From Existing Documents [ Update Project ] /////////////////////////////////////////////////////
@@ -2581,16 +2758,9 @@ app.controller('ExistingTasksModalInstanceController', ['$scope', '$uibModalInst
 
     vm.modalHeading = 'Import Tasks';
 
-    if(dataForThisModalInstance.tasksArray.length > 10)
-    {
-        vm.multiSearchSwitch = true;
-    }
-    else
-    {
-        vm.multiSearchSwitch = false;
-    }
+    vm.existingTasksOptions = TaskService.removeProjectTasksFromExistingTasks(dataForThisModalInstance.tasksInModal, dataForThisModalInstance.projectName);
 
-    if(dataForThisModalInstance.tasksArray.length==0)
+    if(vm.existingTasksOptions.length == 0)
     {
         vm.existingTasksOptions = [
             {
@@ -2600,9 +2770,14 @@ app.controller('ExistingTasksModalInstanceController', ['$scope', '$uibModalInst
 
         noTasks = true;
     }
+
+    if(vm.existingTasksOptions.length > 10)
+    {
+        vm.multiSearchSwitch = true;
+    }
     else
     {
-        vm.existingTasksOptions = TaskService.removeProjectTasksFromExistingTasks(dataForThisModalInstance.tasksInModal, dataForThisModalInstance.projectName);
+        vm.multiSearchSwitch = false;
     }
 
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2667,16 +2842,6 @@ app.controller('ExistingDocumentsModalInstanceController', ['$scope', '$uibModal
 
     vm.modalHeading = 'Import Documents';
 
-    if(dataForThisModalInstance.documentsArray.length==0)
-    {
-        vm.existingDocumentsOptions = [
-            {
-                'id': 0,
-                'name': 'No Documents Are Available'
-            }];
-
-        noDocuments = true;
-    }
     if(inside == "Create Task Global")
     {
         vm.existingDocumentsOptions = DocumentService.removeTaskDocsFromExistingDocs(dataForThisModalInstance.documentsInModal);
@@ -2698,6 +2863,17 @@ app.controller('ExistingDocumentsModalInstanceController', ['$scope', '$uibModal
         vm.existingDocumentsOptions = DocumentService.removePrjDocsFromExistingDocs(dataForThisModalInstance.docsInProjectModal, dataForThisModalInstance.projectName);
     }
 
+    if(vm.existingDocumentsOptions.length == 0)
+    {
+        vm.existingDocumentsOptions = [
+            {
+                'id': 0,
+                'name': 'No Documents Are Available'
+            }];
+
+        noDocuments = true;
+    }
+
     if(vm.existingDocumentsOptions.length > 10)
     {
         vm.multiSearchSwitch = true;
@@ -2716,8 +2892,8 @@ app.controller('ExistingDocumentsModalInstanceController', ['$scope', '$uibModal
         //        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService));
         if(inside == "Create Task Global" || inside == "Update Task Global")
         {
-            console.log("trigFrom 0: " + trigFrom);
-            console.log("inside 0: " + inside);
+//            console.log("trigFrom 0: " + trigFrom);
+//            console.log("inside 0: " + inside);
 
             if((vm.selectedExistingDocuments) && (!noDocuments))
             {
@@ -2754,8 +2930,8 @@ app.controller('ExistingDocumentsModalInstanceController', ['$scope', '$uibModal
         }
         if(trigFrom == "Create Project" || trigFrom == "Update Project")
         {
-            console.log("trigFrom 1: " + trigFrom);
-            console.log("inside 1: " + inside);
+//            console.log("trigFrom 1: " + trigFrom);
+//            console.log("inside 1: " + inside);
 
             if((vm.selectedExistingDocuments) && (!noDocuments))
             {
@@ -2792,8 +2968,8 @@ app.controller('ExistingDocumentsModalInstanceController', ['$scope', '$uibModal
         }
         else if((trigFrom == "Create Task" || trigFrom == "Update Task") && (inside == "Create Project"))
         {
-            console.log("trigFrom 2: " + trigFrom);
-            console.log("inside 2: " + inside);
+//            console.log("trigFrom 2: " + trigFrom);
+//            console.log("inside 2: " + inside);
 
             if((vm.selectedExistingDocuments) && (!noDocuments))
             {
@@ -2842,8 +3018,8 @@ app.controller('ExistingDocumentsModalInstanceController', ['$scope', '$uibModal
         }
         else if((trigFrom == "Create Task" || trigFrom == "Update Task") && (inside == "Update Project"))
         {
-            console.log("trigFrom 3: " + trigFrom);
-            console.log("inside 3: " + inside);
+//            console.log("trigFrom 3: " + trigFrom);
+//            console.log("inside 3: " + inside);
 
             if((vm.selectedExistingDocuments) && (!noDocuments))
             {
@@ -2971,7 +3147,7 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
 
         var taskName = task_params.taskName;
 
-        console.log("task_params : " + JSON.stringify(task_params));
+//        console.log("task_params : " + JSON.stringify(task_params));
 
         var taskTargetEndDate;
 
@@ -3022,7 +3198,8 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
 
                     if(userCreatedFlag)
                     {
-                        UserService.addProjectToUser(usersArray, project.name);
+                        var projectId = ProjectService.getProjectId(project.name);
+                        UserService.addProjectToUser(usersArray, projectId, project.name);
                         UserService.addTaskToUser(usersArray, newTaskObject.id, taskName);
                     }
 
@@ -3152,7 +3329,7 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
                 TaskService.createTaskPanel(newTasksArray);
                 DocumentService.createDocumentPanel(documentsArray);
 
-                console.log("newTaskObject : " + JSON.stringify(newTaskObject));
+//                console.log("newTaskObject : " + JSON.stringify(newTaskObject));
 
                 newTaskObject = {};
 
@@ -3177,10 +3354,22 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
                 'project': '',
                 'description': taskDescription,
                 'documents': documentsArray,
-                'users': usersArray
+                'users': []
             };
 
-            $uibModalInstance.close({new_task_params: new_task_params, floatingDocuments: floatingDocuments});
+//            if(userCreatedFlag)
+//            {
+//                for(var user of usersArray)
+//                {
+//                    new_task_params.users.push({id: user.id, name: user.name, email: user.email});
+//                }
+//
+//                UserService.addTaskToUser(usersArray, new_task_params.id, taskName);
+//
+//                userCreatedFlag = false;
+//            }
+
+            $uibModalInstance.close({new_task_params: new_task_params, floatingDocuments: floatingDocuments, tasksToBeAddedInUser: {usersArray: usersArray, taskId: new_task_params.id, taskName: taskName}});
         }
     };
 
@@ -3234,6 +3423,8 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
 
     vm.addExistingUsersModal = function()
     {
+//        console.log("vm.userPanels : " + JSON.stringify(vm.userPanels));
+
         var addExistingUsersModalInstance = $uibModal.open({
             animation: false,
             templateUrl: 'partials/existing_users_modal.html',
@@ -3247,8 +3438,8 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
                         triggeredFrom: "Create Task",
                         inside: dataForThisModalInstance.triggeredFrom,
                         usersArray: JSON.parse(JSON.stringify(UserService.getUserPanels())),
-                        usersInModal: JSON.parse(JSON.stringify(vm.userPanels)),
-                        docsInProjectModal: dataForThisModalInstance.docsInProjectModal
+                        usersInModal: JSON.parse(JSON.stringify(vm.userPanels))
+//                        usersInProjectModal: dataForThisModalInstance.usersInProjectModal
                     };
                 }
             }
@@ -3414,6 +3605,20 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
      ////////////////// Delete Document [ Create Task ] /////////////////////////////////////////// [E N D] ///////////
      *///////////////////////////////////////////////////////////////////////////////////////////// [E N D] ///////////
 
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ////////////////// Delete User [ Create Task ] ////////////////////////////////////////////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.deleteUser = function(userToDelete)
+    {
+        UserService.deleteUserInTaskModal(userToDelete, vm.userPanels);
+        UserService.deleteUserInTaskModal(userToDelete, usersArray);
+    };
+
+    /*//////////////////////////////////////////////////////////////////////////////////////// [E N D] ////////////////
+     ////////////////// Delete User [ Create Task ] ////////////////////////////////////////// [E N D] ////////////////
+     *//////////////////////////////////////////////////////////////////////////////////////// [E N D] ////////////////
+
 
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
      ///////////////// Modal For Document Info /////// [ Create Task ] /////////////////////////////////////////////
@@ -3502,6 +3707,7 @@ app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
     var documentUpdateFlag = false;
     var userUpdateFlag = false;
     var documentsToDelete = [];
+    var usersToDelete = [];
     var floatingDocuments = [];
     var taskToEdit = dataForThisModalInstance.taskToEdit;
     var taskProject = taskToEdit.project;
@@ -3596,16 +3802,12 @@ app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
 
             if(documentCreatedFlag)
             {
-                console.log("documentCreatedFlag");
-
                 DocumentService.addTaskToDocument(updatedDocumentsArray, taskToEdit.name);
 
                 DocumentService.createDocumentPanel(updatedDocumentsArray);
 
                 for(var newDocument of updatedDocumentsArray)
                 {
-                    console.log("addDocumentToTask");
-
                     TaskService.addDocumentToTask(taskToEdit.id, newDocument);
 
                     if(dataForThisModalInstance.taskToEdit.project)
@@ -3620,8 +3822,6 @@ app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
 
             if(documentUpdateFlag)
             {
-                console.log("documentUpdateFlag");
-
                 if(taskToEdit.project)
                 {
                     ProjectService.updateDocumentsInProject(taskToEdit.project, JSON.parse(JSON.stringify(modifiedDocuments)));
@@ -3650,52 +3850,73 @@ app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
 
                 if(userAddedToTask)
                 {
-                    UserService.addProjectToUser(updatedUsersArray, updated_task.project);
+                    var projectId = ProjectService.getProjectId(updated_task.project);
+                    UserService.addProjectToUser(updatedUsersArray, projectId, updated_task.project);
 
                     var projectToUpdate = ProjectService.getProjectByName(updated_task.project);
 
                     for(var user of updatedUsersArray)
                     {
-//                        projectToUpdate.users.push({id: user.id, name: user.name, email: user.email});
                         userObject = {id: user.id, name: user.name, email: user.email};
                         ProjectService.addUserToProject(updated_task.project, userObject);
                     }
 
                 }
             }
+
+            if(userDeletedFlag)
+            {
+                TaskService.deleteUsersFromTasks(usersToDelete, taskToEdit.id);
+                UserService.deleteTaskFromUser(usersToDelete, taskToEdit.id);
+            }
+
         }
         else if(dataForThisModalInstance.triggeredFrom == "Create Project")
         {
-            console.log("Create Project");
-//            if(documentDeletedFlag)
+//            if(userCreatedFlag)
 //            {
-//            }
-//
-//            if(documentCreatedFlag)
-//            {
-//            }
-//
-//            if(documentUpdateFlag)
-//            {
+//                UserService.addTaskToUser(updatedUsersArray, taskToEdit.id, taskToEdit.name);
+//                for(var user of updatedUsersArray)
+//                {
+//                    taskToEdit.users.push({id: user.id, name: user.name, email: user.email});
+//                    userAddedToTask = true;
+//                }
 //            }
 
             updated_task = taskToEdit;
 
+            if(updated_task.project)
+            {
+                ProjectService.updateTasksInProject(updated_task.project, [updated_task]);
+
+//                if(userAddedToTask)
+//                {
+//                    var projectId = ProjectService.getProjectId(updated_task.project);
+//                    UserService.addProjectToUser(updatedUsersArray, projectId, updated_task.project);
+//
+//                    var projectToUpdate = ProjectService.getProjectByName(updated_task.project);
+//
+//                    for(var user of updatedUsersArray)
+//                    {
+//                        userObject = {id: user.id, name: user.name, email: user.email};
+//                        ProjectService.addUserToProject(updated_task.project, userObject);
+//                    }
+//
+//                }
+            }
+
         }
         else if(dataForThisModalInstance.triggeredFrom == "Update Project")
         {
-            console.log("Update Project");
 
-//            if(documentDeletedFlag)
+//            if(userCreatedFlag)
 //            {
-//            }
-//
-//            if(documentCreatedFlag)
-//            {
-//            }
-//
-//            if(documentUpdateFlag)
-//            {
+//                UserService.addTaskToUser(updatedUsersArray, taskToEdit.id, taskToEdit.name);
+//                for(var user of updatedUsersArray)
+//                {
+//                    taskToEdit.users.push({id: user.id, name: user.name, email: user.email});
+//                    userAddedToTask = true;
+//                }
 //            }
 
             updated_task = taskToEdit;
@@ -3706,7 +3927,10 @@ app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
             updated_task = taskToEdit;
         }
 
-        $uibModalInstance.close({updated_task: updated_task, documentsToDelete: documentsToDelete, floatingDocuments: floatingDocuments, modifiedDocuments: modifiedDocuments});
+        console.log("usersToDelete : " + JSON.stringify(usersToDelete));
+
+        $uibModalInstance.close({updated_task: updated_task, documentsToDelete: documentsToDelete, floatingDocuments: floatingDocuments, modifiedDocuments: modifiedDocuments, tasksToBeAddedInUser: {usersArray: updatedUsersArray, taskId: taskToEdit.id, taskName: taskToEdit.name}});
+
     };
 
     /*/////////////////////////////////////////////////////////////////////////////////////// [E N D] /////////////////
@@ -3834,7 +4058,7 @@ app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
      */////////////////////////////////////////////////////////////////////////////////////////////////// [E N D] /////
 
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-     ///////////// Add From Existing Users [ Update Task ] ////////////////////////////////////////////////////////
+     ///////////// Assign Users To Task [ Update Task ] ///////////////////////////////////////////////////////////////
      */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     vm.addExistingUsersModal = function()
@@ -3857,6 +4081,7 @@ app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
                         taskName: dataForThisModalInstance.taskToEdit.name,
                         taskProject: taskProject,
                         docsInProjectModal: dataForThisModalInstance.docsInProjectModal
+//                        usersInProjectModal: dataForThisModalInstance.usersInProjectModal
                     };
                 }
             }
@@ -3881,7 +4106,7 @@ app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
     };
 
     /*/////////////////////////////////////////////////////////////////////////////////////////////////// [E N D] /////
-     ///////////// Add From Existing Users [ Update Task ] ////////////////////////////////////////// [E N D] /////
+     ///////////// Assign Users To Task [ Update Task ] ///////////////////////////////////////////////// [E N D] /////
      */////////////////////////////////////////////////////////////////////////////////////////////////// [E N D] /////
 
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3964,6 +4189,26 @@ app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
     /*///////////////////////////////////////////////////////////////////////////////////////////// [E N D] ///////////
      ////////////////// Delete Document [ Update Task ] /////////////////////////////////////////// [E N D] ///////////
      *///////////////////////////////////////////////////////////////////////////////////////////// [E N D] ///////////
+
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ////////////////// Delete User [ Update Task ] ///////////////////////////////////////////////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.deleteUser = function(userToDelete)
+    {
+        usersToDelete.push(userToDelete);
+
+        UserService.deleteUserInTaskModal(userToDelete, vm.userPanels);
+        UserService.deleteUserInTaskModal(userToDelete, updatedUsersArray);
+
+        userDeletedFlag = true;
+        vm.taskUpdateFlag = true;
+
+    };
+
+    /*//////////////////////////////////////////////////////////////////////////////////////// [E N D] ////////////////
+     ////////////////// Delete User [ Update Task ] ////////////////////////////////////////// [E N D] ////////////////
+     *//////////////////////////////////////////////////////////////////////////////////////// [E N D] ////////////////
 
     vm.cancelModal = function () {
         $uibModalInstance.dismiss('cancel');
@@ -4345,44 +4590,11 @@ app.controller('ExistingUsersModalInstanceController', ['$scope', '$uibModalInst
 
     var vm = this;
     var noUsers = false;
-    var trigFrom = dataForThisModalInstance.triggeredFrom;
-    var inside = dataForThisModalInstance.inside;
+    var userInModal = dataForThisModalInstance.usersInModal;
 
     vm.modalHeading = 'Add Users';
 
-    if(dataForThisModalInstance.usersArray.length==0)
-    {
-        vm.existingUsersOptions = [
-            {
-                'id': 0,
-                'name': 'No Users Are Available'
-            }];
-
-        noUsers = true;
-    }
-
-    if(inside == "Create Task Global")
-    {
-        vm.existingUsersOptions = UserService.removeUsersExistingInProjectOrTask(dataForThisModalInstance.usersInModal);
-    }
-    else if(inside == "Update Task Global")
-    {
-        vm.existingUsersOptions = UserService.removeUsersExistingInProjectOrTask(dataForThisModalInstance.usersInModal);
-    }
-    else if(trigFrom == "Create Project")
-    {
-        vm.existingUsersOptions = UserService.removeUsersExistingInProjectOrTask(dataForThisModalInstance.usersInModal);
-
-//        console.log("vm.existingUsersOptions : " + JSON.stringify(vm.existingUsersOptions));
-    }
-    else if(trigFrom == "Update Project")
-    {
-        vm.existingUsersOptions = UserService.removePrjDocsFromExistingDocs(dataForThisModalInstance.usersInModal, dataForThisModalInstance.projectName);
-    }
-    else if(inside == "Create Project" || inside == "Update Project")
-    {
-        vm.existingUsersOptions = UserService.removePrjDocsFromExistingDocs(dataForThisModalInstance.usersInProjectModal, dataForThisModalInstance.projectName);
-    }
+    vm.existingUsersOptions = UserService.removeUsersExistingInProjectOrTask(userInModal);
 
     if(vm.existingUsersOptions.length > 10)
     {
@@ -4393,6 +4605,17 @@ app.controller('ExistingUsersModalInstanceController', ['$scope', '$uibModalInst
         vm.multiSearchSwitch = false;
     }
 
+    if(vm.existingUsersOptions.length == 0)
+    {
+        vm.existingUsersOptions = [
+            {
+                'id': 0,
+                'email': 'No Users Are Available'
+            }];
+
+        noUsers = true;
+    }
+
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
      ////////////////// Create Existing User //////////////////////////////////////////////////////////////////////////
      */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -4401,47 +4624,15 @@ app.controller('ExistingUsersModalInstanceController', ['$scope', '$uibModalInst
 
         //        console.log("Global Docs AFTER : " + JSON.stringify(UserService));
 
-        if(inside == "Create Task Global" || inside == "Update Task Global")
+        if((vm.selectedExistingUsers) && (!noUsers))
         {
-            console.log("trigFrom 0: " + trigFrom);
-            console.log("inside 0: " + inside);
-
-            if((vm.selectedExistingUsers) && (!noUsers))
-            {
-//                console.log("vm.selectedExistingUsers: " + JSON.stringify(vm.selectedExistingUsers));
-
-                $uibModalInstance.close(vm.selectedExistingUsers);
-            }
-        }
-        if(trigFrom == "Create Project" || trigFrom == "Update Project")
-        {
-            console.log("trigFrom 1: " + trigFrom);
-            console.log("inside 1: " + inside);
-
-            if((vm.selectedExistingUsers) && (!noUsers))
-            {
-                $uibModalInstance.close(vm.selectedExistingUsers);
-            }
-        }
-        else if((trigFrom == "Create Task" || trigFrom == "Update Task") && (inside == "Create Project"))
-        {
-            console.log("trigFrom 2: " + trigFrom);
-            console.log("inside 2: " + inside);
-
-            $uibModalInstance.close(vm.selectedExistingUsers);
-        }
-        else if((trigFrom == "Create Task" || trigFrom == "Update Task") && (inside == "Update Project"))
-        {
-            console.log("trigFrom 3: " + trigFrom);
-            console.log("inside 3: " + inside);
-
             $uibModalInstance.close(vm.selectedExistingUsers);
         }
 
     };
 
     /*///////////////////////////////////////////////////////////////////////////////////////////////// [E N D] ///////
-     ////////////////// Create Existing User ////////////////////////////////////////////////////// [E N D] ///////
+     ////////////////// Create Existing User ////////////////////////////////////////////////////////// [E N D] ///////
      *///////////////////////////////////////////////////////////////////////////////////////////////// [E N D] ///////
 
     vm.cancelModal = function () {

@@ -66,6 +66,17 @@ app.service('ProjectService', function(){
         }
     };
 
+    var getProjectId = function(projectName)
+    {
+        for(var project of projectPanels)
+        {
+            if(project.name == projectName)
+            {
+                return project.id;
+            }
+        }
+    };
+
     var checkTaskInProject = function(projName, taskObject)
     {
         "use strict";
@@ -401,6 +412,46 @@ app.service('ProjectService', function(){
         }
     };
 
+    var deleteUsersFromProjects = function(usersToDelete, projectName)
+    {
+        if(projectName)
+        {
+            var deleteFromProject;
+
+            for(var projectGlobal of projectPanels)
+            {
+                if(projectGlobal.name == projectName)
+                {
+                    deleteFromProject = projectGlobal;
+                }
+            }
+
+            for(var user of usersToDelete)
+            {
+                for(var userProject of deleteFromProject.users)
+                {
+                    if(userProject.email == user.email)
+                    {
+                        removeEntity(deleteFromProject.users, 'email', user.email);
+                    }
+                }
+            }
+
+        }
+        else
+        {
+            for(var projectGlobal of projectPanels)
+            {
+                for(var userProject of projectGlobal.users)
+                {
+                    if(userProject.email == usersToDelete.email)
+                    {
+                        removeEntity(projectGlobal.users, 'email', usersToDelete.email);
+                    }
+                }
+            }
+        }
+    };
 
     var removeEntity = function(arr, attr, value)
     {
@@ -425,16 +476,17 @@ app.service('ProjectService', function(){
         updatedProjectParams: updatedProjectParams,
         getProjectPanels: getProjectPanels,
         getProjectByName: getProjectByName,
+        getProjectId: getProjectId,
         addProjectToTask: addProjectToTask,
         addProjectToDocument: addProjectToDocument,
         checkTaskInProject: checkTaskInProject,
         checkDocumentInProject: checkDocumentInProject,
-//        addProjectToUser: addProjectToUser,
         addTaskToProject: addTaskToProject,
         addDocumentToProject: addDocumentToProject,
         addUserToProject: addUserToProject,
         deleteTasksFromProject: deleteTasksFromProject,
         deleteDocumentsFromProject: deleteDocumentsFromProject,
+        deleteUsersFromProjects: deleteUsersFromProjects,
         delDocFromProject: delDocFromProject,
         deleteTaskAndDocumentsFromProject: deleteTaskAndDocumentsFromProject,
         checkProjectExistence: checkProjectExistence,

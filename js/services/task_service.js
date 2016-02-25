@@ -311,6 +311,73 @@ app.service('TaskService', function(){
         }
     };
 
+    var addUserToTask = function(taskName, userObject)
+    {
+        "use strict";
+//                        console.log("Global Docs AFTER : " + JSON.stringify(UserService.getUserPanels()));
+
+        for(var taskGlobal of taskPanels)
+        {
+            var userAlreadyExistsInTask = false;
+
+            if (taskGlobal.name == taskName)
+            {
+                for(var userTask of taskGlobal.users)
+                {
+                    if(userTask.email == userObject.email)
+                    {
+                        userAlreadyExistsInTask = true;
+                    }
+                }
+
+                if(!userAlreadyExistsInTask)
+                {
+                    taskGlobal.users.push(userObject);
+                }
+
+            }
+        }
+    };
+
+    var deleteUserFromTasks = function(userToDelete)
+    {
+        for(var taskGlobal of taskPanels)
+        {
+            for(var userTask of taskGlobal.users)
+            {
+                if(userTask.email == userToDelete.email)
+                {
+                    removeEntity(taskGlobal.users, 'id', 'email', userToDelete.id, userToDelete.email);
+                }
+            }
+        }
+    };
+
+    var deleteUsersFromTasks = function(usersToDelete, taskId)
+    {
+        var deleteFromTask;
+
+        for(var taskGlobal of taskPanels)
+        {
+            if(taskGlobal.id == taskId)
+            {
+                deleteFromTask = taskGlobal;
+                break;
+            }
+        }
+
+        for(var user of usersToDelete)
+        {
+            for(var userTask of deleteFromTask.users)
+            {
+                if(userTask.email == user.email)
+                {
+                    removeEntity(deleteFromTask.users, 'id', 'email', user.id, user.email);
+                }
+            }
+        }
+    };
+
     return{
         newTaskID: newTaskID,
         checkTaskExistence: checkTaskExistence,
@@ -319,6 +386,9 @@ app.service('TaskService', function(){
         getTaskPanels: getTaskPanels,
         getTaskById: getTaskById,
         addDocumentToTask: addDocumentToTask,
+        addUserToTask: addUserToTask,
+        deleteUserFromTasks: deleteUserFromTasks,
+        deleteUsersFromTasks: deleteUsersFromTasks,
         deleteTask: deleteTask,
         deleteTaskModal: deleteTaskModal,
         deleteTaskGlobal: deleteTaskGlobal,
