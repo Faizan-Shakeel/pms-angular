@@ -5,41 +5,30 @@ var app = angular.module('mainViewModule', ['ui.bootstrap', 'nsPopover']);
 app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService', 'DocumentService', 'UserService', 'NotificationsAndHistoryService', function ($scope, ProjectService, TaskService, DocumentService, UserService, NotificationsAndHistoryService)
 {
     var vm = this;
-
     /*/////////////////////////////////////////////////////////////////////////////////////////////////
      ////////////////// ACCORDION /////////////////////////////////////////////////////////////////////
      */////////////////////////////////////////////////////////////////////////////////////////////////
 
-    vm.clearNotifications = function()
-    {
-        console.log(vm.accordionVisibility);
-
-        if(!vm.accordionStatus.isSecondOpen || !vm.accordionVisibility)
-        {
-            console.log("Inside : " + vm.accordionStatus.isSecondOpen);
-
-            vm.notificationsCount = 0;
-        }
-    };
-
-    vm.globalNnotifications = NotificationsAndHistoryService.getNotifications();
-    vm.notificationsCount = 0;
+    vm.notificationsCount = {count: 0};
+    vm.globalNotifications = NotificationsAndHistoryService.getNotifications();
+    vm.globalHistory = NotificationsAndHistoryService.getHistory();
+    vm.notificationsCount = NotificationsAndHistoryService.globalNotificationsCount;
     vm.onlineUsersCount = 0;
 
     vm.accordionVisibility = false;
 
     vm.oneAtATime = true;
 
-    vm.groups = [
-        {
-            title: 'Dynamic Group Header - 1',
-            content: 'Dynamic Group Body - 1'
-        },
-        {
-            title: 'Dynamic Group Header - 2',
-            content: 'Dynamic Group Body - 2'
-        }
-    ];
+//    vm.groups = [
+//        {
+//            title: 'Dynamic Group Header - 1',
+//            content: 'Dynamic Group Body - 1'
+//        },
+//        {
+//            title: 'Dynamic Group Header - 2',
+//            content: 'Dynamic Group Body - 2'
+//        }
+//    ];
 
     vm.accordionStatus = {
         isFirstOpen: true,
@@ -70,10 +59,12 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
 
 //        console.log("vm.accordionVisibility  : " + vm.accordionVisibility);
 
-        if(vm.accordionStatus.isSecondOpen && !vm.accordionVisibility)
-        {
-            vm.notificationsCount = 0;
-        }
+        NotificationsAndHistoryService.clearNotifications();
+
+//        if(vm.accordionStatus.isSecondOpen && !vm.accordionVisibility)
+//        {
+//            vm.globalNotificationsCount = 0;
+//        }
 
         if(vm.chatPanelVisibility)
         {
@@ -97,6 +88,21 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
                 vm.globalTabsBootstrapClass = 'col-lg-8 col-md-8 col-sm-8';
             }
         }
+    };
+
+    var accInfoObject = {isSecondOpen: vm.accordionStatus.isSecondOpen, accVisibility: vm.accordionVisibility};
+    NotificationsAndHistoryService.setAccordionStatus(accInfoObject);
+
+    vm.updateAccordionInfo = function()
+    {
+        console.log("C A L L E D");
+
+//        console.log("vm.notificationsCount : " + vm.notificationsCount);
+
+        NotificationsAndHistoryService.setAccordionStatus(accInfoObject);
+
+        NotificationsAndHistoryService.clearNotifications();
+
     };
 
     /*/////////////////////////////////////////////////////////////////////////////////////////////////
@@ -255,10 +261,7 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
 
         NotificationsAndHistoryService.addNotifications(projectToDelete, action, actionBy, elementType);
 
-        if(!vm.accordionStatus.isSecondOpen || vm.accordionVisibility)
-        {
-            vm.notificationsCount++;
-        }
+        NotificationsAndHistoryService.setNotificationsCount(vm.accordionStatus.isSecondOpen, vm.accordionVisibility);
 
         var selectedProjectTasksArray;
         var selectedProjectDocumentsArray;
@@ -297,7 +300,7 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
 
         if(!vm.accordionStatus.isSecondOpen || vm.accordionVisibility)
         {
-            vm.notificationsCount++;
+            vm.globalNotificationsCount++;
         }
 
         var deletedTaskProject;
@@ -329,7 +332,7 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
 
         if(!vm.accordionStatus.isSecondOpen || vm.accordionVisibility)
         {
-            vm.notificationsCount++;
+            vm.globalNotificationsCount++;
         }
 
         removeEntity(DocumentService.getDocumentPanels(), 'id', documentToDelete.id);
@@ -360,7 +363,7 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
 
         if(!vm.accordionStatus.isSecondOpen || vm.accordionVisibility)
         {
-            vm.notificationsCount++;
+            vm.globalNotificationsCount++;
         }
 
         removeEntity(UserService.getUserPanels(), 'id', userToDelete.id);

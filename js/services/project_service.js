@@ -12,6 +12,8 @@ app.service('ProjectService', ['NotificationsAndHistoryService', function (Notif
     var action;
     var actionBy;
     var elementType;
+    var accordionInfo;
+    var historyObject;
 
     var createProjectPanel = function(project_params)
     {
@@ -24,6 +26,12 @@ app.service('ProjectService', ['NotificationsAndHistoryService', function (Notif
         elementType = 'Project';
 
         NotificationsAndHistoryService.addNotifications(project_params, action, actionBy, elementType);
+
+        accordionInfo = NotificationsAndHistoryService.getAccordionStatus();
+        NotificationsAndHistoryService.setNotificationsCount(accordionInfo.isSecondOpen, accordionInfo.accVisibility);
+
+        historyObject = {elementType: elementType, element: project_params};
+        NotificationsAndHistoryService.makeHistory(historyObject);
 
     };
 

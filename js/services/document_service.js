@@ -7,11 +7,13 @@ var app = angular.module('documentServiceModule', []);
 
 app.service('DocumentService', ['NotificationsAndHistoryService', function (NotificationsAndHistoryService)
 {
+    var accordionInfo;
     var documentPanels = [];
     var documentsIdArray = [];
     var action;
     var actionBy;
     var elementType;
+    var historyObject;
 
     var createDocumentPanel = function(newDocumentObject)
     {
@@ -26,6 +28,11 @@ app.service('DocumentService', ['NotificationsAndHistoryService', function (Noti
 
             NotificationsAndHistoryService.addNotifications(newDocumentObject[index], action, actionBy, elementType);
 
+            accordionInfo = NotificationsAndHistoryService.getAccordionStatus();
+            NotificationsAndHistoryService.setNotificationsCount(accordionInfo.isSecondOpen, accordionInfo.accVisibility);
+
+            historyObject = {elementType: elementType, element: newDocumentObject[index]};
+            NotificationsAndHistoryService.makeHistory(historyObject);
         });
     };
 

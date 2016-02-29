@@ -6,10 +6,6 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
 
     var vm = this;
 
-    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-     ///////////////// Modal For Project Info /////// [ Global ] //////////////////////////////////////////////////////
-     */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     vm.infoElement = function(elemType, elemInfo)
     {
 //        console.log("elemType : " + JSON.stringify(elemType));
@@ -61,6 +57,10 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
         }
     };
 
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////// Modal For Project Info /////// [ Global ] //////////////////////////////////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     vm.infoProjectModal = function (projectInfo) {
 
 //        console.log("projectInfo Global : " + JSON.stringify(projectInfo));
@@ -81,8 +81,11 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
             }
         });
 
-        editProjectModalInstance.result.then(function ()
+        editProjectModalInstance.result.then(function (projectInfo)
         {
+            console.log("projectInfo : " + JSON.stringify(projectInfo));
+
+            NotificationsAndHistoryService.makeHistory({elementType: 'Project', element: projectInfo});
 
         }, function () {
 
@@ -114,8 +117,9 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
             }
         });
 
-        editTaskModalInstance.result.then(function ()
+        editTaskModalInstance.result.then(function (taskInfo)
         {
+            NotificationsAndHistoryService.makeHistory({elementType: 'Task', element: taskInfo});
 
         }, function () {
 
@@ -147,10 +151,12 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
             }
         });
 
-        editDocumentModalInstance.result.then(function ()
+        editDocumentModalInstance.result.then(function (documentInfo)
         {
 
         }, function () {
+
+            NotificationsAndHistoryService.makeHistory({elementType: 'Document', element: documentInfo});
 
         });
     };
@@ -183,10 +189,12 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
             }
         });
 
-        editUserModalInstance.result.then(function ()
+        editUserModalInstance.result.then(function (userInfo)
         {
 
         }, function () {
+
+            NotificationsAndHistoryService.makeHistory({elementType: 'User', element: userInfo});
 
         });
     };
@@ -247,9 +255,9 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
             }
         });
 
-        editProjectModalInstance.result.then(function ()
+        editProjectModalInstance.result.then(function (project_params)
         {
-
+            NotificationsAndHistoryService.makeHistory({elementType: 'Project', element: project_params});
         }, function () {
 
         });
@@ -319,9 +327,9 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
             }
         });
 
-        editTaskModalInstance.result.then(function ()
+        editTaskModalInstance.result.then(function (task_params)
         {
-
+            NotificationsAndHistoryService.makeHistory({elementType: 'Task', element: task_params.updated_task});
         }, function () {
 
         });
@@ -399,6 +407,9 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
 
             TaskService.updateDocumentsInTask(JSON.parse(JSON.stringify([updated_document])));
 
+            NotificationsAndHistoryService.makeHistory({elementType: 'Document', element: updated_document});
+
+
         }, function () {
 
         });
@@ -466,8 +477,9 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
             }
         });
 
-        editUserModalInstance.result.then(function ()
+        editUserModalInstance.result.then(function (updated_user)
         {
+//            NotificationsAndHistoryService.makeHistory({elementType: 'Document', element: updated_user});
 
         }, function () {
 
@@ -1530,10 +1542,6 @@ app.controller('InfoProjectModalInstanceController', ['$scope', '$uibModal', '$u
     vm.documentPanels = projectInfo.documents;
     vm.userPanels = JSON.parse(JSON.stringify(projectInfo.users));
 
-    vm.cancel = function () {
-        $uibModalInstance.dismiss('cancel');
-    };
-
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
      ///////////////// Modal For Task Info /////// [ Project Info ] ///////////////////////////////////////////////////
      */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1637,6 +1645,11 @@ app.controller('InfoProjectModalInstanceController', ['$scope', '$uibModal', '$u
      ///////////////// Modal For User Info /////// [ Project Info ] //////////////////////////// [E N D] //////////////
      *////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
 
+    vm.cancel = function () {
+//        $uibModalInstance.dismiss('cancel');
+        $uibModalInstance.close(projectInfo);
+    };
+
 }]);
 
 app.controller('InfoTaskModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'UserService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, UserService) {
@@ -1656,10 +1669,6 @@ app.controller('InfoTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
     vm.taskDescription = taskInfo.description;
     vm.documentPanels = JSON.parse(JSON.stringify(taskInfo.documents));
     vm.userPanels = JSON.parse(JSON.stringify(taskInfo.users));
-
-    vm.cancel = function () {
-        $uibModalInstance.dismiss('cancel');
-    };
 
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
      ///////////////// Modal For Document Info //////// [ Task Info ] /////////////////////////////////////////////////
@@ -1731,6 +1740,10 @@ app.controller('InfoTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
      ///////////////// Modal For User Info /////// [ Task Info ] /////////////////////////////// [E N D] //////////////
      *////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
 
+    vm.cancel = function () {
+        $uibModalInstance.close(taskInfo);
+    };
+
 }]);
 
 app.controller('InfoDocumentModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'DocumentService', 'TaskService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, ProjectService, DocumentService, TaskService) {
@@ -1744,7 +1757,7 @@ app.controller('InfoDocumentModalInstanceController', ['$scope', '$uibModal', '$
     vm.documentDescription = documentInfo.description;
 
     vm.cancel = function () {
-        $uibModalInstance.dismiss('cancel');
+        $uibModalInstance.close(documentInfo);
     };
 
 }]);
@@ -1761,7 +1774,6 @@ app.controller('InfoUserModalInstanceController', ['$scope', '$uibModal', '$uibM
     vm.projectPanels = userInfo.projects;
     vm.taskPanels = userInfo.tasks;
     vm.documentPanels = userInfo.documents;
-
 
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
      ///////////////// Modal For Project Info /////// [ User Info ] ///////////////////////////////////////////////////
@@ -1868,7 +1880,7 @@ app.controller('InfoUserModalInstanceController', ['$scope', '$uibModal', '$uibM
      *////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
 
     vm.cancel = function () {
-        $uibModalInstance.dismiss('cancel');
+        $uibModalInstance.close(userInfo);
     };
 
 }]);
@@ -2109,7 +2121,7 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
 
         ProjectService.updatedProjectParams(updated_project_params);
 
-        $uibModalInstance.close();
+        $uibModalInstance.close(updated_project_params);
     };
 
     /*///////////////////////////////////////////////////////////////////////////////////////// [E N D] ///////////////

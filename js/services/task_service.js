@@ -7,11 +7,13 @@ var app = angular.module('taskServiceModule', []);
 
 app.service('TaskService', ['NotificationsAndHistoryService', function (NotificationsAndHistoryService)
 {
+    var accordionInfo;
     var taskPanels = [];
     var tasksIdArray = [];
     var action;
     var actionBy;
     var elementType;
+    var historyObject;
 
     var createTaskPanel = function(newTasksArray)
     {
@@ -26,8 +28,13 @@ app.service('TaskService', ['NotificationsAndHistoryService', function (Notifica
 
             NotificationsAndHistoryService.addNotifications(newTasksArray[index], action, actionBy, elementType);
 
-        });
+            accordionInfo = NotificationsAndHistoryService.getAccordionStatus();
+            NotificationsAndHistoryService.setNotificationsCount(accordionInfo.isSecondOpen, accordionInfo.accVisibility);
 
+            historyObject = {elementType: elementType, element: newTasksArray[index]};
+            NotificationsAndHistoryService.makeHistory(historyObject);
+
+        });
     };
 
     var updatedTaskParams = function(updated_task)

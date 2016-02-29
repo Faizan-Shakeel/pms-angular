@@ -79,9 +79,7 @@
                 </div>
 
                 <div>
-                    <!--<p class="navbar-text" id="notifications" uib-tooltip="Notifications" tooltip-placement="bottom"><i class="fa fa-comments-o"></i><strong> 7</strong></p>-->
-                    <!--<p class="navbar-text" id="users-online" uib-tooltip="Online Users" tooltip-placement="bottom"><i class="fa fa-user-md"></i><strong> 3</strong></p>-->
-                    <p class="navbar-text" id="notifications" uib-tooltip="Notifications" tooltip-placement="bottom"><i class="fa fa-comments-o"></i><strong> {{MainViewVM.notificationsCount}}</strong></p>
+                    <p class="navbar-text" id="notifications" uib-tooltip="Unread Notifications" tooltip-placement="bottom"><i class="fa fa-comments-o"></i><strong> {{MainViewVM.notificationsCount.count}}</strong></p>
                     <p class="navbar-text" id="users-online" uib-tooltip="Online Users" tooltip-placement="bottom"><i class="fa fa-user-md"></i><strong> {{MainViewVM.onlineUsersCount}}</strong></p>
                 </div>
 
@@ -157,22 +155,19 @@
 
                 </uib-accordion-group>
 
-                <uib-accordion-group is-open="MainViewVM.accordionStatus.isSecondOpen">
+                <uib-accordion-group is-open="MainViewVM.accordionStatus.isSecondOpen" ng-click="MainViewVM.updateAccordionInfo()">
                     <uib-accordion-heading>
-                        <p id="testId2" ng-click="MainViewVM.clearNotifications(MainViewVM.accordionStatus.isSecondOpen)">Notifications</p>
+                        <p id="testId2" ng-click="MainViewVM.clearNotifications()">Notifications</p>
                         <!--<p id="testId2">Notifications</p>-->
 
                     </uib-accordion-heading>
 
                     <div slim-scroll height="400px">
 
-                        <div class="panel panel-default custom-notification-panel-style" ng-repeat="notification in MainViewVM.globalNnotifications">
+                        <div class="panel panel-default custom-notification-panel-style" ng-repeat="notification in MainViewVM.globalNotifications">
 
                             <div class="panel-body custom-notification-panel-body-style">
-                                <!--<a href="">{{notification.actionBy}}</a><span> {{notification.action}} {{notification.elementType}} </span><a href="" ng-click="ModalVM.infoElement(notification.elementType, notification.element)">{{notification.element.name}}</a>-->
-
                                 <a href="">{{notification.actionBy}}</a><span> {{notification.action}} <a href="" ng-click="ModalVM.infoElement(notification.elementType2, notification.element2)">{{notification.action2}}</a> {{notification.elementType}} </span><a href="" ng-click="ModalVM.infoElement(notification.elementType, notification.element)">{{notification.element.name}}</a>
-
                             </div>
 
                             <div class="panel-footer custom-notification-panel-footer-style">
@@ -194,9 +189,9 @@
 
                     <div slim-scroll height="400px">
 
-                        <div class="panel panel-default custom-history-panel-style">
+                        <div class="panel panel-default custom-history-panel-style" ng-repeat="history in MainViewVM.globalHistory">
                             <div class="panel-body custom-history-panel-body-style">
-                                <a href="">P00101</a>
+                                <a href="" ng-click="ModalVM.infoElement(history.elementType, history.element)">{{history.element.name}}</a>
                             </div>
                         </div>
 

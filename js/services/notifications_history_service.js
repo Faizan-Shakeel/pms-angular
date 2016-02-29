@@ -7,18 +7,34 @@ var app = angular.module('notificationsAndHistoryModule', []);
 
 app.service('NotificationsAndHistoryService', [function () {
 
+    var history = [];
     var globalNotifications = [];
+    var accordionStatusAndVisibility;
+    var globalNotificationsCount = {count: 0};
+
+    var setAccordionStatus = function(accStatusParams)
+    {
+        accordionStatusAndVisibility = accStatusParams;
+    };
+
+    var getAccordionStatus = function()
+    {
+        return accordionStatusAndVisibility;
+    };
+
+    var makeHistory = function(historyParams)
+    {
+        history.unshift(historyParams);
+    };
+
+    var getHistory = function()
+    {
+        return history;
+    };
 
     var addNotifications = function(elementParams, action, actionBy, elementType, action2, elementType2, element2)
     {
         "use strict";
-
-//        console.log("actionBy : " + actionBy);
-//        console.log("action : " + action);
-//        console.log("elementType : " + elementType);
-//        console.log("action2 : " + action2);
-//        console.log("elementParams : " + JSON.stringify(elementParams));
-//        console.log("element2 : " + JSON.stringify(element2));
 
         var actionDate = moment().format("L");
         var actionTime = moment().format('LT');
@@ -36,7 +52,6 @@ app.service('NotificationsAndHistoryService', [function () {
         };
 
         globalNotifications.unshift(notificationsParams);
-//        globalNotifications.reverse();
     };
 
     var getNotifications = function()
@@ -46,12 +61,38 @@ app.service('NotificationsAndHistoryService', [function () {
         return globalNotifications;
     };
 
+    var setNotificationsCount = function(accStatus, accVisibility)
+    {
+        if(!accStatus || accVisibility)
+        {
+            globalNotificationsCount.count++;
+        }
+    };
 
+    var getNotificationsCount = function()
+    {
+        return globalNotificationsCount;
+    };
 
+    var clearNotifications = function()
+    {
+        if(!accordionStatusAndVisibility.isSecondOpen || !accordionStatusAndVisibility.accVisibility)
+        {
+            globalNotificationsCount.count = 0;
+        }
+    };
 
     return{
         addNotifications: addNotifications,
-        getNotifications: getNotifications
+        getNotifications: getNotifications,
+        setNotificationsCount: setNotificationsCount,
+        getNotificationsCount: getNotificationsCount,
+        setAccordionStatus: setAccordionStatus,
+        getAccordionStatus: getAccordionStatus,
+        clearNotifications: clearNotifications,
+        makeHistory: makeHistory,
+        getHistory: getHistory,
+        globalNotificationsCount: globalNotificationsCount
     }
 
 }]);

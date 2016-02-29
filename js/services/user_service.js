@@ -7,6 +7,7 @@ var app = angular.module('userServiceModule', []);
 
 app.service('UserService', ['NotificationsAndHistoryService', function (NotificationsAndHistoryService)
 {
+    var accordionInfo;
     var userPanels = [];
     var usersIdArray = [];
     var action;
@@ -15,6 +16,7 @@ app.service('UserService', ['NotificationsAndHistoryService', function (Notifica
     var elementType;
     var elementType2;
     var element2;
+    var historyObject;
 
     var createUserPanel = function(newUserObject)
     {
@@ -28,6 +30,12 @@ app.service('UserService', ['NotificationsAndHistoryService', function (Notifica
             elementType = 'User';
 
             NotificationsAndHistoryService.addNotifications(newUserObject[index], action, actionBy, elementType);
+
+            accordionInfo = NotificationsAndHistoryService.getAccordionStatus();
+            NotificationsAndHistoryService.setNotificationsCount(accordionInfo.isSecondOpen, accordionInfo.accVisibility);
+
+            historyObject = {elementType: elementType, element: newUserObject[index]};
+            NotificationsAndHistoryService.makeHistory(historyObject);
 
         });
     };
@@ -190,6 +198,9 @@ app.service('UserService', ['NotificationsAndHistoryService', function (Notifica
 
                     NotificationsAndHistoryService.addNotifications(deleteFromUser, action, actionBy, elementType, action2, elementType2, element2);
 
+                    accordionInfo = NotificationsAndHistoryService.getAccordionStatus();
+                    NotificationsAndHistoryService.setNotificationsCount(accordionInfo.isSecondOpen, accordionInfo.accVisibility);
+
                 }
             }
         }
@@ -228,6 +239,9 @@ app.service('UserService', ['NotificationsAndHistoryService', function (Notifica
                     element2 = task;
 
                     NotificationsAndHistoryService.addNotifications(deleteFromUser, action, actionBy, elementType, action2, elementType2, element2);
+
+                    accordionInfo = NotificationsAndHistoryService.getAccordionStatus();
+                    NotificationsAndHistoryService.setNotificationsCount(accordionInfo.isSecondOpen, accordionInfo.accVisibility);
 
                 }
             }
@@ -328,6 +342,9 @@ app.service('UserService', ['NotificationsAndHistoryService', function (Notifica
 
                     NotificationsAndHistoryService.addNotifications(userToUpdate, action, actionBy, elementType, action2, elementType2, element2);
 
+                    accordionInfo = NotificationsAndHistoryService.getAccordionStatus();
+                    NotificationsAndHistoryService.setNotificationsCount(accordionInfo.isSecondOpen, accordionInfo.accVisibility);
+
                 }
             }
 //        <a href="" ng-click="ModalVM.infoElement(notification.elementType, notification.element)">
@@ -358,6 +375,9 @@ app.service('UserService', ['NotificationsAndHistoryService', function (Notifica
                     element2 = taskIdObject;
 
                     NotificationsAndHistoryService.addNotifications(userGlobal, action, actionBy, elementType, action2, elementType2, element2);
+
+                    accordionInfo = NotificationsAndHistoryService.getAccordionStatus();
+                    NotificationsAndHistoryService.setNotificationsCount(accordionInfo.isSecondOpen, accordionInfo.accVisibility);
 
                 }
             }
