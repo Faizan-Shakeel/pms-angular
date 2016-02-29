@@ -79,8 +79,10 @@
                 </div>
 
                 <div>
-                    <p class="navbar-text" id="notifications" uib-tooltip="Notifications" tooltip-placement="bottom"><i class="fa fa-comments-o"></i><strong> 7</strong></p>
-                    <p class="navbar-text" id="users-online" uib-tooltip="Online Users" tooltip-placement="bottom"><i class="fa fa-user-md"></i><strong> 3</strong></p>
+                    <!--<p class="navbar-text" id="notifications" uib-tooltip="Notifications" tooltip-placement="bottom"><i class="fa fa-comments-o"></i><strong> 7</strong></p>-->
+                    <!--<p class="navbar-text" id="users-online" uib-tooltip="Online Users" tooltip-placement="bottom"><i class="fa fa-user-md"></i><strong> 3</strong></p>-->
+                    <p class="navbar-text" id="notifications" uib-tooltip="Notifications" tooltip-placement="bottom"><i class="fa fa-comments-o"></i><strong> {{MainViewVM.notificationsCount}}</strong></p>
+                    <p class="navbar-text" id="users-online" uib-tooltip="Online Users" tooltip-placement="bottom"><i class="fa fa-user-md"></i><strong> {{MainViewVM.onlineUsersCount}}</strong></p>
                 </div>
 
             </div>
@@ -138,7 +140,7 @@
         <div class="col-lg-2 col-md-2 col-sm-2" ng-hide="MainViewVM.accordionVisibility">
 
             <uib-accordion close-others="MainViewVM.oneAtATime">
-                <uib-accordion-group is-open="MainViewVM.status.isFirstOpen">
+                <uib-accordion-group is-open="MainViewVM.accordionStatus.isFirstOpen">
                     <uib-accordion-heading>
                         <p id="testId">Dashboard</p>
 
@@ -155,23 +157,27 @@
 
                 </uib-accordion-group>
 
-                <uib-accordion-group>
+                <uib-accordion-group is-open="MainViewVM.accordionStatus.isSecondOpen">
                     <uib-accordion-heading>
-                        <p id="testId2">Notifications</p>
+                        <p id="testId2" ng-click="MainViewVM.clearNotifications(MainViewVM.accordionStatus.isSecondOpen)">Notifications</p>
+                        <!--<p id="testId2">Notifications</p>-->
 
                     </uib-accordion-heading>
 
                     <div slim-scroll height="400px">
 
-                        <div class="panel panel-default custom-notification-panel-style">
+                        <div class="panel panel-default custom-notification-panel-style" ng-repeat="notification in MainViewVM.globalNnotifications">
 
                             <div class="panel-body custom-notification-panel-body-style">
-                                <a href="">User 1</a><span> modified project </span><a href="">P00101</a>
+                                <!--<a href="">{{notification.actionBy}}</a><span> {{notification.action}} {{notification.elementType}} </span><a href="" ng-click="ModalVM.infoElement(notification.elementType, notification.element)">{{notification.element.name}}</a>-->
+
+                                <a href="">{{notification.actionBy}}</a><span> {{notification.action}} <a href="" ng-click="ModalVM.infoElement(notification.elementType2, notification.element2)">{{notification.action2}}</a> {{notification.elementType}} </span><a href="" ng-click="ModalVM.infoElement(notification.elementType, notification.element)">{{notification.element.name}}</a>
+
                             </div>
 
                             <div class="panel-footer custom-notification-panel-footer-style">
-                                <span class="pull-left">12.02.2013</span>
-                                <span class="pull-right">14:24</span>
+                                <span class="pull-left">{{notification.actionDate}}</span>
+                                <span class="pull-right">{{notification.actionTime}}</span>
                             </div>
                         </div>
 
@@ -180,7 +186,7 @@
                 </uib-accordion-group>
 
 
-                <uib-accordion-group>
+                <uib-accordion-group is-open="MainViewVM.accordionStatus.isThirdOpen">
                     <uib-accordion-heading>
                         <p id="testId3">History</p>
 
@@ -330,7 +336,7 @@
 
                                 <div class="btn-group-vertical" id="users-btn-grp-panel-in-new-project-modal">
                                     <button class="btn btn-default test-button-border" ng-click="ModalVM.infoUserModal(userPanel)"><i class="fa fa-info"></i></button>
-                                    <button class="btn btn-default" ng-click="ModalVM.editUser(userPanel)"><i class="fa fa-edit"></i></button>
+                                    <button class="btn btn-default" ng-click="ModalVM.editUserModal(userPanel)"><i class="fa fa-edit"></i></button>
                                     <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteUser(userPanel)"><i class="fa fa-trash-o"></i></button>
                                 </div>
                             </div>
@@ -432,6 +438,7 @@
 <script src="bower_components/angular-input-masks/angular-input-masks-standalone.min.js"></script>
 <script src="bower_components/angular-messages/angular-messages.min.js"></script>
 <script src="bower_components/angular-bootstrap-multiselect/dist/angular-bootstrap-multiselect.min.js"></script>
+<script src="bower_components/moment/moment.js"></script>
 <!--<script src="bower_components/lodash/dist/lodash.min.js"></script>-->
 <!--<script src="bower_components/angular-bootstrap-simple-chat/src/scripts/index.js"></script>-->
 
@@ -451,6 +458,7 @@
 <script type="text/javascript" src="js/services/task_service.js"></script>
 <script type="text/javascript" src="js/services/document_service.js"></script>
 <script type="text/javascript" src="js/services/user_service.js"></script>
+<script type="text/javascript" src="js/services/notifications_history_service.js"></script>
 
 <script type="text/javascript" src="app.js"></script>
 

@@ -5,10 +5,13 @@
 
 var app = angular.module('documentServiceModule', []);
 
-app.service('DocumentService', function(){
-
+app.service('DocumentService', ['NotificationsAndHistoryService', function (NotificationsAndHistoryService)
+{
     var documentPanels = [];
     var documentsIdArray = [];
+    var action;
+    var actionBy;
+    var elementType;
 
     var createDocumentPanel = function(newDocumentObject)
     {
@@ -16,7 +19,25 @@ app.service('DocumentService', function(){
 
         angular.forEach(newDocumentObject, function(value, index){
             documentPanels.push(newDocumentObject[index]);
+
+            action = 'created';
+            actionBy = 'User';
+            elementType = 'Document';
+
+            NotificationsAndHistoryService.addNotifications(newDocumentObject[index], action, actionBy, elementType);
+
         });
+    };
+
+    var getDocumentById = function(documentId)
+    {
+        for(var documentGlobal of documentPanels)
+        {
+            if(documentGlobal.id == documentId)
+            {
+                return documentGlobal;
+            }
+        }
     };
 
     var updatedDocumentParams = function(updated_document)
@@ -30,6 +51,26 @@ app.service('DocumentService', function(){
                 break;
             }
         }
+    };
+
+    var checkDocumentExistenceById = function(documentId)
+    {
+        "use strict";
+//                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
+
+        var documentAlreadyExists = false;
+
+        for(var documentPanel of documentPanels)
+        {
+            if(documentPanel.id == documentId)
+            {
+                documentAlreadyExists = true;
+                break;
+            }
+        }
+
+        return documentAlreadyExists;
+
     };
 
     var checkDocumentExistence = function(documentName, documentsArray)
@@ -337,9 +378,11 @@ app.service('DocumentService', function(){
 
     return{
         newDocumentID: newDocumentID,
+        checkDocumentExistenceById: checkDocumentExistenceById,
         checkDocumentExistence: checkDocumentExistence,
         chkTaskDocsInPrjDocsWithoutPrjName: chkTaskDocsInPrjDocsWithoutPrjName,
         createDocumentPanel: createDocumentPanel,
+        getDocumentById: getDocumentById,
         updatedDocumentParams: updatedDocumentParams,
         getDocumentPanels: getDocumentPanels,
         deleteDocument: deleteDocument,
@@ -354,4 +397,4 @@ app.service('DocumentService', function(){
         removeTaskDocsFromExistingDocs: removeTaskDocsFromExistingDocs
     };
 
-});
+}]);

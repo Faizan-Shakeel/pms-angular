@@ -5,16 +5,26 @@
 
 var app = angular.module('projectServiceModule', []);
 
-app.service('ProjectService', function(){
-
+app.service('ProjectService', ['NotificationsAndHistoryService', function (NotificationsAndHistoryService)
+{
     var projectPanels = [];
     var projectsIdArray = [];
+    var action;
+    var actionBy;
+    var elementType;
 
     var createProjectPanel = function(project_params)
     {
         "use strict";
 
         projectPanels.push(project_params);
+
+        action = 'created';
+        actionBy = 'User';
+        elementType = 'Project';
+
+        NotificationsAndHistoryService.addNotifications(project_params, action, actionBy, elementType);
+
     };
 
     var updatedProjectParams = function(updated_project)
@@ -290,10 +300,6 @@ app.service('ProjectService', function(){
                 projectAlreadyExists = true;
                 break;
             }
-            else
-            {
-                projectAlreadyExists = false;
-            }
         }
 
         return projectAlreadyExists;
@@ -470,6 +476,41 @@ app.service('ProjectService', function(){
         return arr;
     };
 
+    var deleteUsersFromTaskInProject = function(usersToDelete, taskId, projectName)
+    {
+        var projectGlobal;
+        var taskProject;
+
+        for(var project of projectPanels)
+        {
+            if(project.name == projectName)
+            {
+                projectGlobal = project;
+                break;
+            }
+        }
+
+        for(var task of projectGlobal.tasks)
+        {
+            if(task.id == taskId)
+            {
+                taskProject = task;
+                break;
+            }
+        }
+
+        for(var user of usersToDelete)
+        {
+            for(var userTask of taskProject.users)
+            {
+                if(user.email == userTask.email)
+                {
+                    removeEntity(taskProject.users, 'email', userTask.email);
+                }
+            }
+        }
+    };
+
     return{
         newProjectID: newProjectID,
         createProjectPanel: createProjectPanel,
@@ -485,6 +526,7 @@ app.service('ProjectService', function(){
         addDocumentToProject: addDocumentToProject,
         addUserToProject: addUserToProject,
         deleteTasksFromProject: deleteTasksFromProject,
+        deleteUsersFromTaskInProject: deleteUsersFromTaskInProject,
         deleteDocumentsFromProject: deleteDocumentsFromProject,
         deleteUsersFromProjects: deleteUsersFromProjects,
         delDocFromProject: delDocFromProject,
@@ -496,4 +538,4 @@ app.service('ProjectService', function(){
         checkDocumentExistenceInTaskProject: checkDocumentExistenceInTaskProject
     };
 
-});
+}]);

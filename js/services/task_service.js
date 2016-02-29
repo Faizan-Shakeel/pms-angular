@@ -5,10 +5,13 @@
 
 var app = angular.module('taskServiceModule', []);
 
-app.service('TaskService', function(){
-
+app.service('TaskService', ['NotificationsAndHistoryService', function (NotificationsAndHistoryService)
+{
     var taskPanels = [];
     var tasksIdArray = [];
+    var action;
+    var actionBy;
+    var elementType;
 
     var createTaskPanel = function(newTasksArray)
     {
@@ -16,7 +19,15 @@ app.service('TaskService', function(){
 
         angular.forEach(newTasksArray, function(value, index){
             taskPanels.push(newTasksArray[index]);
+
+            action = 'created';
+            actionBy = 'User';
+            elementType = 'Task';
+
+            NotificationsAndHistoryService.addNotifications(newTasksArray[index], action, actionBy, elementType);
+
         });
+
     };
 
     var updatedTaskParams = function(updated_task)
@@ -36,6 +47,26 @@ app.service('TaskService', function(){
                 break;
             }
         }
+    };
+
+    var checkTaskExistenceById = function(taskId)
+    {
+        "use strict";
+//                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
+
+        var taskAlreadyExists = false;
+
+        for(var taskPanel of taskPanels)
+        {
+            if(taskPanel.id == taskId)
+            {
+                taskAlreadyExists = true;
+                break;
+            }
+        }
+
+        return taskAlreadyExists;
+
     };
 
     var checkTaskExistence = function(taskName, tasksArray)
@@ -311,7 +342,7 @@ app.service('TaskService', function(){
         }
     };
 
-    var addUserToTask = function(taskName, userObject)
+    var addUserToTask = function(taskId, userObject)
     {
         "use strict";
 //                        console.log("Global Docs AFTER : " + JSON.stringify(UserService.getUserPanels()));
@@ -320,7 +351,7 @@ app.service('TaskService', function(){
         {
             var userAlreadyExistsInTask = false;
 
-            if (taskGlobal.name == taskName)
+            if (taskGlobal.name == taskId)
             {
                 for(var userTask of taskGlobal.users)
                 {
@@ -357,17 +388,17 @@ app.service('TaskService', function(){
     {
         var deleteFromTask;
 
-        for(var taskGlobal of taskPanels)
-        {
-            if(taskGlobal.id == taskId)
-            {
-                deleteFromTask = taskGlobal;
-                break;
-            }
-        }
-
         for(var user of usersToDelete)
         {
+            for(var taskGlobal of taskPanels)
+            {
+                if(taskGlobal.id == taskId)
+                {
+                    deleteFromTask = taskGlobal;
+                    break;
+                }
+            }
+
             for(var userTask of deleteFromTask.users)
             {
                 if(userTask.email == user.email)
@@ -380,6 +411,7 @@ app.service('TaskService', function(){
 
     return{
         newTaskID: newTaskID,
+        checkTaskExistenceById: checkTaskExistenceById,
         checkTaskExistence: checkTaskExistence,
         createTaskPanel: createTaskPanel,
         updatedTaskParams: updatedTaskParams,
@@ -401,4 +433,4 @@ app.service('TaskService', function(){
         updateDocumentsInTask: updateDocumentsInTask
     };
 
-});
+}]);

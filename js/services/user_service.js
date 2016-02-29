@@ -5,49 +5,54 @@
 
 var app = angular.module('userServiceModule', []);
 
-app.service('UserService', function(){
-
+app.service('UserService', ['NotificationsAndHistoryService', function (NotificationsAndHistoryService)
+{
     var userPanels = [];
     var usersIdArray = [];
+    var action;
+    var action2;
+    var actionBy;
+    var elementType;
+    var elementType2;
+    var element2;
 
     var createUserPanel = function(newUserObject)
     {
         "use strict";
 
-//        newUserObject = [{
-//            'id': 0,
-//            'name': 'User 1',
-//            'email': 'user1@gmail.com',
-//            'designation': '',
-//            'projects': [],
-//            'tasks': [],
-//            'documents': []
-//        }];
-
         angular.forEach(newUserObject, function(value, index){
             userPanels.push(newUserObject[index]);
+
+            action = 'created';
+            actionBy = 'User';
+            elementType = 'User';
+
+            NotificationsAndHistoryService.addNotifications(newUserObject[index], action, actionBy, elementType);
+
         });
     };
 
-//    createUserPanel();
-
-    var updatedUserParams = function(updated_user)
+    var checkUserExistenceByEmail = function(userEmail)
     {
-        for(var userToUpdate of userPanels)
-        {
-            if(userToUpdate.id == updated_user.id)
-            {
-                userToUpdate.description = updated_user.description;
+        "use strict";
+//                        console.log("Global Docs AFTER : " + JSON.stringify(UserService.getUserPanels()));
 
+        var userAlreadyExists = false;
+
+        for(var userPanel of userPanels)
+        {
+            if(userPanel.email == userEmail)
+            {
+                userAlreadyExists = true;
                 break;
             }
         }
+        return userAlreadyExists;
     };
 
     var checkUsersExistence = function(userSet1, userSet2)
     {
         "use strict";
-//                        console.log("Global Docs AFTER : " + JSON.stringify(UserService.getUserPanels()));
 
         var userExists;
         var newUsers = [];
@@ -72,34 +77,6 @@ app.service('UserService', function(){
         }
 
         return newUsers;
-
-    };
-
-    var chkTaskDocsInPrjDocsWithoutPrjName = function(taskDocs, modalDocs)
-    {
-        "use strict";
-        //                        console.log("Global Docs AFTER : " + JSON.stringify(UserService.getUserPanels()));
-
-        var userAlreadyExists = false;
-
-        for(var tDoc of taskDocs)
-        {
-            for(var mDoc of modalDocs)
-            {
-                if(tDoc.name == mDoc.name)
-                {
-                    userAlreadyExists = true;
-                    return {status: userAlreadyExists, existingUser: mDoc.name};
-                    break;
-                }
-                else
-                {
-                    userAlreadyExists = false;
-                }
-            }
-        }
-
-        return userAlreadyExists;
 
     };
 
@@ -129,19 +106,6 @@ app.service('UserService', function(){
             }
         }
     };
-
-    var getUserById = function(userId)
-    {
-        for(var userGlobal of userPanels)
-        {
-            if(userGlobal.id == userId)
-            {
-                return userGlobal;
-            }
-        }
-    };
-
-//    console.log("User Info : " + JSON.stringify(getUserById(0)));
 
     var getProjectUsers = function(projectUsersIds)
     {
@@ -181,21 +145,6 @@ app.service('UserService', function(){
 
     };
 
-    var deleteUser = function(usersArray)
-    {
-        "use strict";
-        //                        console.log("Global Docs AFTER : " + JSON.stringify(UserService.getUserPanels()));
-
-        angular.forEach(usersArray, function(valueFromGlobalList,indexGlobalList){
-            angular.forEach(userPanels, function(valueFromSpecificProject,indexSpecificProject){
-                if(valueFromGlobalList.id == valueFromSpecificProject.id)
-                {
-                    userPanels = removeEntity(userPanels, 'id', 'project', valueFromGlobalList.id, valueFromGlobalList.project);
-                }
-            });
-        });
-    };
-
     var deleteUserModal = function(selectedUserToDelete, modalUsersArray)
     {
         "use strict";
@@ -207,62 +156,8 @@ app.service('UserService', function(){
     var deleteUserInTaskModal = function(selectedUserToDelete, modalUsersArray)
     {
         "use strict";
-        //                        console.log("Global Docs AFTER : " + JSON.stringify(UserService.getUserPanels()));
 
         removeEntity(modalUsersArray, 'id', 'email', selectedUserToDelete.id, selectedUserToDelete.email);
-    };
-
-    var deleteUserGlobal = function(usersToDelete, deleteFrom)
-    {
-        "use strict";
-        //                        console.log("Global Docs AFTER : " + JSON.stringify(UserService.getUserPanels()));
-
-        for(var user of usersToDelete)
-        {
-            removeEntity(deleteFrom, 'id', 'project', user.id, user.project);
-        }
-    };
-
-    var deleteFloatingUsers = function(floatingUsers)
-    {
-        "use strict";
-        //                        console.log("Global Docs AFTER : " + JSON.stringify(UserService.getUserPanels()));
-
-        for(var floatUser of floatingUsers)
-        {
-
-            for(var user of userPanels)
-            {
-                if(!(user.project) && (user.id == floatUser.id))
-                {
-                    console.log("userPanels : " + JSON.stringify(userPanels));
-
-                    removeEntity(userPanels, 'id', 'project', user.id, user.project);
-
-                    console.log("userPanels : " + JSON.stringify(userPanels));
-                }
-            }
-        }
-    };
-
-    var deleteUsersFromModalTask = function(docToDelete, modalTasks)
-    {
-        var userDeletedFlag = false;
-
-        if(docToDelete.task)
-        {
-            for (var task of modalTasks)
-            {
-                if(task.name == docToDelete.task)
-                {
-                    removeEntity(task.users, 'id', 'project', docToDelete.id, docToDelete.project);
-                    userDeletedFlag = true;
-                }
-            }
-        }
-
-        return userDeletedFlag;
-
     };
 
     var deleteProjectFromUser = function(usersToDelete, projectName)
@@ -285,6 +180,16 @@ app.service('UserService', function(){
                 if(project.name == projectName)
                 {
                     removeEntity(deleteFromUser.projects, 'id', 'name', project.id, project.name);
+
+                    actionBy = 'User';
+                    action = 'deleted';
+                    action2 = projectName;
+                    elementType = 'from user';
+                    elementType2 = 'Project';
+                    element2 = project;
+
+                    NotificationsAndHistoryService.addNotifications(deleteFromUser, action, actionBy, elementType, action2, elementType2, element2);
+
                 }
             }
         }
@@ -307,21 +212,85 @@ app.service('UserService', function(){
 
             for(var task of deleteFromUser.tasks)
             {
+                console.log("task : " + JSON.stringify(task));
+
                 if(task.id == taskId)
                 {
+                    console.log("taskId : " + JSON.stringify(task));
+
                     removeEntity(deleteFromUser.tasks, 'id', 'name', task.id, task.name);
+
+                    actionBy = 'User';
+                    action = 'deleted';
+                    action2 = task.name;
+                    elementType = 'from user';
+                    elementType2 = 'Task';
+                    element2 = task;
+
+                    NotificationsAndHistoryService.addNotifications(deleteFromUser, action, actionBy, elementType, action2, elementType2, element2);
+
                 }
             }
         }
     };
 
-    var addProjectToUser = function(usersArray, projectId, projectName)
+    var updateUserRole = function(updatedUsers, projectName)
+    {
+        var globalUserProjects;
+
+        for(var userUpd of updatedUsers)
+        {
+            for(var userGlobal of userPanels)
+            {
+                if(userGlobal.email == userUpd.email)
+                {
+                    globalUserProjects = userGlobal.projects;
+
+                }
+            }
+
+            for(var project of globalUserProjects)
+            {
+                if(project.name == projectName)
+                {
+                    project.role = userUpd.newRole;
+                }
+            }
+        }
+    };
+
+
+    var updateUserRoleInModal = function(modalUsers, updatedUsers, projectName)
+    {
+        var ModalUserProjects;
+
+        for(var userUpdated of updatedUsers)
+        {
+            for(var userModal of modalUsers)
+            {
+                if(userModal.email == userUpdated.email)
+                {
+                    ModalUserProjects = userModal.projects;
+                }
+            }
+
+            for(var project of ModalUserProjects)
+            {
+                if(project.name == projectName)
+                {
+                    project.role = userUpdated.newRole;
+                }
+            }
+        }
+    };
+
+    var addProjectToUser = function(usersArray, projectId, projectName, userRole)
     {
         "use strict";
         //                        console.log("Global Docs AFTER : " + JSON.stringify(UserService.getUserPanels()));
 
         var userToUpdate;
-        var projectNameObject = {id: projectId, name: projectName};
+        var projectObject = {id: projectId, name: projectName, role: userRole};
 
         for(var userModal of usersArray)
         {
@@ -348,10 +317,20 @@ app.service('UserService', function(){
 
                 if(!projectAlreadyExistsInUser)
                 {
-                    userToUpdate.projects.push(projectNameObject);
+                    userToUpdate.projects.push(JSON.parse(JSON.stringify(projectObject)));
+
+                    actionBy = 'User';
+                    action = 'assigned ';
+                    action2 = projectObject.name;
+                    elementType = 'to user';
+                    elementType2 = 'Project';
+                    element2 = projectObject;
+
+                    NotificationsAndHistoryService.addNotifications(userToUpdate, action, actionBy, elementType, action2, elementType2, element2);
+
                 }
             }
-
+//        <a href="" ng-click="ModalVM.infoElement(notification.elementType, notification.element)">
         }
 
     };
@@ -369,86 +348,23 @@ app.service('UserService', function(){
             {
                 if(userModal.email == userGlobal.email)
                 {
-//                    userModal.tasks.push(taskIdObject);
-                    userGlobal.tasks.push(taskIdObject);
+                    userGlobal.tasks.push(JSON.parse(JSON.stringify(taskIdObject)));
+
+                    actionBy = 'User';
+                    action = 'assigned ';
+                    action2 = taskIdObject.name;
+                    elementType = 'to user';
+                    elementType2 = 'Task';
+                    element2 = taskIdObject;
+
+                    NotificationsAndHistoryService.addNotifications(userGlobal, action, actionBy, elementType, action2, elementType2, element2);
+
                 }
             }
         }
 
     };
 
-    var updateUsers = function(updatedUsers, global)
-    {
-        "use strict";
-        //                        console.log("Global Docs AFTER : " + JSON.stringify(UserService.getUserPanels()));
-
-        for(var i=0; i<updatedUsers.length; i++)
-        {
-            for(var j=0; j<userPanels.length; j++)
-            {
-                if(userPanels[j].id == updatedUsers[i].id)
-                {
-                    userPanels[j] = updatedUsers[i];
-                    if(global)
-                    {
-                        return userPanels[j];
-                    }
-                }
-            }
-        }
-    };
-
-    var removePrjDocsFromExistingDocs = function(projectUsers, projectName)
-    {
-        "use strict";
-        //                        console.log("Global Docs AFTER : " + JSON.stringify(UserService.getUserPanels()));
-
-        var filteredArray = [];
-        var userNotFound;
-
-        for(var user of userPanels)
-        {
-            userNotFound = true;
-
-            console.log("user" + JSON.stringify(user));
-
-            if(projectUsers.length)
-            {
-                console.log("TTWWOO");
-
-                for(var projectUser of projectUsers)
-                {
-                    console.log("TTHHRREE");
-
-                    if((projectUser.name == user.name) || (user.project == projectName) || (user.task))
-                    {
-                        userNotFound = false;
-                        break;
-                    }
-                }
-            }
-
-            else if(user.project == projectName)
-            {
-                console.log("FFOOUURR");
-
-                userNotFound = false;
-            }
-
-            else if(user.task)
-            {
-                userNotFound = false;
-            }
-
-            if(userNotFound)
-            {
-                filteredArray.push(user);
-            }
-        }
-
-        return filteredArray;
-
-    };
 
     var removeUsersExistingInProjectOrTask = function(usersInModal)
     {
@@ -478,65 +394,6 @@ app.service('UserService', function(){
 
     };
 
-    var removeTaskDocsFromExistingDocs = function(taskUsers, taskName)
-    {
-        "use strict";
-        //                        console.log("Global Docs AFTER : " + JSON.stringify(UserService.getUserPanels()));
-
-        var filteredArray = [];
-        var userNotFound;
-
-        for(var user of userPanels)
-        {
-            userNotFound = true;
-
-            console.log("user" + JSON.stringify(user));
-
-            if(taskUsers.length)
-            {
-                console.log("TTWWOO");
-
-                for(var taskDoc of taskUsers)
-                {
-                    console.log("TTHHRREE");
-
-                    if((taskDoc.name == user.name) || (user.task == taskName) || (user.project))
-                    {
-                        userNotFound = false;
-                        break;
-                    }
-                }
-            }
-
-            else if(user.task == taskName)
-            {
-                console.log("FFOOUURR");
-
-                userNotFound = false;
-            }
-
-            else if(user.project)
-            {
-                userNotFound = false;
-            }
-
-            if(userNotFound)
-            {
-                filteredArray.push(user);
-            }
-        }
-
-        return filteredArray;
-
-    };
-
-    var hasDuplicates = function(array)
-    {
-        "use strict";
-
-        return (new Set(array)).size !== array.length;
-    };
-
     var removeEntity = function(arr, attr, attr2, value, value2)
     {
         "use strict";
@@ -553,40 +410,25 @@ app.service('UserService', function(){
         return arr;
     };
 
-//    var deleteUserModal = function(selectedUserToDelete, modalUsersArray)
-//    {
-//        "use strict";
-//        //                        console.log("Global Docs AFTER : " + JSON.stringify(UserService.getUserPanels()));
-//
-//        removeEntity(modalUsersArray, 'id', 'project', selectedUserToDelete.id, selectedUserToDelete.project);
-//    };
-
     return{
-        newUserID: newUserID,
+        checkUserExistenceByEmail: checkUserExistenceByEmail,
         checkUsersExistence: checkUsersExistence,
-        chkTaskDocsInPrjDocsWithoutPrjName: chkTaskDocsInPrjDocsWithoutPrjName,
+        newUserID: newUserID,
         createUserPanel: createUserPanel,
-        updatedUserParams: updatedUserParams,
         getUserPanels: getUserPanels,
         getUserByEmail: getUserByEmail,
-        getUserById: getUserById,
         getProjectUsers: getProjectUsers,
         getTaskUsers: getTaskUsers,
-        deleteUser: deleteUser,
-        deleteUserModal: deleteUserModal,
-        deleteUserInTaskModal: deleteUserInTaskModal,
-        deleteUserGlobal: deleteUserGlobal,
-        deleteFloatingUsers: deleteFloatingUsers,
-        deleteUsersFromModalTask: deleteUsersFromModalTask,
-        deleteProjectFromUser: deleteProjectFromUser,
-        deleteTaskFromUser: deleteTaskFromUser,
-        hasDuplicates: hasDuplicates,
         addProjectToUser: addProjectToUser,
         addTaskToUser: addTaskToUser,
-        updateUsers: updateUsers,
-        removePrjDocsFromExistingDocs: removePrjDocsFromExistingDocs,
-        removeTaskDocsFromExistingDocs: removeTaskDocsFromExistingDocs,
+        updateUserRole: updateUserRole,
+        updateUserRoleInModal: updateUserRoleInModal,
+        deleteUserModal: deleteUserModal,
+        deleteProjectFromUser: deleteProjectFromUser,
+        deleteTaskFromUser: deleteTaskFromUser,
+        deleteUserInTaskModal: deleteUserInTaskModal,
         removeUsersExistingInProjectOrTask: removeUsersExistingInProjectOrTask
     };
 
-});
+}]);
+
