@@ -8,9 +8,6 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
 
     vm.infoElement = function(elemType, elemInfo)
     {
-//        console.log("elemType : " + JSON.stringify(elemType));
-//        console.log("elemInfo : " + JSON.stringify(elemInfo));
-
         if(elemType == 'Project')
         {
             if(ProjectService.checkProjectExistence(elemInfo.name))
@@ -83,7 +80,6 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
 
         editProjectModalInstance.result.then(function (projectInfo)
         {
-            console.log("projectInfo : " + JSON.stringify(projectInfo));
 
             NotificationsAndHistoryService.makeHistory({elementType: 'Project', element: projectInfo});
 
@@ -119,6 +115,7 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
 
         editTaskModalInstance.result.then(function (taskInfo)
         {
+
             NotificationsAndHistoryService.makeHistory({elementType: 'Task', element: taskInfo});
 
         }, function () {
@@ -215,12 +212,14 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
             controller: 'CreateProjectModalInstanceController',
             controllerAs: 'ModalVM',
             windowClass: 'modals-style',
-            backdrop: 'static'
-//            resolve: {
-//                projectName: function () {
-//                    return vm.projectname;
-//                }
-//            }
+            backdrop: 'static',
+            resolve: {
+                dataForThisModalInstance: function(){
+                    return{
+                        globalScope: vm
+                    };
+                }
+            }
         });
 
         newProjectModalInstance.result.then(function () {
@@ -249,7 +248,8 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
             resolve: {
                 dataForThisModalInstance: function(){
                     return{
-                        projectToEdit: JSON.parse(JSON.stringify(projectToEdit))
+                        projectToEdit: JSON.parse(JSON.stringify(projectToEdit)),
+                        globalScope: vm
                     };
                 }
             }
@@ -257,7 +257,9 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
 
         editProjectModalInstance.result.then(function (project_params)
         {
+
             NotificationsAndHistoryService.makeHistory({elementType: 'Project', element: project_params});
+
         }, function () {
 
         });
@@ -284,6 +286,7 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
                 dataForThisModalInstance: function () {
                     return {
                         isGlobal: true,
+                        globalScope: vm,
                         triggeredFrom: 'Create Task Global',
                         projectsArray: JSON.parse(JSON.stringify(ProjectService.getProjectPanels()))
                     };
@@ -320,6 +323,7 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
                 dataForThisModalInstance: function(){
                     return{
                         isGlobal: true,
+                        globalScope: vm,
                         triggeredFrom: 'Update Task Global',
                         taskToEdit: JSON.parse(JSON.stringify(taskToEdit))
                     };
@@ -329,7 +333,9 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
 
         editTaskModalInstance.result.then(function (task_params)
         {
+
             NotificationsAndHistoryService.makeHistory({elementType: 'Task', element: task_params.updated_task});
+
         }, function () {
 
         });
@@ -490,9 +496,48 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
      //////////////// Modal For Editing User  [ Global ] //////////////////////////////////////////// [E N D] /////////
      */////////////////////////////////////////////////////////////////////////////////////////////// [E N D] /////////
 
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////// Confirmation Modal /////// [ Global ] //////////////////////////////////////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.confirmationModal = function (deletionConfirmed) {
+
+        var confirmationModalInstance = $uibModal.open({
+            animation: false,
+            templateUrl: 'partials/confirmation_modal.html',
+            controller: 'ConfirmationModalInstanceController',
+            controllerAs: 'ConfirmModalVM',
+            windowClass: 'modals-style',
+            backdrop: 'static',
+            resolve: {
+                dataForThisModalInstance: function(){
+                    return{
+//                        projectInfo: JSON.parse(JSON.stringify(projectInfo))
+                    };
+                }
+            }
+        });
+
+        confirmationModalInstance.result.then(function (result)
+        {
+            if(result)
+            {
+                deletionConfirmed();
+            }
+
+//            NotificationsAndHistoryService.makeHistory({elementType: 'Project', element: projectInfo});
+
+        }, function () {
+
+        });
+    };
+    /*////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+     ///////////////// Confirmation Modal /////// [ Global ] /////////////////////////////////// [E N D] //////////////
+     *////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+
 }]);
 
-app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'ProjectService', 'TaskService', 'DocumentService', 'UserService', function ($scope, $uibModal, $uibModalInstance, ProjectService, TaskService, DocumentService, UserService) {
+app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'TaskService', 'DocumentService', 'UserService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, ProjectService, TaskService, DocumentService, UserService) {
 
     var vm = this;
     var floatingTasks = [];
@@ -943,7 +988,9 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
                         triggeredFrom: 'Create Project',
                         projectsArray: projectsArray,
                         tasksArray: JSON.parse(JSON.stringify(vm.taskPanels)),
-                        docsInProjectModal: JSON.parse(JSON.stringify(vm.documentPanels))
+                        docsInProjectModal: JSON.parse(JSON.stringify(vm.documentPanels)),
+                        globalScope: dataForThisModalInstance.globalScope
+
 //                        usersInProjectModal: JSON.parse(JSON.stringify(vm.userPanels))
                     };
                 }
@@ -1050,7 +1097,8 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
                         isGlobal: false,
                         triggeredFrom: 'Create Project',
                         taskToEdit: JSON.parse(JSON.stringify(taskToEdit)),
-                        docsInProjectModal: JSON.parse(JSON.stringify(vm.documentPanels))
+                        docsInProjectModal: JSON.parse(JSON.stringify(vm.documentPanels)),
+                        globalScope: dataForThisModalInstance.globalScope
                     };
                 }
             }
@@ -1212,23 +1260,46 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
 
     vm.deleteTask = function(taskToDelete)
     {
-        var modalDocuments = JSON.parse(JSON.stringify(vm.documentPanels));
-
-        for(var doc of modalDocuments)
+        var deletionConfirmed = function()
         {
-            if(doc.task == taskToDelete.name)
+            var modalDocuments = JSON.parse(JSON.stringify(vm.documentPanels));
+
+            for(var doc of modalDocuments)
             {
-                DocumentService.deleteDocumentModal(doc, vm.documentPanels);
-                DocumentService.deleteDocumentModal(doc, documentsArray);
+                if(doc.task == taskToDelete.name)
+                {
+                    DocumentService.deleteDocumentModal(doc, vm.documentPanels);
+                    DocumentService.deleteDocumentModal(doc, documentsArray);
 
-                documentDeletedFlag = true;
+                    documentDeletedFlag = true;
+                }
             }
-        }
 
-        TaskService.deleteTaskModal(taskToDelete, vm.taskPanels);
-        TaskService.deleteTaskModal(taskToDelete, tasksArray);
+            TaskService.deleteTaskModal(taskToDelete, vm.taskPanels);
+            TaskService.deleteTaskModal(taskToDelete, tasksArray);
 
-        taskDeletedFlag = true;
+            taskDeletedFlag = true;
+        };
+
+        dataForThisModalInstance.globalScope.confirmationModal(deletionConfirmed);
+
+//        var modalDocuments = JSON.parse(JSON.stringify(vm.documentPanels));
+//
+//        for(var doc of modalDocuments)
+//        {
+//            if(doc.task == taskToDelete.name)
+//            {
+//                DocumentService.deleteDocumentModal(doc, vm.documentPanels);
+//                DocumentService.deleteDocumentModal(doc, documentsArray);
+//
+//                documentDeletedFlag = true;
+//            }
+//        }
+//
+//        TaskService.deleteTaskModal(taskToDelete, vm.taskPanels);
+//        TaskService.deleteTaskModal(taskToDelete, tasksArray);
+//
+//        taskDeletedFlag = true;
     };
 
     /*///////////////////////////////////////////////////////////////////////////////////////// [E N D] ///////////////
@@ -1242,11 +1313,22 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
 
     vm.deleteDocument = function(documentToDelete)
     {
-        DocumentService.deleteDocumentModal(documentToDelete, vm.documentPanels);
-        DocumentService.deleteDocumentModal(documentToDelete, documentsArray);
-        DocumentService.deleteDocumentsFromModalTask(documentToDelete, tasksArray);
+        var deletionConfirmed = function()
+        {
+            DocumentService.deleteDocumentModal(documentToDelete, vm.documentPanels);
+            DocumentService.deleteDocumentModal(documentToDelete, documentsArray);
+            DocumentService.deleteDocumentsFromModalTask(documentToDelete, tasksArray);
 
-        documentDeletedFlag = true;
+            documentDeletedFlag = true;
+        };
+
+        dataForThisModalInstance.globalScope.confirmationModal(deletionConfirmed);
+
+//        DocumentService.deleteDocumentModal(documentToDelete, vm.documentPanels);
+//        DocumentService.deleteDocumentModal(documentToDelete, documentsArray);
+//        DocumentService.deleteDocumentsFromModalTask(documentToDelete, tasksArray);
+//
+//        documentDeletedFlag = true;
     };
 
     /*//////////////////////////////////////////////////////////////////////////////////////// [E N D] ////////////////
@@ -2148,7 +2230,8 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
                         triggeredFrom: 'Update Project',
                         projectsArray: JSON.parse(JSON.stringify(ProjectService.getProjectPanels())),
                         tasksArray: JSON.parse(JSON.stringify(vm.taskPanels)),
-                        docsInProjectModal: JSON.parse(JSON.stringify(vm.documentPanels))
+                        docsInProjectModal: JSON.parse(JSON.stringify(vm.documentPanels)),
+                        globalScope: dataForThisModalInstance.globalScope
                     };
                 }
             }
@@ -2403,7 +2486,8 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
                         isGlobal: false,
                         triggeredFrom: 'Update Project',
                         taskToEdit: JSON.parse(JSON.stringify(taskToEdit)),
-                        docsInProjectModal: JSON.parse(JSON.stringify(vm.documentPanels))
+                        docsInProjectModal: JSON.parse(JSON.stringify(vm.documentPanels)),
+                        globalScope: dataForThisModalInstance.globalScope
                     };
                 }
             }
@@ -2760,23 +2844,30 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
         //        console.log(" : " + );
         //        console.log(" : " + JSON.stringify());
 
-        var modalDocuments = JSON.parse(JSON.stringify(vm.documentPanels));
-
-        for(var doc of modalDocuments)
+        var deletionConfirmed = function()
         {
-            if(doc.task == taskToDelete.name)
-            {
-                DocumentService.deleteDocumentModal(doc, vm.documentPanels);
-                DocumentService.deleteDocumentModal(doc, newDocumentsArray);
-                documentsToDelete.push(doc);
-                documentDeletedFlag = true;
-            }
-        }
+            var modalDocuments = JSON.parse(JSON.stringify(vm.documentPanels));
 
-        tasksToDelete.push(taskToDelete);
-        TaskService.deleteTaskModal(taskToDelete, vm.taskPanels);
-        taskDeletedFlag = true;
-        vm.updateFlag = true;
+            for(var doc of modalDocuments)
+            {
+                if(doc.task == taskToDelete.name)
+                {
+                    DocumentService.deleteDocumentModal(doc, vm.documentPanels);
+                    DocumentService.deleteDocumentModal(doc, newDocumentsArray);
+                    documentsToDelete.push(doc);
+                    documentDeletedFlag = true;
+                }
+            }
+
+            tasksToDelete.push(taskToDelete);
+            TaskService.deleteTaskModal(taskToDelete, vm.taskPanels);
+            taskDeletedFlag = true;
+            vm.updateFlag = true;
+
+        };
+
+        dataForThisModalInstance.globalScope.confirmationModal(deletionConfirmed);
+
     };
 
     /*//////////////////////////////////////////////////////////////////////////////////////////////// [E N D] ////////
@@ -2791,18 +2882,24 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
     {
         //        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService));
 
-        documentsToDelete.push(documentToDelete);
-        DocumentService.deleteDocumentModal(documentToDelete, vm.documentPanels);
-
-        var documentDeletedFromTask = DocumentService.deleteDocumentsFromModalTask(documentToDelete, vm.taskPanels);
-
-        if(documentDeletedFromTask)
+        var deletionConfirmed = function()
         {
-            taskUpdateFlag = true;
-        }
+            documentsToDelete.push(documentToDelete);
+            DocumentService.deleteDocumentModal(documentToDelete, vm.documentPanels);
 
-        documentDeletedFlag = true;
-        vm.updateFlag = true;
+            var documentDeletedFromTask = DocumentService.deleteDocumentsFromModalTask(documentToDelete, vm.taskPanels);
+
+            if(documentDeletedFromTask)
+            {
+                taskUpdateFlag = true;
+            }
+
+            documentDeletedFlag = true;
+            vm.updateFlag = true;
+        };
+
+        dataForThisModalInstance.globalScope.confirmationModal(deletionConfirmed);
+
     };
 
     /*//////////////////////////////////////////////////////////////////////////////////////////////////// [E N D] ////
@@ -2815,10 +2912,16 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
 
     vm.deleteUser = function(userToDelete)
     {
-        usersToDelete.push(userToDelete);
-        UserService.deleteUserModal(userToDelete, vm.userPanels);
-        userDeletedFlag = true;
-        vm.updateFlag = true;
+        var deletionConfirmed = function()
+        {
+            usersToDelete.push(userToDelete);
+            UserService.deleteUserModal(userToDelete, vm.userPanels);
+            userDeletedFlag = true;
+            vm.updateFlag = true;
+        };
+
+        dataForThisModalInstance.globalScope.confirmationModal(deletionConfirmed);
+
     };
 
     /*//////////////////////////////////////////////////////////////////////////////////////// [E N D] ////////////////
@@ -3022,6 +3125,7 @@ app.controller('ExistingTasksModalInstanceController', ['$scope', '$uibModalInst
     if(vm.existingTasksOptions.length > 10)
     {
         vm.multiSearchSwitch = true;
+        vm.searchResultLimit = 10;
     }
     else
     {
@@ -3127,6 +3231,7 @@ app.controller('ExistingDocumentsModalInstanceController', ['$scope', '$uibModal
     if(vm.existingDocumentsOptions.length > 10)
     {
         vm.multiSearchSwitch = true;
+        vm.searchResultLimit = 10;
     }
     else
     {
@@ -3342,6 +3447,7 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
     if(dataForThisModalInstance.projectsArray.length > 10)
     {
         vm.multiSearchSwitch = true;
+        vm.searchResultLimit = 10;
     }
     else
     {
@@ -3840,8 +3946,14 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
 
     vm.deleteDocument = function(documentToDelete)
     {
-        DocumentService.deleteDocumentModal(documentToDelete, vm.documentPanels);
-        DocumentService.deleteDocumentModal(documentToDelete, documentsArray);
+        var deletionConfirmed = function()
+        {
+            DocumentService.deleteDocumentModal(documentToDelete, vm.documentPanels);
+            DocumentService.deleteDocumentModal(documentToDelete, documentsArray);
+        };
+
+        dataForThisModalInstance.globalScope.confirmationModal(deletionConfirmed);
+
     };
 
     /*///////////////////////////////////////////////////////////////////////////////////////////// [E N D] ///////////
@@ -3854,8 +3966,16 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
 
     vm.deleteUser = function(userToDelete)
     {
-        UserService.deleteUserInTaskModal(userToDelete, vm.userPanels);
-        UserService.deleteUserInTaskModal(userToDelete, usersArray);
+        var deletionConfirmed = function()
+        {
+            UserService.deleteUserInTaskModal(userToDelete, vm.userPanels);
+            UserService.deleteUserInTaskModal(userToDelete, usersArray);
+        };
+
+        dataForThisModalInstance.globalScope.confirmationModal(deletionConfirmed);
+
+//        UserService.deleteUserInTaskModal(userToDelete, vm.userPanels);
+//        UserService.deleteUserInTaskModal(userToDelete, usersArray);
     };
 
     /*//////////////////////////////////////////////////////////////////////////////////////// [E N D] ////////////////
@@ -4388,13 +4508,26 @@ app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
 
     vm.deleteDocument = function(documentToDelete)
     {
-        documentsToDelete.push(documentToDelete);
+        var deletionConfirmed = function()
+        {
+            documentsToDelete.push(documentToDelete);
 
-        DocumentService.deleteDocumentModal(documentToDelete, vm.documentPanels);
-        DocumentService.deleteDocumentModal(documentToDelete, updatedDocumentsArray);
+            DocumentService.deleteDocumentModal(documentToDelete, vm.documentPanels);
+            DocumentService.deleteDocumentModal(documentToDelete, updatedDocumentsArray);
 
-        documentDeletedFlag = true;
-        vm.taskUpdateFlag = true;
+            documentDeletedFlag = true;
+            vm.taskUpdateFlag = true;
+        };
+
+        dataForThisModalInstance.globalScope.confirmationModal(deletionConfirmed);
+
+//        documentsToDelete.push(documentToDelete);
+//
+//        DocumentService.deleteDocumentModal(documentToDelete, vm.documentPanels);
+//        DocumentService.deleteDocumentModal(documentToDelete, updatedDocumentsArray);
+//
+//        documentDeletedFlag = true;
+//        vm.taskUpdateFlag = true;
     };
 
     /*///////////////////////////////////////////////////////////////////////////////////////////// [E N D] ///////////
@@ -4407,13 +4540,26 @@ app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
 
     vm.deleteUser = function(userToDelete)
     {
-        usersToDelete.push(userToDelete);
+        var deletionConfirmed = function()
+        {
+            usersToDelete.push(userToDelete);
 
-        UserService.deleteUserInTaskModal(userToDelete, vm.userPanels);
-        UserService.deleteUserInTaskModal(userToDelete, updatedUsersArray);
+            UserService.deleteUserInTaskModal(userToDelete, vm.userPanels);
+            UserService.deleteUserInTaskModal(userToDelete, updatedUsersArray);
 
-        userDeletedFlag = true;
-        vm.taskUpdateFlag = true;
+            userDeletedFlag = true;
+            vm.taskUpdateFlag = true;
+        };
+
+        dataForThisModalInstance.globalScope.confirmationModal(deletionConfirmed);
+
+//        usersToDelete.push(userToDelete);
+//
+//        UserService.deleteUserInTaskModal(userToDelete, vm.userPanels);
+//        UserService.deleteUserInTaskModal(userToDelete, updatedUsersArray);
+//
+//        userDeletedFlag = true;
+//        vm.taskUpdateFlag = true;
 
     };
 
@@ -4925,6 +5071,7 @@ app.controller('ExistingUsersModalInstanceController', ['$scope', '$uibModalInst
     if(vm.existingUsersOptions.length > 10)
     {
         vm.multiSearchSwitch = true;
+        vm.searchResultLimit = 10;
     }
     else
     {
@@ -4964,6 +5111,41 @@ app.controller('ExistingUsersModalInstanceController', ['$scope', '$uibModalInst
      *///////////////////////////////////////////////////////////////////////////////////////////////// [E N D] ///////
 
     vm.cancelModal = function () {
+        $uibModalInstance.dismiss('cancel');
+    };
+
+}]);
+
+app.controller('ConfirmationModalInstanceController', ['$scope', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'UserService', function ($scope, $uibModalInstance, dataForThisModalInstance, ProjectService, UserService) {
+
+    var vm = this;
+
+    vm.modalTitle = 'Confirm';
+    vm.confirmationMessage = 'Are You Sure?';
+
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ////////////////// Create Existing User //////////////////////////////////////////////////////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.confirm = function() {
+
+        //        console.log("");
+        //        console.log(" : " + );
+        //        console.log(" : " + JSON.stringify());
+
+    };
+
+    /*///////////////////////////////////////////////////////////////////////////////////////////////// [E N D] ///////
+     ////////////////// Create Existing User ////////////////////////////////////////////////////////// [E N D] ///////
+     *///////////////////////////////////////////////////////////////////////////////////////////////// [E N D] ///////
+
+    var confirmed = 'OK';
+
+    vm.confirm = function () {
+        $uibModalInstance.close(confirmed);
+    };
+
+    vm.cancel = function () {
         $uibModalInstance.dismiss('cancel');
     };
 

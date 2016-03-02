@@ -155,9 +155,10 @@
 
                 </uib-accordion-group>
 
-                <uib-accordion-group is-open="MainViewVM.accordionStatus.isSecondOpen" ng-click="MainViewVM.updateAccordionInfo()">
+                <!--<uib-accordion-group is-open="MainViewVM.accordionStatus.isSecondOpen" ng-click="MainViewVM.updateAccordionInfo()">-->
+                <uib-accordion-group is-open="MainViewVM.accordionStatus.isSecondOpen">
                     <uib-accordion-heading>
-                        <p id="testId2" ng-click="MainViewVM.clearNotifications()">Notifications</p>
+                        <p id="testId2" ng-click="MainViewVM.updateAccordionInfo()">Notifications</p>
                         <!--<p id="testId2">Notifications</p>-->
 
                     </uib-accordion-heading>
@@ -231,7 +232,7 @@
                                 <div class="btn-group-vertical" id="btn-grp-panel">
                                     <button class="btn btn-default test-button-border" ng-click="ModalVM.infoProjectModal(projectPanel)"><i class="fa fa-info"></i></button>
                                     <button class="btn btn-default" ng-click="ModalVM.editProjectModal(projectPanel)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteProject(projectPanel)"><i class="fa fa-trash-o"></i></button>
+                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteProject(projectPanel, ModalVM)"><i class="fa fa-trash-o"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -265,7 +266,7 @@
                                 <div class="btn-group-vertical" id="tasks-btn-grp-panel-in-new-project-modal">
                                     <button class="btn btn-default test-button-border" ng-click="ModalVM.infoTaskModal(taskPanel)"><i class="fa fa-info"></i></button>
                                     <button class="btn btn-default" ng-click="ModalVM.editTaskModal(taskPanel)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteTask(taskPanel)"><i class="fa fa-trash-o"></i></button>
+                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteTask(taskPanel, ModalVM)"><i class="fa fa-trash-o"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -300,7 +301,7 @@
                                 <div class="btn-group-vertical" id="documents-btn-grp-panel-in-new-project-modal">
                                     <button class="btn btn-default test-button-border" ng-click="ModalVM.infoDocumentModal(documentPanel)"><i class="fa fa-info"></i></button>
                                     <button class="btn btn-default" ng-click="ModalVM.editDocumentModal(documentPanel)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteDocument(documentPanel)"><i class="fa fa-trash-o"></i></button>
+                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteDocument(documentPanel, ModalVM)"><i class="fa fa-trash-o"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -332,7 +333,7 @@
                                 <div class="btn-group-vertical" id="users-btn-grp-panel-in-new-project-modal">
                                     <button class="btn btn-default test-button-border" ng-click="ModalVM.infoUserModal(userPanel)"><i class="fa fa-info"></i></button>
                                     <button class="btn btn-default" ng-click="ModalVM.editUserModal(userPanel)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteUser(userPanel)"><i class="fa fa-trash-o"></i></button>
+                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteUser(userPanel, ModalVM)"><i class="fa fa-trash-o"></i></button>
                                 </div>
                             </div>
                         </div>

@@ -24,7 +24,31 @@ app.service('NotificationsAndHistoryService', [function () {
 
     var makeHistory = function(historyParams)
     {
-        history.unshift(historyParams);
+        var elementFound;
+
+        if(history.length)
+        {
+            for(var elem of history)
+            {
+                elementFound = false;
+
+                if((elem.element.id == historyParams.element.id) && (elem.elementType == historyParams.elementType))
+                {
+                    elementFound = true;
+                    break;
+                }
+            }
+
+            if(!elementFound)
+            {
+                history.unshift(historyParams);
+            }
+        }
+        else
+        {
+            history.unshift(historyParams);
+        }
+
     };
 
     var getHistory = function()
@@ -74,9 +98,17 @@ app.service('NotificationsAndHistoryService', [function () {
         return globalNotificationsCount;
     };
 
-    var clearNotifications = function()
+    var clearNotificationsAccordion = function()
     {
-        if(!accordionStatusAndVisibility.isSecondOpen || !accordionStatusAndVisibility.accVisibility)
+        if(!accordionStatusAndVisibility.accVisibility && accordionStatusAndVisibility.isSecondOpen)
+        {
+            globalNotificationsCount.count = 0;
+        }
+    };
+
+    var clearNotificationsSecondOpen = function()
+    {
+        if(!accordionStatusAndVisibility.accVisibility || !accordionStatusAndVisibility.isSecondOpen)
         {
             globalNotificationsCount.count = 0;
         }
@@ -89,7 +121,8 @@ app.service('NotificationsAndHistoryService', [function () {
         getNotificationsCount: getNotificationsCount,
         setAccordionStatus: setAccordionStatus,
         getAccordionStatus: getAccordionStatus,
-        clearNotifications: clearNotifications,
+        clearNotificationsAccordion: clearNotificationsAccordion,
+        clearNotificationsSecondOpen: clearNotificationsSecondOpen,
         makeHistory: makeHistory,
         getHistory: getHistory,
         globalNotificationsCount: globalNotificationsCount
