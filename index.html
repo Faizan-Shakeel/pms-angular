@@ -41,48 +41,47 @@
     <div ng-controller="ModalsController as ModalVM">
 
         <nav class="navbar navbar-default navbar-fixed-top" id="navbar-bottom-margin" role="navigation">
+            <div class="container-fluid">
 
-            <header class="navbar-header">
-                <a class="navbar-brand" href="#" id="application-logo">PMS</a>
-            </header>
+                <div class="row">
 
-            <div class="collapse navbar-collapse col-lg-offset-2" id="bs-example-navbar-collapse-1">
+                    <header class="navbar-header col-lg-2 col-md-2 col-sm-2">
+                        <a class="navbar-brand" href="#" id="application-logo">PMS</a>
+                    </header>
 
-                <div class="navbar-form navbar-left">
-                    <div class="form-group" id="main-div">
-                        <div class="input-group" id="inline-div-1">
-                            <div class="input-group-btn" id="inline-div-2" uib-dropdown is-open="MainViewVM.searchDropdownStatus.isopen">
-                                <button type="button" class="btn btn-default" uib-dropdown-toggle ng-disabled="disabled" id="search-categories">
-                                    {{MainViewVM.selectedItem}} <span class="caret"></span>
-                                </button>
-
+                    <div class="col-lg-3 col-md-4 col-sm-5" id="search-group">
+                        <div class="input-group">
+                            <div class="input-group-btn" uib-dropdown is-open="MainViewVM.searchDropdownStatus.isopen">
+                                <button type="button" class="btn btn-default" uib-dropdown-toggle ng-disabled="disabled" id="search-categories">{{MainViewVM.selectedItem}} <span class="caret"></span></button>
                                 <ul class="uib-dropdown-menu" id="test-drop-down" role="menu" aria-labelledby="search-categories">
                                     <li ng-repeat="dropdownItem in MainViewVM.dropdownItems" role="menuitem"><a ng-click="MainViewVM.globalSearchDropDown(dropdownItem)">{{dropdownItem}}</a></li>
                                 </ul>
                             </div>
 
-                            <input type="search" class="form-control" placeholder="Search Projects" ng-model="MainViewVM.searchProjects.name" ng-show="MainViewVM.projectVisibility" ng-class="ngHide"/>
-                            <input type="search" class="form-control" placeholder="Search Tasks" ng-model="MainViewVM.searchTasks.name" ng-show="MainViewVM.taskVisibility" ng-class="ngHide"/>
-                            <input type="search" class="form-control" placeholder="Search Documents" ng-model="MainViewVM.searchDocuments.name" ng-show="MainViewVM.documentVisibility" ng-class="ngHide"/>
-                            <input type="search" class="form-control" placeholder="Search Users" ng-model="MainViewVM.searchUsers.name" ng-show="MainViewVM.userVisibility" ng-class="ngHide"/>
+                            <input type="text" class="form-control" placeholder="Search Projects" ng-model="MainViewVM.searchProjects.name" ng-show="MainViewVM.projectVisibility" ng-class="ngHide"/>
+                            <input type="text" class="form-control" placeholder="Search Tasks" ng-model="MainViewVM.searchTasks.name" ng-show="MainViewVM.taskVisibility" ng-class="ngHide"/>
+                            <input type="text" class="form-control" placeholder="Search Documents" ng-model="MainViewVM.searchDocuments.name" ng-show="MainViewVM.documentVisibility" ng-class="ngHide"/>
+                            <input type="text" class="form-control" placeholder="Search Users" ng-model="MainViewVM.searchUsers.name" ng-show="MainViewVM.userVisibility" ng-class="ngHide"/>
 
                             <div class="input-group-btn" id="inline-div-3">
                                 <button class="btn btn-default" id="search-button" type="submit"><span class="glyphicon glyphicon-search"></span></button>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="navbar-btn navbar-right" id="signed-in-user">
-                    <span id="signed-in-user-id">online.user@gmail.com</span>
-                    <img class="open img-rounded" id="signed-in-user-pic" ng-src="images/Original_Size/user.png" alt="" ns-popover ns-popover-template="partials/popover.html" ns-popover-timeout=-1 ns-popover-trigger="click" ns-popover-placement="bottom|right" ns-popover="MainViewVM.displayPopover"/>
-                </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 notifications">
+                        <p class="navbar-text" id="notifications" uib-tooltip="Unread Notifications" tooltip-placement="bottom"><i class="fa fa-comments-o"></i><strong> {{MainViewVM.notificationsCount.count}}</strong></p>
+                        <p class="navbar-text" id="users-online" uib-tooltip="Online Users" tooltip-placement="bottom"><i class="fa fa-user-md"></i><strong> {{MainViewVM.onlineUsersCount}}</strong></p>
+                    </div>
 
-                <div>
-                    <p class="navbar-text" id="notifications" uib-tooltip="Unread Notifications" tooltip-placement="bottom"><i class="fa fa-comments-o"></i><strong> {{MainViewVM.notificationsCount.count}}</strong></p>
-                    <p class="navbar-text" id="users-online" uib-tooltip="Online Users" tooltip-placement="bottom"><i class="fa fa-user-md"></i><strong> {{MainViewVM.onlineUsersCount}}</strong></p>
-                </div>
+                    <div class="navbar-brand col-lg-3 col-md-4 col-sm-3 pull-right" id="signed-in-user">
+                        <a class="pull-right" href="#">
+                        <span class="" id="signed-in-user-id">faizan shakeel</span>
+                            <img class="open img-rounded" id="signed-in-user-pic" ng-src="images/Original_Size/user.png" ns-popover ns-popover-template="partials/popover.html" ns-popover-timeout=-1 ns-popover-trigger="click" ns-popover-placement="bottom|right" ns-popover="MainViewVM.displayPopover"/>
+                        </a>
+                    </div>
 
+                </div>
             </div>
         </nav>
 
@@ -427,6 +426,7 @@
 <script src="js/Third-Party-JS/jquery.slimscroll.js"></script>
 <!--<script src="js/Third-Party-JS/jquery.validate.min.js"></script>-->
 <script type="text/javascript" src="js/Third-Party-JS/angular.min.js"></script>
+<script type="text/javascript" src="js/Third-Party-JS/angular-animate.min.js"></script>
 <script type="text/javascript" src="i18n/angular-locale_de-de.js"></script>
 <script type="text/javascript" src="js/Third-Party-JS/ui-bootstrap-tpls-0.14.3.min.js"></script>
 <script type="text/javascript" src="bower_components/nsPopover/src/nsPopover.js"></script>
