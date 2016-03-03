@@ -2,18 +2,67 @@
 
 var app = angular.module('projectServiceModule', ['ngStorage']);
 
+<<<<<<< HEAD
 app.service('ProjectService', ['mongoCrudService', '$localStorage', function(mongoCrudService, $localStorage){
 
+=======
+app.service('ProjectService', ['NotificationsAndHistoryService', function (NotificationsAndHistoryService)
+{
+>>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
     var projectPanels = [];
     var projectsIdArray = [];
+    var action;
+    var actionBy;
+    var elementType;
+    var accordionInfo;
+    var historyObject;
 
-    var createProjectPanel = function(value)
+    var createProjectPanel = function(project_params)
     {
         "use strict";
+<<<<<<< HEAD
         value = {project: value};
         projectPanels.push(value.project);
         console.log(value);
         mongoCrudService.createNewEntry(value);
+=======
+
+        projectPanels.push(project_params);
+
+        action = 'created';
+        actionBy = 'User';
+        elementType = 'Project';
+
+        NotificationsAndHistoryService.addNotifications(project_params, action, actionBy, elementType);
+
+        accordionInfo = NotificationsAndHistoryService.getAccordionStatus();
+        NotificationsAndHistoryService.setNotificationsCount(accordionInfo.isSecondOpen, accordionInfo.accVisibility);
+
+        historyObject = {elementType: elementType, element: project_params};
+        NotificationsAndHistoryService.makeHistory(historyObject);
+
+    };
+
+    var updatedProjectParams = function(updated_project)
+    {
+        for(var projectToUpdate of projectPanels)
+        {
+            if(projectToUpdate.id == updated_project.id)
+            {
+                projectToUpdate.budget = updated_project.budget;
+                projectToUpdate.targetEndDate = updated_project.targetEndDate;
+                projectToUpdate.description = updated_project.description;
+                projectToUpdate.status = updated_project.status;
+                projectToUpdate.modifiedDate = updated_project.modifiedDate;
+                projectToUpdate.lastModifiedBy = updated_project.lastModifiedBy;
+                projectToUpdate.numberOfTasks = updated_project.numberOfTasks;
+                projectToUpdate.numberOfDocuments = updated_project.numberOfDocuments;
+                projectToUpdate.numberOfUsers = updated_project.numberOfUsers;
+
+                break;
+            }
+        }
+>>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
     };
 
     var newProjectID = function()
@@ -34,6 +83,28 @@ app.service('ProjectService', ['mongoCrudService', '$localStorage', function(mon
         "use strict";
 
         return projectPanels;
+    };
+
+    var getProjectByName = function(projectName)
+    {
+        for(var projectGlobal of projectPanels)
+        {
+            if(projectGlobal.name == projectName)
+            {
+                return projectGlobal;
+            }
+        }
+    };
+
+    var getProjectId = function(projectName)
+    {
+        for(var project of projectPanels)
+        {
+            if(project.name == projectName)
+            {
+                return project.id;
+            }
+        }
     };
 
     var checkTaskInProject = function(projName, taskObject)
@@ -87,6 +158,20 @@ app.service('ProjectService', ['mongoCrudService', '$localStorage', function(mon
         return {status: false};
     };
 
+//    var addProjectToUser = function(usersArray, projectName)
+//    {
+//        for(var userModal of usersArray)
+//        {
+//            for(var projectGlobal of projectPanels)
+//            {
+//                if(projectGlobal.name == projectName)
+//                {
+//                    projectGlobal.users.push(userModal);
+//                }
+//            }
+//        }
+//    };
+
     var addTaskToProject = function(projName, taskObject)
     {
         "use strict";
@@ -123,6 +208,34 @@ app.service('ProjectService', ['mongoCrudService', '$localStorage', function(mon
 //              * Calling this function to update this entry in 
 //               project's tasks array in database
                 mongoCrudService.updateData(projectPanel.id, {'project.documents': projectPanel.documents[0]});
+            }
+        }
+    };
+
+    var addUserToProject = function(projectName, userObject)
+    {
+        "use strict";
+//                        console.log("Global Docs AFTER : " + JSON.stringify(UserService.getUserPanels()));
+
+        for(var projectGlobal of projectPanels)
+        {
+            var userAlreadyExistsInProject = false;
+
+            if (projectGlobal.name == projectName)
+            {
+                for(var userProject of projectGlobal.users)
+                {
+                    if(userProject.email == userObject.email)
+                    {
+                        userAlreadyExistsInProject = true;
+                    }
+                }
+
+                if(!userAlreadyExistsInProject)
+                {
+                    projectGlobal.users.push(userObject);
+                }
+
             }
         }
     };
@@ -197,6 +310,24 @@ app.service('ProjectService', ['mongoCrudService', '$localStorage', function(mon
         }
     };
 
+    var delDocFromProject = function(docToDelete)
+    {
+        "use strict";
+//                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
+
+        for(var project of projectPanels)
+        {
+            for(var doc of project.documents)
+            {
+                if(doc.id == docToDelete.id)
+                {
+                    removeEntity(project.documents, 'id', docToDelete.id);
+                    break;
+                }
+            }
+        }
+    };
+
     var checkProjectExistence = function(projectName)
     {
         "use strict";
@@ -211,10 +342,6 @@ app.service('ProjectService', ['mongoCrudService', '$localStorage', function(mon
             {
                 projectAlreadyExists = true;
                 break;
-            }
-            else
-            {
-                projectAlreadyExists = false;
             }
         }
 
@@ -284,6 +411,99 @@ app.service('ProjectService', ['mongoCrudService', '$localStorage', function(mon
         }
     };
 
+    var checkDocumentExistenceInTaskProject = function(docName, taskProject)
+    {
+        for(var project of projectPanels)
+        {
+            if(project.name == taskProject)
+            {
+                for(var doc of project.documents)
+                {
+                    if(doc.name == docName)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+
+    };
+
+    var deleteTaskAndDocumentsFromProject = function(taskToDelete, selectedTaskDocumentsArray)
+    {
+        var deletedTaskProject;
+
+        for(var project of projectPanels)
+        {
+            for(var task of project.tasks)
+            {
+                if(task.id == taskToDelete.id)
+                {
+                    deletedTaskProject = project;
+                    removeEntity(project.tasks, 'id', taskToDelete.id);
+                    break;
+                }
+            }
+        }
+
+        if(deletedTaskProject)
+        {
+            for(var taskToDeleteDoc of selectedTaskDocumentsArray)
+            {
+                for(var document of deletedTaskProject.documents)
+                {
+                    if(document.id == taskToDeleteDoc.id)
+                    {
+                        removeEntity(deletedTaskProject.documents, 'id', taskToDeleteDoc.id);
+                    }
+                }
+            }
+        }
+    };
+
+    var deleteUsersFromProjects = function(usersToDelete, projectName)
+    {
+        if(projectName)
+        {
+            var deleteFromProject;
+
+            for(var projectGlobal of projectPanels)
+            {
+                if(projectGlobal.name == projectName)
+                {
+                    deleteFromProject = projectGlobal;
+                }
+            }
+
+            for(var user of usersToDelete)
+            {
+                for(var userProject of deleteFromProject.users)
+                {
+                    if(userProject.email == user.email)
+                    {
+                        removeEntity(deleteFromProject.users, 'email', user.email);
+                    }
+                }
+            }
+
+        }
+        else
+        {
+            for(var projectGlobal of projectPanels)
+            {
+                for(var userProject of projectGlobal.users)
+                {
+                    if(userProject.email == usersToDelete.email)
+                    {
+                        removeEntity(projectGlobal.users, 'email', usersToDelete.email);
+                    }
+                }
+            }
+        }
+    };
+
     var removeEntity = function(arr, attr, value)
     {
         "use strict";
@@ -295,15 +515,54 @@ app.service('ProjectService', ['mongoCrudService', '$localStorage', function(mon
                 && (arguments.length > 2 && arr[i][attr] === value ) ){
 
                 arr.splice(i,1);
+
             }
         }
         return arr;
     };
 
+    var deleteUsersFromTaskInProject = function(usersToDelete, taskId, projectName)
+    {
+        var projectGlobal;
+        var taskProject;
+
+        for(var project of projectPanels)
+        {
+            if(project.name == projectName)
+            {
+                projectGlobal = project;
+                break;
+            }
+        }
+
+        for(var task of projectGlobal.tasks)
+        {
+            if(task.id == taskId)
+            {
+                taskProject = task;
+                break;
+            }
+        }
+
+        for(var user of usersToDelete)
+        {
+            for(var userTask of taskProject.users)
+            {
+                if(user.email == userTask.email)
+                {
+                    removeEntity(taskProject.users, 'email', userTask.email);
+                }
+            }
+        }
+    };
+
     return{
         newProjectID: newProjectID,
         createProjectPanel: createProjectPanel,
+        updatedProjectParams: updatedProjectParams,
         getProjectPanels: getProjectPanels,
+        getProjectByName: getProjectByName,
+        getProjectId: getProjectId,
         addProjectToTask: addProjectToTask,
         addProjectToDocument: addProjectToDocument,
 
@@ -311,12 +570,22 @@ app.service('ProjectService', ['mongoCrudService', '$localStorage', function(mon
         checkDocumentInProject: checkDocumentInProject,
         addTaskToProject: addTaskToProject,
         addDocumentToProject: addDocumentToProject,
+        addUserToProject: addUserToProject,
         deleteTasksFromProject: deleteTasksFromProject,
+        deleteUsersFromTaskInProject: deleteUsersFromTaskInProject,
         deleteDocumentsFromProject: deleteDocumentsFromProject,
+        deleteUsersFromProjects: deleteUsersFromProjects,
+        delDocFromProject: delDocFromProject,
+        deleteTaskAndDocumentsFromProject: deleteTaskAndDocumentsFromProject,
         checkProjectExistence: checkProjectExistence,
         getTaskProject: getTaskProject,
         updateTasksInProject: updateTasksInProject,
-        updateDocumentsInProject: updateDocumentsInProject
+        updateDocumentsInProject: updateDocumentsInProject,
+        checkDocumentExistenceInTaskProject: checkDocumentExistenceInTaskProject
     };
 }]);
 
+<<<<<<< HEAD
+=======
+}]);
+>>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52

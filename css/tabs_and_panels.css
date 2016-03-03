@@ -76,7 +76,7 @@
     height: 300px;
 }
 
-.modal-new-project-tab-body, .modal-new-task-tab-body, .modal-new-document-tab-body, .modal-new-user-tab-body, .modal-existing-task-body, .modal-existing-document-body
+.modal-new-project-tab-body, .modal-new-task-tab-body, .modal-new-document-tab-body, .modal-new-user-tab-body, .modal-existing-task-body, .modal-existing-document-body, .modal-existing-user-body
 {
     /*position: relative;*/
     height: 300px;
@@ -162,12 +162,6 @@
     color: #428bca;
 }
 
-.chatting-box
-{
-
-
-
-}
 
 /*.btn-circle {*/
 /*position: absolute;*/

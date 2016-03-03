@@ -5,21 +5,93 @@
 
 var app = angular.module('documentServiceModule', ['ngFileUpload']);
 
+<<<<<<< HEAD
 app.service('DocumentService',['mongoCrudService', 'Upload', function(mongoCrudService, Upload){
 
     var documentPanels = [];
     var documentsIdArray = [];
     var documentValues = {};
+=======
+app.service('DocumentService', ['NotificationsAndHistoryService', function (NotificationsAndHistoryService)
+{
+    var accordionInfo;
+    var documentPanels = [];
+    var documentsIdArray = [];
+    var action;
+    var actionBy;
+    var elementType;
+    var historyObject;
+
+>>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
     var createDocumentPanel = function(newDocumentObject)
     {
         "use strict";
 
         angular.forEach(newDocumentObject, function(value, index){
             documentPanels.push(newDocumentObject[index]);
+<<<<<<< HEAD
             console.log(newDocumentObject[index]);
             documentValues = {documents: newDocumentObject[index]};
             mongoCrudService.createNewEntry(documentValues);
+=======
+
+            action = 'created';
+            actionBy = 'User';
+            elementType = 'Document';
+
+            NotificationsAndHistoryService.addNotifications(newDocumentObject[index], action, actionBy, elementType);
+
+            accordionInfo = NotificationsAndHistoryService.getAccordionStatus();
+            NotificationsAndHistoryService.setNotificationsCount(accordionInfo.isSecondOpen, accordionInfo.accVisibility);
+
+            historyObject = {elementType: elementType, element: newDocumentObject[index]};
+            NotificationsAndHistoryService.makeHistory(historyObject);
+>>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
         });
+    };
+
+    var getDocumentById = function(documentId)
+    {
+        for(var documentGlobal of documentPanels)
+        {
+            if(documentGlobal.id == documentId)
+            {
+                return documentGlobal;
+            }
+        }
+    };
+
+    var updatedDocumentParams = function(updated_document)
+    {
+        for(var documentToUpdate of documentPanels)
+        {
+            if(documentToUpdate.id == updated_document.id)
+            {
+                documentToUpdate.description = updated_document.description;
+
+                break;
+            }
+        }
+    };
+
+    var checkDocumentExistenceById = function(documentId)
+    {
+        "use strict";
+//                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
+
+        var documentAlreadyExists = false;
+
+        for(var documentPanel of documentPanels)
+        {
+            if(documentPanel.id == documentId)
+            {
+                documentAlreadyExists = true;
+                break;
+            }
+        }
+
+        return documentAlreadyExists;
+
     };
 
     var checkDocumentExistence = function(documentName, documentsArray)
@@ -60,6 +132,7 @@ app.service('DocumentService',['mongoCrudService', 'Upload', function(mongoCrudS
                 if(tDoc.name == mDoc.name)
                 {
                     documentAlreadyExists = true;
+                    return {status: documentAlreadyExists, existingDocument: mDoc.name};
                     break;
                 }
                 else
@@ -127,7 +200,7 @@ app.service('DocumentService',['mongoCrudService', 'Upload', function(mongoCrudS
         }
     };
 
-    var deleteFloatingDocuments = function(floatingDocuments, deleteByProperty)
+    var deleteFloatingDocuments = function(floatingDocuments)
     {
         "use strict";
         //                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
@@ -139,10 +212,34 @@ app.service('DocumentService',['mongoCrudService', 'Upload', function(mongoCrudS
             {
                 if(!(document.project) && (document.id == floatDocument.id))
                 {
+                    console.log("documentPanels : " + JSON.stringify(documentPanels));
+
                     removeEntity(documentPanels, 'id', 'project', document.id, document.project);
+
+                    console.log("documentPanels : " + JSON.stringify(documentPanels));
                 }
             }
         }
+    };
+
+    var deleteDocumentsFromModalTask = function(docToDelete, modalTasks)
+    {
+        var documentDeletedFlag = false;
+
+        if(docToDelete.task)
+        {
+            for (var task of modalTasks)
+            {
+                if(task.name == docToDelete.task)
+                {
+                    removeEntity(task.documents, 'id', 'project', docToDelete.id, docToDelete.project);
+                    documentDeletedFlag = true;
+                }
+            }
+        }
+
+        return documentDeletedFlag;
+
     };
 
     var addTaskToDocument = function(documentsArray, taskName)
@@ -189,10 +286,16 @@ app.service('DocumentService',['mongoCrudService', 'Upload', function(mongoCrudS
         {
             documentNotFound = true;
 
+            console.log("document" + JSON.stringify(document));
+
             if(projectDocuments.length)
             {
+                console.log("TTWWOO");
+
                 for(var projectDocument of projectDocuments)
                 {
+                    console.log("TTHHRREE");
+
                     if((projectDocument.name == document.name) || (document.project == projectName) || (document.task))
                     {
                         documentNotFound = false;
@@ -203,10 +306,64 @@ app.service('DocumentService',['mongoCrudService', 'Upload', function(mongoCrudS
 
             else if(document.project == projectName)
             {
+                console.log("FFOOUURR");
+
                 documentNotFound = false;
             }
 
             else if(document.task)
+            {
+                documentNotFound = false;
+            }
+
+            if(documentNotFound)
+            {
+                filteredArray.push(document);
+            }
+        }
+
+        return filteredArray;
+
+    };
+
+    var removeTaskDocsFromExistingDocs = function(taskDocuments, taskName)
+    {
+        "use strict";
+        //                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
+
+        var filteredArray = [];
+        var documentNotFound;
+
+        for(var document of documentPanels)
+        {
+            documentNotFound = true;
+
+            console.log("document" + JSON.stringify(document));
+
+            if(taskDocuments.length)
+            {
+                console.log("TTWWOO");
+
+                for(var taskDoc of taskDocuments)
+                {
+                    console.log("TTHHRREE");
+
+                    if((taskDoc.name == document.name) || (document.task == taskName) || (document.project))
+                    {
+                        documentNotFound = false;
+                        break;
+                    }
+                }
+            }
+
+            else if(document.task == taskName)
+            {
+                console.log("FFOOUURR");
+
+                documentNotFound = false;
+            }
+
+            else if(document.project)
             {
                 documentNotFound = false;
             }
@@ -276,20 +433,28 @@ app.service('DocumentService',['mongoCrudService', 'Upload', function(mongoCrudS
 
     return{
         newDocumentID: newDocumentID,
+        checkDocumentExistenceById: checkDocumentExistenceById,
         checkDocumentExistence: checkDocumentExistence,
         chkTaskDocsInPrjDocsWithoutPrjName: chkTaskDocsInPrjDocsWithoutPrjName,
         createDocumentPanel: createDocumentPanel,
+        getDocumentById: getDocumentById,
+        updatedDocumentParams: updatedDocumentParams,
         getDocumentPanels: getDocumentPanels,
         deleteDocument: deleteDocument,
         deleteDocumentModal: deleteDocumentModal,
         deleteDocumentGlobal: deleteDocumentGlobal,
         deleteFloatingDocuments: deleteFloatingDocuments,
+        deleteDocumentsFromModalTask: deleteDocumentsFromModalTask,
         hasDuplicates: hasDuplicates,
         addTaskToDocument: addTaskToDocument,
         updateDocuments: updateDocuments,
         removePrjDocsFromExistingDocs: removePrjDocsFromExistingDocs,
+<<<<<<< HEAD
         extractFileExtension: extractFileExtension,
         uploadFile: uploadFile
+=======
+        removeTaskDocsFromExistingDocs: removeTaskDocsFromExistingDocs
+>>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
     };
 
 }]);

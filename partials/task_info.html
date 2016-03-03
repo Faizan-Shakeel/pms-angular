@@ -1,0 +1,90 @@
+
+<div>
+
+    <div class="modal-header">
+        <h4 class="modal-title text-center">Task Info</h4>
+    </div>
+
+    <div class="modal-body">
+
+        <uib-tabset justified="true">
+
+            <uib-tab heading="Task">
+
+                <div class="modal-new-task-form">
+
+                    <br/>
+
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-lg-2 col-md-2 col-sm-2 control-label">Name</label>
+                            <div class="col-sm-10">
+                                <p class="form-control-static">{{TaskModalVM.taskName}}</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-lg-2 col-md-2 col-sm-2 control-label">Target Date</label>
+                            <div class="col-sm-10">
+                                <p class="form-control-static">{{TaskModalVM.taskTargetEndDate}}</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-show="TaskModalVM.statusVisibility">
+                            <label class="col-lg-2 col-md-2 col-sm-2 control-label">Status</label>
+                            <div class="col-sm-10">
+                                <p class="form-control-static">{{TaskModalVM.selectedStatus}}</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-lg-2 col-md-2 col-sm-2 control-label">Project</label>
+                            <div class="col-sm-10">
+                                <p class="form-control-static">{{TaskModalVM.taskProject}}</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-lg-2 col-md-2 col-sm-2 control-label">Description</label>
+                            <div class="col-sm-10">
+                                <p class="form-control-static">{{TaskModalVM.taskDescription}}</p>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </uib-tab>
+
+            <uib-tab heading="Documents">
+                <div class="modal-new-document-tab-body">
+                    <div slim-scroll height="310px">
+                        <div class="panel panel-default" ng-repeat="documentPanel in TaskModalVM.documentPanels">
+                            <div class="panel-body text-center">
+                                <a href="" ng-click="TaskModalVM.infoDocumentModal(documentPanel)">{{documentPanel.name}}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </uib-tab>
+
+            <uib-tab heading="Users">
+                <div class="modal-new-user-tab-body">
+                    <div slim-scroll height="310px">
+                        <div class="panel panel-default" ng-repeat="userPanel in TaskModalVM.userPanels">
+                            <div class="panel-body text-center">
+                                <a href="" ng-click="TaskModalVM.infoUserModal(userPanel)">{{userPanel.name}}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </uib-tab>
+
+        </uib-tabset>
+
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-warning" ng-click="TaskModalVM.cancel()">Cancel</button>
+    </div>
+
+</div>

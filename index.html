@@ -30,12 +30,14 @@
     
     <!--Third Party Styles-->
 
+    <!--<link href='https://fonts.googleapis.com/css?family=Neucha&subset=latin,cyrillic' rel='stylesheet' type='text/css'>-->
+
     <link href="css/Third-Party-CSS/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="font-awesome-4.0.3/css/font-awesome.min.css">
     <link href="css/Third-Party-CSS/bootstrap-tour.min.css" rel="stylesheet">
     <link href="css/Third-Party-CSS/popbox.css" rel="stylesheet">
-    <link rel="stylesheet" href="bower_components/angular-bootstrap-simple-chat/src/css/style.css">
-    <link rel="stylesheet" href="bower_components/angular-bootstrap-simple-chat/src/css/themes.css">
+    <!--<link rel="stylesheet" href="bower_components/angular-bootstrap-simple-chat/src/css/style.css">-->
+    <!--<link rel="stylesheet" href="bower_components/angular-bootstrap-simple-chat/src/css/themes.css">-->
 
     <!--Third Party Styles-->
 
@@ -58,20 +60,402 @@
 
 <!-------------------------------------------------------------------- Navigation Bar Fixed Top -----------------------------------------------------------------------START-->
 
+<<<<<<< HEAD
+=======
+        <nav class="navbar navbar-default navbar-fixed-top" id="navbar-bottom-margin" role="navigation">
+
+            <header class="navbar-header">
+                <a class="navbar-brand" href="#" id="application-logo">PMS</a>
+            </header>
+
+            <div class="collapse navbar-collapse col-lg-offset-2" id="bs-example-navbar-collapse-1">
+
+                <div class="navbar-form navbar-left">
+                    <div class="form-group" id="main-div">
+                        <div class="input-group" id="inline-div-1">
+                            <div class="input-group-btn" id="inline-div-2" uib-dropdown is-open="MainViewVM.searchDropdownStatus.isopen">
+                                <button type="button" class="btn btn-default" uib-dropdown-toggle ng-disabled="disabled" id="search-categories">
+                                    {{MainViewVM.selectedItem}} <span class="caret"></span>
+                                </button>
+
+                                <ul class="uib-dropdown-menu" id="test-drop-down" role="menu" aria-labelledby="search-categories">
+                                    <li ng-repeat="dropdownItem in MainViewVM.dropdownItems" role="menuitem"><a ng-click="MainViewVM.globalSearchDropDown(dropdownItem)">{{dropdownItem}}</a></li>
+                                </ul>
+                            </div>
+
+                            <input type="search" class="form-control" placeholder="Search Projects" ng-model="MainViewVM.searchProjects.name" ng-show="MainViewVM.projectVisibility" ng-class="ngHide"/>
+                            <input type="search" class="form-control" placeholder="Search Tasks" ng-model="MainViewVM.searchTasks.name" ng-show="MainViewVM.taskVisibility" ng-class="ngHide"/>
+                            <input type="search" class="form-control" placeholder="Search Documents" ng-model="MainViewVM.searchDocuments.name" ng-show="MainViewVM.documentVisibility" ng-class="ngHide"/>
+                            <input type="search" class="form-control" placeholder="Search Users" ng-model="MainViewVM.searchUsers.name" ng-show="MainViewVM.userVisibility" ng-class="ngHide"/>
+
+                            <div class="input-group-btn" id="inline-div-3">
+                                <button class="btn btn-default" id="search-button" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="navbar-btn navbar-right" id="signed-in-user">
+                    <span id="signed-in-user-id">online.user@gmail.com</span>
+                    <img class="open img-rounded" id="signed-in-user-pic" ng-src="images/Original_Size/user.png" alt="" ns-popover ns-popover-template="partials/popover.html" ns-popover-timeout=-1 ns-popover-trigger="click" ns-popover-placement="bottom|right" ns-popover="MainViewVM.displayPopover"/>
+                </div>
+
+                <div>
+                    <p class="navbar-text" id="notifications" uib-tooltip="Unread Notifications" tooltip-placement="bottom"><i class="fa fa-comments-o"></i><strong> {{MainViewVM.notificationsCount.count}}</strong></p>
+                    <p class="navbar-text" id="users-online" uib-tooltip="Online Users" tooltip-placement="bottom"><i class="fa fa-user-md"></i><strong> {{MainViewVM.onlineUsersCount}}</strong></p>
+                </div>
+
+            </div>
+        </nav>
+
+        <!-------------------------------------------------------------------- Navigation Bar Fixed Top -----------------------------------------------------------------------END-->
+
+
+        <!-------------------------------------------------------Row-Containing-Buttons-For-Menu-&-Chatting-Panel--------------------------------------------------------------START-->
+
+        <div class="row hidden-xs" id="test-second-custom-bar">
+
+            <div class="col-lg-2 col-md-2 col-sm-2" id="123">
+                <button class="btn btn-default" id="menu-opener" ng-click="MainViewVM.switchAccordionVisibility()">Menu <span class="glyphicon glyphicon-book" id="icon-main-options-color"></span></button>
+            </div>
+
+            <div class="col-lg-3 col-md-4 col-sm-5 common-class">
+                <div class="btn-group" id="create-record">
+                    <!--<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">-->
+                    <!--Create <span class="caret"></span>-->
+                    <!--</button>-->
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#" id="create-project-dropdown-menu">Project</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#" id="create-task-dropdown-menu">Task</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#" id="create-file-dropdown-menu">File</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#" id="create-user-dropdown-menu">User</a></li>
+                    </ul>
+
+                </div>
+                <button class="btn btn-default common-class" id="edit-record">Edit <span class="glyphicon glyphicon-edit" id="icon-edit-record-color"></span></button>
+                <button class="btn btn-default common-class" id="delete-record">Delete <span class="glyphicon glyphicon-remove" id="icon-delete-record-color"></span></button>
+            </div>
+
+            <!--<div id="one-click-panels-expand">-->
+            <!--<button class="btn btn-default" id="expand-tooltip" data-toggle="tooltip" data-original-title="Expand"><i class="fa fa-angle-double-left" id="expand-left"></i><i class="fa fa-angle-double-right" id="expand-right"></i></button>-->
+            <!--<button class="btn btn-default" id="contract-tooltip" data-toggle="tooltip" data-original-title="Contract" style="display: none"><i class="fa fa-angle-double-right" id="contract-left"></i><i class="fa fa-angle-double-left" id="contract-right"></i></button>-->
+            <!--</div>-->
+
+            <div class="col-lg-2 col-md-2 col-sm-2 pull-right">
+                <button class="btn btn-default" id="chatting-list-opener" ng-click="MainViewVM.switchChatPanelVisibility()">Colleagues <span class="glyphicon glyphicon-comment" id="icon-chat-list-color"></span></button>
+            </div>
+
+        </div>
+
+        <!-------------------------------------------------------Row-Containing-Buttons-For-Menu-&-Chatting-Panel----------------------------------------------------------------END-->
+
+
+        <!-------------------------------------------------------Row-Containing-Accordion-&-Table-&-Chatting-Panel-------------------------------------------------------------START-->
+
+        <div class="row" id="third-row">
+
+        <div class="col-lg-2 col-md-2 col-sm-2" ng-hide="MainViewVM.accordionVisibility">
+
+            <uib-accordion close-others="MainViewVM.oneAtATime">
+                <uib-accordion-group is-open="MainViewVM.accordionStatus.isFirstOpen">
+                    <uib-accordion-heading>
+                        <p id="testId">Dashboard</p>
+
+                    </uib-accordion-heading>
+
+                    <div id="acc-content">
+
+                        <a href="#" id="project-popover" class="btn btn-default center-block" ng-click="ModalVM.newProjectModal()"><i class="fa fa-bar-chart-o pull-left" id="test1"></i>Create Project</a>
+                        <a href="#" id="task-popover" class="btn btn-default center-block" ng-click="ModalVM.newTaskModal()"><i class="fa fa-tasks pull-left" id="test2"></i>Create Task</a>
+                        <a href="#" id="file-popover" class="btn btn-default center-block" ng-click="ModalVM.newDocumentModal()"><i class="fa fa-files-o pull-left" id="test3"></i>Create Document</a>
+                        <a href="#" id="user-popover" class="btn btn-default center-block" ng-click="ModalVM.newUserModal()"><i class="fa fa-users pull-left" id="test4"></i>Create User</a>
+
+                    </div>
+
+                </uib-accordion-group>
+
+                <!--<uib-accordion-group is-open="MainViewVM.accordionStatus.isSecondOpen" ng-click="MainViewVM.updateAccordionInfo()">-->
+                <uib-accordion-group is-open="MainViewVM.accordionStatus.isSecondOpen">
+                    <uib-accordion-heading>
+                        <p id="testId2" ng-click="MainViewVM.updateAccordionInfo()">Notifications</p>
+                        <!--<p id="testId2">Notifications</p>-->
+
+                    </uib-accordion-heading>
+
+                    <div slim-scroll height="400px">
+
+                        <div class="panel panel-default custom-notification-panel-style" ng-repeat="notification in MainViewVM.globalNotifications">
+
+                            <div class="panel-body custom-notification-panel-body-style">
+                                <a href="">{{notification.actionBy}}</a><span> {{notification.action}} <a href="" ng-click="ModalVM.infoElement(notification.elementType2, notification.element2)">{{notification.action2}}</a> {{notification.elementType}} </span><a href="" ng-click="ModalVM.infoElement(notification.elementType, notification.element)">{{notification.element.name}}</a>
+                            </div>
+
+                            <div class="panel-footer custom-notification-panel-footer-style">
+                                <span class="pull-left">{{notification.actionDate}}</span>
+                                <span class="pull-right">{{notification.actionTime}}</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </uib-accordion-group>
+
+
+                <uib-accordion-group is-open="MainViewVM.accordionStatus.isThirdOpen">
+                    <uib-accordion-heading>
+                        <p id="testId3">History</p>
+
+                    </uib-accordion-heading>
+
+                    <div slim-scroll height="400px">
+
+                        <div class="panel panel-default custom-history-panel-style" ng-repeat="history in MainViewVM.globalHistory">
+                            <div class="panel-body custom-history-panel-body-style">
+                                <a href="" ng-click="ModalVM.infoElement(history.elementType, history.element)">{{history.element.name}}</a>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </uib-accordion-group>
+
+            </uib-accordion>
+        </div>
+
+        <div class="{{MainViewVM.globalTabsBootstrapClass}}">
+            <uib-tabset justified="true">
+
+                <uib-tab heading="Projects" active="MainViewVM.active.Projects">
+
+                    <div id="test-tabs-height" slim-scroll height="500px">
+
+                        <div class="panel panel-default" id="outer-panel" ng-repeat="projectPanel in MainViewVM.projectPanels | filter:MainViewVM.searchProjects">
+                            <div class="panel-body">
+
+                                <div class="panel panel-default" id="inner-panel">
+                                    <div class="panel-body">
+                                        <i class="fa fa-suitcase fa-2x" id="panel-icon-fix"></i>
+                                    </div>
+                                </div>
+
+                                <div id="panel-content">
+                                    <p>
+                                    <h4>{{projectPanel.name}}</h4>
+                                    </p>
+
+                                    <p>
+                                        {{projectPanel.status}}
+                                    </p>
+                                </div>
+
+                                <div class="btn-group-vertical" id="btn-grp-panel">
+                                    <button class="btn btn-default test-button-border" ng-click="ModalVM.infoProjectModal(projectPanel)"><i class="fa fa-info"></i></button>
+                                    <button class="btn btn-default" ng-click="ModalVM.editProjectModal(projectPanel)"><i class="fa fa-edit"></i></button>
+                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteProject(projectPanel, ModalVM)"><i class="fa fa-trash-o"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+
+                <uib-tab heading="Tasks" active="MainViewVM.active.Tasks">
+
+                    <div slim-scroll height="500px">
+
+                        <div class="panel panel-default" id="outer-panel-tasks-in-new-project-modal" ng-repeat="taskPanel in MainViewVM.taskPanels | filter:MainViewVM.searchTasks">
+                            <div class="panel-body">
+
+                                <div class="panel panel-default" id="inner-panel-tasks-in-new-project-modal">
+                                    <div class="panel-body">
+                                        <i class="fa fa-suitcase fa-2x" id="task-panel-icon-fix-in-new-project-modal"></i>
+                                    </div>
+                                </div>
+
+                                <div id="task-panel-content-in-new-project-modal">
+                                    <p>
+                                    <h4>{{taskPanel.name}} <span class="col-lg-offset-8">ID: {{taskPanel.id}}</span></h4>
+                                    </p>
+
+                                    <p>
+                                        {{taskPanel.status}}
+                                        <span class="col-lg-offset-7">{{taskPanel.project}}</span>
+                                    </p>
+                                </div>
+
+                                <div class="btn-group-vertical" id="tasks-btn-grp-panel-in-new-project-modal">
+                                    <button class="btn btn-default test-button-border" ng-click="ModalVM.infoTaskModal(taskPanel)"><i class="fa fa-info"></i></button>
+                                    <button class="btn btn-default" ng-click="ModalVM.editTaskModal(taskPanel)"><i class="fa fa-edit"></i></button>
+                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteTask(taskPanel, ModalVM)"><i class="fa fa-trash-o"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+
+                <uib-tab heading="Documents" active="MainViewVM.active.Documents">
+
+                    <div slim-scroll height="500px">
+
+                        <div class="panel panel-default" id="outer-panel-documents-in-new-project-modal" ng-repeat="documentPanel in MainViewVM.documentPanels | filter:MainViewVM.searchDocuments">
+                            <div class="panel-body">
+
+                                <div class="panel panel-default" id="inner-panel-documents-in-new-project-modal">
+                                    <div class="panel-body">
+                                        <i class="fa fa-suitcase fa-2x" id="document-panel-icon-fix-in-new-project-modal"></i>
+                                    </div>
+                                </div>
+
+                                <div id="document-panel-content-in-new-project-modal">
+                                    <p>
+                                    <h4>{{documentPanel.name}} <span class="col-lg-offset-8">ID: {{documentPanel.id}} </span> </h4>
+                                    </p>
+
+                                    <p>
+                                        {{documentPanel.status}}
+                                        <span class="col-lg-offset-6">[ {{documentPanel.project}} ] [ {{documentPanel.task}} ]</span>
+                                        <!--<span class="col-lg-offset-7">{{documentPanel.task}}</span>-->
+                                    </p>
+                                </div>
+
+                                <div class="btn-group-vertical" id="documents-btn-grp-panel-in-new-project-modal">
+                                    <button class="btn btn-default test-button-border" ng-click="ModalVM.infoDocumentModal(documentPanel)"><i class="fa fa-info"></i></button>
+                                    <button class="btn btn-default" ng-click="ModalVM.editDocumentModal(documentPanel)"><i class="fa fa-edit"></i></button>
+                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteDocument(documentPanel, ModalVM)"><i class="fa fa-trash-o"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+
+                <uib-tab heading="Users" active="MainViewVM.active.Users">
+                    <div slim-scroll height="500px">
+
+                        <div class="panel panel-default" id="outer-panel-users-in-new-project-modal" ng-repeat="userPanel in MainViewVM.userPanels | filter:MainViewVM.searchUsers">
+                            <div class="panel-body">
+
+                                <div class="panel panel-default" id="inner-panel-users-in-new-project-modal">
+                                    <div class="panel-body">
+                                        <i class="fa fa-suitcase fa-2x" id="user-panel-icon-fix-in-new-project-modal"></i>
+                                    </div>
+                                </div>
+
+                                <div id="user-panel-content-in-new-project-modal">
+                                    <p>
+                                    <h4>{{userPanel.name}}</h4>
+                                    </p>
+
+                                    <p>
+                                        {{userPanel.email}}
+                                    </p>
+                                </div>
+
+                                <div class="btn-group-vertical" id="users-btn-grp-panel-in-new-project-modal">
+                                    <button class="btn btn-default test-button-border" ng-click="ModalVM.infoUserModal(userPanel)"><i class="fa fa-info"></i></button>
+                                    <button class="btn btn-default" ng-click="ModalVM.editUserModal(userPanel)"><i class="fa fa-edit"></i></button>
+                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteUser(userPanel, ModalVM)"><i class="fa fa-trash-o"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+
+            </uib-tabset>
+
+            <!--<div class="chat-box">-->
+                <irontec-simple-chat
+                        messages="MainViewVM.messages"
+                        username="MainViewVM.username"
+                        input-placeholder-text="You can write here"
+                        submit-button-text="{{MainViewVM.submitButtonText}}"
+                        title="{{MainViewVM.title}}"
+                        theme="material"
+                        submit-function="MainViewVM.sendMessage"
+                        visible="MainViewVM.visible"
+                        expand-on-new="{{MainViewVM.expandOnNew}}">
+                </irontec-simple-chat>
+            <!--</div>-->
+
+        </div>
+
+
+        <!-------------------------------------------------------------------------- Chat Box --------------------------------------------------------------------------------START-->
+
+        <!--<div class="chat-box">-->
+            <!--<irontec-simple-chat-->
+                    <!--messages="MainViewVM.messages"-->
+                    <!--username="MainViewVM.username"-->
+                    <!--input-placeholder-text="You can write here"-->
+                    <!--submit-button-text="{{MainViewVM.submitButtonText}}"-->
+                    <!--title="{{MainViewVM.title}}"-->
+                    <!--theme="material"-->
+                    <!--submit-function="MainViewVM.sendMessage"-->
+                    <!--visible="MainViewVM.visible"-->
+                    <!--expand-on-new="{{MainViewVM.expandOnNew}}">-->
+            <!--</irontec-simple-chat>-->
+        <!--</div>-->
+        <!-------------------------------------------------------------------------- Chat Box -------------------------------------------------------------------------------------END-->
+
+
+        <!------------------------------------------------------------------------ Context Menu --------------------------------------------------------------------------START-->
+        <!--<ng-include src="'context-menu.html'"></ng-include>-->
+        <!------------------------------------------------------------------------ Context Menu --------------------------------------------------------------------------END-->
+
+        <!------------------------------------------------------------------------ Chatting List -----------------------------------------------------------------------START-->
+        <aside class="col-lg-2 col-md-2 col-sm-2" id="chatting-list-fixed" ng-hide="MainViewVM.chatPanelVisibility">
+
+            <div class="panel panel-default" id="chatting-list-panel">
+                <div class="panel-heading" id="chat-panel-heading">Chat</div>
+
+                <ul class="list-group" id="chat-ul" slim-scroll height="500px">
+
+                    <li ng-repeat="user in MainViewVM.users" class="list-group-item" ng-click="MainViewVM.selectedUser(user)"><i id="onlineUserIcon" class={{user.status}}></i>{{user.name}}</li>
+                    <!--<li ng-repeat="user in MainViewVM.users" class="list-group-item" ng-click="MainViewVM.visible = !MainViewVM.visible"><i id="onlineUserIcon" class={{user.status}}></i>{{user.name}}</li>-->
+                    <!--<li ng-repeat="user in MainViewVM.users" class="list-group-item"><i id="onlineUserIcon" class={{user.status}}></i>{{user.name}}</li>-->
+
+                </ul>
+
+            </div>
+        </aside>
+        <!------------------------------------------------------------------------ Chatting List -----------------------------------------------------------------------END-->
+
+        </div>
+
+        <!-------------------------------------------------------Row-Containing-Accordion-&-Table-&-Chatting-Panel---------------------------------------------------------------END-->
+
+
+        <!---------------------------------------------------------------------- Navigation Bar Bottom ---------------------------------------------------------------------------START-->
+        <footer class="navbar navbar-default navbar-fixed-bottom hidden-xs" id="navbar-bottom">
+            <p id="nav-bottom-elem-left">Project Management System</p>
+        </footer>
+        <!---------------------------------------------------------------------- Navigation Bar Bottom -----------------------------------------------------------------------------END-->
+
+    </div>
+
+</div>
+>>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
 
 <!------------------------------------------------------------- MAIN CONTAINER (Write No HTML Outside) --------------------------------------------------------------------END-->
 
 <!--Third Party-->
 
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<!--<script src="js/Third-Party-JS/jquery-1.11.3.min.js"></script>-->
 <script src="js/Third-Party-JS/bootstrap.min.js"></script>
-<!--[if lt IE 9]><script src="js/Third-Party-JS/html5shiv.js"><![endif]-->
-<script src="js/Third-Party-JS/bootstrap-tour.min.js"></script>
-<script src="js/Third-Party-JS/respond.js"></script>
+<!--[if lt IE 9]><!--<script src="js/Third-Party-JS/html5shiv.js">--><![endif]-->
+<!--<script src="js/Third-Party-JS/bootstrap-tour.min.js"></script>-->
+<!--<script src="js/Third-Party-JS/respond.js"></script>-->
 <script src="js/Third-Party-JS/jquery.slimscroll.js"></script>
+<<<<<<< HEAD
 <script src="js/Third-Party-JS/jquery.validate.min.js"></script>
 
 <script src="bower_components/angular/angular.js"></script>
+=======
+<!--<script src="js/Third-Party-JS/jquery.validate.min.js"></script>-->
+<script type="text/javascript" src="js/Third-Party-JS/angular.min.js"></script>
+>>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
 <script type="text/javascript" src="i18n/angular-locale_de-de.js"></script>
 <script type="text/javascript" src="js/Third-Party-JS/ui-bootstrap-tpls-0.14.3.min.js"></script>
 <script type="text/javascript" src="bower_components/nsPopover/src/nsPopover.js"></script>
@@ -79,6 +463,7 @@
 <script src="bower_components/angular-input-masks/angular-input-masks-standalone.min.js"></script>
 <script src="bower_components/angular-messages/angular-messages.min.js"></script>
 <script src="bower_components/angular-bootstrap-multiselect/dist/angular-bootstrap-multiselect.min.js"></script>
+<<<<<<< HEAD
 <script src="bower_components/angular-route/angular-route.js"></script>
 <script src="bower_components/ngstorage/ngStorage.js"></script>
 <script src="bower_components/ng-file-upload/ng-file-upload.js"></script>
@@ -89,6 +474,11 @@
 <script src="/socket.io/socket.io.js"></script>
 <script src="node_modules/socket.io/node_modules/socket.io-client/socket.io.js"></script>
 <script src="bower_components/angular-bootstrap-simple-chat/src/scripts/index.js"></script>
+=======
+<script src="bower_components/moment/moment.js"></script>
+<!--<script src="bower_components/lodash/dist/lodash.min.js"></script>-->
+<!--<script src="bower_components/angular-bootstrap-simple-chat/src/scripts/index.js"></script>-->
+>>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
 
 <!--Directives-->
 
@@ -112,8 +502,13 @@
 <script type="text/javascript" src="js/services/project_service.js"></script>
 <script type="text/javascript" src="js/services/task_service.js"></script>
 <script type="text/javascript" src="js/services/document_service.js"></script>
+<<<<<<< HEAD
 <script type="text/javascript" src="js/services/chatSocketservice.js"></script>
 <script type="text/javascript" src="js/services/chatService.js"></script>
+=======
+<script type="text/javascript" src="js/services/user_service.js"></script>
+<script type="text/javascript" src="js/services/notifications_history_service.js"></script>
+>>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
 
 <script type="text/javascript" src="app.js"></script>
 

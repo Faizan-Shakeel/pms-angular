@@ -9,7 +9,11 @@
 
             <br/>
 
+<<<<<<< HEAD
             <form name="addNewDocumentValidationForm" class="form-horizontal" ng-submit="addNewDocumentValidationForm.$valid && DocumentModalVM.documentUpdateFlag && DocumentModalVM.createOrUpdateDocument(DocumentModalVM.documentName, DocumentModalVM.documentDescription, DocumentModalVM.file)" novalidate>
+=======
+            <form name="addNewDocumentValidationForm" class="form-horizontal" ng-submit="addNewDocumentValidationForm.$valid && DocumentModalVM.documentUpdateFlag && DocumentModalVM.createOrUpdateDocument(DocumentModalVM)" novalidate>
+>>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
                 <div class="form-group" ng-class="{ 'has-error': addNewDocumentValidationForm.documentName.$touched && addNewDocumentValidationForm.documentName.$invalid }">
                     <label for="documentName" class="col-lg-2 col-md-2 col-sm-2 control-label">Name</label>
                     <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">
@@ -25,7 +29,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="documentDescription" class="col-lg-2 col-md-2 col-sm-2 control-label">Document Description</label>
+                    <label for="documentDescription" class="col-lg-2 col-md-2 col-sm-2 control-label">Description</label>
                     <div class="col-lg-8 col-md-8 col-sm-8 col-lg-offset-1">
                         <textarea class="form-control documentModalTextAreaForDescription" id="documentDescription" ng-model="DocumentModalVM.documentDescription" placeholder="Document Description" ng-change="DocumentModalVM.documentUpdateDetected()"></textarea>
                     </div>

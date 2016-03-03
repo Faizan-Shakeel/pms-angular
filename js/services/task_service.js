@@ -5,10 +5,20 @@
 
 var app = angular.module('taskServiceModule', ['ngStorage']);
 
+<<<<<<< HEAD
 app.service('TaskService', ['mongoCrudService','$localStorage', function(mongoCrudService, $localStorage){
 
+=======
+app.service('TaskService', ['NotificationsAndHistoryService', function (NotificationsAndHistoryService)
+{
+    var accordionInfo;
+>>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
     var taskPanels = [];
     var tasksIdArray = [];
+    var action;
+    var actionBy;
+    var elementType;
+    var historyObject;
 
     var createTaskPanel = function(newTasksArray)
     {
@@ -17,10 +27,65 @@ app.service('TaskService', ['mongoCrudService','$localStorage', function(mongoCr
         angular.forEach(newTasksArray, function(value, index){
             //newTasksArray[index] = {tasks: newTasksArray[index]};
             taskPanels.push(newTasksArray[index]);
+<<<<<<< HEAD
             console.log(newTasksArray[index]);
             taskValues = {tasks: newTasksArray[index]}
             mongoCrudService.createNewEntry(taskValues);
+=======
+
+            action = 'created';
+            actionBy = 'User';
+            elementType = 'Task';
+
+            NotificationsAndHistoryService.addNotifications(newTasksArray[index], action, actionBy, elementType);
+
+            accordionInfo = NotificationsAndHistoryService.getAccordionStatus();
+            NotificationsAndHistoryService.setNotificationsCount(accordionInfo.isSecondOpen, accordionInfo.accVisibility);
+
+            historyObject = {elementType: elementType, element: newTasksArray[index]};
+            NotificationsAndHistoryService.makeHistory(historyObject);
+
+>>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
         });
+    };
+
+    var updatedTaskParams = function(updated_task)
+    {
+        for(var taskToUpdate of taskPanels)
+        {
+            if(taskToUpdate.id == updated_task.id)
+            {
+                taskToUpdate.targetEndDate = updated_task.targetEndDate;
+                taskToUpdate.description = updated_task.description;
+                taskToUpdate.status = updated_task.status;
+                taskToUpdate.modifiedDate = updated_task.modifiedDate;
+                taskToUpdate.lastModifiedBy = updated_task.lastModifiedBy;
+                taskToUpdate.numberOfDocuments = updated_task.numberOfDocuments;
+                taskToUpdate.numberOfUsers = updated_task.numberOfUsers;
+
+                break;
+            }
+        }
+    };
+
+    var checkTaskExistenceById = function(taskId)
+    {
+        "use strict";
+//                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
+
+        var taskAlreadyExists = false;
+
+        for(var taskPanel of taskPanels)
+        {
+            if(taskPanel.id == taskId)
+            {
+                taskAlreadyExists = true;
+                break;
+            }
+        }
+
+        return taskAlreadyExists;
+
     };
 
     var checkTaskExistence = function(taskName, tasksArray)
@@ -67,6 +132,17 @@ app.service('TaskService', ['mongoCrudService','$localStorage', function(mongoCr
         return taskPanels;
     };
 
+    var getTaskById = function(taskId)
+    {
+        for(var taskGlobal of taskPanels)
+        {
+            if(taskGlobal.id == taskId)
+            {
+                return taskGlobal;
+            }
+        }
+    };
+
     var deleteTaskModal = function(selectedTaskToDelete, modalTasksArray)
     {
         "use strict";
@@ -80,6 +156,25 @@ app.service('TaskService', ['mongoCrudService','$localStorage', function(mongoCr
         for(var task of tasksToDelete)
         {
             removeEntity(deleteFrom, 'id', 'project', task.id, task.project);
+        }
+    };
+
+    var delDocFromTask = function(docToDelete)
+    {
+        "use strict";
+//                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
+
+        for(var task of taskPanels)
+        {
+            for(var doc of task.documents)
+            {
+                if(doc.id == docToDelete.id)
+                {
+                    removeEntity(task.documents, 'id', 'project', docToDelete.id, docToDelete.project);
+                    return task;
+//                    break;
+                }
+            }
         }
     };
 
@@ -114,7 +209,7 @@ app.service('TaskService', ['mongoCrudService','$localStorage', function(mongoCr
         }
     };
 
-    var deleteFloatingTasks = function(floatingTasks, deleteByProperty)
+    var deleteFloatingTasks = function(floatingTasks)
     {
         "use strict";
         //                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
@@ -216,6 +311,26 @@ app.service('TaskService', ['mongoCrudService','$localStorage', function(mongoCr
         }
     };
 
+    var updateDocumentsInTask = function(updatedDocuments)
+    {
+        "use strict";
+//                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
+
+        for(var i=0; i<taskPanels.length; i++)
+        {
+            for (var k = 0; k < taskPanels[i].documents.length; k++)
+            {
+                for (var j = 0; j < updatedDocuments.length; j++)
+                {
+                    if(taskPanels[i].documents[k].id == updatedDocuments[j].id)
+                    {
+                        taskPanels[i].documents[k] = updatedDocuments[j];
+                    }
+                }
+            }
+        }
+    };
+
     var removeEntity = function(arr, attr, attr2, value, value2)
     {
         "use strict";
@@ -224,6 +339,7 @@ app.service('TaskService', ['mongoCrudService','$localStorage', function(mongoCr
         while(i--){
             if( arr[i]
                 && arr[i].hasOwnProperty(attr)
+                && arr[i].hasOwnProperty(attr2)
                 && (arguments.length > 2 && arr[i][attr] === value && arr[i][attr2] === value2) ){
 
                 arr.splice(i,1);
@@ -232,19 +348,113 @@ app.service('TaskService', ['mongoCrudService','$localStorage', function(mongoCr
         return arr;
     };
 
+    var addDocumentToTask = function(taskID, documentObject)
+    {
+        "use strict";
+//                        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
+
+        for(var task of taskPanels)
+        {
+            if (task.id == taskID)
+            {
+                console.log("task : " + JSON.stringify(task));
+
+                task.documents.push(documentObject);
+
+                console.log("task : " + JSON.stringify(task));
+            }
+        }
+    };
+
+    var addUserToTask = function(taskId, userObject)
+    {
+        "use strict";
+//                        console.log("Global Docs AFTER : " + JSON.stringify(UserService.getUserPanels()));
+
+        for(var taskGlobal of taskPanels)
+        {
+            var userAlreadyExistsInTask = false;
+
+            if (taskGlobal.name == taskId)
+            {
+                for(var userTask of taskGlobal.users)
+                {
+                    if(userTask.email == userObject.email)
+                    {
+                        userAlreadyExistsInTask = true;
+                    }
+                }
+
+                if(!userAlreadyExistsInTask)
+                {
+                    taskGlobal.users.push(userObject);
+                }
+
+            }
+        }
+    };
+
+    var deleteUserFromTasks = function(userToDelete)
+    {
+        for(var taskGlobal of taskPanels)
+        {
+            for(var userTask of taskGlobal.users)
+            {
+                if(userTask.email == userToDelete.email)
+                {
+                    removeEntity(taskGlobal.users, 'id', 'email', userToDelete.id, userToDelete.email);
+                }
+            }
+        }
+    };
+
+    var deleteUsersFromTasks = function(usersToDelete, taskId)
+    {
+        var deleteFromTask;
+
+        for(var user of usersToDelete)
+        {
+            for(var taskGlobal of taskPanels)
+            {
+                if(taskGlobal.id == taskId)
+                {
+                    deleteFromTask = taskGlobal;
+                    break;
+                }
+            }
+
+            for(var userTask of deleteFromTask.users)
+            {
+                if(userTask.email == user.email)
+                {
+                    removeEntity(deleteFromTask.users, 'id', 'email', user.id, user.email);
+                }
+            }
+        }
+    };
+
     return{
         newTaskID: newTaskID,
+        checkTaskExistenceById: checkTaskExistenceById,
         checkTaskExistence: checkTaskExistence,
         createTaskPanel: createTaskPanel,
+        updatedTaskParams: updatedTaskParams,
         getTaskPanels: getTaskPanels,
+        getTaskById: getTaskById,
+        addDocumentToTask: addDocumentToTask,
+        addUserToTask: addUserToTask,
+        deleteUserFromTasks: deleteUserFromTasks,
+        deleteUsersFromTasks: deleteUsersFromTasks,
         deleteTask: deleteTask,
         deleteTaskModal: deleteTaskModal,
         deleteTaskGlobal: deleteTaskGlobal,
         deleteDocumentsFromTask: deleteDocumentsFromTask,
+        delDocFromTask: delDocFromTask,
         deleteFloatingTasks: deleteFloatingTasks,
         hasDuplicates: hasDuplicates,
         removeProjectTasksFromExistingTasks: removeProjectTasksFromExistingTasks,
-        updateTasks: updateTasks
+        updateTasks: updateTasks,
+        updateDocumentsInTask: updateDocumentsInTask
     };
 
 }]);

@@ -51,12 +51,6 @@
     text-align: center;
 }
 
-#chat-ul
-{
-    /*height: 584px;*/
-    /*overflow: hidden;*/
-}
-
 #chat-ul li
 {
     height: 50px;
@@ -155,6 +149,7 @@
     height: 400px;
 }
 
+<<<<<<< HEAD
 .chat-window
 {
     position: absolute;
@@ -163,6 +158,13 @@
     bottom: 0;
     right: 15px;
 }
+=======
+/*#test-zindex*/
+/*{*/
+    /*position: relative;*/
+    /*z-index: 10;*/
+/*}*/
+>>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
 
 .unreadMsgTrue
 {
@@ -175,6 +177,26 @@
     padding: 5px 5px 5px 5px;
 }
 
+<<<<<<< HEAD
 .unreadMsgFalse
 {
+=======
+/*.chat-box*/
+/*{*/
+    /*position: absolute;*/
+    /*width: 300px;*/
+    /*height: 400px;*/
+    /*bottom: 0;*/
+    /*right: 55px;*/
+/*}*/
+
+
+.chat-window
+{
+    position: absolute;
+    width: 300px;
+    height: 400px;
+    bottom: 0;
+    right: 15px;
+>>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
 }

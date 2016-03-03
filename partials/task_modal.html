@@ -14,7 +14,7 @@
 
                     <br/>
 
-                    <form name="addNewTaskValidationForm" class="form-horizontal" ng-submit="addNewTaskValidationForm.$valid && TaskModalVM.taskUpdateFlag && TaskModalVM.createOrUpdateTask(TaskModalVM.taskName, TaskModalVM.taskDescription)" novalidate>
+                    <form name="addNewTaskValidationForm" class="form-horizontal" ng-submit="addNewTaskValidationForm.$valid && (addNewTaskValidationForm.taskTargetEndDate.$dirty || addNewTaskValidationForm.taskStatus.$dirty || addNewTaskValidationForm.taskDescription.$dirty || TaskModalVM.taskUpdateFlag) && TaskModalVM.createOrUpdateTask(TaskModalVM)" novalidate>
                         <div class="form-group" ng-class="{ 'has-error': addNewTaskValidationForm.taskName.$touched && addNewTaskValidationForm.taskName.$invalid }">
                             <label for="taskName" class="col-lg-2 col-md-2 col-sm-2 control-label">Name</label>
                             <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">
@@ -33,7 +33,7 @@
 
                             <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">
                                 <p class="input-group">
-                                    <input type="text" id="taskDate" class="form-control" uib-datepicker-popup="{{TaskModalVM.format}}" is-open="TaskModalVM.status.opened" ng-model="TaskModalVM.taskDate" close-text="Close" placeholder="Target Date"/>
+                                    <input type="text" id="taskDate" class="form-control" name="taskTargetEndDate" uib-datepicker-popup="{{TaskModalVM.format}}" is-open="TaskModalVM.status.opened" ng-model="TaskModalVM.taskTargetEndDate" close-text="Close" placeholder="Target Date"/>
                                     <span class="input-group-btn">
                                         <button type="button" class="btn btn-default" ng-click="TaskModalVM.openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                                     </span>
@@ -41,17 +41,26 @@
                             </div>
                         </div>
 
+                        <div class="form-group" ng-show="TaskModalVM.statusVisibility">
+                            <label for="taskStatus" class="col-lg-2 col-md-2 col-sm-2 control-label">Status</label>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">
+                                <select id="taskStatus" class="form-control" name="taskStatus" ng-model="TaskModalVM.selectedStatus">
+                                    <option ng-repeat="taskStatus in TaskModalVM.statuses">{{taskStatus.status}}</option>
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="form-group">
-                            <label for="taskDescription" class="col-lg-2 col-md-2 col-sm-2 control-label">Task Description</label>
+                            <label for="taskDescription" class="col-lg-2 col-md-2 col-sm-2 control-label">Description</label>
                             <div class="col-lg-8 col-md-8 col-sm-8 col-lg-offset-1">
-                                <textarea class="form-control taskModalTextAreaForDescription" id="taskDescription" ng-model="TaskModalVM.taskDescription" placeholder="Task Description" ng-change="TaskModalVM.taskUpdateDetected()"></textarea>
+                                <textarea class="form-control taskModalTextAreaForDescription" id="taskDescription" name="taskDescription" ng-model="TaskModalVM.taskDescription" placeholder="Task Description" ng-change="TaskModalVM.taskUpdateDetected()"></textarea>
                             </div>
                         </div>
 
                         <div class="form-group" ng-show="TaskModalVM.projectsListVisibility">
                             <label for="taskBelongsToProject" class="col-lg-2 col-md-2 col-sm-2 control-label">Project</label>
                             <div id="taskBelongsToProject" class="col-lg-8 col-md-8 col-sm-8 col-lg-offset-1">
-                                <multiselect ng-model="TaskModalVM.selectedProjects" options="TaskModalVM.taskProject" id-prop="id" display-prop="name" show-search="TaskModalVM.multiSearchSwitch"></multiselect>
+                                <multiselect ng-model="TaskModalVM.selectedProjects" options="TaskModalVM.taskProject" id-prop="id" display-prop="name" show-search="TaskModalVM.multiSearchSwitch" search-limit="TaskModalVM.searchResultLimit"></multiselect>
                             </div>
                         </div>
 
@@ -100,7 +109,7 @@
                                 </div>
 
                                 <div class="btn-group-vertical" id="documents-btn-grp-panel-in-new-project-modal">
-                                    <button class="btn btn-default test-button-border"><i class="fa fa-info"></i></button>
+                                    <button class="btn btn-default test-button-border" ng-click="TaskModalVM.infoDocumentModal(documentPanel)"><i class="fa fa-info"></i></button>
                                     <button class="btn btn-default" ng-click="TaskModalVM.editDocumentModal(documentPanel)"><i class="fa fa-edit"></i></button>
                                     <button class="btn btn-default test-button-border" ng-click="TaskModalVM.deleteDocument(documentPanel)"><i class="fa fa-trash-o"></i></button>
                                 </div>
@@ -115,7 +124,7 @@
             <uib-tab heading="Users">
                 <div class="modal-new-user-tab-body">
 
-                    <button type="button" class="btn btn-default btn-circle-user-tab-project-modal btn-lg" uib-tooltip="Add User" tooltip-placement="right" ng-click="TaskModalVM.addNewTask()"><i class="fa fa-plus fa-lg addEntityIconColor"></i></button>
+                    <button type="button" class="btn btn-default btn-circle-user-tab-project-modal btn-lg" uib-tooltip="Add User" tooltip-placement="right" ng-click="TaskModalVM.addExistingUsersModal()"><i class="fa fa-plus fa-lg addEntityIconColor"></i></button>
 
                     <div slim-scroll height="300px">
 
@@ -134,14 +143,14 @@
                                     </p>
 
                                     <p>
-                                        {{userPanel.status}}
+                                        {{userPanel.email}}
                                     </p>
                                 </div>
 
                                 <div class="btn-group-vertical" id="users-btn-grp-panel-in-new-project-modal">
-                                    <button class="btn btn-default test-button-border"><i class="fa fa-info"></i></button>
-                                    <button class="btn btn-default" ng-click="TaskModalVM.editUsers(userPanel.name)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-default test-button-border" ng-click="TaskModalVM.deleteUser(userPanel.name)"><i class="fa fa-trash-o"></i></button>
+                                    <button class="btn btn-default test-button-border" ng-click="TaskModalVM.infoUserModal(userPanel)"><i class="fa fa-info"></i></button>
+                                    <button class="btn btn-default" ng-click="TaskModalVM.editUserModal(userPanel)"><i class="fa fa-edit"></i></button>
+                                    <button class="btn btn-default test-button-border" ng-click="TaskModalVM.deleteUser(userPanel)"><i class="fa fa-trash-o"></i></button>
                                 </div>
 
                             </div>
