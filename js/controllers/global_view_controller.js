@@ -7,6 +7,7 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
 {
     var vm = this;
     init();
+    //chatService.checkMsgStatus(vm.unreadMsgUserEmail);
 
     /*/////////////////////////////////////////////////////////////////////////////////////////////////
      ////////////////// ACCORDION /////////////////////////////////////////////////////////////////////
@@ -133,12 +134,12 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
                 if (findMsgFlag != -1)
                 {
                     $localStorage.currentUser.users.unreadMessageFlag.splice(findMsgFlag, 1);
-                    selectedUserObject.name = selectedUserObject.name.replace('(1)','');
                     mongoCrudService.updateChatFlag($localStorage.currentUser.users);
+
                 }                
             });
-            
-            selectedUserObject.name = selectedUserObject.name.replace('(1)', '');            
+            console.log($localStorage.currentUser);
+            vm.checkForMsgFlag = '';
             vm.visible = !vm.visible;
             
 
@@ -195,10 +196,8 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
                 if (findMsgFlag == -1)
                 {
                     selectedUserObject.unreadMessageFlag.push($localStorage.currentUser.users.email);
-                    mongoCrudService.updateChatFlag(selectedUserObject);
-                    console.log(selectedUserObject);
-                }
-                
+                    mongoCrudService.updateChatFlag(selectedUserObject);                    
+                }          
             };
 
             vm.expandOnNew = true;
@@ -212,7 +211,8 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
                        {
                            if (vm.visible == false)
                            {
-                               vm.users[i].name = vm.users[i].name + '(1)';                               
+                               //vm.users[i].name = vm.users[i].name + '(1)';
+                               vm.checkForMsgFlag = vm.users[i].email;                            
                            }
                        }
                    }
@@ -484,7 +484,8 @@ function init()
                }
            }           
         }
-        vm.users = chatService.checkMsgStatus(vm.users);
+//        vm.users = chatService.checkMsgStatus(vm.users);
+        //chatService.checkMsgStatus(vm.users,vm.unreadMsgUserEmail);
     });
 }
 }]);

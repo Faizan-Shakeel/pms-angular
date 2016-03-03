@@ -333,7 +333,7 @@
                 <ul class="list-group" id="chat-ul" slim-scroll height="500px">
 
                     <!--<li ng-repeat="user in MainViewVM.users" class="list-group-item" ng-click="MainViewVM.visible = !MainViewVM.visible"><i id="onlineUserIcon" class={{user.status}}></i>{{user.name}}</li>-->
-                    <li ng-repeat="user in MainViewVM.users" class="list-group-item" ng-click="MainViewVM.selectedUser(user)"><i class="{{MainViewVM.checkMsgStatusClass}}" >{{user.name}}</i></li> <!-- id="onlineUserIcon" -->
+                    <li ng-repeat="user in MainViewVM.users" class="list-group-item" ng-click="MainViewVM.selectedUser(user)" ><i ng-class="user.email == MainViewVM.checkForMsgFlag? 'unreadMsgTrue' : 'unreadMsgFalse'">{{user.name}}</i></li> <!-- id="onlineUserIcon" -->
                 </ul>
 
             </div>

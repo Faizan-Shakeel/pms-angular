@@ -164,4 +164,17 @@
     right: 15px;
 }
 
+.unreadMsgTrue
+{
+    background-color: #CCCCCC;
+    font-weight: bold;
+    border-top: solid;
+    border-left: solid;
+    border-bottom: solid;
+    border-right: solid;
+    padding: 5px 5px 5px 5px;
+}
 
+.unreadMsgFalse
+{
+}

@@ -26,7 +26,7 @@ app.service('chatService',['$localStorage', function($localStorage)
     //   and checks whether a particular user has sent a message to logged-in
     //   user or not by finding the user's emailID (i.e. the message sender)  
     //   in logged-in user's unreadMessageFlag array. **
-    var checkMsgStatus = function(users)
+    var checkMsgStatus = function(users, unreadMsgUserEmail)
     {
         for (var i=0; i<users.length; i++)
         {
@@ -34,11 +34,12 @@ app.service('chatService',['$localStorage', function($localStorage)
             {
                 if($localStorage.currentUser.users.unreadMessageFlag[j] == users[i].email)
                 {
-                    users[i].name = users[i].name + '(1)';
+                    unreadMsgUserEmail = users[i].email;
+                    //users[i].name = users[i].name + '(1)';
                 }              
             }
         }
-        return users;
+        //return unreadMsgUserEmail;
     }
         return ({selectChat: selectChat,
                  checkMsgStatus: checkMsgStatus});
