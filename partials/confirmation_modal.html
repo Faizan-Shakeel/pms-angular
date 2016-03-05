@@ -7,19 +7,19 @@
 
     <div class="modal-body">
 
-        <div class="modal-new-document-form">
+        <div class="modal-confirm-delete">
 
             <br/>
 
-            <p class="form-control-static">{{ConfirmModalVM.confirmationMessage}}</p>
+            <p class="text-center">{{ConfirmModalVM.confirmationMessage}}</p>
 
         </div>
     </div>
 
     <div class="modal-footer">
 
-        <button class="btn btn-primary" type="button" ng-click="ConfirmModalVM.confirm()">Yes</button>
-        <button class="btn btn-warning" type="button" ng-click="ConfirmModalVM.cancel()">Cancel</button>
+        <button class="btn btn-danger" type="button" ng-click="ConfirmModalVM.confirm()">Yes</button>
+        <button class="btn btn-default" type="button" ng-click="ConfirmModalVM.cancel()">Cancel</button>
 
     </div>
 

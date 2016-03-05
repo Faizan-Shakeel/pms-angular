@@ -5,14 +5,20 @@ var app = angular.module('mainViewModule', ['ui.bootstrap', 'nsPopover']);
 app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService', 'DocumentService', 'UserService', 'NotificationsAndHistoryService', function ($scope, ProjectService, TaskService, DocumentService, UserService, NotificationsAndHistoryService)
 {
     var vm = this;
+    var accInfoObject;
+    var loggedInUserName = "Logged In User's Name";
+    var userNameMaxLength = 17;
+    var loggedInUserName = loggedInUserName.substring(0, userNameMaxLength);
 
     /*/////////////////////////////////////////////////////////////////////////////////////////////////
      ////////////////// ACCORDION /////////////////////////////////////////////////////////////////////
      */////////////////////////////////////////////////////////////////////////////////////////////////
 
-    var accInfoObject;
+//    vm.test = "{{MainViewVM.searchTasks.name}}";
+
     vm.onlineUsersCount = 0;
     vm.notificationsCount = {count: 0};
+    vm.loggedInUserName = loggedInUserName;
     vm.globalHistory = NotificationsAndHistoryService.getHistory();
     vm.globalNotifications = NotificationsAndHistoryService.getNotifications();
     vm.notificationsCount = NotificationsAndHistoryService.globalNotificationsCount;
@@ -177,9 +183,11 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
     };
 
     vm.projectVisibility = true;
-    vm.dropdownItems = ['Projects', 'Tasks', 'Documents', 'Users'];
+//    vm.dropdownItems = ['Projects', 'Tasks', 'Documents', 'Users'];
 
-    vm.selectedItem = vm.dropdownItems[0];
+    vm.dropdownItems = [{name: 'Projects', icon: 'fa fa-bar-chart-o', id: 'dropdown-icon-project'}, {name: 'Tasks', icon: 'fa fa-tasks', id: 'dropdown-icon-task'}, {name: 'Documents', icon: 'fa fa-files-o', id: 'dropdown-icon-document'}, {name: 'Users', icon: 'fa fa-users', id: 'dropdown-icon-user'}];
+
+    vm.selectedItem = vm.dropdownItems[0].name;
     vm.globalSearchDropDown = function (item) {
 
         vm.selectedItem = item;

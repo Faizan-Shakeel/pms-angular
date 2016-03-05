@@ -1,5 +1,5 @@
 <!doctype html>
-<html ng-app="pmsAngular">
+<html ng-app="pmsAngular" xmlns="http://www.w3.org/1999/html">
 
 <head>
     <meta charset="utf-8">
@@ -10,10 +10,13 @@
 
     <!--<link href='https://fonts.googleapis.com/css?family=Neucha&subset=latin,cyrillic' rel='stylesheet' type='text/css'>-->
 
+    <!--<link href='https://fonts.googleapis.com/css?family=Short+Stack' rel='stylesheet' type='text/css'>-->
+
     <link href="css/Third-Party-CSS/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="font-awesome-4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="font-awesome-4.5.0/css/font-awesome.min.css">
     <link href="css/Third-Party-CSS/bootstrap-tour.min.css" rel="stylesheet">
-    <link href="css/Third-Party-CSS/popbox.css" rel="stylesheet">
+    <!--<link href="css/Third-Party-CSS/popbox.css" rel="stylesheet">-->
+    <!--<link href="css/Third-Party-CSS/nsPopover.css" rel="stylesheet">-->
     <!--<link rel="stylesheet" href="bower_components/angular-bootstrap-simple-chat/src/css/style.css">-->
     <!--<link rel="stylesheet" href="bower_components/angular-bootstrap-simple-chat/src/css/themes.css">-->
 
@@ -28,11 +31,13 @@
     <link href="css/custom-icon.css" rel="stylesheet">
     <link href="css/tabs_and_panels.css" rel="stylesheet">
     <link href="css/shadow.css" rel="stylesheet">
+    <link href="css/popover.css" rel="stylesheet">
     <!--Custom Styles-->
 
 </head>
 
 <body>
+
 
 <!------------------------------------------------------------ MAIN CONTAINER (Write No HTML Outside) -----------------------------------------------------------------START-->
 <div class="container-full-width" ng-controller="Main_View_Controller as MainViewVM" ng-cloak>
@@ -54,7 +59,7 @@
                             <div class="input-group-btn" uib-dropdown is-open="MainViewVM.searchDropdownStatus.isopen">
                                 <button type="button" class="btn btn-default" uib-dropdown-toggle ng-disabled="disabled" id="search-categories">{{MainViewVM.selectedItem}} <span class="caret"></span></button>
                                 <ul class="uib-dropdown-menu" id="test-drop-down" role="menu" aria-labelledby="search-categories">
-                                    <li ng-repeat="dropdownItem in MainViewVM.dropdownItems" role="menuitem"><a ng-click="MainViewVM.globalSearchDropDown(dropdownItem)">{{dropdownItem}}</a></li>
+                                    <li ng-repeat="dropdownItem in MainViewVM.dropdownItems" role="menuitem"><a ng-click="MainViewVM.globalSearchDropDown(dropdownItem.name)"><i class="{{dropdownItem.icon}} pull-left" id="{{dropdownItem.id}}"></i>{{dropdownItem.name}}</a></li>
                                 </ul>
                             </div>
 
@@ -74,9 +79,9 @@
                         <p class="navbar-text" id="users-online" uib-tooltip="Online Users" tooltip-placement="bottom"><i class="fa fa-user-md"></i><strong> {{MainViewVM.onlineUsersCount}}</strong></p>
                     </div>
 
-                    <div class="navbar-brand col-lg-3 col-md-4 col-sm-3 pull-right" id="signed-in-user">
-                        <a class="pull-right" href="#">
-                        <span class="" id="signed-in-user-id">faizan shakeel</span>
+                    <div class="navbar-brand col-lg-3 col-md-4 col-sm-3 pull-right">
+                        <a class="pull-right" id="signed-in-user">
+                        <span class="" id="signed-in-user-id">{{MainViewVM.loggedInUserName}}</span>
                             <img class="open img-rounded" id="signed-in-user-pic" ng-src="images/Original_Size/user.png" ns-popover ns-popover-template="partials/popover.html" ns-popover-timeout=-1 ns-popover-trigger="click" ns-popover-placement="bottom|right" ns-popover="MainViewVM.displayPopover"/>
                         </a>
                     </div>
@@ -102,7 +107,7 @@
                     <!--Create <span class="caret"></span>-->
                     <!--</button>-->
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="#" id="create-project-dropdown-menu">Project</a></li>
+                        <li><a href="#" id="create-project-dropdown-menu"></i>Project</a></li>
                         <li class="divider"></li>
                         <li><a href="#" id="create-task-dropdown-menu">Task</a></li>
                         <li class="divider"></li>
@@ -212,9 +217,9 @@
                         <div class="panel panel-default" id="outer-panel" ng-repeat="projectPanel in MainViewVM.projectPanels | filter:MainViewVM.searchProjects">
                             <div class="panel-body">
 
-                                <div class="panel panel-default" id="inner-panel">
+                                <div class="panel panel-default {{projectPanel.statusColor}}" id="inner-panel">
                                     <div class="panel-body">
-                                        <i class="fa fa-suitcase fa-2x" id="panel-icon-fix"></i>
+                                        <i class="fa fa-bar-chart-o fa-2x" id="project-panel-icon-fix"></i>
                                     </div>
                                 </div>
 
@@ -229,9 +234,9 @@
                                 </div>
 
                                 <div class="btn-group-vertical" id="btn-grp-panel">
-                                    <button class="btn btn-default test-button-border" ng-click="ModalVM.infoProjectModal(projectPanel)"><i class="fa fa-info"></i></button>
+                                    <button class="btn btn-info" ng-click="ModalVM.infoProjectModal(projectPanel)"><i class="fa fa-info"></i></button>
                                     <button class="btn btn-default" ng-click="ModalVM.editProjectModal(projectPanel)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteProject(projectPanel, ModalVM)"><i class="fa fa-trash-o"></i></button>
+                                    <button class="btn btn-danger" ng-click="MainViewVM.deleteProject(projectPanel, ModalVM)"><i class="fa fa-trash-o"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -245,9 +250,9 @@
                         <div class="panel panel-default" id="outer-panel-tasks-in-new-project-modal" ng-repeat="taskPanel in MainViewVM.taskPanels | filter:MainViewVM.searchTasks">
                             <div class="panel-body">
 
-                                <div class="panel panel-default" id="inner-panel-tasks-in-new-project-modal">
+                                <div class="panel panel-default {{taskPanel.statusColor}}" id="inner-panel-tasks-in-new-project-modal">
                                     <div class="panel-body">
-                                        <i class="fa fa-suitcase fa-2x" id="task-panel-icon-fix-in-new-project-modal"></i>
+                                        <i class="fa fa-tasks fa-2x" id="task-panel-icon-fix"></i>
                                     </div>
                                 </div>
 
@@ -263,9 +268,9 @@
                                 </div>
 
                                 <div class="btn-group-vertical" id="tasks-btn-grp-panel-in-new-project-modal">
-                                    <button class="btn btn-default test-button-border" ng-click="ModalVM.infoTaskModal(taskPanel)"><i class="fa fa-info"></i></button>
+                                    <button class="btn btn-info test-button-border" ng-click="ModalVM.infoTaskModal(taskPanel)"><i class="fa fa-info"></i></button>
                                     <button class="btn btn-default" ng-click="ModalVM.editTaskModal(taskPanel)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteTask(taskPanel, ModalVM)"><i class="fa fa-trash-o"></i></button>
+                                    <button class="btn btn-danger test-button-border" ng-click="MainViewVM.deleteTask(taskPanel, ModalVM)"><i class="fa fa-trash-o"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -281,7 +286,7 @@
 
                                 <div class="panel panel-default" id="inner-panel-documents-in-new-project-modal">
                                     <div class="panel-body">
-                                        <i class="fa fa-suitcase fa-2x" id="document-panel-icon-fix-in-new-project-modal"></i>
+                                        <i class="fa fa-files-o fa-2x" id="document-panel-icon-fix"></i>
                                     </div>
                                 </div>
 
@@ -298,9 +303,9 @@
                                 </div>
 
                                 <div class="btn-group-vertical" id="documents-btn-grp-panel-in-new-project-modal">
-                                    <button class="btn btn-default test-button-border" ng-click="ModalVM.infoDocumentModal(documentPanel)"><i class="fa fa-info"></i></button>
+                                    <button class="btn btn-info test-button-border" ng-click="ModalVM.infoDocumentModal(documentPanel)"><i class="fa fa-info"></i></button>
                                     <button class="btn btn-default" ng-click="ModalVM.editDocumentModal(documentPanel)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteDocument(documentPanel, ModalVM)"><i class="fa fa-trash-o"></i></button>
+                                    <button class="btn btn-danger test-button-border" ng-click="MainViewVM.deleteDocument(documentPanel, ModalVM)"><i class="fa fa-trash-o"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -315,7 +320,7 @@
 
                                 <div class="panel panel-default" id="inner-panel-users-in-new-project-modal">
                                     <div class="panel-body">
-                                        <i class="fa fa-suitcase fa-2x" id="user-panel-icon-fix-in-new-project-modal"></i>
+                                        <i class="fa fa-user fa-2x" id="user-panel-icon-fix"></i>
                                     </div>
                                 </div>
 
@@ -330,9 +335,9 @@
                                 </div>
 
                                 <div class="btn-group-vertical" id="users-btn-grp-panel-in-new-project-modal">
-                                    <button class="btn btn-default test-button-border" ng-click="ModalVM.infoUserModal(userPanel)"><i class="fa fa-info"></i></button>
+                                    <button class="btn btn-info test-button-border" ng-click="ModalVM.infoUserModal(userPanel)"><i class="fa fa-info"></i></button>
                                     <button class="btn btn-default" ng-click="ModalVM.editUserModal(userPanel)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteUser(userPanel, ModalVM)"><i class="fa fa-trash-o"></i></button>
+                                    <button class="btn btn-danger test-button-border" ng-click="MainViewVM.deleteUser(userPanel, ModalVM)"><i class="fa fa-trash-o"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -410,6 +415,49 @@
         <!---------------------------------------------------------------------- Navigation Bar Bottom -----------------------------------------------------------------------------END-->
 
     </div>
+
+
+
+
+
+
+
+
+
+
+    <!--<div id="popover">-->
+        <!--<div class="row">-->
+        <!--<div class="col-lg-4" id="user-display-pic">-->
+
+        <!--</div>-->
+        <!--<div class="col-lg-8" id="user-info">-->
+
+        <!--<p>User Name</p>-->
+        <!--<p>User Designation</p>-->
+
+        <!--</div>-->
+        <!--</div>-->
+
+        <!--<div class="row">-->
+        <!--<div class="col-lg-12" id="user-logoff-button">-->
+
+        <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+
+    <!--<div class="row">-->
+        <!--<div class="col-lg-2 col-sm-6 col-md-4">-->
+            <!--<div class="thumbnail">-->
+                <!--<img ng-src="images/Original_Size/user.png" alt="">-->
+                <!--<div class="caption">-->
+                    <!--<h3 class="text-center">User Name</h3>-->
+                    <!--<p class="text-center">User Designation</p>-->
+                    <!--<p><a href="#" class="btn btn-primary pull-left" role="button">Profile</a> <a href="#" class="btn btn-default pull-right" role="button">Settings</a></p>-->
+                    <!--<button class="btn btn-default btn-block">Log Out</button>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
 
 </div>
 

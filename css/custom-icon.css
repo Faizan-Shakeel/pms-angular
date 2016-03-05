@@ -9,6 +9,60 @@
     margin-top: 3px;
 }
 
+#test1
+{
+    color: #0099ff;
+}
+
+#test2
+{
+    color: #006600;
+}
+
+#test3
+{
+    color: #cc6600;
+}
+
+#test4
+{
+    color: #660066;
+}
+
+#dropdown-icon-project
+{
+    margin-right: 15px;
+    margin-top: 3px;
+    color: #0099ff;
+}
+
+#dropdown-icon-task
+{
+    margin-right: 15px;
+    margin-top: 3px;
+    color: #006600;
+}
+
+#dropdown-icon-document
+{
+    margin-right: 15px;
+    margin-top: 3px;
+    color: #cc6600;
+}
+
+#dropdown-icon-user
+{
+    margin-right: 15px;
+    margin-top: 3px;
+    color: #660066;
+}
+
+/*#dropdown-icons*/
+/*{*/
+    /*margin-right: 15px;*/
+    /*margin-top: 3px;*/
+/*}*/
+
 /*#test2*/
 /*{*/
     /*margin-right: -15px;*/

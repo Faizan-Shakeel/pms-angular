@@ -8,6 +8,7 @@ var app = angular.module('notificationsAndHistoryModule', []);
 app.service('NotificationsAndHistoryService', [function () {
 
     var history = [];
+    var elementStatusColor;
     var globalNotifications = [];
     var accordionStatusAndVisibility;
     var globalNotificationsCount = {count: 0};
@@ -114,6 +115,42 @@ app.service('NotificationsAndHistoryService', [function () {
         }
     };
 
+    var setStatusColor = function(status)
+    {
+        console.log("elementStatusColor : " + elementStatusColor);
+
+        if(status == 'Pending Approval')
+        {
+            elementStatusColor = 'pending-approval';
+        }
+        else if(status == 'Approved')
+        {
+            elementStatusColor = 'approved';
+        }
+        else if(status == 'In Progress')
+        {
+            elementStatusColor = 'in-progress';
+        }
+        else if(status == 'Completed')
+        {
+            elementStatusColor = 'completed';
+        }
+        else if(status == 'Closed')
+        {
+            elementStatusColor = 'closed';
+        }
+
+        console.log("elementStatusColor : " + elementStatusColor);
+
+        return elementStatusColor;
+
+    };
+
+//    var getStatusColor = function()
+//    {
+//        return elementStatusColor;
+//    };
+
     return{
         addNotifications: addNotifications,
         getNotifications: getNotifications,
@@ -125,6 +162,8 @@ app.service('NotificationsAndHistoryService', [function () {
         clearNotificationsSecondOpen: clearNotificationsSecondOpen,
         makeHistory: makeHistory,
         getHistory: getHistory,
+        setStatusColor: setStatusColor,
+//        getStatusColor: getStatusColor,
         globalNotificationsCount: globalNotificationsCount
     }
 

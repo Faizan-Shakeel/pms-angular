@@ -35,7 +35,7 @@
                                 <p class="input-group">
                                     <input type="text" id="taskDate" class="form-control" name="taskTargetEndDate" uib-datepicker-popup="{{TaskModalVM.format}}" is-open="TaskModalVM.status.opened" ng-model="TaskModalVM.taskTargetEndDate" close-text="Close" placeholder="Target Date"/>
                                     <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default" ng-click="TaskModalVM.openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                        <button type="button" class="btn btn-info" ng-click="TaskModalVM.openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                                     </span>
                                 </p>
                             </div>
@@ -94,7 +94,7 @@
 
                                 <div class="panel panel-default" id="inner-panel-documents-in-new-project-modal">
                                     <div class="panel-body">
-                                        <i class="fa fa-suitcase fa-2x" id="document-panel-icon-fix-in-new-project-modal"></i>
+                                        <i class="fa fa-files-o fa-2x" id="document-panel-icon-fix"></i>
                                     </div>
                                 </div>
 
@@ -109,9 +109,9 @@
                                 </div>
 
                                 <div class="btn-group-vertical" id="documents-btn-grp-panel-in-new-project-modal">
-                                    <button class="btn btn-default test-button-border" ng-click="TaskModalVM.infoDocumentModal(documentPanel)"><i class="fa fa-info"></i></button>
+                                    <button class="btn btn-info test-button-border" ng-click="TaskModalVM.infoDocumentModal(documentPanel)"><i class="fa fa-info"></i></button>
                                     <button class="btn btn-default" ng-click="TaskModalVM.editDocumentModal(documentPanel)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-default test-button-border" ng-click="TaskModalVM.deleteDocument(documentPanel)"><i class="fa fa-trash-o"></i></button>
+                                    <button class="btn btn-danger test-button-border" ng-click="TaskModalVM.deleteDocument(documentPanel)"><i class="fa fa-trash-o"></i></button>
                                 </div>
 
                             </div>
@@ -133,7 +133,7 @@
 
                                 <div class="panel panel-default" id="inner-panel-users-in-new-project-modal">
                                     <div class="panel-body">
-                                        <i class="fa fa-suitcase fa-2x" id="user-panel-icon-fix-in-new-project-modal"></i>
+                                        <i class="fa fa-user fa-2x" id="user-panel-icon-fix"></i>
                                     </div>
                                 </div>
 
@@ -148,9 +148,9 @@
                                 </div>
 
                                 <div class="btn-group-vertical" id="users-btn-grp-panel-in-new-project-modal">
-                                    <button class="btn btn-default test-button-border" ng-click="TaskModalVM.infoUserModal(userPanel)"><i class="fa fa-info"></i></button>
+                                    <button class="btn btn-info test-button-border" ng-click="TaskModalVM.infoUserModal(userPanel)"><i class="fa fa-info"></i></button>
                                     <button class="btn btn-default" ng-click="TaskModalVM.editUserModal(userPanel)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-default test-button-border" ng-click="TaskModalVM.deleteUser(userPanel)"><i class="fa fa-trash-o"></i></button>
+                                    <button class="btn btn-danger test-button-border" ng-click="TaskModalVM.deleteUser(userPanel)"><i class="fa fa-trash-o"></i></button>
                                 </div>
 
                             </div>
@@ -165,8 +165,8 @@
     </div>
 
     <div class="modal-footer">
-        <label for="submit-new-task-form" class="btn btn-primary" ng-disabled="addNewTaskValidationForm.$invalid">{{TaskModalVM.modalType}}</label>
-        <button type="button" class="btn btn-warning" ng-click="TaskModalVM.cancelModal()">Cancel</button>
+        <label for="submit-new-task-form" class="btn btn-success" ng-disabled="addNewTaskValidationForm.$invalid">{{TaskModalVM.modalType}}</label>
+        <button type="button" class="btn btn-default" ng-click="TaskModalVM.cancelModal()">Cancel</button>
     </div>
 
 </div>
