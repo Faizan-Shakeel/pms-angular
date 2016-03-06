@@ -10,6 +10,7 @@
 
     <!--Third Party Styles-->
 
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
     <link href="css/Third-Party-CSS/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="font-awesome-4.5.0/css/font-awesome.min.css">
     <link href="css/Third-Party-CSS/bootstrap-tour.min.css" rel="stylesheet">
@@ -200,30 +201,32 @@
 
                     <div id="test-tabs-height" slim-scroll height="500px">
 
-                        <!--<div class="panel panel-default" id="outer-panel" ng-repeat="projectPanel in MainViewVM.projectPanels | filter:MainViewVM.searchProjects">-->
-                        <div class="panel panel-default" id="outer-panel" ng-repeat="projectPanel in MainViewVM.projectPanelsFilter">
-                            <div class="panel-body">
+                        <div ui-sortable ng-model="MainViewVM.projectPanelsFilter">
 
-                                <div class="panel panel-default {{projectPanel.statusColor}}" id="inner-panel">
-                                    <div class="panel-body">
-                                        <i class="fa fa-bar-chart-o fa-2x" id="project-panel-icon-fix"></i>
+                            <div class="panel panel-default" id="outer-panel" ng-repeat="projectPanel in MainViewVM.projectPanelsFilter">
+                                <div class="panel-body">
+
+                                    <div class="panel panel-default {{projectPanel.statusColor}}" id="inner-panel">
+                                        <div class="panel-body">
+                                            <i class="fa fa-bar-chart-o fa-2x" id="project-panel-icon-fix"></i>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div id="panel-content">
-                                    <p>
-                                    <h4>{{projectPanel.name}}</h4>
-                                    </p>
+                                    <div id="panel-content">
+                                        <p>
+                                        <h4>{{projectPanel.name}}</h4>
+                                        </p>
 
-                                    <p>
-                                        {{projectPanel.status}}
-                                    </p>
-                                </div>
+                                        <p>
+                                            {{projectPanel.status}}
+                                        </p>
+                                    </div>
 
-                                <div class="btn-group-vertical" id="btn-grp-panel">
-                                    <button class="btn btn-info" ng-click="ModalVM.infoProjectModal(projectPanel)"><i class="fa fa-info"></i></button>
-                                    <button class="btn btn-default" ng-click="ModalVM.editProjectModal(projectPanel)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-danger" ng-click="MainViewVM.deleteProject(projectPanel, ModalVM)"><i class="fa fa-trash-o"></i></button>
+                                    <div class="btn-group-vertical" id="btn-grp-panel">
+                                        <button class="btn btn-info" ng-click="ModalVM.infoProjectModal(projectPanel)"><i class="fa fa-info"></i></button>
+                                        <button class="btn btn-default" ng-click="ModalVM.editProjectModal(projectPanel)"><i class="fa fa-edit"></i></button>
+                                        <button class="btn btn-danger" ng-click="MainViewVM.deleteProject(projectPanel, ModalVM)"><i class="fa fa-trash-o"></i></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -234,7 +237,6 @@
 
                     <div slim-scroll height="500px">
 
-                        <!--<div class="panel panel-default" id="outer-panel-tasks-in-new-project-modal" ng-repeat="taskPanel in MainViewVM.taskPanels | filter:MainViewVM.searchTasks">-->
                         <div class="panel panel-default" id="outer-panel-tasks-in-new-project-modal" ng-repeat="taskPanel in MainViewVM.taskPanelsFilter">
                             <div class="panel-body">
 
@@ -269,7 +271,6 @@
 
                     <div slim-scroll height="500px">
 
-                        <!--<div class="panel panel-default" id="outer-panel-documents-in-new-project-modal" ng-repeat="documentPanel in MainViewVM.documentPanels | filter:MainViewVM.searchDocuments">-->
                         <div class="panel panel-default" id="outer-panel-documents-in-new-project-modal" ng-repeat="documentPanel in MainViewVM.documentPanelsFilter">
                             <div class="panel-body">
 
@@ -287,7 +288,6 @@
                                     <p>
                                         {{documentPanel.status}}
                                         <span class="col-lg-offset-6">[ {{documentPanel.project}} ] [ {{documentPanel.task}} ]</span>
-                                        <!--<span class="col-lg-offset-7">{{documentPanel.task}}</span>-->
                                     </p>
                                 </div>
 
@@ -304,7 +304,6 @@
                 <uib-tab heading="Users" active="MainViewVM.active.Users">
                     <div slim-scroll height="500px">
 
-                        <!--<div class="panel panel-default" id="outer-panel-users-in-new-project-modal" ng-repeat="userPanel in MainViewVM.userPanels | filter:MainViewVM.searchUsers">-->
                         <div class="panel panel-default" id="outer-panel-users-in-new-project-modal" ng-repeat="userPanel in MainViewVM.userPanelsFilter">
                             <div class="panel-body">
 
@@ -423,7 +422,9 @@
 
 <!--Third Party-->
 
+
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 <script src="js/Third-Party-JS/bootstrap.min.js"></script>
 <script src="js/Third-Party-JS/jquery.slimscroll.js"></script>
 <script type="text/javascript" src="js/Third-Party-JS/angular.min.js"></script>
@@ -434,7 +435,12 @@
 <script src="bower_components/angular-input-masks/angular-input-masks-standalone.min.js"></script>
 <script src="bower_components/angular-messages/angular-messages.min.js"></script>
 <script src="bower_components/angular-bootstrap-multiselect/dist/angular-bootstrap-multiselect.min.js"></script>
+<script type="text/javascript" src="js/Third-Party-JS/sortable.js"></script>
+<!--<script src="js/Third-Party-JS/ng-sortable.js"></script>-->
+<!--<script src="http://rubaxa.github.io/Sortable/Sortable.js"></script>-->
+<!--<script src="http://rubaxa.github.io/Sortable/ng-sortable.js"></script>-->
 <script src="bower_components/moment/moment.js"></script>
+
 
 
 <!--Directives-->

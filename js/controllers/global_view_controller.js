@@ -14,6 +14,15 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
      ////////////////// ACCORDION /////////////////////////////////////////////////////////////////////
      */////////////////////////////////////////////////////////////////////////////////////////////////
 
+//    $scope.sortableOptions = {
+//        containment: "parent",
+//        axis: "y",
+//        tolerance: "pointer",
+//        start: function(e, ui) {
+//            $(e.target).data("ui-sortable").floating = true;
+//        }
+//    };
+
     vm.onlineUsersCount = 0;
     vm.notificationsCount = {count: 0};
     vm.loggedInUserName = loggedInUserName;

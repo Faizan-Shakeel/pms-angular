@@ -15,10 +15,9 @@ var app = angular.module('pmsAngular', [
     'notificationsAndHistoryModule',
     'ui.utils.masks',
     'ngMessages',
-    'btorfs.multiselect'
-
-
-//    'ngAnimate'
+    'btorfs.multiselect',
+    'ngAnimate',
+    'ui.sortable'
 //    'luegg.directives',
 //    'irontec.simpleChat'
 

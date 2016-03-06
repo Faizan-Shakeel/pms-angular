@@ -5,6 +5,11 @@
     /*width: 50px;*/
 }
 
+#ul-without-bullet
+{
+    list-style-type: none;
+}
+
 #outer-panel-tasks-in-new-project-modal, #outer-panel-documents-in-new-project-modal, #outer-panel-users-in-new-project-modal
 {
     position: relative;
