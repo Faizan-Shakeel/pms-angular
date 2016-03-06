@@ -16,8 +16,8 @@
 
                     <form name="addNewTaskValidationForm" class="form-horizontal" ng-submit="addNewTaskValidationForm.$valid && (addNewTaskValidationForm.taskTargetEndDate.$dirty || addNewTaskValidationForm.taskStatus.$dirty || addNewTaskValidationForm.taskDescription.$dirty || TaskModalVM.taskUpdateFlag) && TaskModalVM.createOrUpdateTask(TaskModalVM)" novalidate>
                         <div class="form-group" ng-class="{ 'has-error': addNewTaskValidationForm.taskName.$touched && addNewTaskValidationForm.taskName.$invalid }">
-                            <label for="taskName" class="col-lg-2 col-md-2 col-sm-2 control-label">Name</label>
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">
+                            <label for="taskName" class="col-lg-3 col-md-3 col-sm-3 control-label">Name</label>
+                            <div class="col-lg-8 col-md-8 col-sm-8">
                                 <input type="text" class="form-control" id="taskName" name="taskName" placeholder="Task Name" ng-model="TaskModalVM.taskName" required="" ng-disabled="TaskModalVM.taskNameEditable"/>
 
                                 <div class="help-block" ng-messages="addNewTaskValidationForm.taskName.$error" ng-show="addNewTaskValidationForm.taskName.$touched">
@@ -29,9 +29,9 @@
 
                         <div class="form-group">
 
-                            <label for="taskDate" class="col-lg-2 col-md-2 col-sm-2 control-label">Target Date</label>
+                            <label for="taskDate" class="col-lg-3 col-md-3 col-sm-3 control-label">Target Date</label>
 
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">
+                            <div class="col-lg-8 col-md-8 col-sm-8">
                                 <p class="input-group">
                                     <input type="text" id="taskDate" class="form-control" name="taskTargetEndDate" uib-datepicker-popup="{{TaskModalVM.format}}" is-open="TaskModalVM.status.opened" ng-model="TaskModalVM.taskTargetEndDate" close-text="Close" placeholder="Target Date"/>
                                     <span class="input-group-btn">
@@ -42,8 +42,8 @@
                         </div>
 
                         <div class="form-group" ng-show="TaskModalVM.statusVisibility">
-                            <label for="taskStatus" class="col-lg-2 col-md-2 col-sm-2 control-label">Status</label>
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">
+                            <label for="taskStatus" class="col-lg-3 col-md-3 col-sm-3 control-label">Status</label>
+                            <div class="col-lg-8 col-md-8 col-sm-8">
                                 <select id="taskStatus" class="form-control" name="taskStatus" ng-model="TaskModalVM.selectedStatus">
                                     <option ng-repeat="taskStatus in TaskModalVM.statuses">{{taskStatus.status}}</option>
                                 </select>
@@ -51,15 +51,15 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="taskDescription" class="col-lg-2 col-md-2 col-sm-2 control-label">Description</label>
-                            <div class="col-lg-8 col-md-8 col-sm-8 col-lg-offset-1">
+                            <label for="taskDescription" class="col-lg-3 col-md-3 col-sm-3 control-label">Description</label>
+                            <div class="col-lg-8 col-md-8 col-sm-8">
                                 <textarea class="form-control taskModalTextAreaForDescription" id="taskDescription" name="taskDescription" ng-model="TaskModalVM.taskDescription" placeholder="Task Description" ng-change="TaskModalVM.taskUpdateDetected()"></textarea>
                             </div>
                         </div>
 
                         <div class="form-group" ng-show="TaskModalVM.projectsListVisibility">
-                            <label for="taskBelongsToProject" class="col-lg-2 col-md-2 col-sm-2 control-label">Project</label>
-                            <div id="taskBelongsToProject" class="col-lg-8 col-md-8 col-sm-8 col-lg-offset-1">
+                            <label for="taskBelongsToProject" class="col-lg-3 col-md-3 col-sm-3 control-label">Project</label>
+                            <div id="taskBelongsToProject" class="col-lg-8 col-md-8 col-sm-8">
                                 <multiselect ng-model="TaskModalVM.selectedProjects" options="TaskModalVM.taskProject" id-prop="id" display-prop="name" show-search="TaskModalVM.multiSearchSwitch" search-limit="TaskModalVM.searchResultLimit"></multiselect>
                             </div>
                         </div>

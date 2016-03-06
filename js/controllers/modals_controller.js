@@ -1624,6 +1624,8 @@ app.controller('InfoProjectModalInstanceController', ['$scope', '$uibModal', '$u
     vm.projectName = projectInfo.name;
     vm.projectBudget = projectInfo.budget;
     vm.projectDescription = projectInfo.description;
+    vm.projectTargetEndDate = moment(projectInfo.targetEndDate).format("L");
+
     vm.taskPanels = projectInfo.tasks;
     vm.documentPanels = projectInfo.documents;
     vm.userPanels = JSON.parse(JSON.stringify(projectInfo.users));
@@ -1749,7 +1751,8 @@ app.controller('InfoTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
 
     if(taskInfo.targetEndDate != undefined)
     {
-        vm.taskTargetEndDate = new Date(taskInfo.targetEndDate);
+//        vm.taskTargetEndDate = new Date(taskInfo.targetEndDate);
+        vm.taskTargetEndDate = moment(taskInfo.targetEndDate).format("L");
     }
 
     vm.taskDescription = taskInfo.description;

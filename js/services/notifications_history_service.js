@@ -42,6 +42,11 @@ app.service('NotificationsAndHistoryService', [function () {
 
             if(!elementFound)
             {
+                if(history.length >= 15)
+                {
+                    history.length = 14;
+                }
+
                 history.unshift(historyParams);
             }
         }
@@ -75,6 +80,11 @@ app.service('NotificationsAndHistoryService', [function () {
             'actionDate': actionDate,
             'actionTime': actionTime
         };
+
+        if(globalNotifications.length >= 50)
+        {
+            globalNotifications.length = 49;
+        }
 
         globalNotifications.unshift(notificationsParams);
     };
@@ -145,11 +155,6 @@ app.service('NotificationsAndHistoryService', [function () {
         return elementStatusColor;
 
     };
-
-//    var getStatusColor = function()
-//    {
-//        return elementStatusColor;
-//    };
 
     return{
         addNotifications: addNotifications,

@@ -1,7 +1,3 @@
-#project-popover, #task-popover, #file-popover, #user-popover
-{
-    /*text-align: center;*/
-}
 
 #test1, #test2, #test3, #test4
 {
@@ -29,75 +25,65 @@
     color: #660066;
 }
 
+.dropdown-text-decoration-none
+{
+    cursor: pointer;
+}
+
 #dropdown-icon-project
 {
-    margin-right: 15px;
-    margin-top: 3px;
+    margin: 3px 15px 0 -10px;
     color: #0099ff;
 }
 
 #dropdown-icon-task
 {
-    margin-right: 15px;
-    margin-top: 3px;
+    margin: 3px 15px 0 -10px;
     color: #006600;
 }
 
 #dropdown-icon-document
 {
-    margin-right: 15px;
-    margin-top: 3px;
+    margin: 3px 15px 0 -10px;
     color: #cc6600;
 }
 
 #dropdown-icon-user
 {
-    margin-right: 15px;
-    margin-top: 3px;
+    margin: 3px 15px 0 -10px;
     color: #660066;
 }
-
-/*#dropdown-icons*/
-/*{*/
-    /*margin-right: 15px;*/
-    /*margin-top: 3px;*/
-/*}*/
-
-/*#test2*/
-/*{*/
-    /*margin-right: -15px;*/
-/*}*/
-/*#test3*/
-/*{*/
-    /*margin-right: -15px;*/
-/*}*/
-/*#test4*/
-/*{*/
-    /*margin-right: -15px;*/
-/*}*/
-
-/*#test1*/
-/*{*/
-    /*margin-right: 20px;*/
-/*}*/
-
-/*#test2*/
-/*{*/
-    /*margin-right: 46px;*/
-/*}*/
-
-/*#test3*/
-/*{*/
-    /*margin-right: 50px;*/
-/*}*/
-
-/*#test4*/
-/*{*/
-    /*margin-right: 47px;*/
-/*}*/
 
 .test-img-vertical-align
 {
     margin-top: 8px;
+}
+
+
+
+@media only screen and (min-width: 768px) and (max-width: 991px)
+{
+    #test1, #test2, #test3, #test4
+    {
+        margin-right: 10px;
+    }
+
+    /*#doc-text*/
+    /*{*/
+        /*width: 85px;*/
+        /*overflow: hidden;*/
+        /*white-space: nowrap;*/
+        /*display: block;*/
+        /*text-overflow: ellipsis;*/
+    /*}*/
+
+}
+
+@media only screen and (min-width: 992px) and (max-width: 1480px)
+{
+    #test1, #test2, #test3, #test4
+    {
+        margin-right: 10px;
+    }
 }
 

@@ -16,6 +16,8 @@ var app = angular.module('pmsAngular', [
     'ui.utils.masks',
     'ngMessages',
     'btorfs.multiselect'
+
+
 //    'ngAnimate'
 //    'luegg.directives',
 //    'irontec.simpleChat'

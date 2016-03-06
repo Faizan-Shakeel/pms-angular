@@ -68,18 +68,18 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
             }
             else
             {
-                vm.globalTabsBootstrapClass = 'col-lg-10 col-md-10 col-sm-10';
+                vm.globalTabsBootstrapClass = 'col-lg-10 col-md-10 col-sm-9';
             }
         }
         else
         {
             if(vm.accordionVisibility)
             {
-                vm.globalTabsBootstrapClass = 'col-lg-10 col-md-10 col-sm-10';
+                vm.globalTabsBootstrapClass = 'col-lg-10 col-md-10 col-sm-9';
             }
             else
             {
-                vm.globalTabsBootstrapClass = 'col-lg-8 col-md-8 col-sm-8';
+                vm.globalTabsBootstrapClass = 'col-lg-8 col-md-8 col-sm-6';
             }
         }
     };
@@ -138,18 +138,18 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
             }
             else
             {
-                vm.globalTabsBootstrapClass = 'col-lg-10 col-md-10 col-sm-10';
+                vm.globalTabsBootstrapClass = 'col-lg-10 col-md-10 col-sm-9';
             }
         }
         else
         {
             if(vm.chatPanelVisibility)
             {
-                vm.globalTabsBootstrapClass = 'col-lg-10 col-md-10 col-sm-10';
+                vm.globalTabsBootstrapClass = 'col-lg-10 col-md-10 col-sm-9';
             }
             else
             {
-                vm.globalTabsBootstrapClass = 'col-lg-8 col-md-8 col-sm-8';
+                vm.globalTabsBootstrapClass = 'col-lg-8 col-md-8 col-sm-6';
             }
         }
     };
@@ -235,7 +235,7 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
      ////////////////// TABS AND PANELS ///////////////////////////////////////////////////////////////
      */////////////////////////////////////////////////////////////////////////////////////////////////
 
-    vm.globalTabsBootstrapClass = 'col-lg-8 col-md-8 col-sm-8';
+    vm.globalTabsBootstrapClass = 'col-lg-8 col-md-8 col-sm-6';
     vm.projectPanels = ProjectService.getProjectPanels();
     vm.taskPanels = TaskService.getTaskPanels();
     vm.documentPanels = DocumentService.getDocumentPanels();

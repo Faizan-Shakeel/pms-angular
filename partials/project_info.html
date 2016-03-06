@@ -17,36 +17,44 @@
 
                     <form class="form-horizontal">
                         <div class="form-group">
-                            <label class="col-lg-2 col-md-2 col-sm-2 control-label">Name</label>
-                            <div class="col-sm-10">
+                            <label class="col-lg-3 col-md-3 col-sm-3 control-label">Name</label>
+                            <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
                                 <p class="form-control-static">{{ModalVM.projectName}}</p>
                             </div>
                         </div>
 
+                        <hr class="info-divider"/>
+
                         <div class="form-group">
-                            <label class="col-lg-2 col-md-2 col-sm-2 control-label">Budget</label>
-                            <div class="col-sm-10">
+                            <label class="col-lg-3 col-md-3 col-sm-3 control-label">Budget</label>
+                            <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
                                 <p class="form-control-static">{{ModalVM.projectBudget}}</p>
                             </div>
                         </div>
 
+                        <hr class="info-divider"/>
+
                         <div class="form-group">
-                            <label class="col-lg-2 col-md-2 col-sm-2 control-label">Target Date</label>
-                            <div class="col-sm-10">
+                            <label class="col-lg-3 col-md-3 col-sm-3 control-label">Target Date</label>
+                            <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
                                 <p class="form-control-static">{{ModalVM.projectTargetEndDate}}</p>
                             </div>
                         </div>
 
+                        <hr class="info-divider"/>
+
                         <div class="form-group" ng-show="ModalVM.statusVisibility">
-                            <label class="col-lg-2 col-md-2 col-sm-2 control-label">Status</label>
-                            <div class="col-sm-10">
+                            <label class="col-lg-3 col-md-3 col-sm-3 control-label">Status</label>
+                            <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
                                 <p class="form-control-static">{{ModalVM.selectedStatus}}</p>
                             </div>
                         </div>
 
+                        <hr class="info-divider" ng-show="ModalVM.statusVisibility"/>
+
                         <div class="form-group">
-                            <label class="col-lg-2 col-md-2 col-sm-2 control-label">Description</label>
-                            <div class="col-sm-10">
+                            <label class="col-lg-3 col-md-3 col-sm-3 control-label">Description</label>
+                            <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
                                 <p class="form-control-static">{{ModalVM.projectDescription}}</p>
                             </div>
                         </div>

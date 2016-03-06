@@ -303,6 +303,8 @@ app.service('UserService', ['NotificationsAndHistoryService', function (Notifica
         "use strict";
         //                        console.log("Global Docs AFTER : " + JSON.stringify(UserService.getUserPanels()));
 
+        console.log("lasondoiansasdasd lasondoiansasdasd lasondoiansasdasd");
+
         var userToUpdate;
         var projectObject = {id: projectId, name: projectName, role: userRole};
 

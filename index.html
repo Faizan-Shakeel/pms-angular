@@ -1,28 +1,23 @@
 <!doctype html>
-<html ng-app="pmsAngular" xmlns="http://www.w3.org/1999/html">
+<!--<html ng-app="pmsAngular" xmlns="http://www.w3.org/1999/html">-->
+<html ng-app="pmsAngular">
 
 <head>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PMS</title>
 
     <!--Third Party Styles-->
 
-    <!--<link href='https://fonts.googleapis.com/css?family=Neucha&subset=latin,cyrillic' rel='stylesheet' type='text/css'>-->
-
-    <!--<link href='https://fonts.googleapis.com/css?family=Short+Stack' rel='stylesheet' type='text/css'>-->
-
     <link href="css/Third-Party-CSS/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="font-awesome-4.5.0/css/font-awesome.min.css">
     <link href="css/Third-Party-CSS/bootstrap-tour.min.css" rel="stylesheet">
-    <!--<link href="css/Third-Party-CSS/popbox.css" rel="stylesheet">-->
-    <!--<link href="css/Third-Party-CSS/nsPopover.css" rel="stylesheet">-->
-    <!--<link rel="stylesheet" href="bower_components/angular-bootstrap-simple-chat/src/css/style.css">-->
-    <!--<link rel="stylesheet" href="bower_components/angular-bootstrap-simple-chat/src/css/themes.css">-->
 
     <!--Third Party Styles-->
 
     <!--Custom Styles-->
+
     <link href="css/container.css" rel="stylesheet">
     <link href="css/navbar-top.css" rel="stylesheet">
     <link href="css/navbar2.css" rel="stylesheet">
@@ -32,7 +27,17 @@
     <link href="css/tabs_and_panels.css" rel="stylesheet">
     <link href="css/shadow.css" rel="stylesheet">
     <link href="css/popover.css" rel="stylesheet">
+
     <!--Custom Styles-->
+
+    <!--To Be Deleted-->
+
+    <!--<link href="css/Third-Party-CSS/popbox.css" rel="stylesheet">-->
+    <!--<link href="css/Third-Party-CSS/nsPopover.css" rel="stylesheet">-->
+    <!--<link rel="stylesheet" href="bower_components/angular-bootstrap-simple-chat/src/css/style.css">-->
+    <!--<link rel="stylesheet" href="bower_components/angular-bootstrap-simple-chat/src/css/themes.css">-->
+
+    <!--To Be Deleted-->
 
 </head>
 
@@ -40,7 +45,8 @@
 
 
 <!------------------------------------------------------------ MAIN CONTAINER (Write No HTML Outside) -----------------------------------------------------------------START-->
-<div class="container-full-width" ng-controller="Main_View_Controller as MainViewVM" ng-cloak>
+<!--<div class="container-full-width" ng-controller="Main_View_Controller as MainViewVM" ng-cloak>-->
+<div class="container-fluid" ng-controller="Main_View_Controller as MainViewVM" ng-cloak>
 
 <!-------------------------------------------------------------------- Navigation Bar Fixed Top -----------------------------------------------------------------------START-->
     <div ng-controller="ModalsController as ModalVM">
@@ -50,16 +56,16 @@
 
                 <div class="row">
 
-                    <header class="navbar-header col-lg-2 col-md-2 col-sm-2">
+                    <header class="navbar-header col-lg-2 col-md-2 col-sm-1">
                         <a class="navbar-brand" href="#" id="application-logo">PMS</a>
                     </header>
 
-                    <div class="col-lg-3 col-md-4 col-sm-5" id="search-group">
+                    <div class="col-lg-4 col-md-4 col-sm-5" id="search-group">
                         <div class="input-group">
                             <div class="input-group-btn" uib-dropdown is-open="MainViewVM.searchDropdownStatus.isopen">
                                 <button type="button" class="btn btn-default" uib-dropdown-toggle ng-disabled="disabled" id="search-categories">{{MainViewVM.selectedItem}} <span class="caret"></span></button>
                                 <ul class="uib-dropdown-menu" id="test-drop-down" role="menu" aria-labelledby="search-categories">
-                                    <li ng-repeat="dropdownItem in MainViewVM.dropdownItems" role="menuitem"><a ng-click="MainViewVM.globalSearchDropDown(dropdownItem.name)"><i class="{{dropdownItem.icon}} pull-left" id="{{dropdownItem.id}}"></i>{{dropdownItem.name}}</a></li>
+                                    <li ng-repeat="dropdownItem in MainViewVM.dropdownItems" role="menuitem"><a class="dropdown-text-decoration-none" ng-click="MainViewVM.globalSearchDropDown(dropdownItem.name)"><i class="{{dropdownItem.icon}} pull-left" id="{{dropdownItem.id}}"></i>{{dropdownItem.name}}</a></li>
                                 </ul>
                             </div>
 
@@ -79,7 +85,7 @@
                         <p class="navbar-text" id="users-online" uib-tooltip="Online Users" tooltip-placement="bottom"><i class="fa fa-user-md"></i><strong> {{MainViewVM.onlineUsersCount}}</strong></p>
                     </div>
 
-                    <div class="navbar-brand col-lg-3 col-md-4 col-sm-3 pull-right">
+                    <div class="navbar-brand col-lg-3 col-md-4 col-sm-4 pull-right">
                         <a class="pull-right" id="signed-in-user">
                         <span class="" id="signed-in-user-id">{{MainViewVM.loggedInUserName}}</span>
                             <img class="open img-rounded" id="signed-in-user-pic" ng-src="images/Original_Size/user.png" ns-popover ns-popover-template="partials/popover.html" ns-popover-timeout=-1 ns-popover-trigger="click" ns-popover-placement="bottom|right" ns-popover="MainViewVM.displayPopover"/>
@@ -97,36 +103,11 @@
 
         <div class="row hidden-xs" id="test-second-custom-bar">
 
-            <div class="col-lg-2 col-md-2 col-sm-2" id="123">
+            <div class="col-lg-2 col-md-2 col-sm-3" id="123">
                 <button class="btn btn-default" id="menu-opener" ng-click="MainViewVM.switchAccordionVisibility()">Menu <span class="glyphicon glyphicon-book" id="icon-main-options-color"></span></button>
             </div>
 
-            <div class="col-lg-3 col-md-4 col-sm-5 common-class">
-                <div class="btn-group" id="create-record">
-                    <!--<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">-->
-                    <!--Create <span class="caret"></span>-->
-                    <!--</button>-->
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a href="#" id="create-project-dropdown-menu"></i>Project</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#" id="create-task-dropdown-menu">Task</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#" id="create-file-dropdown-menu">File</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#" id="create-user-dropdown-menu">User</a></li>
-                    </ul>
-
-                </div>
-                <button class="btn btn-default common-class" id="edit-record">Edit <span class="glyphicon glyphicon-edit" id="icon-edit-record-color"></span></button>
-                <button class="btn btn-default common-class" id="delete-record">Delete <span class="glyphicon glyphicon-remove" id="icon-delete-record-color"></span></button>
-            </div>
-
-            <!--<div id="one-click-panels-expand">-->
-            <!--<button class="btn btn-default" id="expand-tooltip" data-toggle="tooltip" data-original-title="Expand"><i class="fa fa-angle-double-left" id="expand-left"></i><i class="fa fa-angle-double-right" id="expand-right"></i></button>-->
-            <!--<button class="btn btn-default" id="contract-tooltip" data-toggle="tooltip" data-original-title="Contract" style="display: none"><i class="fa fa-angle-double-right" id="contract-left"></i><i class="fa fa-angle-double-left" id="contract-right"></i></button>-->
-            <!--</div>-->
-
-            <div class="col-lg-2 col-md-2 col-sm-2 pull-right">
+            <div class="col-lg-2 col-md-2 col-sm-3 pull-right">
                 <button class="btn btn-default" id="chatting-list-opener" ng-click="MainViewVM.switchChatPanelVisibility()">Colleagues <span class="glyphicon glyphicon-comment" id="icon-chat-list-color"></span></button>
             </div>
 
@@ -139,7 +120,7 @@
 
         <div class="row" id="third-row">
 
-        <div class="col-lg-2 col-md-2 col-sm-2" ng-hide="MainViewVM.accordionVisibility">
+        <div class="col-lg-2 col-md-2 col-sm-3" ng-hide="MainViewVM.accordionVisibility">
 
             <uib-accordion close-others="MainViewVM.oneAtATime">
                 <uib-accordion-group is-open="MainViewVM.accordionStatus.isFirstOpen">
@@ -386,7 +367,7 @@
         <!------------------------------------------------------------------------ Context Menu --------------------------------------------------------------------------END-->
 
         <!------------------------------------------------------------------------ Chatting List -----------------------------------------------------------------------START-->
-        <aside class="col-lg-2 col-md-2 col-sm-2" id="chatting-list-fixed" ng-hide="MainViewVM.chatPanelVisibility">
+        <aside class="col-lg-2 col-md-2 col-sm-3" id="chatting-list-fixed" ng-hide="MainViewVM.chatPanelVisibility">
 
             <div class="panel panel-default" id="chatting-list-panel">
                 <div class="panel-heading" id="chat-panel-heading">Chat</div>
@@ -416,75 +397,35 @@
 
     </div>
 
-
-
-
-
-
-
-
-
-
-    <!--<div id="popover">-->
-        <!--<div class="row">-->
-        <!--<div class="col-lg-4" id="user-display-pic">-->
-
-        <!--</div>-->
-        <!--<div class="col-lg-8" id="user-info">-->
-
-        <!--<p>User Name</p>-->
-        <!--<p>User Designation</p>-->
-
-        <!--</div>-->
-        <!--</div>-->
-
-        <!--<div class="row">-->
-        <!--<div class="col-lg-12" id="user-logoff-button">-->
-
-        <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
-
-    <!--<div class="row">-->
-        <!--<div class="col-lg-2 col-sm-6 col-md-4">-->
-            <!--<div class="thumbnail">-->
-                <!--<img ng-src="images/Original_Size/user.png" alt="">-->
-                <!--<div class="caption">-->
-                    <!--<h3 class="text-center">User Name</h3>-->
-                    <!--<p class="text-center">User Designation</p>-->
-                    <!--<p><a href="#" class="btn btn-primary pull-left" role="button">Profile</a> <a href="#" class="btn btn-default pull-right" role="button">Settings</a></p>-->
-                    <!--<button class="btn btn-default btn-block">Log Out</button>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
-
 </div>
 
 <!------------------------------------------------------------- MAIN CONTAINER (Write No HTML Outside) --------------------------------------------------------------------END-->
 
+<!--To Be Deleted-->
+
+<!--<script src="js/Third-Party-JS/jquery-1.11.3.min.js"></script>-->
+<!--<script src="js/Third-Party-JS/bootstrap-tour.min.js"></script>-->
+<!--<script src="js/Third-Party-JS/respond.js"></script>-->
+<!--<script src="js/Third-Party-JS/jquery.validate.min.js"></script>-->
+<!--<script src="bower_components/lodash/dist/lodash.min.js"></script>-->
+<!--<script src="bower_components/angular-bootstrap-simple-chat/src/scripts/index.js"></script>-->
+
+<!--To Be Deleted-->
+
 <!--Third Party-->
 
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-<!--<script src="js/Third-Party-JS/jquery-1.11.3.min.js"></script>-->
 <script src="js/Third-Party-JS/bootstrap.min.js"></script>
-<!--[if lt IE 9]><!--<script src="js/Third-Party-JS/html5shiv.js">--><![endif]-->
-<!--<script src="js/Third-Party-JS/bootstrap-tour.min.js"></script>-->
-<!--<script src="js/Third-Party-JS/respond.js"></script>-->
 <script src="js/Third-Party-JS/jquery.slimscroll.js"></script>
-<!--<script src="js/Third-Party-JS/jquery.validate.min.js"></script>-->
 <script type="text/javascript" src="js/Third-Party-JS/angular.min.js"></script>
 <script type="text/javascript" src="js/Third-Party-JS/angular-animate.min.js"></script>
 <script type="text/javascript" src="i18n/angular-locale_de-de.js"></script>
 <script type="text/javascript" src="js/Third-Party-JS/ui-bootstrap-tpls-0.14.3.min.js"></script>
 <script type="text/javascript" src="bower_components/nsPopover/src/nsPopover.js"></script>
-<!--<script type="text/javascript" src="bower_components/angular-animate/angular-animate.min.js"></script>-->
 <script src="bower_components/angular-input-masks/angular-input-masks-standalone.min.js"></script>
 <script src="bower_components/angular-messages/angular-messages.min.js"></script>
 <script src="bower_components/angular-bootstrap-multiselect/dist/angular-bootstrap-multiselect.min.js"></script>
 <script src="bower_components/moment/moment.js"></script>
-<!--<script src="bower_components/lodash/dist/lodash.min.js"></script>-->
-<!--<script src="bower_components/angular-bootstrap-simple-chat/src/scripts/index.js"></script>-->
 
 
 <!--Directives-->
@@ -504,7 +445,11 @@
 <script type="text/javascript" src="js/services/user_service.js"></script>
 <script type="text/javascript" src="js/services/notifications_history_service.js"></script>
 
+<!--Application-->
+
 <script type="text/javascript" src="app.js"></script>
+
+<!--Application-->
 
 
 </body>

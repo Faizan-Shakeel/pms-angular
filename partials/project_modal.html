@@ -17,8 +17,8 @@
 
                     <form name="validatedForm" class="form-horizontal" ng-submit="validatedForm.$valid && (validatedForm.projectBudget.$dirty || validatedForm.projectTargetEndDate.$dirty || validatedForm.projectStatus.$dirty || validatedForm.projectDescription.$dirty || ModalVM.updateFlag) && ModalVM.createOrUpdateProject(ModalVM)" novalidate>
                         <div class="form-group" ng-class="{ 'has-error': validatedForm.projectName.$touched && validatedForm.projectName.$invalid }">
-                            <label for="projectName" class="col-lg-2 col-md-2 col-sm-2 control-label">Name</label>
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">
+                            <label for="projectName" class="col-lg-3 col-md-3 col-sm-3 control-label">Name</label>
+                            <div class="col-lg-8 col-md-8 col-sm-8">
                                 <input type="text" class="form-control" id="projectName" name="projectName" placeholder="Name" ng-model="ModalVM.projectName" required="" ng-disabled="ModalVM.projectNameEditable"/>
 
                                 <div class="help-block" ng-messages="validatedForm.projectName.$error" ng-show="validatedForm.projectName.$touched">
@@ -28,17 +28,17 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="projectBudget" class="col-lg-2 col-md-2 col-sm-2 control-label">Budget</label>
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">
+                            <label for="projectBudget" class="col-lg-3 col-md-3 col-sm-3 control-label">Budget</label>
+                            <div class="col-lg-8 col-md-8 col-sm-8">
                                 <input id="projectBudget" class="form-control" type="text" name="projectBudget" ng-model="ModalVM.projectBudget" ui-money-mask placeholder="Budget" />
                             </div>
                         </div>
 
                         <div class="form-group">
 
-                            <label for="projectTargetEndDate" class="col-lg-2 col-md-2 col-sm-2 control-label">Target Date</label>
+                            <label for="projectTargetEndDate" class="col-lg-3 col-md-3 col-sm-3 control-label">Target Date</label>
 
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">
+                            <div class="col-lg-8 col-md-8 col-sm-8">
                                 <p class="input-group">
                                     <input type="text" id="projectTargetEndDate" class="form-control" name="projectTargetEndDate" uib-datepicker-popup="{{ModalVM.format}}" is-open="ModalVM.status.opened" ng-model="ModalVM.projectTargetEndDate" close-text="Close" placeholder="Target End Date"/>
                                     <span class="input-group-btn">
@@ -49,8 +49,8 @@
                         </div>
 
                         <div class="form-group" ng-show="ModalVM.statusVisibility">
-                            <label for="projectStatus" class="col-lg-2 col-md-2 col-sm-2 control-label">Status</label>
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">
+                            <label for="projectStatus" class="col-lg-3 col-md-3 col-sm-3 control-label">Status</label>
+                            <div class="col-lg-8 col-md-8 col-sm-8">
                                 <select id="projectStatus" class="form-control" name="projectStatus" ng-model="ModalVM.selectedStatus">
                                     <option ng-repeat="projectStatus in ModalVM.statuses">{{projectStatus.status}}</option>
                                 </select>
@@ -58,8 +58,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="projectDescription" class="col-lg-2 col-md-2 col-sm-2 control-label">Description</label>
-                            <div class="col-lg-8 col-md-8 col-sm-8 col-lg-offset-1">
+                            <label for="projectDescription" class="col-lg-3 col-md-3 col-sm-3 control-label">Description</label>
+                            <div class="col-lg-8 col-md-8 col-sm-8">
                                 <textarea class="form-control projectModalTextAreaForDescription" id="projectDescription" name="projectDescription" ng-model="ModalVM.projectDescription" placeholder="Project Description"></textarea>
                             </div>
                         </div>
