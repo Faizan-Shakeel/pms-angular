@@ -1,5 +1,4 @@
 <!doctype html>
-<!--<html ng-app="pmsAngular" xmlns="http://www.w3.org/1999/html">-->
 <html ng-app="pmsAngular">
 
 <head>
@@ -10,7 +9,6 @@
 
     <!--Third Party Styles-->
 
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
     <link href="css/Third-Party-CSS/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="font-awesome-4.5.0/css/font-awesome.min.css">
     <link href="css/Third-Party-CSS/bootstrap-tour.min.css" rel="stylesheet">
@@ -201,7 +199,11 @@
 
                     <div id="test-tabs-height" slim-scroll height="500px">
 
-                        <div ui-sortable ng-model="MainViewVM.projectPanelsFilter">
+                        <!--<div ui-sortable ng-model="MainViewVM.projectPanelsFilter">-->
+
+                        <div ng-sortable="{animation: 400}">
+                        <!--<div ng-sortable="{animation: 400, scroll: true, scrollSensitivity: 30, scrollSpeed: 10}">-->
+                        <!--<div ng-sortable="{scroll: true, scrollSensitivity: 30, scrollSpeed: 10}">-->
 
                             <div class="panel panel-default" id="outer-panel" ng-repeat="projectPanel in MainViewVM.projectPanelsFilter">
                                 <div class="panel-body">
@@ -237,30 +239,33 @@
 
                     <div slim-scroll height="500px">
 
-                        <div class="panel panel-default" id="outer-panel-tasks-in-new-project-modal" ng-repeat="taskPanel in MainViewVM.taskPanelsFilter">
-                            <div class="panel-body">
+                        <div ng-sortable="{animation: 400}">
 
-                                <div class="panel panel-default {{taskPanel.statusColor}}" id="inner-panel-tasks-in-new-project-modal">
-                                    <div class="panel-body">
-                                        <i class="fa fa-tasks fa-2x" id="task-panel-icon-fix"></i>
+                            <div class="panel panel-default" id="outer-panel-tasks-in-new-project-modal" ng-repeat="taskPanel in MainViewVM.taskPanelsFilter">
+                                <div class="panel-body">
+
+                                    <div class="panel panel-default {{taskPanel.statusColor}}" id="inner-panel-tasks-in-new-project-modal">
+                                        <div class="panel-body">
+                                            <i class="fa fa-tasks fa-2x" id="task-panel-icon-fix"></i>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div id="task-panel-content-in-new-project-modal">
-                                    <p>
-                                    <h4>{{taskPanel.name}} <span class="col-lg-offset-8">ID: {{taskPanel.id}}</span></h4>
-                                    </p>
+                                    <div id="task-panel-content-in-new-project-modal">
+                                        <p>
+                                        <h4>{{taskPanel.name}} <span class="col-lg-offset-8">ID: {{taskPanel.id}}</span></h4>
+                                        </p>
 
-                                    <p>
-                                        {{taskPanel.status}}
-                                        <span class="col-lg-offset-7">{{taskPanel.project}}</span>
-                                    </p>
-                                </div>
+                                        <p>
+                                            {{taskPanel.status}}
+                                            <span class="col-lg-offset-7">{{taskPanel.project}}</span>
+                                        </p>
+                                    </div>
 
-                                <div class="btn-group-vertical" id="tasks-btn-grp-panel-in-new-project-modal">
-                                    <button class="btn btn-info test-button-border" ng-click="ModalVM.infoTaskModal(taskPanel)"><i class="fa fa-info"></i></button>
-                                    <button class="btn btn-default" ng-click="ModalVM.editTaskModal(taskPanel)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-danger test-button-border" ng-click="MainViewVM.deleteTask(taskPanel, ModalVM)"><i class="fa fa-trash-o"></i></button>
+                                    <div class="btn-group-vertical" id="tasks-btn-grp-panel-in-new-project-modal">
+                                        <button class="btn btn-info test-button-border" ng-click="ModalVM.infoTaskModal(taskPanel)"><i class="fa fa-info"></i></button>
+                                        <button class="btn btn-default" ng-click="ModalVM.editTaskModal(taskPanel)"><i class="fa fa-edit"></i></button>
+                                        <button class="btn btn-danger test-button-border" ng-click="MainViewVM.deleteTask(taskPanel, ModalVM)"><i class="fa fa-trash-o"></i></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -271,30 +276,33 @@
 
                     <div slim-scroll height="500px">
 
-                        <div class="panel panel-default" id="outer-panel-documents-in-new-project-modal" ng-repeat="documentPanel in MainViewVM.documentPanelsFilter">
-                            <div class="panel-body">
+                        <div ng-sortable="{animation: 400}">
 
-                                <div class="panel panel-default" id="inner-panel-documents-in-new-project-modal">
-                                    <div class="panel-body">
-                                        <i class="fa fa-files-o fa-2x" id="document-panel-icon-fix"></i>
+                            <div class="panel panel-default" id="outer-panel-documents-in-new-project-modal" ng-repeat="documentPanel in MainViewVM.documentPanelsFilter">
+                                <div class="panel-body">
+
+                                    <div class="panel panel-default" id="inner-panel-documents-in-new-project-modal">
+                                        <div class="panel-body">
+                                            <i class="fa fa-files-o fa-2x" id="document-panel-icon-fix"></i>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div id="document-panel-content-in-new-project-modal">
-                                    <p>
-                                    <h4>{{documentPanel.name}} <span class="col-lg-offset-8">ID: {{documentPanel.id}} </span> </h4>
-                                    </p>
+                                    <div id="document-panel-content-in-new-project-modal">
+                                        <p>
+                                        <h4>{{documentPanel.name}} <span class="col-lg-offset-8">ID: {{documentPanel.id}} </span> </h4>
+                                        </p>
 
-                                    <p>
-                                        {{documentPanel.status}}
-                                        <span class="col-lg-offset-6">[ {{documentPanel.project}} ] [ {{documentPanel.task}} ]</span>
-                                    </p>
-                                </div>
+                                        <p>
+                                            {{documentPanel.status}}
+                                            <span class="col-lg-offset-6">[ {{documentPanel.project}} ] [ {{documentPanel.task}} ]</span>
+                                        </p>
+                                    </div>
 
-                                <div class="btn-group-vertical" id="documents-btn-grp-panel-in-new-project-modal">
-                                    <button class="btn btn-info test-button-border" ng-click="ModalVM.infoDocumentModal(documentPanel)"><i class="fa fa-info"></i></button>
-                                    <button class="btn btn-default" ng-click="ModalVM.editDocumentModal(documentPanel)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-danger test-button-border" ng-click="MainViewVM.deleteDocument(documentPanel, ModalVM)"><i class="fa fa-trash-o"></i></button>
+                                    <div class="btn-group-vertical" id="documents-btn-grp-panel-in-new-project-modal">
+                                        <button class="btn btn-info test-button-border" ng-click="ModalVM.infoDocumentModal(documentPanel)"><i class="fa fa-info"></i></button>
+                                        <button class="btn btn-default" ng-click="ModalVM.editDocumentModal(documentPanel)"><i class="fa fa-edit"></i></button>
+                                        <button class="btn btn-danger test-button-border" ng-click="MainViewVM.deleteDocument(documentPanel, ModalVM)"><i class="fa fa-trash-o"></i></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -304,29 +312,32 @@
                 <uib-tab heading="Users" active="MainViewVM.active.Users">
                     <div slim-scroll height="500px">
 
-                        <div class="panel panel-default" id="outer-panel-users-in-new-project-modal" ng-repeat="userPanel in MainViewVM.userPanelsFilter">
-                            <div class="panel-body">
+                        <div ng-sortable="{animation: 400}">
 
-                                <div class="panel panel-default" id="inner-panel-users-in-new-project-modal">
-                                    <div class="panel-body">
-                                        <i class="fa fa-user fa-2x" id="user-panel-icon-fix"></i>
+                            <div class="panel panel-default" id="outer-panel-users-in-new-project-modal" ng-repeat="userPanel in MainViewVM.userPanelsFilter">
+                                <div class="panel-body">
+
+                                    <div class="panel panel-default" id="inner-panel-users-in-new-project-modal">
+                                        <div class="panel-body">
+                                            <i class="fa fa-user fa-2x" id="user-panel-icon-fix"></i>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div id="user-panel-content-in-new-project-modal">
-                                    <p>
-                                    <h4>{{userPanel.name}}</h4>
-                                    </p>
+                                    <div id="user-panel-content-in-new-project-modal">
+                                        <p>
+                                        <h4>{{userPanel.name}}</h4>
+                                        </p>
 
-                                    <p>
-                                        {{userPanel.email}}
-                                    </p>
-                                </div>
+                                        <p>
+                                            {{userPanel.email}}
+                                        </p>
+                                    </div>
 
-                                <div class="btn-group-vertical" id="users-btn-grp-panel-in-new-project-modal">
-                                    <button class="btn btn-info test-button-border" ng-click="ModalVM.infoUserModal(userPanel)"><i class="fa fa-info"></i></button>
-                                    <button class="btn btn-default" ng-click="ModalVM.editUserModal(userPanel)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-danger test-button-border" ng-click="MainViewVM.deleteUser(userPanel, ModalVM)"><i class="fa fa-trash-o"></i></button>
+                                    <div class="btn-group-vertical" id="users-btn-grp-panel-in-new-project-modal">
+                                        <button class="btn btn-info test-button-border" ng-click="ModalVM.infoUserModal(userPanel)"><i class="fa fa-info"></i></button>
+                                        <button class="btn btn-default" ng-click="ModalVM.editUserModal(userPanel)"><i class="fa fa-edit"></i></button>
+                                        <button class="btn btn-danger test-button-border" ng-click="MainViewVM.deleteUser(userPanel, ModalVM)"><i class="fa fa-trash-o"></i></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -422,11 +433,9 @@
 
 <!--Third Party-->
 
-
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 <script src="js/Third-Party-JS/bootstrap.min.js"></script>
-<script src="js/Third-Party-JS/jquery.slimscroll.js"></script>
+<script src="js/Third-Party-JS/jquery.slimscroll.min.js"></script>
 <script type="text/javascript" src="js/Third-Party-JS/angular.min.js"></script>
 <script type="text/javascript" src="js/Third-Party-JS/angular-animate.min.js"></script>
 <script type="text/javascript" src="i18n/angular-locale_de-de.js"></script>
@@ -435,12 +444,11 @@
 <script src="bower_components/angular-input-masks/angular-input-masks-standalone.min.js"></script>
 <script src="bower_components/angular-messages/angular-messages.min.js"></script>
 <script src="bower_components/angular-bootstrap-multiselect/dist/angular-bootstrap-multiselect.min.js"></script>
-<script type="text/javascript" src="js/Third-Party-JS/sortable.js"></script>
-<!--<script src="js/Third-Party-JS/ng-sortable.js"></script>-->
-<!--<script src="http://rubaxa.github.io/Sortable/Sortable.js"></script>-->
-<!--<script src="http://rubaxa.github.io/Sortable/ng-sortable.js"></script>-->
+<script src="http://rubaxa.github.io/Sortable/Sortable.js"></script>
+<script src="http://rubaxa.github.io/Sortable/ng-sortable.js"></script>
 <script src="bower_components/moment/moment.js"></script>
 
+<!--Third Party-->
 
 
 <!--Directives-->

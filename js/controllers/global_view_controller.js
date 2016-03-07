@@ -14,15 +14,6 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
      ////////////////// ACCORDION /////////////////////////////////////////////////////////////////////
      */////////////////////////////////////////////////////////////////////////////////////////////////
 
-//    $scope.sortableOptions = {
-//        containment: "parent",
-//        axis: "y",
-//        tolerance: "pointer",
-//        start: function(e, ui) {
-//            $(e.target).data("ui-sortable").floating = true;
-//        }
-//    };
-
     vm.onlineUsersCount = 0;
     vm.notificationsCount = {count: 0};
     vm.loggedInUserName = loggedInUserName;
@@ -210,9 +201,6 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
 
                 vm.inputSearchFilter(vm.searchProjects, 'redirect');
             }
-
-//            console.log("T  E  S  T : " + JSON.stringify(vm.searchProjects));
-
         }
 
         vm.selectedItem = item;
@@ -254,29 +242,23 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
 
     vm.inputSearchFilter = function(userInput, redirect)
     {
-//        console.log("User Input 2 : " + JSON.stringify(userInput));
-
         if(redirect)
         {
             $timeout(function() {
                 if(vm.selectedItem == "Projects")
                 {
-                    console.log("projectPanels : " + JSON.stringify(userInput));
                     vm.projectPanelsFilter = $filter('filter')(vm.projectPanels, userInput);
                 }
                 else if(vm.selectedItem == "Tasks")
                 {
-                    console.log("taskPanels : " + JSON.stringify(userInput));
                     vm.taskPanelsFilter = $filter('filter')(vm.taskPanels, userInput);
                 }
                 else if(vm.selectedItem == "Documents")
                 {
-                    console.log("documentPanels : " + JSON.stringify(userInput));
                     vm.documentPanelsFilter = $filter('filter')(vm.documentPanels, userInput);
                 }
                 else if(vm.selectedItem == "Users")
                 {
-                    console.log("userPanels : " + JSON.stringify(userInput));
                     vm.userPanelsFilter = $filter('filter')(vm.userPanels, userInput);
                 }
             }, 25);
@@ -285,22 +267,18 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
         {
             if(vm.selectedItem == "Projects")
             {
-                console.log("projectPanels : " + JSON.stringify(userInput));
                 vm.projectPanelsFilter = $filter('filter')(vm.projectPanels, userInput);
             }
             else if(vm.selectedItem == "Tasks")
             {
-                console.log("taskPanels : " + JSON.stringify(userInput));
                 vm.taskPanelsFilter = $filter('filter')(vm.taskPanels, userInput);
             }
             else if(vm.selectedItem == "Documents")
             {
-                console.log("documentPanels : " + JSON.stringify(userInput));
                 vm.documentPanelsFilter = $filter('filter')(vm.documentPanels, userInput);
             }
             else if(vm.selectedItem == "Users")
             {
-                console.log("userPanels : " + JSON.stringify(userInput));
                 vm.userPanelsFilter = $filter('filter')(vm.userPanels, userInput);
             }
         }
