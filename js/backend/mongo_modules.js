@@ -46,6 +46,12 @@ var fs = require('fs');
 /////////////////////////////////////////////////////////////
     var createNewData = function(req, callback)
     {
+        if (req.body.users)
+        {
+            var hash = bcrypt.hashSync(req.body.users.password);
+            req.body.users.password = hash;
+        }   
+
         var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
         db.once('open', function()
         {
@@ -92,12 +98,13 @@ var updateData = function(req, callback)
             var createSchema = schema.schema(schemaKey);
             var PmsCollection = db.model('PmsCollection',createSchema);
             query[idTag] = req.body.id;
-            console.log(query);
+            console.log(req.body.data);
             //var options = {upsert: false};
             PmsCollection.findOneAndUpdate(query, req.body.data, function(err, doc)
             {
                 if (!err)
                 {
+                    console.log(doc);
                     db.close();
                     callback('Data Updated Successfully');
                 }
@@ -305,7 +312,7 @@ var deleteData = function(req, callback)
             }
             else if (req.body.id.indexOf('u') !== -1)
             {
-                PmsCollection.remove({'project.id':req.body.id},function(err,removed)
+                PmsCollection.remove({'users.id':req.body.id},function(err,removed)
                 {
                     if (!err)
                     {

@@ -5,7 +5,7 @@
 
 var app = angular.module('userServiceModule', []);
 
-app.service('UserService', ['NotificationsAndHistoryService', function (NotificationsAndHistoryService)
+app.service('UserService', ['NotificationsAndHistoryService', 'mongoCrudService', '$localStorage', function (NotificationsAndHistoryService, mongoCrudService, $localStorage)
 {
     var accordionInfo;
     var userPanels = [];
@@ -17,6 +17,8 @@ app.service('UserService', ['NotificationsAndHistoryService', function (Notifica
     var elementType2;
     var element2;
     var historyObject;
+    var userData;
+    var password; // will store temporary password created for the new user
 
     var createUserPanel = function(newUserObject)
     {
@@ -24,6 +26,11 @@ app.service('UserService', ['NotificationsAndHistoryService', function (Notifica
 
         angular.forEach(newUserObject, function(value, index){
             userPanels.push(newUserObject[index]);
+            userData = {users: newUserObject[index]};
+            password = Math.floor(Math.random() * 100000000);
+            userData.users.password = password;
+            mongoCrudService.createNewEntry(userData);
+            mongoCrudService.inviteUser(newUserObject[index]);
 
             action = 'created';
             actionBy = 'User';
@@ -92,9 +99,13 @@ app.service('UserService', ['NotificationsAndHistoryService', function (Notifica
     {
         "use strict";
 
-        var userID = usersIdArray.length;
+        if ($localStorage.usersIdArray)
+        {
+            usersIdArray = $localStorage.usersIdArray.slice();
+        }
+        var userID = usersIdArray.length + 'u';
         usersIdArray.push(userID);
-
+        $localStorage.usersIdArray = usersIdArray.slice();
         return userID;
     };
 
@@ -366,6 +377,7 @@ app.service('UserService', ['NotificationsAndHistoryService', function (Notifica
                 if(userModal.email == userGlobal.email)
                 {
                     userGlobal.tasks.push(JSON.parse(JSON.stringify(taskIdObject)));
+                    console.log(userGlobal);
 
                     actionBy = 'User';
                     action = 'assigned ';

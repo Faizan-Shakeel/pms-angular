@@ -20,14 +20,10 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 var port = process.env.PORT || 3000;
-// *** THIS FEATURE IS UNDER DEVELOPMENT *** //
-//var transporter = nodemailer.createTransport({
-//    service: 'Yahoo',
-//    auth: {
-//        user: 'write your email address here',
-//        pass: 'password here'
-//    }
-//});
+
+
+
+
 
 app.use(express.static(__dirname + '/../../../pms-angular'));
 
@@ -134,6 +130,18 @@ app.post('/fetch' , function(req,res)
 });
 
 
+////////////////////////////////////////////////////////
+// *********** SET EMAIL CREDENTIALS **************** //
+////////////////////////////////////////////////////////
+
+    // var transporter = nodemailer.createTransport({
+    // service: 'Yahoo',
+    // auth: {
+    //    user: 'ghost_stalker323',
+    //    pass: 'chacha210'
+    //       }
+    // });
+
 ////////////////////////////////////////////////////////////////
 // ************* CREATE NEW ENTRY IN DATABASE *************** //
 ////////////////////////////////////////////////////////////////
@@ -239,30 +247,38 @@ app.post('/downloadFile', function(req, res)
 
 
 /////////////////////////////////////////////////////////
-// *********** SEND EMAIL (UNDER DEVELOPMENT) ******** //
+// ********** INVITE USER VIA EMAIL ****************** //
 /////////////////////////////////////////////////////////
-//app.post('/sendemail', function(req,res)
-//{
-//       var mailOptions = {
-//        from: 'ghost_stalker323@yahoo.com',
-//        to: req.body.receiverEmail,
-//        subject: req.body.subject,
-//        text: req.body.text
-//    };
-//    console.log(req.body.receiverEmail);
-//    transporter.sendMail(mailOptions,function(err, info)
-//    {
-//        if (err)
-//        {
-//            console.log('error sending mail ' + err);
-//        }
-//        else
-//        {
-//            console.log('mail sent');
-//        }            
-//    });
-//   res.send('email data received');
-//});
+app.post('/inviteUser', function(req,res)
+{
+    var transporter = nodemailer.createTransport({
+    service: req.body.userParameters.service,
+    auth: {
+       user: req.body.userParameters.senderEmail,
+       pass: req.body.userParameters.senderPassword
+          }
+    });
+
+      var mailOptions = {
+       from: req.body.userParameters.senderEmail,
+       to: req.body.userParameters.email,
+       subject: req.body.userParameters.subject,
+       text: req.body.userParameters.content
+   };
+   console.log(req.body.userParameters);
+   transporter.sendMail(mailOptions,function(err, info)
+   {
+       if (err)
+       {
+           console.log('error sending mail ' + err);
+       }
+       else
+       {
+           console.log('mail sent');
+       }            
+   });
+  res.send('email data received');
+});
 
 
 ////////////////////////////////////////////////

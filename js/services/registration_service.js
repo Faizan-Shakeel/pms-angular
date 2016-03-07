@@ -10,6 +10,7 @@ app.service('registrationService', ['$http', '$location', '$rootScope' ,function
                     name: user.name,
                     email: user.email,
                     position: 'admin',
+                    id: '0u',
                     imageUrl: '',
                     password: user.password,
                     projectAndRole: ''

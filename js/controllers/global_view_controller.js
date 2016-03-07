@@ -2,12 +2,7 @@
 
 var app = angular.module('mainViewModule', ['ui.bootstrap', 'nsPopover']);
 
-<<<<<<< HEAD
-
-app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService', 'DocumentService', 'mongoCrudService', '$localStorage', '$rootScope', 'chatSocket', 'chatService', function ($scope, ProjectService, TaskService, DocumentService, mongoCrudService, $localStorage, $rootScope, chatSocket, chatService)
-=======
-app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService', 'DocumentService', 'UserService', 'NotificationsAndHistoryService', function ($scope, ProjectService, TaskService, DocumentService, UserService, NotificationsAndHistoryService)
->>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
+app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService', 'DocumentService', 'UserService', 'NotificationsAndHistoryService', 'mongoCrudService', '$localStorage', '$rootScope', 'chatSocket', 'chatService', function ($scope, ProjectService, TaskService, DocumentService, UserService, NotificationsAndHistoryService, mongoCrudService, $localStorage, $rootScope, chatSocket, chatService)
 {
     var vm = this;
     init();
@@ -156,17 +151,7 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
             console.log($localStorage.currentUser);
             vm.checkForMsgFlag = '';
             vm.visible = !vm.visible;
-            
-
-<<<<<<< HEAD
     };
-=======
-    vm.selectedUser = function(selectedUser)
-    {
-        vm.visible = !vm.visible;
-    };
-
->>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
 //    vm.scrollBarConfig = {
 //        autoResize: true // If true, will listen for DOM elements being added or removed inside the scroll container
 //    };
@@ -198,7 +183,6 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
         }
     };
 
-<<<<<<< HEAD
         // ********* SIMPLE CHAT APPLICATION MODULE ******* //
 
             var socket = io();
@@ -257,23 +241,6 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
                }
             });
 
-=======
-    vm.messages = [];
-    vm.username = 'Online User';
-    vm.visible = false;
-    vm.title = 'Chatting With';
-    vm.submitButtonText = 'Send';
-
-    vm.sendMessage = function(message, username) {
-        if(message && message !== '' && username) {
-            vm.messages.push({
-                'username': username,
-                'content': message
-            });
-        }
-    };
-//    vm.expandOnNew = true;
->>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
 
     /*//////////////////////////////////////////////////////////////////////////////////////////////////
      ////////////////// CHATTING PANEL [E N D] /////////////////////////////////////////////////////////
@@ -347,11 +314,6 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
 
     vm.deleteProject = function(projectToDelete, modalControllerScope)
     {
-<<<<<<< HEAD
-        var selectedProjectTasksArray;
-        var selectedProjectDocumentsArray;
-        angular.forEach(vm.projectPanels, function(value,index){
-=======
         var deletionConfirmed = function()
         {
             var action = 'deleted';
@@ -375,45 +337,24 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
                     selectedProjectUsersArray = vm.projectPanels[index].users;
                 }
             });
->>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
 
             for(var task of selectedProjectTasksArray)
             {
-<<<<<<< HEAD
-                selectedProjectTasksArray = vm.projectPanels[index].tasks;
-                selectedProjectDocumentsArray = vm.projectPanels[index].documents;
-                //console.log(selectedProjectTasksArray);
-            }
-        });
-        TaskService.deleteTask(selectedProjectTasksArray);
-        DocumentService.deleteDocument(selectedProjectDocumentsArray);
-        mongoCrudService.deleteData(projectToDelete.id);
-        
-        removeEntity(vm.projectPanels, 'id', projectToDelete.id);
-=======
                 UserService.deleteTaskFromUser(task.users, task.id);
             }
 
             TaskService.deleteTask(selectedProjectTasksArray);
             DocumentService.deleteDocument(selectedProjectDocumentsArray);
             UserService.deleteProjectFromUser(selectedProjectUsersArray, projectToDelete.name);
-
+            mongoCrudService.deleteData(projectToDelete.id);
             removeEntity(vm.projectPanels, 'id', projectToDelete.id);
         };
 
         modalControllerScope.confirmationModal(deletionConfirmed);
->>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
-
     };
 
     vm.deleteTask = function(taskToDelete, modalControllerScope)
     {
-<<<<<<< HEAD
-        var deletedTaskProject;
-        var selectedTaskDocumentsArray;
-        
-        angular.forEach(vm.taskPanels, function(value,index){
-=======
         var deletionConfirmed = function()
         {
             var action = 'deleted';
@@ -421,19 +362,11 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
             var elementType = 'Task';
 
             NotificationsAndHistoryService.addNotifications(taskToDelete, action, actionBy, elementType);
->>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
 
             if(!vm.accordionStatus.isSecondOpen || vm.accordionVisibility)
             {
                 vm.globalNotificationsCount++;
             }
-<<<<<<< HEAD
-        });
-        
-        mongoCrudService.deleteData(taskToDelete.id); 
-        DocumentService.deleteDocument(selectedTaskDocumentsArray);
-        removeEntity(TaskService.getTaskPanels(), 'id', taskToDelete.id);
-=======
 
             var deletedTaskProject;
             var selectedTaskDocumentsArray;
@@ -451,9 +384,9 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
             removeEntity(TaskService.getTaskPanels(), 'id', taskToDelete.id);
             ProjectService.deleteTaskAndDocumentsFromProject(taskToDelete, selectedTaskDocumentsArray);
             UserService.deleteTaskFromUser(selectedTaskUsersArray, taskToDelete.id);
+            mongoCrudService.deleteData(taskToDelete.id);
 
         };
->>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
 
         modalControllerScope.confirmationModal(deletionConfirmed);
 
@@ -471,18 +404,7 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
 
             if(!vm.accordionStatus.isSecondOpen || vm.accordionVisibility)
             {
-<<<<<<< HEAD
-                if(task.id == taskToDelete.id)
-                {
-                    deletedTaskProject = project;
-                    removeEntity(project.tasks, 'id', taskToDelete.id);
-                    console.log(deletedTaskProject);
-                    mongoCrudService.updateData(deletedTaskProject.id, {'project.tasks': deletedTaskProject.tasks});
-                    break;
-                }
-=======
                 vm.globalNotificationsCount++;
->>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
             }
 
             removeEntity(DocumentService.getDocumentPanels(), 'id', documentToDelete.id);
@@ -498,21 +420,13 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
 
                 if(updatedTask)
                 {
-<<<<<<< HEAD
-                    if(document.id == taskToDeleteDoc.id)
-                    {
-                        removeEntity(deletedTaskProject.documents, 'id', taskToDeleteDoc.id);
-                        console.log(deletedTaskProject);
-                    }
-=======
                     ProjectService.updateTasksInProject(documentToDelete.project, JSON.parse(JSON.stringify([updatedTask])));
->>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
                 }
             }
+        mongoCrudService.deleteData(documentToDelete.id);
+        mongoCrudService.deleteFile(documentToDelete.url);
         };
-
         modalControllerScope.confirmationModal(deletionConfirmed);
-
     };
 
     vm.deleteUser = function(userToDelete, modalControllerScope)
@@ -523,57 +437,6 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
             var actionBy = 'User';
             var elementType = 'User';
 
-<<<<<<< HEAD
-        angular.forEach(vm.projectPanels, function(valueProject,indexProject){
-            angular.forEach(valueProject.documents, function(valueDocument,indexDocument){
-                if(valueDocument.id == documentToDelete.id)
-                {
-                    removeEntity(valueProject.documents, 'id', documentToDelete.id);
-                    console.log(valueProject);
-                    mongoCrudService.updateData(valueProject.id, {'project.documents': valueProject.documents});
-                }
-            });
-        });
-        
-        angular.forEach(vm.taskPanels, function(valueTask,indexProject){
-            angular.forEach(valueTask.documents, function(valueDocument,indexDocument){
-                if(valueDocument.id == documentToDelete.id)
-                {
-                    removeEntity(valueTask.documents, 'id', documentToDelete.id);
-                    console.log(valueTask);
-                    mongoCrudService.updateData(valueTask.id, {'tasks.documents': valueTask.documents});
-                }
-            });
-        });
-                
-        mongoCrudService.deleteData(documentToDelete.id);
-        mongoCrudService.deleteFile(documentToDelete.url);
-//        console.log(ProjectService.projectPanels);
-
-//        for(var project of ProjectService.projectPanels)
-//        {
-//            for(var doc of project.documents)
-//            {
-//                if(doc.id == documentToDelete.id)
-//                {
-//                    removeEntity(project.documents, 'id', documentToDelete.id);
-//                    break;
-//                }
-//            }
-//        }
-//
-//        for(var task of TaskService.taskPanels)
-//        {
-//            for(var doc of task.documents)
-//            {
-//                if(doc.id == documentToDelete.id)
-//                {
-//                    removeEntity(task.documents, 'id', documentToDelete.id);
-//                    break;
-//                }
-//            }
-//        }
-=======
             NotificationsAndHistoryService.addNotifications(userToDelete, action, actionBy, elementType);
 
             if(!vm.accordionStatus.isSecondOpen || vm.accordionVisibility)
@@ -584,13 +447,13 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
             removeEntity(UserService.getUserPanels(), 'id', userToDelete.id);
 
             TaskService.deleteUserFromTasks(userToDelete);
-
+            console.log(userToDelete);
             ProjectService.deleteUsersFromProjects(userToDelete);
+            mongoCrudService.deleteData(userToDelete.id);
         };
 
         modalControllerScope.confirmationModal(deletionConfirmed);
 
->>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
     };
 
     var removeEntity = function(arr, attr, value){
@@ -633,6 +496,7 @@ function init()
            }
            if (data[i].users)
            {
+                vm.userPanels.push(data[i].users);
                if (data[i].users.email != $localStorage.currentUser.users.email)
                {
                    vm.users.push(data[i].users);

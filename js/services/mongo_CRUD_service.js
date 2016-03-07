@@ -20,7 +20,6 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
         var retrieveData = function()
         {
             var deferred = $q.defer();
-            //console.log(deferred);
             var data = {
                 companyName: $rootScope.companyName
             };
@@ -160,7 +159,29 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
         $http.post('/retrieveChat', data).success(deferred.resolve);
         return deferred.promise;
     };
-    
+
+
+    //////////////////////////////////////////////////
+    // ****** INVITE USER VIA EMAIL *************** //
+    //////////////////////////////////////////////////
+    var inviteUser = function(userParameters)
+    {
+        var userData = {userParameters: userParameters};
+            userData.userParameters.senderEmail = 'sender email address';
+            userData.userParameters.senderPassword = 'sender email password';
+            userData.userParameters.service = 'email service (e.g. Yahoo)';
+            userData.userParameters.subject = 'Invitation to Join PMS';
+            userData.userParameters.content = 'You have been invited to join PMS by ' + $rootScope.currentUser.users.name + '. Your temporary password is ' + userParameters.password;
+        console.log(userData);
+        $http.post('/inviteUser', userData).success(function(response)
+        {
+            console.log(response);
+        })
+                .error(function(err)
+        {
+            console.log(err);
+        });
+    };
     
     
     return { retrieveData: retrieveData,
@@ -171,5 +192,7 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
              updateData: updateData,
              updateUser: updateUser,
              updateChatFlag: updateChatFlag,
-             retrieveChat: retrieveChat};
+             retrieveChat: retrieveChat,
+             inviteUser: inviteUser
+            };
 });

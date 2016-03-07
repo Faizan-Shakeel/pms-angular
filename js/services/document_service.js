@@ -5,14 +5,7 @@
 
 var app = angular.module('documentServiceModule', ['ngFileUpload']);
 
-<<<<<<< HEAD
-app.service('DocumentService',['mongoCrudService', 'Upload', function(mongoCrudService, Upload){
-
-    var documentPanels = [];
-    var documentsIdArray = [];
-    var documentValues = {};
-=======
-app.service('DocumentService', ['NotificationsAndHistoryService', function (NotificationsAndHistoryService)
+app.service('DocumentService',['NotificationsAndHistoryService' ,'mongoCrudService', 'Upload', function(NotificationsAndHistoryService, mongoCrudService, Upload)
 {
     var accordionInfo;
     var documentPanels = [];
@@ -22,18 +15,15 @@ app.service('DocumentService', ['NotificationsAndHistoryService', function (Noti
     var elementType;
     var historyObject;
 
->>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
     var createDocumentPanel = function(newDocumentObject)
     {
         "use strict";
 
         angular.forEach(newDocumentObject, function(value, index){
             documentPanels.push(newDocumentObject[index]);
-<<<<<<< HEAD
             console.log(newDocumentObject[index]);
-            documentValues = {documents: newDocumentObject[index]};
+            var documentValues = {documents: newDocumentObject[index]};
             mongoCrudService.createNewEntry(documentValues);
-=======
 
             action = 'created';
             actionBy = 'User';
@@ -46,7 +36,6 @@ app.service('DocumentService', ['NotificationsAndHistoryService', function (Noti
 
             historyObject = {elementType: elementType, element: newDocumentObject[index]};
             NotificationsAndHistoryService.makeHistory(historyObject);
->>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
         });
     };
 
@@ -174,8 +163,10 @@ app.service('DocumentService', ['NotificationsAndHistoryService', function (Noti
                     console.log('this focument called');
                     console.log(valueFromGlobalList.id);
                     documentPanels = removeEntity(documentPanels, 'id', 'project', valueFromGlobalList.id, valueFromGlobalList.project);
+                    console.log(valueFromGlobalList.id);
+                    console.log(valueFromGlobalList.name);
                     mongoCrudService.deleteData(valueFromGlobalList.id);
-                    mongoCrudService.deleteFile(valueFromGlobalList.name);
+                    mongoCrudService.deleteFile(valueFromGlobalList.url);
                 }
             });
         });
@@ -449,12 +440,9 @@ app.service('DocumentService', ['NotificationsAndHistoryService', function (Noti
         addTaskToDocument: addTaskToDocument,
         updateDocuments: updateDocuments,
         removePrjDocsFromExistingDocs: removePrjDocsFromExistingDocs,
-<<<<<<< HEAD
         extractFileExtension: extractFileExtension,
-        uploadFile: uploadFile
-=======
+        uploadFile: uploadFile,
         removeTaskDocsFromExistingDocs: removeTaskDocsFromExistingDocs
->>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
     };
 
 }]);

@@ -5,14 +5,10 @@
 
 var app = angular.module('taskServiceModule', ['ngStorage']);
 
-<<<<<<< HEAD
-app.service('TaskService', ['mongoCrudService','$localStorage', function(mongoCrudService, $localStorage){
-
-=======
-app.service('TaskService', ['NotificationsAndHistoryService', function (NotificationsAndHistoryService)
+app.service('TaskService', ['NotificationsAndHistoryService', 'mongoCrudService','$localStorage', function(NotificationsAndHistoryService, mongoCrudService, $localStorage)
 {
+
     var accordionInfo;
->>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
     var taskPanels = [];
     var tasksIdArray = [];
     var action;
@@ -27,11 +23,10 @@ app.service('TaskService', ['NotificationsAndHistoryService', function (Notifica
         angular.forEach(newTasksArray, function(value, index){
             //newTasksArray[index] = {tasks: newTasksArray[index]};
             taskPanels.push(newTasksArray[index]);
-<<<<<<< HEAD
+
             console.log(newTasksArray[index]);
             taskValues = {tasks: newTasksArray[index]}
             mongoCrudService.createNewEntry(taskValues);
-=======
 
             action = 'created';
             actionBy = 'User';
@@ -45,7 +40,6 @@ app.service('TaskService', ['NotificationsAndHistoryService', function (Notifica
             historyObject = {elementType: elementType, element: newTasksArray[index]};
             NotificationsAndHistoryService.makeHistory(historyObject);
 
->>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
         });
     };
 
@@ -334,7 +328,6 @@ app.service('TaskService', ['NotificationsAndHistoryService', function (Notifica
     var removeEntity = function(arr, attr, attr2, value, value2)
     {
         "use strict";
-
         var i = arr.length;
         while(i--){
             if( arr[i]
@@ -403,6 +396,7 @@ app.service('TaskService', ['NotificationsAndHistoryService', function (Notifica
                 if(userTask.email == userToDelete.email)
                 {
                     removeEntity(taskGlobal.users, 'id', 'email', userToDelete.id, userToDelete.email);
+                    mongoCrudService.updateData(taskGlobal.id, {'tasks.users': taskGlobal.users});
                 }
             }
         }

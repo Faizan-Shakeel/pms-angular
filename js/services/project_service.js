@@ -2,13 +2,9 @@
 
 var app = angular.module('projectServiceModule', ['ngStorage']);
 
-<<<<<<< HEAD
-app.service('ProjectService', ['mongoCrudService', '$localStorage', function(mongoCrudService, $localStorage){
-
-=======
-app.service('ProjectService', ['NotificationsAndHistoryService', function (NotificationsAndHistoryService)
+app.service('ProjectService', ['NotificationsAndHistoryService', 'mongoCrudService', '$localStorage', function(NotificationsAndHistoryService, mongoCrudService, $localStorage)
 {
->>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
+
     var projectPanels = [];
     var projectsIdArray = [];
     var action;
@@ -20,14 +16,10 @@ app.service('ProjectService', ['NotificationsAndHistoryService', function (Notif
     var createProjectPanel = function(project_params)
     {
         "use strict";
-<<<<<<< HEAD
-        value = {project: value};
-        projectPanels.push(value.project);
-        console.log(value);
-        mongoCrudService.createNewEntry(value);
-=======
 
+        var value = {project: project_params};
         projectPanels.push(project_params);
+        mongoCrudService.createNewEntry(value);
 
         action = 'created';
         actionBy = 'User';
@@ -58,11 +50,9 @@ app.service('ProjectService', ['NotificationsAndHistoryService', function (Notif
                 projectToUpdate.numberOfTasks = updated_project.numberOfTasks;
                 projectToUpdate.numberOfDocuments = updated_project.numberOfDocuments;
                 projectToUpdate.numberOfUsers = updated_project.numberOfUsers;
-
                 break;
             }
         }
->>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
     };
 
     var newProjectID = function()
@@ -187,7 +177,7 @@ app.service('ProjectService', ['NotificationsAndHistoryService', function (Notif
                 projectPanel.tasks.push(taskObject);
 //                 * Calling this function to update this entry in 
 //                   project's tasks array in database
-                console.log(projectPanel.tasks);
+                //console.log(projectPanel.tasks);
                 mongoCrudService.updateData(projectPanel.id, {'project.tasks': projectPanel.tasks});
                 break;
             }
@@ -216,7 +206,7 @@ app.service('ProjectService', ['NotificationsAndHistoryService', function (Notif
     {
         "use strict";
 //                        console.log("Global Docs AFTER : " + JSON.stringify(UserService.getUserPanels()));
-
+    console.log('update users in project called');
         for(var projectGlobal of projectPanels)
         {
             var userAlreadyExistsInProject = false;
@@ -234,6 +224,7 @@ app.service('ProjectService', ['NotificationsAndHistoryService', function (Notif
                 if(!userAlreadyExistsInProject)
                 {
                     projectGlobal.users.push(userObject);
+                    console.log(projectGlobal);
                 }
 
             }
@@ -455,8 +446,9 @@ app.service('ProjectService', ['NotificationsAndHistoryService', function (Notif
                 for(var document of deletedTaskProject.documents)
                 {
                     if(document.id == taskToDeleteDoc.id)
-                    {
+                    {   console.log(deletedTaskProject.documents);
                         removeEntity(deletedTaskProject.documents, 'id', taskToDeleteDoc.id);
+                        console.log(deletedTaskProject.documents);
                     }
                 }
             }
@@ -484,6 +476,7 @@ app.service('ProjectService', ['NotificationsAndHistoryService', function (Notif
                     if(userProject.email == user.email)
                     {
                         removeEntity(deleteFromProject.users, 'email', user.email);
+                        mongoCrudService.updateData(deleteFromProject.id, {'project.users':deleteFromProject.users});                        
                     }
                 }
             }
@@ -496,8 +489,9 @@ app.service('ProjectService', ['NotificationsAndHistoryService', function (Notif
                 for(var userProject of projectGlobal.users)
                 {
                     if(userProject.email == usersToDelete.email)
-                    {
+                    {   
                         removeEntity(projectGlobal.users, 'email', usersToDelete.email);
+                        mongoCrudService.updateData(projectGlobal.id, {'project.users': projectGlobal.users});
                     }
                 }
             }
@@ -584,8 +578,3 @@ app.service('ProjectService', ['NotificationsAndHistoryService', function (Notif
         checkDocumentExistenceInTaskProject: checkDocumentExistenceInTaskProject
     };
 }]);
-
-<<<<<<< HEAD
-=======
-}]);
->>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52

@@ -13,7 +13,6 @@ var app = angular.module('pmsAngular', [
     'notificationsAndHistoryModule',
     'ui.utils.masks',
     'ngMessages',
-<<<<<<< HEAD
     'btorfs.multiselect',
     'mongoCrudServiceModule',
     'loginServiceModule',
@@ -25,12 +24,9 @@ var app = angular.module('pmsAngular', [
     'btford.socket-io',
     'chatSocketServiceModule',
     'chatServiceModule'
-=======
-    'btorfs.multiselect'
 //    'luegg.directives',
 //    'irontec.simpleChat'
 
->>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
 ]);
 
  app.config(['$routeProvider','$httpProvider', function($routeProvider, $httpProvider) {

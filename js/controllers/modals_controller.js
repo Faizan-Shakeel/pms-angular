@@ -2,11 +2,7 @@
 
 var app = angular.module('modalsModule', ['ui.bootstrap','ngFileUpload']);
 
-<<<<<<< HEAD
-app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'ProjectService','TaskService','$log', function ($scope, $rootScope, $uibModal, ProjectService ,TaskService, $log) {
-=======
-app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'ProjectService','TaskService', 'DocumentService', 'UserService', 'NotificationsAndHistoryService', function ($scope, $rootScope, $uibModal, ProjectService ,TaskService, DocumentService, UserService, NotificationsAndHistoryService) {
->>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
+app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'ProjectService','TaskService','DocumentService' ,'NotificationsAndHistoryService' ,'$log', function ($scope, $rootScope, $uibModal, ProjectService ,TaskService, DocumentService, UserService, NotificationsAndHistoryService, $log) {
 
     var vm = this;
 
@@ -334,14 +330,8 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
                 }
             }
         });
-<<<<<<< HEAD
-        
-        
-        newDocumentModalInstance.result.then(function ()
-=======
 
         editTaskModalInstance.result.then(function (task_params)
->>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
         {
 
             NotificationsAndHistoryService.makeHistory({elementType: 'Task', element: task_params.updated_task});
@@ -1977,7 +1967,7 @@ app.controller('InfoUserModalInstanceController', ['$scope', '$uibModal', '$uibM
 
 }]);
 
-app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'TaskService', 'DocumentService', 'UserService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, ProjectService, TaskService, DocumentService, UserService) {
+app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'TaskService', 'DocumentService', 'UserService', 'mongoCrudService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, ProjectService, TaskService, DocumentService, UserService, mongoCrudService) {
 
     var vm = this;
     var newTasksArray = [];
@@ -2128,9 +2118,12 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
 
         if(userCreatedFlag)
         {
+
             var projectId = ProjectService.getProjectId(projectToEdit.name);
             UserService.addProjectToUser(newUsersArray, projectId, projectToEdit.name, userRoleInProject);
             var projectToUpdate = ProjectService.getProjectByName(projectToEdit.name);
+            
+            console.log(projectToUpdate.id);
 
             for(var user of newUsersArray)
             {
@@ -2144,7 +2137,8 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
                     UserService.addTaskToUser(userToAddToTask.usersArray, userToAddToTask.id, userToAddToTask.taskName);
                 }
             }
-
+            console.log(projectToUpdate.users);
+            mongoCrudService.updateData(projectToUpdate.id, {'project.users': projectToUpdate.users});
             userCreatedFlag = false;
         }
 
@@ -3583,6 +3577,7 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
                         newTaskObject.users.push({id: user.id, name: user.name, email: user.email});
                         userObject = {id: user.id, name: user.name, email: user.email};
                         ProjectService.addUserToProject(project.name, userObject);
+                        console.log('called');
                     }
 
                     taskAlreadyExistsInProject = ProjectService.checkTaskInProject(newTaskObject.project, newTaskObject);
@@ -3677,6 +3672,7 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
 
                 if(userCreatedFlag)
                 {
+                    console.log('userCreatedFlag called');
                     UserService.addTaskToUser(usersArray, newTaskObject.id, taskName);
                     userCreatedFlag = false;
                 }
@@ -4067,7 +4063,7 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
 
 }]);
 
-app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'TaskService', 'DocumentService', 'UserService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, ProjectService, TaskService, DocumentService, UserService) {
+app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'TaskService', 'DocumentService', 'UserService', 'mongoCrudService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, ProjectService, TaskService, DocumentService, UserService, mongoCrudService) {
 
     var vm = this;
     var updatedDocumentsArray = [];
@@ -4216,6 +4212,7 @@ app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
                     taskToEdit.users.push({id: user.id, name: user.name, email: user.email});
                     userAddedToTask = true;
                 }
+                mongoCrudService.updateData(taskToEdit.id, {'tasks.users': taskToEdit.users});
             }
 
             updated_task = TaskService.updateTasks([taskToEdit], true);
@@ -4482,32 +4479,11 @@ app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
             {
                 if(modifiedDocuments[x].id == updated_document.id)
                 {
-<<<<<<< HEAD
-                    var updatedIdDocs = [];
-                    var docIdUpdatedFlag = false;
-
-                    newTaskObject.id = TaskService.newTaskID();
-                    newTaskObject.name = new_task_params.name;
-                    newTaskObject.status = "Waiting For Approval";
-                    newTaskObject.project = project.name;
-                    newTaskObject.projectId = project.id;
-                    newTaskObject.description = new_task_params.description;
-                    newTaskObject.documents = documentsArray;
-
-                    taskAlreadyExistsInProject = ProjectService.checkTaskInProject(newTaskObject.project, newTaskObject);
-
-                    if(documentsArray.length)
-                    {
-                        for(var i=0; i < documentsArray.length; i++)
-                        {
-                            documentAlreadyExistsInProject = ProjectService.checkDocumentInProject(project.name, documentsArray[i]);
-=======
                     modifiedDocuments[x] = updated_document;
                     docModifiedAgainFlag = true;
                     break;
                 }
             }
->>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
 
             if(!docModifiedAgainFlag)
             {
@@ -4569,25 +4545,12 @@ app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
      ////////////////// Delete User [ Update Task ] ///////////////////////////////////////////////////////////////////
      */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-<<<<<<< HEAD
-                newTaskObject.id = TaskService.newTaskID();
-                newTaskObject.name = new_task_params.name;
-                newTaskObject.status = "Waiting For Approval";
-                newTaskObject.project = '';
-                newTaskObject.projectId = '';
-                newTaskObject.description = new_task_params.description;
-                newTaskObject.documents = documentsArray;
-                newTasksArray.push(newTaskObject);
-                TaskService.createTaskPanel(newTasksArray);
-                DocumentService.createDocumentPanel(documentsArray);
-=======
+
     vm.deleteUser = function(userToDelete)
     {
         var deletionConfirmed = function()
         {
             usersToDelete.push(userToDelete);
->>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
-
             UserService.deleteUserInTaskModal(userToDelete, vm.userPanels);
             UserService.deleteUserInTaskModal(userToDelete, updatedUsersArray);
 
@@ -4597,17 +4560,6 @@ app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
 
         dataForThisModalInstance.globalScope.confirmationModal(deletionConfirmed);
 
-<<<<<<< HEAD
-            new_task_params = {
-                'id': TaskService.newTaskID(),
-                'name': taskName,
-                'status': 'Task Status',
-                'project': '',
-                'projectId': ProjectService.newProjectID(),
-                'description': taskDescription,
-                'documents': documentsArray
-            };
-=======
 //        usersToDelete.push(userToDelete);
 //
 //        UserService.deleteUserInTaskModal(userToDelete, vm.userPanels);
@@ -4615,7 +4567,6 @@ app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
 //
 //        userDeletedFlag = true;
 //        vm.taskUpdateFlag = true;
->>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
 
     };
 
@@ -4735,15 +4686,10 @@ app.controller('EditDocumentModalInstanceController', ['$scope', '$uibModalInsta
 
     vm.createOrUpdateDocument = function(documentName, documentDescription) {
 
-<<<<<<< HEAD
-        //        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
-        
-=======
         //        console.log("");
         //        console.log(" : " + );
         //        console.log(" : " + JSON.stringify());
 
->>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
         var updated_document = {};
         dataForThisModalInstance.documentToEdit.description = vm.documentDescription;
 
@@ -4793,53 +4739,6 @@ app.controller('CreateDocumentModalInstanceController', ['$scope', '$uibModalIns
      ////////////////// Create New Document ///////////////////////////////////////////////////////////////////////////
      */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-<<<<<<< HEAD
-    vm.createOrUpdateDocument = function(documentName, documentDescription, fileData) {
-
-        //        console.log("Global Docs AFTER : " + JSON.stringify(DocumentService.getDocumentPanels()));
-        console.log('document creation function called');
-        //////////// UPLOADING FILE //////////
-        /////////////////////////////////////
-        // var extractFileExtension = function(file)
-        // {
-        //     //** Here we are extracting the extension of the file. **
-        //     var fileExtension = '';
-        //     for (var i = file.length - 1; i>=0; i--)
-        //     {
-        //         fileExtension = file[i] + fileExtension;
-        //         if (file[i] == '.')
-        //         {
-        //             break;
-        //         }
-        //     }
-        //     return fileExtension;
-        // }
-
-        DocumentService.uploadFile(documentName , fileData);
-
-
-        // if (documentName && fileData)
-        // {
-        //     console.log('file upload called');
-        //    uploadFile(documentName , fileData);  
-           
-        //     //* Here we are extracting the extension of the file *//
-        //     for (var i = vm.file.name.length - 1; i>=0; i--)
-        //     {
-        //         fileExtension = vm.file.name[i] + fileExtension;
-        //         if (vm.file.name[i] == '.')
-        //         {
-        //             break;
-        //         }
-        //     }
-        // }
-                
-        ////////////////////////////////////       
-        /////////UPLOADING FILE COMPLETE ///
-        ///////////////////////////////////
-
-        
-=======
     vm.createOrUpdateDocument = function(document_params) {
 
         //        console.log("");
@@ -4848,8 +4747,11 @@ app.controller('CreateDocumentModalInstanceController', ['$scope', '$uibModalIns
 
         var documentName = document_params.documentName;
         var documentDescription = document_params.documentDescription;
+        console.log(document_params);
+        DocumentService.uploadFile(document_params.documentName , document_params.file);
+        var fileExtension = DocumentService.extractFileExtension(document_params.file.name);
+        console.log(fileExtension);
 
->>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
         if(dataForThisModalInstance.isGlobal)
         {
             new_document_params = {
@@ -4870,7 +4772,6 @@ app.controller('CreateDocumentModalInstanceController', ['$scope', '$uibModalIns
                     return;
                 }
             }
-            var fileExtension = DocumentService.extractFileExtension(fileData.name);
             newDocumentObject.id = DocumentService.newDocumentID();
             newDocumentObject.name = new_document_params.name;
             newDocumentObject.status = "Waiting For Approval";
@@ -4991,16 +4892,15 @@ app.controller('CreateDocumentModalInstanceController', ['$scope', '$uibModalIns
                 alert("Document '" + documentName + "' Already Exists In This Project");
                 return;
             }
-
             new_document_params = {
                 'id': DocumentService.newDocumentID(),
-                'name': documentName + fileExtension,
+                'name': documentName,
                 'status': 'Document Status',
+                'url': documentName + fileExtension,
                 'project': '',
                 'task': '',
                 'description': documentDescription
             };
-
             $uibModalInstance.close(new_document_params);
         }
     };
@@ -5015,7 +4915,7 @@ app.controller('CreateDocumentModalInstanceController', ['$scope', '$uibModalIns
 
 }]);
 
-app.controller('CreateUserModalInstanceController', ['$scope', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'UserService', function ($scope, $uibModalInstance, dataForThisModalInstance, ProjectService, UserService) {
+app.controller('CreateUserModalInstanceController', ['$scope', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'UserService', 'mongoCrudService', function ($scope, $uibModalInstance, dataForThisModalInstance, ProjectService, UserService, mongoCrudService) {
 
     var vm = this;
     var new_user_params = '';

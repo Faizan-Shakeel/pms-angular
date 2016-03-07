@@ -85,7 +85,8 @@ function schema(userKeys)
                                 position: String,
                                 imageUrl: String,
                                 password: String,
-                                projectAndRole: String,
+                                projects: [Schema.Types.Mixed],
+                                tasks: [Schema.Types.Mixed],
                                 chatData: [Schema.Types.Mixed],
                                 unreadMessageFlag: [Schema.Types.Mixed]
                             }
