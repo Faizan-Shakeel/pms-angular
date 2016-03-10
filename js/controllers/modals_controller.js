@@ -692,7 +692,11 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
             'targetEndDate': projectTargetEndDate,
             'description': projectDescription,
             'status': 'Pending Approval',
-            'statusColor': 'pending-approval',
+            'pendingStatusClass': 'status-pending-icon-on',
+            'approvedStatusClass': 'status-approved-icon-off',
+            'inProgressStatusClass': 'status-in-progress-icon-off',
+            'completedStatusClass': 'status-completed-icon-off',
+            'closedStatusClass': 'status-closed-icon-off',
             'createDate': new Date(),
             'modifiedDate': '',
             'endDate': '',
@@ -2183,16 +2187,21 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
             }
         }
 
+        var statusClasses = NotificationsAndHistoryService.setStatusColor(vm.selectedStatus);
+
         projectToEdit.budget = vm.projectBudget;
         projectToEdit.targetEndDate = vm.projectTargetEndDate;
         projectToEdit.description = vm.projectDescription;
         projectToEdit.status = vm.selectedStatus;
-        projectToEdit.statusColor = NotificationsAndHistoryService.setStatusColor(projectToEdit.status);
+        projectToEdit.pendingStatusClass = statusClasses.pendingStatusClass;
+        projectToEdit.approvedStatusClass = statusClasses.approvedStatusClass;
+        projectToEdit.inProgressStatusClass = statusClasses.inProgressStatusClass;
+        projectToEdit.completedStatusClass = statusClasses.completedStatusClass;
+        projectToEdit.closedStatusClass = statusClasses.closedStatusClass;
         projectToEdit.numberOfTasks = vm.taskPanels.length;
         projectToEdit.numberOfDocuments = vm.documentPanels.length;
         projectToEdit.numberOfUsers = vm.userPanels.length;
 
-        console.log("elementStatusColor 2 : " + projectToEdit.statusColor);
 
         var updated_project_params = {
             'id': projectToEdit.id,
@@ -2201,7 +2210,11 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
             'targetEndDate': projectToEdit.targetEndDate,
             'description': projectToEdit.description,
             'status': projectToEdit.status,
-            'statusColor': projectToEdit.statusColor,
+            'pendingStatusClass': projectToEdit.pendingStatusClass,
+            'approvedStatusClass': projectToEdit.approvedStatusClass,
+            'inProgressStatusClass': projectToEdit.inProgressStatusClass,
+            'completedStatusClass': projectToEdit.completedStatusClass,
+            'closedStatusClass': projectToEdit.closedStatusClass,
             'createDate': projectToEdit.createDate,
             'modifiedDate': new Date(),
             'endDate': projectToEdit.endDate,
@@ -2211,6 +2224,7 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
             'numberOfDocuments': projectToEdit.numberOfDocuments,
             'numberOfUsers': projectToEdit.numberOfUsers
         };
+
 
         ProjectService.updatedProjectParams(updated_project_params);
 
@@ -3526,7 +3540,11 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
         }
 
         var taskStatus = 'Pending Approval';
-        var taskStatusColor = 'pending-approval';
+        var taskPendingStatusClass = 'status-pending-icon-on';
+        var taskApprovedStatusClass = 'status-approved-icon-off';
+        var taskInProgressStatusClass = 'status-in-progress-icon-off';
+        var taskCompletedStatusClass = 'status-completed-icon-off';
+        var taskClosedStatusClass = 'status-closed-icon-off';
         var taskDescription = task_params.taskDescription;
 
         if(dataForThisModalInstance.isGlobal)
@@ -3535,7 +3553,11 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
                 'name': taskName,
                 'targetEndDate': taskTargetEndDate,
                 'status': taskStatus,
-                'statusColor': taskStatusColor,
+                'pendingStatusClass': 'status-pending-icon-on',
+                'approvedStatusClass': 'status-approved-icon-off',
+                'inProgressStatusClass': 'status-in-progress-icon-off',
+                'completedStatusClass': 'status-completed-icon-off',
+                'closedStatusClass': 'status-closed-icon-off',
                 'projectsArray': vm.selectedProjects,
                 'description': taskDescription
             };
@@ -3577,7 +3599,11 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
                     newTaskObject.name = new_task_params.name;
                     newTaskObject.targetEndDate = new_task_params.targetEndDate;
                     newTaskObject.status = "Pending Approval";
-                    newTaskObject.statusColor = new_task_params.statusColor;
+                    newTaskObject.pendingStatusClass = new_task_params.pendingStatusClass;
+                    newTaskObject.approvedStatusClass = new_task_params.approvedStatusClass;
+                    newTaskObject.inProgressStatusClass = new_task_params.inProgressStatusClass;
+                    newTaskObject.completedStatusClass = new_task_params.completedStatusClass;
+                    newTaskObject.closedStatusClass = new_task_params.closedStatusClass;
                     newTaskObject.project = project.name;
                     newTaskObject.description = new_task_params.description;
                     newTaskObject.documents = documentsArray;
@@ -3688,7 +3714,11 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
                 newTaskObject.name = new_task_params.name;
                 newTaskObject.targetEndDate = new_task_params.targetEndDate;
                 newTaskObject.status = new_task_params.status;
-                newTaskObject.statusColor = new_task_params.statusColor;
+                newTaskObject.pendingStatusClass = new_task_params.pendingStatusClass;
+                newTaskObject.approvedStatusClass = new_task_params.approvedStatusClass;
+                newTaskObject.inProgressStatusClass = new_task_params.inProgressStatusClass;
+                newTaskObject.completedStatusClass = new_task_params.completedStatusClass;
+                newTaskObject.closedStatusClass = new_task_params.closedStatusClass;
                 newTaskObject.project = '';
                 newTaskObject.description = new_task_params.description;
                 newTaskObject.documents = documentsArray;
@@ -3722,7 +3752,11 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
                 'name': taskName,
                 'targetEndDate': taskTargetEndDate,
                 'status': taskStatus,
-                'statusColor': taskStatusColor,
+                'pendingStatusClass': taskPendingStatusClass,
+                'approvedStatusClass': taskApprovedStatusClass,
+                'inProgressStatusClass': taskInProgressStatusClass,
+                'completedStatusClass': taskCompletedStatusClass,
+                'closedStatusClass': taskClosedStatusClass,
                 'project': '',
                 'description': taskDescription,
                 'documents': documentsArray,
@@ -4155,11 +4189,18 @@ app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
         var updated_task = {};
         var userObject;
         var userAddedToTask = false;
+        var statusClasses = NotificationsAndHistoryService.setStatusColor(vm.selectedStatus);
 
         taskToEdit.targetEndDate = new Date(task_params.taskTargetEndDate);
         taskToEdit.status = task_params.selectedStatus;
         taskToEdit.statusColor = NotificationsAndHistoryService.setStatusColor(taskToEdit.status);
         taskToEdit.description = task_params.taskDescription;
+
+        taskToEdit.pendingStatusClass = statusClasses.pendingStatusClass;
+        taskToEdit.approvedStatusClass = statusClasses.approvedStatusClass;
+        taskToEdit.inProgressStatusClass = statusClasses.inProgressStatusClass;
+        taskToEdit.completedStatusClass = statusClasses.completedStatusClass;
+        taskToEdit.closedStatusClass = statusClasses.closedStatusClass;
 
         if(dataForThisModalInstance.isGlobal)
         {

@@ -18,7 +18,6 @@ var app = angular.module('pmsAngular', [
     'btorfs.multiselect',
     'ngAnimate',
     'ng-sortable'
-//    'luegg.directives',
-//    'irontec.simpleChat'
+
 
 ]);

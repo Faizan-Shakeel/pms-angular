@@ -28,6 +28,92 @@
     line-height: 70px;
 }
 
+.status-pending-icon-off
+{
+    position: absolute;
+    top: 35px;
+    right: 200px;
+    color: #f2f2f2;
+}
+
+.status-approved-icon-off
+{
+    position: absolute;
+    top: 35px;
+    right: 160px;
+    color: #f2f2f2;
+}
+
+.status-in-progress-icon-off
+{
+    position: absolute;
+    top: 35px;
+    right: 120px;
+    color: #f2f2f2;
+}
+
+.status-completed-icon-off
+{
+    position: absolute;
+    top: 35px;
+    right: 80px;
+    color: #f2f2f2;
+}
+
+.status-closed-icon-off
+{
+    position: absolute;
+    top: 35px;
+    right: 50px;
+    color: #f2f2f2;
+}
+
+.status-pending-icon-on
+{
+    position: absolute;
+    top: 35px;
+    right: 200px;
+    /*color: #cc6600;*/
+    color: #a52a2a;
+    text-shadow: 2px 8px 6px rgba(0,0,0,0.2), 0 -5px 35px rgba(255,255,255,0.3);
+}
+
+.status-approved-icon-on
+{
+    position: absolute;
+    top: 35px;
+    right: 160px;
+    color: #800080;
+    text-shadow: 2px 8px 6px rgba(0,0,0,0.2), 0 -5px 35px rgba(255,255,255,0.3);
+}
+
+.status-in-progress-icon-on
+{
+    position: absolute;
+    top: 35px;
+    right: 120px;
+    color: #0099ff;
+    text-shadow: 2px 8px 6px rgba(0,0,0,0.2), 0 -5px 35px rgba(255,255,255,0.3);
+}
+
+.status-completed-icon-on
+{
+    position: absolute;
+    top: 35px;
+    right: 80px;
+    color: #008000;
+    text-shadow: 2px 8px 6px rgba(0,0,0,0.2), 0 -5px 35px rgba(255,255,255,0.3);
+}
+
+.status-closed-icon-on
+{
+    position: absolute;
+    top: 35px;
+    right: 50px;
+    color: #262626;
+    text-shadow: 2px 8px 6px rgba(0,0,0,0.2), 0 -5px 35px rgba(255,255,255,0.3);
+}
+
 .pending-approval
 {
     background: -moz-linear-gradient(top,  rgba(238,238,238,1) 0%, rgba(204,204,204,0) 100%);
@@ -98,6 +184,28 @@
     bottom: -1px;
 }
 
+#status-display
+{
+    position: absolute;
+    top: -1px;
+    right: 100px;
+    bottom: -1px;
+    width: 100px;
+}
+
+.status-align
+{
+    height: 21px;
+}
+
+.status-icon-align
+{
+    position: absolute;
+    /*margin-top: -4px;*/
+    top: 2px;
+    right: 43px;
+}
+
 #tasks-btn-grp-panel-in-new-project-modal, #documents-btn-grp-panel-in-new-project-modal, #users-btn-grp-panel-in-new-project-modal
 {
     position: absolute;
@@ -125,19 +233,19 @@
 #task-panel-icon-fix
 {
     margin-left: -10px;
-    color: #006600;
+    color: #008000;
 }
 
 #document-panel-icon-fix
 {
     margin-left: -10px;
-    color: #cc6600;
+    color: #a52a2a;
 }
 
 #user-panel-icon-fix
 {
     margin-left: -6px;
-    color: #660066;
+    color: #800080;
 }
 
 .modal-new-project-form, .modal-new-task-form, .modal-new-document-form, .modal-new-user-form
