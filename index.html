@@ -11,6 +11,7 @@
 
     <link href="css/Third-Party-CSS/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="font-awesome-4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/Third-Party-CSS/xeditable.css">
 
     <!--Third Party Styles-->
 
@@ -81,15 +82,7 @@
                                 </ul>
                             </div>
 
-                            <!--<input type="text" class="form-control" placeholder="Search Projects" ng-model="MainViewVM.searchProjects.name" ng-show="MainViewVM.projectVisibility" ng-class="ngHide"/>-->
-                            <!--<input type="text" class="form-control" placeholder="Search Tasks" ng-model="MainViewVM.searchTasks.name" ng-show="MainViewVM.taskVisibility" ng-class="ngHide"/>-->
-                            <!--<input type="text" class="form-control" placeholder="Search Documents" ng-model="MainViewVM.searchDocuments.name" ng-show="MainViewVM.documentVisibility" ng-class="ngHide"/>-->
-                            <!--<input type="text" class="form-control" placeholder="Search Users" ng-model="MainViewVM.searchUsers.name" ng-show="MainViewVM.userVisibility" ng-class="ngHide"/>-->
-
                             <input type="text" class="form-control" placeholder="Search Projects" ng-model="MainViewVM.searchProjects.name" ng-change="MainViewVM.inputSearchFilter(MainViewVM.searchProjects)"/>
-                            <!--<input type="text" class="form-control" placeholder="Search Tasks" ng-model="MainViewVM.searchTasks.name" ng-show="MainViewVM.taskVisibility" ng-class="ngHide"/>-->
-                            <!--<input type="text" class="form-control" placeholder="Search Documents" ng-model="MainViewVM.searchDocuments.name" ng-show="MainViewVM.documentVisibility" ng-class="ngHide"/>-->
-                            <!--<input type="text" class="form-control" placeholder="Search Users" ng-model="MainViewVM.searchUsers.name" ng-show="MainViewVM.userVisibility" ng-class="ngHide"/>-->
 
                             <div class="input-group-btn" id="inline-div-3">
                                 <button class="btn btn-default" id="search-button" type="submit"><span class="glyphicon glyphicon-search"></span></button>
@@ -214,10 +207,10 @@
 
                         <div ng-sortable="{animation: 400}">
 
-                            <div class="panel panel-default" id="outer-panel" ng-repeat="projectPanel in MainViewVM.projectPanelsFilter">
+                            <div class="panel panel-default" id="outer-panel" ng-mouseenter="options=true" ng-mouseleave="options=false" ng-repeat="projectPanel in MainViewVM.projectPanelsFilter">
                                 <div class="panel-body">
 
-                                    <div class="panel panel-default" id="inner-panel">
+                                    <div class="panel panel-default" id="project-icon-panel">
                                         <div class="panel-body">
                                             <i class="fa fa-bar-chart-o fa-2x" id="project-panel-icon-fix"></i>
                                         </div>
@@ -239,7 +232,7 @@
                                     <i class="fa fa-check-square-o fa-2x {{projectPanel.completedStatusClass}}" uib-tooltip="Completed" tooltip-placement="top"></i>
                                     <i class="fa fa-lock fa-2x {{projectPanel.closedStatusClass}}" uib-tooltip="Closed" tooltip-placement="top"></i>
 
-                                    <div class="btn-group-vertical" id="btn-grp-panel">
+                                    <div class="btn-group-vertical" id="btn-grp-panel" ng-show="options">
                                         <button class="btn btn-info" ng-click="ModalVM.infoProjectModal(projectPanel)"><i class="fa fa-info"></i></button>
                                         <button class="btn btn-default" ng-click="ModalVM.editProjectModal(projectPanel)"><i class="fa fa-edit"></i></button>
                                         <button class="btn btn-danger" ng-click="MainViewVM.deleteProject(projectPanel, ModalVM)"><i class="fa fa-trash-o"></i></button>
@@ -259,7 +252,7 @@
                             <div class="panel panel-default" id="outer-panel-tasks-in-new-project-modal" ng-repeat="taskPanel in MainViewVM.taskPanelsFilter">
                                 <div class="panel-body">
 
-                                    <div class="panel panel-default {{taskPanel.statusColor}}" id="inner-panel-tasks-in-new-project-modal">
+                                    <div class="panel panel-default {{taskPanel.statusColor}}" id="task-icon-panel">
                                         <div class="panel-body">
                                             <i class="fa fa-tasks fa-2x" id="task-panel-icon-fix"></i>
                                         </div>
@@ -303,7 +296,7 @@
                             <div class="panel panel-default" id="outer-panel-documents-in-new-project-modal" ng-repeat="documentPanel in MainViewVM.documentPanelsFilter">
                                 <div class="panel-body">
 
-                                    <div class="panel panel-default" id="inner-panel-documents-in-new-project-modal">
+                                    <div class="panel panel-default" id="document-icon-panel">
                                         <div class="panel-body">
                                             <i class="fa fa-files-o fa-2x" id="document-panel-icon-fix"></i>
                                         </div>
@@ -339,7 +332,7 @@
                             <div class="panel panel-default" id="outer-panel-users-in-new-project-modal" ng-repeat="userPanel in MainViewVM.userPanelsFilter">
                                 <div class="panel-body">
 
-                                    <div class="panel panel-default" id="inner-panel-users-in-new-project-modal">
+                                    <div class="panel panel-default" id="user-icon-panel">
                                         <div class="panel-body">
                                             <i class="fa fa-user fa-2x" id="user-panel-icon-fix"></i>
                                         </div>
@@ -469,6 +462,7 @@
 <script src="bower_components/moment/moment.js"></script>
 <script src="http://rubaxa.github.io/Sortable/Sortable.js"></script>
 <script src="http://rubaxa.github.io/Sortable/ng-sortable.js"></script>
+<script src="js/Third-Party-JS/xeditable.min.js"></script>
 
 
 <!--Third Party-->

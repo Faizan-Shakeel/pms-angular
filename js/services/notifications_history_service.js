@@ -189,7 +189,6 @@ app.service('NotificationsAndHistoryService', [function () {
         makeHistory: makeHistory,
         getHistory: getHistory,
         setStatusColor: setStatusColor,
-//        getStatusColor: getStatusColor,
         globalNotificationsCount: globalNotificationsCount
     }
 

@@ -2,7 +2,7 @@
 <div>
 
     <div class="modal-header">
-        <h4 class="modal-title text-center">{{ModalVM.modalHeading}}</h4>
+        <h4 class="modal-title text-center text-success">{{ModalVM.modalHeading}}</h4>
     </div>
 
     <div class="modal-body">
@@ -51,7 +51,7 @@
                         <div class="form-group" ng-show="ModalVM.statusVisibility">
                             <label for="projectStatus" class="col-lg-3 col-md-3 col-sm-3 control-label">Status</label>
                             <div class="col-lg-8 col-md-8 col-sm-8">
-                                <select id="projectStatus" class="form-control" name="projectStatus" ng-model="ModalVM.selectedStatus">
+                                <select id="projectStatus" class="form-control" name="projectStatus" ng-model="ModalVM.selectedStatus" ng-change="ModalVM.statusChanged()">
                                     <option ng-repeat="projectStatus in ModalVM.statuses">{{projectStatus.status}}</option>
                                 </select>
                             </div>
@@ -60,7 +60,7 @@
                         <div class="form-group">
                             <label for="projectDescription" class="col-lg-3 col-md-3 col-sm-3 control-label">Description</label>
                             <div class="col-lg-8 col-md-8 col-sm-8">
-                                <textarea class="form-control projectModalTextAreaForDescription" id="projectDescription" name="projectDescription" ng-model="ModalVM.projectDescription" placeholder="Project Description"></textarea>
+                                <textarea class="form-control projectModalTextAreaForDescription" rows="3" id="projectDescription" name="projectDescription" ng-model="ModalVM.projectDescription" placeholder="Project Description"></textarea>
                             </div>
                         </div>
 
@@ -82,9 +82,10 @@
                         </button>
 
                         <ul class="uib-dropdown-menu" role="menu" aria-labelledby="add-new-task-dropDown-button-in-project-modal">
-                            <li role="menuitem" ng-click="ModalVM.addNewTaskModal()"><a href="#">Create New Task</a></li>
+                            <!--<li role="menuitem" ng-click="ModalVM.addNewTaskModal()"><a href="#">Create New Task</a></li>-->
+                            <li role="menuitem" ng-click="ModalVM.addNewTaskModal()"><a href="#"><i class="fa fa-tasks pull-left" id="create-task-project-modal-icon"></i>Create New Task</a></li>
                             <li class="divider"></li>
-                            <li role="menuitem" ng-click="ModalVM.existingTasksModalInProjectModal()"><a href="#">Import Existing Tasks</a></li>
+                            <li role="menuitem" ng-click="ModalVM.existingTasksModalInProjectModal()"><a href="#"><i class="fa fa-link pull-left" id="import-task-project-modal-icon"></i>Import Existing Tasks</a></li>
                         </ul>
                     </div>
 
@@ -93,7 +94,7 @@
                         <div class="panel panel-default" id="outer-panel-tasks-in-new-project-modal" ng-repeat="taskPanel in ModalVM.taskPanels">
                             <div class="panel-body">
 
-                                <div class="panel panel-default {{taskPanel.statusColor}}" id="inner-panel-tasks-in-new-project-modal">
+                                <div class="panel panel-default" id="task-icon-panel">
                                     <div class="panel-body">
                                         <i class="fa fa-tasks fa-2x" id="task-panel-icon-fix"></i>
                                     </div>
@@ -101,7 +102,8 @@
 
                                 <div id="task-panel-content-in-new-project-modal">
                                     <p>
-                                    <h4>{{taskPanel.name}} <span class="col-lg-offset-8">ID: {{taskPanel.id}}</span> </h4>
+                                    <!--<h4>{{taskPanel.name}} <span class="col-lg-offset-8">ID: {{taskPanel.id}}</span> </h4>-->
+                                    <h4>{{taskPanel.name}}</h4>
                                     </p>
 
                                     <p>
@@ -109,10 +111,16 @@
                                     </p>
                                 </div>
 
+                                <i class="fa fa-hourglass-half fa-2x {{taskPanel.pendingStatusClass}}" uib-tooltip="Pending Approval" tooltip-placement="top"></i>
+                                <i class="fa fa-thumbs-o-up fa-2x {{taskPanel.approvedStatusClass}}" uib-tooltip="Approved" tooltip-placement="top"></i>
+                                <i class="fa fa-play-circle-o fa-2x {{taskPanel.inProgressStatusClass}}" uib-tooltip="In Progress" tooltip-placement="top"></i>
+                                <i class="fa fa-check-square-o fa-2x {{taskPanel.completedStatusClass}}" uib-tooltip="Completed" tooltip-placement="top"></i>
+                                <i class="fa fa-lock fa-2x {{taskPanel.closedStatusClass}}" uib-tooltip="Closed" tooltip-placement="top"></i>
+
                                 <div class="btn-group-vertical" id="tasks-btn-grp-panel-in-new-project-modal">
-                                    <button class="btn btn-default test-button-border" ng-click="ModalVM.infoTaskModal(taskPanel)"><i class="fa fa-info"></i></button>
+                                <button class="btn btn-info" ng-click="ModalVM.infoTaskModal(taskPanel)"><i class="fa fa-info"></i></button>
                                 <button class="btn btn-default" ng-click="ModalVM.editTaskModal(taskPanel)"><i class="fa fa-edit"></i></button>
-                                <button class="btn btn-danger test-button-border" ng-click="ModalVM.deleteTask(taskPanel)"><i class="fa fa-trash-o"></i></button>
+                                <button class="btn btn-danger" ng-click="ModalVM.deleteTask(taskPanel)"><i class="fa fa-trash-o"></i></button>
                             </div>
                             </div>
                         </div>
@@ -131,9 +139,9 @@
                         </button>
 
                         <ul class="uib-dropdown-menu" role="menu" aria-labelledby="add-new-document-dropDown-button-in-project-modal">
-                            <li role="menuitem" ng-click="ModalVM.addNewDocumentModal()"><a href="#">Create New Documents</a></li>
+                            <li role="menuitem" ng-click="ModalVM.addNewDocumentModal()"><a href="#"><i class="fa fa-files-o pull-left" id="create-document-project-modal-icon"></i>Create New Documents</a></li>
                             <li class="divider"></li>
-                            <li role="menuitem" ng-click="ModalVM.existingDocumentsModalInProjectModal()"><a href="#">Import Existing Documents</a></li>
+                            <li role="menuitem" ng-click="ModalVM.existingDocumentsModalInProjectModal()"><a href="#"><i class="fa fa-link pull-left" id="import-document-project-modal-icon"></i>Import Existing Documents</a></li>
                         </ul>
                     </div>
 
@@ -142,7 +150,7 @@
                         <div class="panel panel-default" id="outer-panel-documents-in-new-project-modal" ng-repeat="documentPanel in ModalVM.documentPanels">
                             <div class="panel-body">
 
-                                <div class="panel panel-default" id="inner-panel-documents-in-new-project-modal">
+                                <div class="panel panel-default" id="document-icon-panel">
                                     <div class="panel-body">
                                         <i class="fa fa-files-o fa-2x" id="document-panel-icon-fix"></i>
                                     </div>
@@ -159,9 +167,9 @@
                                 </div>
 
                                 <div class="btn-group-vertical" id="documents-btn-grp-panel-in-new-project-modal">
-                                    <button class="btn btn-info test-button-border" ng-click="ModalVM.infoDocumentModal(documentPanel)"><i class="fa fa-info"></i></button>
+                                    <button class="btn btn-info" ng-click="ModalVM.infoDocumentModal(documentPanel)"><i class="fa fa-info"></i></button>
                                     <button class="btn btn-default" ng-click="ModalVM.editDocumentModal(documentPanel)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-danger test-button-border" ng-click="ModalVM.deleteDocument(documentPanel)"><i class="fa fa-trash-o"></i></button>
+                                    <button class="btn btn-danger" ng-click="ModalVM.deleteDocument(documentPanel)"><i class="fa fa-trash-o"></i></button>
                                 </div>
 
                             </div>
@@ -183,7 +191,7 @@
                         <div class="panel panel-default" id="outer-panel-users-in-new-project-modal" ng-repeat="userPanel in ModalVM.userPanels">
                             <div class="panel-body">
 
-                                <div class="panel panel-default" id="inner-panel-users-in-new-project-modal">
+                                <div class="panel panel-default" id="user-icon-panel">
                                     <div class="panel-body">
                                         <i class="fa fa-user fa-2x" id="user-panel-icon-fix"></i>
                                     </div>
@@ -200,9 +208,9 @@
                                 </div>
 
                                 <div class="btn-group-vertical" id="users-btn-grp-panel-in-new-project-modal">
-                                    <button class="btn btn-info test-button-border" ng-click="ModalVM.infoUserModal(userPanel)"><i class="fa fa-info"></i></button>
+                                    <button class="btn btn-info" ng-click="ModalVM.infoUserModal(userPanel)"><i class="fa fa-info"></i></button>
                                     <button class="btn btn-default" ng-click="ModalVM.editUserModal(userPanel)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-danger test-button-border" ng-click="ModalVM.deleteUser(userPanel)"><i class="fa fa-trash-o"></i></button>
+                                    <button class="btn btn-danger" ng-click="ModalVM.deleteUser(userPanel)"><i class="fa fa-trash-o"></i></button>
                                 </div>
 
                             </div>

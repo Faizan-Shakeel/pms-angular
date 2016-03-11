@@ -2,51 +2,81 @@
 <div>
 
     <div class="modal-header">
-        <h4 class="modal-title text-center">Document Info</h4>
+        <h4 class="modal-title text-center text-success">Document Info</h4>
     </div>
 
     <div class="modal-body">
 
         <div class="modal-new-document-form">
 
-            <br/>
+            <div slim-scroll height="300px">
 
-            <form class="form-horizontal">
-                <div class="form-group">
-                    <label class="col-lg-3 col-md-3 col-sm-3 control-label">Name</label>
-                    <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
-                        <p class="form-control-static">{{DocumentModalVM.documentName}}</p>
+                <br/>
+
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-lg-4 col-md-4 col-sm-4 control-label">Name</label>
+                        <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
+                            <p class="form-control-static">{{DocumentModalVM.documentName}}</p>
+                        </div>
                     </div>
-                </div>
 
-                <hr class="info-divider"/>
+                    <hr class="info-divider"/>
 
-                <div class="form-group">
-                    <label class="col-lg-3 col-md-3 col-sm-3 control-label">Project</label>
-                    <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
-                        <p class="form-control-static">{{DocumentModalVM.documentProject}}</p>
+                    <div class="form-group">
+                        <label class="col-lg-4 col-md-4 col-sm-4 control-label">Project</label>
+                        <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
+                            <p class="form-control-static">{{DocumentModalVM.documentProject}}</p>
+                        </div>
                     </div>
-                </div>
 
-                <hr class="info-divider"/>
+                    <hr class="info-divider"/>
 
-                <div class="form-group">
-                    <label class="col-lg-3 col-md-3 col-sm-3 control-label">Task</label>
-                    <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
-                        <p class="form-control-static">{{DocumentModalVM.documentTask}}</p>
+                    <div class="form-group">
+                        <label class="col-lg-4 col-md-4 col-sm-4 control-label">Type</label>
+                        <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
+                            <p class="form-control-static">{{DocumentModalVM.documentType}}</p>
+                        </div>
                     </div>
-                </div>
 
-                <hr class="info-divider"/>
+                    <hr class="info-divider"/>
 
-                <div class="form-group">
-                    <label class="col-lg-3 col-md-3 col-sm-3 control-label">Description</label>
-                    <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
-                        <p class="form-control-static">{{DocumentModalVM.documentDescription}}</p>
+                    <div class="form-group">
+                        <label class="col-lg-4 col-md-4 col-sm-4 control-label">Size</label>
+                        <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
+                            <p class="form-control-static">{{DocumentModalVM.documentSize}}</p>
+                        </div>
                     </div>
-                </div>
 
-            </form>
+                    <hr class="info-divider"/>
+
+                    <div class="form-group">
+                        <label class="col-lg-4 col-md-4 col-sm-4 control-label">Date Created</label>
+                        <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
+                            <p class="form-control-static">{{DocumentModalVM.documentCreateDate}}</p>
+                        </div>
+                    </div>
+
+                    <hr class="info-divider"/>
+
+                    <div class="form-group">
+                        <label class="col-lg-4 col-md-4 col-sm-4 control-label">Created By</label>
+                        <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
+                            <p class="form-control-static">{{DocumentModalVM.documentCreatedBy}}</p>
+                        </div>
+                    </div>
+
+                    <hr class="info-divider"/>
+
+                    <div class="form-group">
+                        <label class="col-lg-4 col-md-4 col-sm-4 control-label">Description</label>
+                        <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
+                            <p class="form-control-static">{{DocumentModalVM.documentDescription}}</p>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
         </div>
     </div>
 

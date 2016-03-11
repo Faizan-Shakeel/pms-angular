@@ -6,8 +6,12 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
 
     var vm = this;
 
+    var emptyFunction = function(){};
+
     vm.infoElement = function(elemType, elemInfo)
     {
+        var notificationMessage;
+
         if(elemType == 'Project')
         {
             if(ProjectService.checkProjectExistence(elemInfo.name))
@@ -16,7 +20,8 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
             }
             else
             {
-                alert("Project Doesn't Exist");
+                notificationMessage = 'Project "' + elemInfo.name + '" Does Not Exist Anymore.';
+                vm.notificationModal(emptyFunction, notificationMessage);
             }
         }
         else if(elemType == 'Task')
@@ -27,7 +32,8 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
             }
             else
             {
-                alert("Task Doesn't Exist");
+                notificationMessage = 'Task "' + elemInfo.name + '" Does Not Exist Anymore.';
+                vm.notificationModal(emptyFunction, notificationMessage);
             }
         }
         else if(elemType == 'Document')
@@ -38,7 +44,8 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
             }
             else
             {
-                alert("Document Doesn't Exist");
+                notificationMessage = 'Document "' + elemInfo.name + '" Does Not Exist Anymore.';
+                vm.notificationModal(emptyFunction, notificationMessage);
             }
         }
         else if((elemType.search('user') != -1) || (elemType.search('User') != -1))
@@ -49,7 +56,8 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
             }
             else
             {
-                alert("User Doesn't Exist");
+                notificationMessage = 'User "' + elemInfo.name + '" Does Not Exist Anymore.';
+                vm.notificationModal(emptyFunction, notificationMessage);
             }
         }
     };
@@ -537,6 +545,77 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
     };
     /*////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
      ///////////////// Confirmation Modal /////// [ Global ] /////////////////////////////////// [E N D] //////////////
+     *////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////// Notification Modal /////// [ Global ] //////////////////////////////////////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.notificationModal = function (notification, messageOne, messageTwo) {
+
+        var notificationModalInstance = $uibModal.open({
+            animation: true,
+            templateUrl: 'partials/notification_modal.html',
+            controller: 'NotificationModalInstanceController',
+            controllerAs: 'NotificationModalVM',
+            windowClass: 'notification-modal-style',
+            backdrop: 'static',
+            resolve: {
+                dataForThisModalInstance: function(){
+                    return{
+                        notificationMessage1: messageOne,
+                        notificationMessage2: messageTwo
+//                        projectInfo: JSON.parse(JSON.stringify(projectInfo))
+                    };
+                }
+            }
+        });
+
+        notificationModalInstance.result.then(function (result)
+        {
+            notification();
+
+        }, function () {
+
+        });
+    };
+    /*////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+     ///////////////// Notification Modal /////// [ Global ] /////////////////////////////////// [E N D] //////////////
+     *////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////// User Profile /////// [ Global ] //////////////////////////////////////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.userProfileModal = function (userInfo) {
+
+        var userInfo = UserService.getUserByEmail('user1@gmail.com');
+
+        var userProfileModalInstance = $uibModal.open({
+            animation: false,
+            templateUrl: 'partials/user_profile.html',
+            controller: 'UserProfileModalInstanceController',
+            controllerAs: 'UserProfileModalVM',
+            windowClass: 'user-profile-modal-style',
+            backdrop: 'static',
+            resolve: {
+                dataForThisModalInstance: function(){
+                    return{
+                        userInfo: JSON.parse(JSON.stringify(userInfo))
+                    };
+                }
+            }
+        });
+
+        userProfileModalInstance.result.then(function (result)
+        {
+
+        }, function () {
+
+        });
+    };
+    /*////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+     ///////////////// User Profile /////// [ Global ] /////////////////////////////////// [E N D] //////////////
      *////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
 
 }]);
@@ -1626,9 +1705,14 @@ app.controller('InfoProjectModalInstanceController', ['$scope', '$uibModal', '$u
     var projectInfo = dataForThisModalInstance.projectInfo;
 
     vm.projectName = projectInfo.name;
+    vm.projectStatus = projectInfo.status;
     vm.projectBudget = projectInfo.budget;
-    vm.projectDescription = projectInfo.description;
     vm.projectTargetEndDate = moment(projectInfo.targetEndDate).format("L");
+    vm.projectCreateDate = moment(projectInfo.createDate).format("L");
+    vm.projectModifiedDate = moment(projectInfo.modifiedDate).format("L");
+    vm.projectEndDate = moment(projectInfo.endDate).format("L");
+    vm.projectCreatedBy = projectInfo.createdBy;
+    vm.projectLastModifiedBy = projectInfo.lastModifiedBy;
 
     vm.taskPanels = projectInfo.tasks;
     vm.documentPanels = projectInfo.documents;
@@ -1752,6 +1836,13 @@ app.controller('InfoTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
     vm.taskNameEditable = true;
     vm.taskName = taskInfo.name;
     vm.taskProject = taskInfo.project;
+    vm.taskStatus = taskInfo.status;
+    vm.taskTargetEndDate = moment(taskInfo.targetEndDate).format("L");
+    vm.taskCreateDate = moment(taskInfo.createDate).format("L");
+    vm.taskModifiedDate = moment(taskInfo.modifiedDate).format("L");
+    vm.taskEndDate = moment(taskInfo.endDate).format("L");
+    vm.taskCreatedBy = taskInfo.createdBy;
+    vm.taskLastModifiedBy = taskInfo.lastModifiedBy;
 
     if(taskInfo.targetEndDate != undefined)
     {
@@ -1846,7 +1937,11 @@ app.controller('InfoDocumentModalInstanceController', ['$scope', '$uibModal', '$
 
     vm.documentName = documentInfo.name;
     vm.documentProject = documentInfo.project;
-    vm.documentTask = documentInfo.task;
+    vm.documentType = documentInfo.type;
+    vm.documentSize = documentInfo.size;
+    vm.documentCreateDate = moment(documentInfo.createDate).format("L");
+    vm.documentCreatedBy = documentInfo.createDate;
+
     vm.documentDescription = documentInfo.description;
 
     vm.cancel = function () {
@@ -2046,6 +2141,49 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
     vm.openDatePicker = function($event) {
         vm.status.opened = true;
     };
+
+    var statusControl = function()
+    {
+        vm.selectedStatus = projectToEdit.status;
+    };
+
+    vm.statusChanged = function()
+    {
+        var notificationMessage1;
+        var notificationMessage2;
+
+        if(projectToEdit.status == 'Pending Approval')
+        {
+            if((vm.selectedStatus != 'Approved') && (vm.selectedStatus != 'Closed'))
+            {
+                notificationMessage1 = 'Invalid Status "' + vm.selectedStatus + '" Selected';
+                notificationMessage2 = 'Valid Status Are "Approved" & "Closed"';
+
+                dataForThisModalInstance.globalScope.notificationModal(statusControl, notificationMessage1, notificationMessage2);
+            }
+        }
+        else if(projectToEdit.status == 'Approved' || projectToEdit.status == 'Completed')
+        {
+            if(vm.selectedStatus != 'In Progress' && vm.selectedStatus != 'Closed')
+            {
+                notificationMessage1 = 'Invalid Status "' + vm.selectedStatus + '" Selected';
+                notificationMessage2 = 'Valid Status Are "In Progress" & "Closed"';
+
+                dataForThisModalInstance.globalScope.notificationModal(statusControl, notificationMessage1, notificationMessage2);
+            }
+        }
+        else if(projectToEdit.status == 'In Progress')
+        {
+            if(vm.selectedStatus != 'Completed' && vm.selectedStatus != 'Closed')
+            {
+                notificationMessage1 = 'Invalid Status "' + vm.selectedStatus + '" Selected';
+                notificationMessage2 = 'Valid Status Are "Completed" & "Closed"';
+
+                dataForThisModalInstance.globalScope.notificationModal(statusControl, notificationMessage1, notificationMessage2);
+            }
+        }
+    };
+
 
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
      ////////////////////// Update Project ////////////////////////////////////////////////////////////////////////////
@@ -4176,6 +4314,48 @@ app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
         vm.taskUpdateFlag = true;
     };
 
+    var statusControl = function()
+    {
+        vm.selectedStatus = taskToEdit.status;
+    };
+
+    vm.statusChanged = function()
+    {
+        var notificationMessage1;
+        var notificationMessage2;
+
+        if(taskToEdit.status == 'Pending Approval')
+        {
+            if((vm.selectedStatus != 'Approved') && (vm.selectedStatus != 'Closed'))
+            {
+                notificationMessage1 = 'Invalid Status "' + vm.selectedStatus + '" Selected';
+                notificationMessage2 = 'Valid Status Are "Approved" & "Closed"';
+
+                dataForThisModalInstance.globalScope.notificationModal(statusControl, notificationMessage1, notificationMessage2);
+            }
+        }
+        else if(taskToEdit.status == 'Approved' || taskToEdit.status == 'Completed')
+        {
+            if(vm.selectedStatus != 'In Progress' && vm.selectedStatus != 'Closed')
+            {
+                notificationMessage1 = 'Invalid Status "' + vm.selectedStatus + '" Selected';
+                notificationMessage2 = 'Valid Status Are "In Progress" & "Closed"';
+
+                dataForThisModalInstance.globalScope.notificationModal(statusControl, notificationMessage1, notificationMessage2);
+            }
+        }
+        else if(taskToEdit.status == 'In Progress')
+        {
+            if(vm.selectedStatus != 'Completed' && vm.selectedStatus != 'Closed')
+            {
+                notificationMessage1 = 'Invalid Status "' + vm.selectedStatus + '" Selected';
+                notificationMessage2 = 'Valid Status Are "Completed" & "Closed"';
+
+                dataForThisModalInstance.globalScope.notificationModal(statusControl, notificationMessage1, notificationMessage2);
+            }
+        }
+    };
+
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
      ////////////////// Update Task ///////////////////////////////////////////////////////////////////////////////////
      */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -4797,12 +4977,19 @@ app.controller('CreateDocumentModalInstanceController', ['$scope', '$uibModalIns
 
         var documentName = document_params.documentName;
         var documentDescription = document_params.documentDescription;
+        var documentType = document_params.documentType;
+        var documentSize = document_params.documentSize;
+        var documentCreateDate = document_params.documentCreateDate;
+        var documentCreatedBy = document_params.documentCreatedBy;
 
         if(dataForThisModalInstance.isGlobal)
         {
             new_document_params = {
                 'name': documentName,
-                'status': 'Document Status',
+                'type': documentType,
+                'size': documentSize,
+                'createDate': documentCreateDate,
+                'createdBy': documentCreatedBy,
                 'description': documentDescription
             };
 
@@ -4821,7 +5008,10 @@ app.controller('CreateDocumentModalInstanceController', ['$scope', '$uibModalIns
 
             newDocumentObject.id = DocumentService.newDocumentID();
             newDocumentObject.name = new_document_params.name;
-            newDocumentObject.status = "Waiting For Approval";
+            newDocumentObject.type = new_document_params.type;
+            newDocumentObject.size = new_document_params.size;
+            newDocumentObject.createDate = new_document_params.createDate;
+            newDocumentObject.createdBy = new_document_params.createdBy;
             newDocumentObject.project = '';
             newDocumentObject.task = '';
             newDocumentObject.description = new_document_params.description;
@@ -4851,7 +5041,10 @@ app.controller('CreateDocumentModalInstanceController', ['$scope', '$uibModalIns
             new_document_params = {
                 'id': DocumentService.newDocumentID(),
                 'name': documentName,
-                'status': 'Document Status',
+                'type': documentType,
+                'size': documentSize,
+                'createDate': documentCreateDate,
+                'createdBy': documentCreatedBy,
                 'project': '',
                 'task': dataForThisModalInstance.taskName,
                 'description': documentDescription
@@ -4889,7 +5082,10 @@ app.controller('CreateDocumentModalInstanceController', ['$scope', '$uibModalIns
             new_document_params = {
                 'id': DocumentService.newDocumentID(),
                 'name': documentName,
-                'status': 'Document Status',
+                'type': documentType,
+                'size': documentSize,
+                'createDate': documentCreateDate,
+                'createdBy': documentCreatedBy,
                 'project': '',
                 'task': dataForThisModalInstance.taskName,
                 'description': documentDescription
@@ -4919,7 +5115,10 @@ app.controller('CreateDocumentModalInstanceController', ['$scope', '$uibModalIns
             new_document_params = {
                 'id': DocumentService.newDocumentID(),
                 'name': documentName,
-                'status': 'Document Status',
+                'type': documentType,
+                'size': documentSize,
+                'createDate': documentCreateDate,
+                'createdBy': documentCreatedBy,
                 'project': '',
                 'task': dataForThisModalInstance.taskName,
                 'description': documentDescription
@@ -4940,7 +5139,10 @@ app.controller('CreateDocumentModalInstanceController', ['$scope', '$uibModalIns
             new_document_params = {
                 'id': DocumentService.newDocumentID(),
                 'name': documentName,
-                'status': 'Document Status',
+                'type': documentType,
+                'size': documentSize,
+                'createDate': documentCreateDate,
+                'createdBy': documentCreatedBy,
                 'project': '',
                 'task': '',
                 'description': documentDescription
@@ -4988,7 +5190,6 @@ app.controller('CreateUserModalInstanceController', ['$scope', '$uibModalInstanc
         vm.roleVisibility = false;
     }
 
-
     vm.createOrUpdateUser = function(user_params) {
 
         //        console.log("");
@@ -5000,10 +5201,17 @@ app.controller('CreateUserModalInstanceController', ['$scope', '$uibModalInstanc
             'name': user_params.userName,
             'email': user_params.userEmail,
             'designation': user_params.userDesignation,
+            'gender': '',
+            'dateOfBirth': '',
+            'contactNumber': '',
+            'address': '',
+            'imageUrl': '',
             'projects': [],
             'tasks': [],
             'documents': []
         };
+
+        console.log("new_user_params : " + JSON.stringify(new_user_params));
 
         for (var userPanel of UserService.getUserPanels())
         {
@@ -5181,22 +5389,6 @@ app.controller('ConfirmationModalInstanceController', ['$scope', '$uibModalInsta
     vm.modalTitle = 'Warning';
     vm.confirmationMessage = 'Are You Sure?';
 
-    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-     ////////////////// Create Existing User //////////////////////////////////////////////////////////////////////////
-     */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    vm.confirm = function() {
-
-        //        console.log("");
-        //        console.log(" : " + );
-        //        console.log(" : " + JSON.stringify());
-
-    };
-
-    /*///////////////////////////////////////////////////////////////////////////////////////////////// [E N D] ///////
-     ////////////////// Create Existing User ////////////////////////////////////////////////////////// [E N D] ///////
-     *///////////////////////////////////////////////////////////////////////////////////////////////// [E N D] ///////
-
     var confirmed = 'OK';
 
     vm.confirm = function () {
@@ -5205,6 +5397,87 @@ app.controller('ConfirmationModalInstanceController', ['$scope', '$uibModalInsta
 
     vm.cancel = function () {
         $uibModalInstance.dismiss('cancel');
+    };
+
+}]);
+
+app.controller('NotificationModalInstanceController', ['$scope', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'UserService', function ($scope, $uibModalInstance, dataForThisModalInstance, ProjectService, UserService) {
+
+    var vm = this;
+
+    vm.modalTitle = 'Not Found';
+    vm.notificationMessage1 = dataForThisModalInstance.notificationMessage1;
+    vm.notificationMessage2 = dataForThisModalInstance.notificationMessage2;
+
+    vm.cancel = function () {
+        $uibModalInstance.close();
+    };
+
+}]);
+
+app.controller('UserProfileModalInstanceController', ['$scope', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'UserService', '$filter', function ($scope, $uibModalInstance, dataForThisModalInstance, ProjectService, UserService, $filter) {
+
+    var vm = this;
+    var userInfo = dataForThisModalInstance.userInfo;
+
+//    console.log("userInfo : " + JSON.stringify(userInfo));
+
+    vm.modalTitle = 'User Profile';
+    vm.userImageUrl = 'images/Original_Size/user.png';
+    vm.userName = userInfo.name;
+    vm.userEmail = userInfo.email;
+    vm.userGender = userInfo.gender;
+    vm.userDesignation = userInfo.designation;
+    vm.userDateOfBirth = new Date();
+    vm.userContactNumber = userInfo.contactNumber;
+    vm.userAddress = userInfo.address;
+
+    vm.genders = [
+        {value: 1, text: 'Male'},
+        {value: 2, text: 'Female'}
+    ];
+
+    vm.showStatus = function() {
+        var selected = $filter('filter')(vm.genders, {value: vm.userGender});
+        return (vm.userGender && selected.length) ? selected[0].text : 'Not set';
+    };
+
+
+    vm.changeEmail = function()
+    {
+
+    };
+
+    vm.changePassword = function()
+    {
+
+    };
+
+    vm.addAddress = function()
+    {
+
+    };
+
+    vm.addContactNumber = function()
+    {
+
+    };
+
+    vm.addDateOfBirth = function()
+    {
+
+    };
+
+    vm.addGender = function()
+    {
+
+    };
+
+    vm.cancel = function (email) {
+
+        console.log("email : " + email);
+
+        $uibModalInstance.close();
     };
 
 }]);

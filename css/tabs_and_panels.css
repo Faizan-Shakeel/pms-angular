@@ -16,7 +16,7 @@
     margin-top: 10px;
 }
 
-#inner-panel
+#project-icon-panel
 {
     position: absolute;
     top: -1px;
@@ -155,7 +155,7 @@
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#00000000',GradientType=0 );
 }
 
-#inner-panel-tasks-in-new-project-modal, #inner-panel-documents-in-new-project-modal, #inner-panel-users-in-new-project-modal
+#task-icon-panel, #document-icon-panel, #user-icon-panel
 {
     position: absolute;
     top: -1px;
@@ -167,7 +167,7 @@
     line-height: 70px;
 }
 
-#inner-panel-documents-in-new-project-modal, #inner-panel-users-in-new-project-modal
+#project-icon-panel, #task-icon-panel, #document-icon-panel, #user-icon-panel
 {
     /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#eeeeee+0,cccccc+100&1+0,0+100;Gren+3D */
     background: -moz-linear-gradient(top,  rgba(238,238,238,1) 0%, rgba(204,204,204,0) 100%); /* FF3.6-15 */
@@ -183,6 +183,11 @@
     right: -1px;
     bottom: -1px;
 }
+
+/*#outer-panel:hover #btn-grp-panel*/
+/*{*/
+    /*visibility: visible;*/
+/*}*/
 
 #status-display
 {
@@ -272,7 +277,11 @@
     /*height: 100px;*/
 }
 
+.user-profile-modal-style .modal-dialog
+{
+    width: 500px;
 
+}
 
 .test-position
 {
@@ -331,13 +340,49 @@
 
 .info-divider
 {
-    /*margin-top: 0;*/
-    /*margin-bottom: 0;*/
-
-    width: 250px;
-
+    margin-left: 250px;
+    width: 200px;
 }
 
+.user-profile-info-divider
+{
+    /*margin-left: 250px;*/
+    width: 450px;
+    /*margin-bottom: 0;*/
+    margin-top: -15px;
+}
+
+#user-profile-pic-in-profile
+{
+    height: 150px;
+    width: 150px;
+}
+
+.form-horizontal .control-label{
+    text-align:right;
+    /*font-style: italic;*/
+}
+
+#user-profile-form .control-label
+{
+    text-align: left;
+    font-weight: normal;
+}
+
+#user-profile-pic-row
+{
+    margin-top: -15px;
+}
+
+#user-name-and-designation
+{
+    margin-top: 60px;
+}
+
+.user-profile-edit-buttons
+{
+    margin-top: -15px;
+}
 
 @media only screen and (min-width: 768px) and (max-width: 991px)
 {
@@ -352,4 +397,3 @@
         height: 250px;
     }
 }
-

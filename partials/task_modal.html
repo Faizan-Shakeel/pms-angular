@@ -1,7 +1,7 @@
 <div>
 
     <div class="modal-header">
-        <h4 class="modal-title text-center">{{TaskModalVM.modalHeading}}</h4>
+        <h4 class="modal-title text-center text-success">{{TaskModalVM.modalHeading}}</h4>
     </div>
 
     <div class="modal-body">
@@ -44,7 +44,7 @@
                         <div class="form-group" ng-show="TaskModalVM.statusVisibility">
                             <label for="taskStatus" class="col-lg-3 col-md-3 col-sm-3 control-label">Status</label>
                             <div class="col-lg-8 col-md-8 col-sm-8">
-                                <select id="taskStatus" class="form-control" name="taskStatus" ng-model="TaskModalVM.selectedStatus">
+                                <select id="taskStatus" class="form-control" name="taskStatus" ng-model="TaskModalVM.selectedStatus" ng-change="TaskModalVM.statusChanged()">
                                     <option ng-repeat="taskStatus in TaskModalVM.statuses">{{taskStatus.status}}</option>
                                 </select>
                             </div>
@@ -53,7 +53,7 @@
                         <div class="form-group">
                             <label for="taskDescription" class="col-lg-3 col-md-3 col-sm-3 control-label">Description</label>
                             <div class="col-lg-8 col-md-8 col-sm-8">
-                                <textarea class="form-control taskModalTextAreaForDescription" id="taskDescription" name="taskDescription" ng-model="TaskModalVM.taskDescription" placeholder="Task Description" ng-change="TaskModalVM.taskUpdateDetected()"></textarea>
+                                <textarea class="form-control taskModalTextAreaForDescription" rows="4" id="taskDescription" name="taskDescription" ng-model="TaskModalVM.taskDescription" placeholder="Task Description" ng-change="TaskModalVM.taskUpdateDetected()"></textarea>
                             </div>
                         </div>
 
@@ -81,9 +81,9 @@
                         </button>
 
                         <ul class="uib-dropdown-menu" role="menu" aria-labelledby="add-new-document-dropDown-button-in-project-modal">
-                            <li role="menuitem" ng-click="TaskModalVM.addNewDocumentModal()"><a href="#">Create New Document</a></li>
+                            <li role="menuitem" ng-click="TaskModalVM.addNewDocumentModal()"><a href="#"><i class="fa fa-files-o pull-left" id="create-document-project-modal-icon"></i>Create New Document</a></li>
                             <li class="divider"></li>
-                            <li role="menuitem" ng-click="TaskModalVM.existingDocumentsModalInProjectModal()"><a href="#">Import Existing Documents</a></li>
+                            <li role="menuitem" ng-click="TaskModalVM.existingDocumentsModalInProjectModal()"><a href="#"><i class="fa fa-link pull-left" id="import-document-project-modal-icon"></i>Import Existing Documents</a></li>
                         </ul>
                     </div>
 
@@ -92,7 +92,7 @@
                         <div class="panel panel-default" id="outer-panel-documents-in-new-project-modal" ng-repeat="documentPanel in TaskModalVM.documentPanels">
                             <div class="panel-body">
 
-                                <div class="panel panel-default" id="inner-panel-documents-in-new-project-modal">
+                                <div class="panel panel-default" id="document-icon-panel">
                                     <div class="panel-body">
                                         <i class="fa fa-files-o fa-2x" id="document-panel-icon-fix"></i>
                                     </div>
@@ -131,7 +131,7 @@
                         <div class="panel panel-default" id="outer-panel-users-in-new-project-modal" ng-repeat="userPanel in TaskModalVM.userPanels">
                             <div class="panel-body">
 
-                                <div class="panel panel-default" id="inner-panel-users-in-new-project-modal">
+                                <div class="panel panel-default" id="user-icon-panel">
                                     <div class="panel-body">
                                         <i class="fa fa-user fa-2x" id="user-panel-icon-fix"></i>
                                     </div>
