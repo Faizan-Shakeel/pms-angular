@@ -381,8 +381,13 @@
 
 .user-profile-edit-buttons
 {
-    margin-top: -15px;
+    margin-top: -10px;
 }
+
+/*.tooltip-inner {*/
+    /*width:100px;*/
+    /*max-width: 200px;*/
+/*}*/
 
 @media only screen and (min-width: 768px) and (max-width: 991px)
 {

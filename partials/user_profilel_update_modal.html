@@ -1,0 +1,109 @@
+<div>
+
+    <div class="modal-header">
+        <h4 class="modal-title text-center text-success">{{UserProfileModalVM.modalTitle}}</h4>
+    </div>
+
+    <div class="modal-body">
+        <div class="modal-update-user-profile-form">
+
+            <br/>
+
+            <form name="updateUserProfileForm" class="form-horizontal" ng-submit="updateUserProfileForm.$valid && UserProfileModalVM.updateUserProfileInfo(UserProfileModalVM)" novalidate>
+                <div class="form-group" ng-show="UserProfileModalVM.userProfileNameVisibility">
+                    <label for="newUserName" class="col-lg-3 col-md-3 col-sm-3 control-label">Name</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8">
+                        <input type="text" class="form-control" id="newUserName" name="newUserName" placeholder="New User Name" ng-model="UserProfileModalVM.newUserName" ng-required="UserProfileModalVM.nameRequiredFlag"/>
+                    </div>
+                </div>
+
+                <div class="form-group" ng-class="{ 'has-error': updateUserProfileForm.newUserEmail.$touched && updateUserProfileForm.newUserEmail.$invalid }"  ng-show="UserProfileModalVM.userProfileEmailVisibility">
+                    <label for="newUserEmail" class="col-lg-3 col-md-3 col-sm-3 control-label">Email</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8">
+                        <input type="email" class="form-control" id="newUserEmail" name="newUserEmail" placeholder="New User Email" ng-model="UserProfileModalVM.newUserEmail" ng-required="UserProfileModalVM.emailRequiredFlag"/>
+                        <div class="help-block" ng-messages="updateUserProfileForm.newUserEmail.$error" ng-show="updateUserProfileForm.newUserEmail.$touched">
+                            <p ng-message="required">Email is required.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" ng-show="UserProfileModalVM.userProfileDesignationVisibility">
+                    <label for="newUserDesignation" class="col-lg-3 col-md-3 col-sm-3 control-label">Designation</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8">
+                        <input type="text" class="form-control" id="newUserDesignation" name="newUserDesignation" placeholder="New User Designation" ng-model="UserProfileModalVM.newUserDesignation"  ng-required="UserProfileModalVM.designationRequiredFlag"/>
+                    </div>
+                </div>
+
+                <div class="form-group" ng-show="UserProfileModalVM.userProfileGenderVisibility">
+                    <label for="newUserGender" class="col-lg-3 col-md-3 col-sm-3 control-label">Gender</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8">
+                        <select id="newUserGender" class="form-control" name="newUserGender" ng-model="UserProfileModalVM.selectedGender" ng-required="UserProfileModalVM.genderRequiredFlag">
+                            <option ng-repeat="userGender in UserProfileModalVM.genders">{{userGender.gender}}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group" ng-show="UserProfileModalVM.userProfileDateOfBirthVisibility">
+                    <label for="newUserDateOfBirth" class="col-lg-3 col-md-3 col-sm-3 control-label">Date Of Birth</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8">
+                        <p class="input-group">
+                            <input type="text" class="form-control" id="newUserDateOfBirth" name="newUserDateOfBirth" placeholder="New User Date Of Birth" ng-model="UserProfileModalVM.newUserDateOfBirth"  ng-required="UserProfileModalVM.dateOfBirthRequiredFlag" close-text="Close" uib-datepicker-popup="{{UserProfileModalVM.dateOfBirthFormat}}" is-open="UserProfileModalVM.dateOfBirthPicker.opened" />
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-info" ng-click="UserProfileModalVM.openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="form-group" ng-show="UserProfileModalVM.userProfileNumberVisibility">
+                    <label for="newUserNumber" class="col-lg-3 col-md-3 col-sm-3 control-label">Number</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8">
+                        <input type="text" class="form-control" id="newUserNumber" name="newUserNumber" placeholder="New User Number" ng-model="UserProfileModalVM.newUserNumber"  ng-required="UserProfileModalVM.numberRequiredFlag" ui-mask-placeholder ui-mask="(99) 999-9999999"/>
+                    </div>
+                </div>
+
+                <div class="form-group" ng-show="UserProfileModalVM.userProfileAddressVisibility">
+                    <label for="newUserAddress" class="col-lg-3 col-md-3 col-sm-3 control-label">Address</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8">
+                        <input type="text" class="form-control" id="newUserAddress" name="newUserAddress" placeholder="New User Address" ng-model="UserProfileModalVM.newUserAddress"  ng-required="UserProfileModalVM.addressRequiredFlag"/>
+                    </div>
+                </div>
+
+
+
+
+
+                <div class="form-group" ng-show="UserProfileModalVM.currentPasswordVisibility">
+                    <label for="newUserCurrentPassword" class="col-lg-3 col-md-3 col-sm-3 control-label">Old Password</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8">
+                        <input type="text" class="form-control" id="newUserCurrentPassword" name="newUserCurrentPassword" placeholder="Enter Current Password" ng-model="UserProfileModalVM.newUserCurrentPassword"  ng-required="UserProfileModalVM.currentPasswordRequiredFlag"/>
+                    </div>
+                </div>
+
+                <div class="form-group" ng-show="UserProfileModalVM.newPasswordVisibility">
+                    <label for="userNewPassword" class="col-lg-3 col-md-3 col-sm-3 control-label">New Password</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8">
+                        <input type="text" class="form-control" id="userNewPassword" name="userNewPassword" placeholder="Enter New Password" ng-model="UserProfileModalVM.userNewPassword"  ng-required="UserProfileModalVM.newPasswordRequiredFlag"/>
+
+                        <br/>
+
+                        <div ng-if="UserProfileModalVM.libMode === 'bootstrap'">
+                            <div ng-password-strength="UserProfileModalVM.userNewPassword" strength="UserProfileModalVM.passStrength" inner-class="progress-bar" inner-class-prefix="progress-bar-"></div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <input type="submit" id="update-user-profile-form" class="hidden" />
+
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <label for="update-user-profile-form" class="btn btn-success" ng-disabled="updateUserProfileForm.$invalid">{{UserProfileModalVM.modalType}}</label>
+        <button type="button" class="btn btn-default" ng-click="UserProfileModalVM.cancel()">Cancel</button>
+    </div>
+
+</div>

@@ -2121,10 +2121,6 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
 
     vm.userPanels = JSON.parse(JSON.stringify(projectUsers));
 
-//    console.log("projectToEdit.users : " + JSON.stringify(projectToEdit.users));
-//    console.log("projectUsers : " + JSON.stringify(projectUsers));
-//    console.log("Global Users : " + JSON.stringify(UserService.getUserPanels()));
-
     vm.statuses = [
         {'status': 'Pending Approval'},
         {'status': 'Approved'},
@@ -5415,7 +5411,7 @@ app.controller('NotificationModalInstanceController', ['$scope', '$uibModalInsta
 
 }]);
 
-app.controller('UserProfileModalInstanceController', ['$scope', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'UserService', '$filter', function ($scope, $uibModalInstance, dataForThisModalInstance, ProjectService, UserService, $filter) {
+app.controller('UserProfileModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'UserService', 'NotificationsAndHistoryService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, ProjectService, UserService, NotificationsAndHistoryService) {
 
     var vm = this;
     var userInfo = dataForThisModalInstance.userInfo;
@@ -5428,56 +5424,250 @@ app.controller('UserProfileModalInstanceController', ['$scope', '$uibModalInstan
     vm.userEmail = userInfo.email;
     vm.userGender = userInfo.gender;
     vm.userDesignation = userInfo.designation;
-    vm.userDateOfBirth = new Date();
+    vm.userDateOfBirth = userInfo.dateOfBirth;
     vm.userContactNumber = userInfo.contactNumber;
     vm.userAddress = userInfo.address;
 
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////// Modal For User Email Update /////// [ Global ] /////////////////////////////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.updateUserProfileModal = function (infoToChange) {
+
+        var updateUserEmailModalInstance = $uibModal.open({
+            animation: false,
+            templateUrl: 'partials/user_profilel_update_modal.html',
+            controller: 'UpdateUserProfileModalInstanceController',
+            controllerAs: 'UserProfileModalVM',
+            windowClass: 'email-update-modal-style',
+            backdrop: 'static',
+            resolve: {
+                dataForThisModalInstance: function(){
+                    return{
+                        userInfo: JSON.parse(JSON.stringify(userInfo)),
+                        infoToChange: infoToChange
+                    };
+                }
+            }
+        });
+
+        updateUserEmailModalInstance.result.then(function (result)
+        {
+
+//            NotificationsAndHistoryService.makeHistory({elementType: 'UserEmail', element: userEmailUpdate});
+
+        }, function () {
+
+        });
+    };
+    /*////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+     ///////////////// Modal For User Email Update /////// [ Global ] /////////////////////////////// [E N D] /////////
+     *////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+
+    vm.cancel = function () {
+        $uibModalInstance.close();
+    };
+
+}]);
+
+
+app.controller('UpdateUserProfileModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'UserService', 'NotificationsAndHistoryService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, ProjectService, UserService, NotificationsAndHistoryService) {
+
+    var vm = this;
+
+    vm.modalType = "Update";
+    vm.libMode = "bootstrap";
+    var userInfo = dataForThisModalInstance.userInfo;
+    var infoToChange = dataForThisModalInstance.infoToChange;
+    vm.modalTitle = "Update " + infoToChange;
+
+    vm.userDateOfBirth = '';
+
+    vm.dateOfBirthPicker = {
+        opened: false
+    };
+
+    vm.openDatePicker = function($event) {
+        vm.dateOfBirthPicker.opened = true;
+    };
+
+    vm.dateOfBirthFormat = 'dd.MM.yyyy';
+
     vm.genders = [
-        {value: 1, text: 'Male'},
-        {value: 2, text: 'Female'}
+        {'gender': 'Male'},
+        {'gender': 'Female'}
     ];
 
-    vm.showStatus = function() {
-        var selected = $filter('filter')(vm.genders, {value: vm.userGender});
-        return (vm.userGender && selected.length) ? selected[0].text : 'Not set';
-    };
+    vm.selectedGender = 'Male';
 
-
-    vm.changeEmail = function()
+    if(infoToChange == 'Name')
     {
+        vm.userProfileNameVisibility = true;
+        vm.userProfileEmailVisibility = false;
+        vm.userProfileDesignationVisibility = false;
+        vm.userProfileGenderVisibility = false;
+        vm.userProfileDateOfBirthVisibility = false;
+        vm.userProfileNumberVisibility = false;
+        vm.userProfileAddressVisibility = false;
 
-    };
-
-    vm.changePassword = function()
+        vm.nameRequiredFlag = true;
+        vm.emailRequiredFlag = false;
+        vm.designationRequiredFlag = false;
+        vm.genderRequiredFlag = false;
+        vm.dateOfBirthRequiredFlag = false;
+        vm.numberRequiredFlag = false;
+        vm.addressRequiredFlag = false;
+    }
+    else if(infoToChange == 'Email')
     {
+        vm.userProfileNameVisibility = false;
+        vm.userProfileEmailVisibility = true;
+        vm.userProfileDesignationVisibility = false;
+        vm.userProfileGenderVisibility = false;
+        vm.userProfileDateOfBirthVisibility = false;
+        vm.userProfileNumberVisibility = false;
+        vm.userProfileAddressVisibility = false;
 
-    };
-
-    vm.addAddress = function()
+        vm.nameRequiredFlag = false;
+        vm.emailRequiredFlag = true;
+        vm.designationRequiredFlag = false;
+        vm.genderRequiredFlag = false;
+        vm.dateOfBirthRequiredFlag = false;
+        vm.numberRequiredFlag = false;
+        vm.addressRequiredFlag = false;
+    }
+    else if(infoToChange == 'Designation')
     {
+        vm.userProfileNameVisibility = false;
+        vm.userProfileEmailVisibility = false;
+        vm.userProfileDesignationVisibility = true;
+        vm.userProfileGenderVisibility = false;
+        vm.userProfileDateOfBirthVisibility = false;
+        vm.userProfileNumberVisibility = false;
+        vm.userProfileAddressVisibility = false;
 
-    };
-
-    vm.addContactNumber = function()
+        vm.nameRequiredFlag = false;
+        vm.emailRequiredFlag = false;
+        vm.designationRequiredFlag = true;
+        vm.genderRequiredFlag = false;
+        vm.dateOfBirthRequiredFlag = false;
+        vm.numberRequiredFlag = false;
+        vm.addressRequiredFlag = false;
+    }
+    else if(infoToChange == 'Gender')
     {
+        vm.userProfileNameVisibility = false;
+        vm.userProfileEmailVisibility = false;
+        vm.userProfileDesignationVisibility = false;
+        vm.userProfileGenderVisibility = true;
+        vm.userProfileDateOfBirthVisibility = false;
+        vm.userProfileNumberVisibility = false;
+        vm.userProfileAddressVisibility = false;
 
-    };
-
-    vm.addDateOfBirth = function()
+        vm.nameRequiredFlag = false;
+        vm.emailRequiredFlag = false;
+        vm.designationRequiredFlag = false;
+        vm.genderRequiredFlag = true;
+        vm.dateOfBirthRequiredFlag = false;
+        vm.numberRequiredFlag = false;
+        vm.addressRequiredFlag = false;
+    }
+    else if(infoToChange == 'Date Of Birth')
     {
+        vm.userProfileNameVisibility = false;
+        vm.userProfileEmailVisibility = false;
+        vm.userProfileDesignationVisibility = false;
+        vm.userProfileGenderVisibility = false;
+        vm.userProfileDateOfBirthVisibility = true;
+        vm.userProfileNumberVisibility = false;
+        vm.userProfileAddressVisibility = false;
 
-    };
-
-    vm.addGender = function()
+        vm.nameRequiredFlag = false;
+        vm.emailRequiredFlag = false;
+        vm.designationRequiredFlag = false;
+        vm.genderRequiredFlag = false;
+        vm.dateOfBirthRequiredFlag = true;
+        vm.numberRequiredFlag = false;
+        vm.addressRequiredFlag = false;
+    }
+    else if(infoToChange == 'Number')
     {
+        vm.userProfileNameVisibility = false;
+        vm.userProfileEmailVisibility = false;
+        vm.userProfileDesignationVisibility = false;
+        vm.userProfileGenderVisibility = false;
+        vm.userProfileDateOfBirthVisibility = false;
+        vm.userProfileNumberVisibility = true;
+        vm.userProfileAddressVisibility = false;
 
-    };
+        vm.nameRequiredFlag = false;
+        vm.emailRequiredFlag = false;
+        vm.designationRequiredFlag = false;
+        vm.genderRequiredFlag = false;
+        vm.dateOfBirthRequiredFlag = false;
+        vm.numberRequiredFlag = true;
+        vm.addressRequiredFlag = false;
+    }
+    else if(infoToChange == 'Address')
+    {
+        vm.userProfileNameVisibility = false;
+        vm.userProfileEmailVisibility = false;
+        vm.userProfileDesignationVisibility = false;
+        vm.userProfileGenderVisibility = false;
+        vm.userProfileDateOfBirthVisibility = false;
+        vm.userProfileNumberVisibility = false;
+        vm.userProfileAddressVisibility = true;
 
-    vm.cancel = function (email) {
+        vm.nameRequiredFlag = false;
+        vm.emailRequiredFlag = false;
+        vm.designationRequiredFlag = false;
+        vm.genderRequiredFlag = false;
+        vm.dateOfBirthRequiredFlag = false;
+        vm.numberRequiredFlag = false;
+        vm.addressRequiredFlag = true;
+    }
+    else if(infoToChange == 'Password')
+    {
+        vm.currentPasswordVisibility = true;
+        vm.newPasswordVisibility = true;
+        vm.userProfileNameVisibility = false;
+        vm.userProfileEmailVisibility = false;
+        vm.userProfileDesignationVisibility = false;
+        vm.userProfileGenderVisibility = false;
+        vm.userProfileDateOfBirthVisibility = false;
+        vm.userProfileNumberVisibility = false;
+        vm.userProfileAddressVisibility = false;
 
-        console.log("email : " + email);
+        vm.currentPasswordRequiredFlag = true;
+        vm.newPasswordRequiredFlag = true;
+        vm.nameRequiredFlag = false;
+        vm.emailRequiredFlag = false;
+        vm.designationRequiredFlag = false;
+        vm.genderRequiredFlag = false;
+        vm.dateOfBirthRequiredFlag = false;
+        vm.numberRequiredFlag = false;
+        vm.addressRequiredFlag = false;
+    }
 
+
+
+//    vm.modalTitle = 'User Profile';
+//    vm.userImageUrl = 'images/Original_Size/user.png';
+//    vm.userName = userInfo.name;
+//    vm.userEmail = userInfo.email;
+//    vm.userGender = userInfo.gender;
+//    vm.userDesignation = userInfo.designation;
+//    vm.userDateOfBirth = userInfo.dateOfBirth;
+//    vm.userContactNumber = userInfo.contactNumber;
+//    vm.userAddress = userInfo.address;
+
+    vm.updateUserProfileInfo = function()
+    {
         $uibModalInstance.close();
+    };
+
+    vm.cancel = function () {
+        $uibModalInstance.dismiss();
     };
 
 }]);
