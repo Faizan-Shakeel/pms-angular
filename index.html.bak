@@ -7,7 +7,7 @@
     <title>PMS</title>
 
     <!-- ************** LOGIN PAGE ASSETS ************* -->
-        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
+            <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
         <!--<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">-->
         <!--<link rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css">-->
 		<!--<link rel="stylesheet" href="assets/css/form-elements.css">-->
@@ -30,25 +30,18 @@
     
     <!--Third Party Styles-->
 
+    <!--<link href='https://fonts.googleapis.com/css?family=Neucha&subset=latin,cyrillic' rel='stylesheet' type='text/css'>-->
+
     <link href="css/Third-Party-CSS/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="font-awesome-4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="font-awesome-4.0.3/css/font-awesome.min.css">
+    <link href="css/Third-Party-CSS/bootstrap-tour.min.css" rel="stylesheet">
+    <link href="css/Third-Party-CSS/popbox.css" rel="stylesheet">
     <!--<link rel="stylesheet" href="bower_components/angular-bootstrap-simple-chat/src/css/style.css">-->
     <!--<link rel="stylesheet" href="bower_components/angular-bootstrap-simple-chat/src/css/themes.css">-->
 
     <!--Third Party Styles-->
 
-    <!--Respond JS-->
-
-    <!--<script type="text/javascript" src="js/Third-Party-JS/respond.min.js"></script>-->
-
-    <!--Respond JS-->
-
-    <!--Html5Shiv-->
-
-    <!--Html5Shiv-->
-
     <!--Custom Styles-->
-
     <link href="css/container.css" rel="stylesheet">
     <link href="css/navbar-top.css" rel="stylesheet">
     <link href="css/navbar2.css" rel="stylesheet">
@@ -57,18 +50,7 @@
     <link href="css/custom-icon.css" rel="stylesheet">
     <link href="css/tabs_and_panels.css" rel="stylesheet">
     <link href="css/shadow.css" rel="stylesheet">
-    <link href="css/popover.css" rel="stylesheet">
-
     <!--Custom Styles-->
-
-    <!--To Be Deleted-->
-
-    <!--<link href="css/Third-Party-CSS/popbox.css" rel="stylesheet">-->
-    <!--<link href="css/Third-Party-CSS/nsPopover.css" rel="stylesheet">-->
-    <!--<link rel="stylesheet" href="bower_components/angular-bootstrap-simple-chat/src/css/style.css">-->
-    <!--<link rel="stylesheet" href="bower_components/angular-bootstrap-simple-chat/src/css/themes.css">-->
-
-    <!--To Be Deleted-->
 
 </head>
 
@@ -82,33 +64,27 @@
 
 <!------------------------------------------------------------- MAIN CONTAINER (Write No HTML Outside) --------------------------------------------------------------------END-->
 
-<!--To Be Deleted-->
-
-<!--<script src="js/Third-Party-JS/jquery-1.11.3.min.js"></script>-->
-<!--<script src="js/Third-Party-JS/bootstrap-tour.min.js"></script>-->
-<!--<script src="js/Third-Party-JS/respond.js"></script>-->
-<!--<script src="js/Third-Party-JS/jquery.validate.min.js"></script>-->
-<!--<script src="bower_components/lodash/dist/lodash.min.js"></script>-->
-<!--<script src="bower_components/angular-bootstrap-simple-chat/src/scripts/index.js"></script>-->
-
-<!--To Be Deleted-->
-
 <!--Third Party-->
 
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<!--<script src="js/Third-Party-JS/jquery-1.11.3.min.js"></script>-->
 <script src="js/Third-Party-JS/bootstrap.min.js"></script>
-<script src="js/Third-Party-JS/jquery.slimscroll.min.js"></script>
-<!--<script type="text/javascript" src="js/Third-Party-JS/angular.min.js"></script>-->
-<script type="text/javascript" src="js/Third-Party-JS/angular.js"></script>
-<script type="text/javascript" src="js/Third-Party-JS/angular-animate.min.js"></script>
+<!--[if lt IE 9]><!--<script src="js/Third-Party-JS/html5shiv.js">--><![endif]-->
+<!--<script src="js/Third-Party-JS/bootstrap-tour.min.js"></script>-->
+<!--<script src="js/Third-Party-JS/respond.js"></script>-->
+<script src="js/Third-Party-JS/jquery.slimscroll.js"></script>
+<script src="js/Third-Party-JS/jquery.validate.min.js"></script>
+
+<script src="bower_components/angular/angular.js"></script>
+<!--<script src="js/Third-Party-JS/jquery.validate.min.js"></script>-->
+<!-- <script type="text/javascript" src="js/Third-Party-JS/angular.min.js"></script> -->
 <script type="text/javascript" src="i18n/angular-locale_de-de.js"></script>
 <script type="text/javascript" src="js/Third-Party-JS/ui-bootstrap-tpls-0.14.3.min.js"></script>
 <script type="text/javascript" src="bower_components/nsPopover/src/nsPopover.js"></script>
+<!--<script type="text/javascript" src="bower_components/angular-animate/angular-animate.min.js"></script>-->
 <script src="bower_components/angular-input-masks/angular-input-masks-standalone.min.js"></script>
 <script src="bower_components/angular-messages/angular-messages.min.js"></script>
 <script src="bower_components/angular-bootstrap-multiselect/dist/angular-bootstrap-multiselect.min.js"></script>
-<script src="http://rubaxa.github.io/Sortable/Sortable.js"></script>
-<script src="http://rubaxa.github.io/Sortable/ng-sortable.js"></script>
 <script src="bower_components/angular-route/angular-route.js"></script>
 <script src="bower_components/ngstorage/ngStorage.js"></script>
 <script src="bower_components/ng-file-upload/ng-file-upload.js"></script>
@@ -116,12 +92,12 @@
 <script src="bower_components/lodash/dist/lodash.min.js"></script>
 <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 <script src="bower_components/angular-socket-io/socket.js"></script>
+<script src="/socket.io/socket.io.js"></script>
 <script src="node_modules/socket.io/node_modules/socket.io-client/socket.io.js"></script>
 <script src="bower_components/angular-bootstrap-simple-chat/src/scripts/index.js"></script>
 <script src="bower_components/moment/moment.js"></script>
-
-<!--Third Party-->
-
+<!--<script src="bower_components/lodash/dist/lodash.min.js"></script>-->
+<!--<script src="bower_components/angular-bootstrap-simple-chat/src/scripts/index.js"></script>-->
 
 <!--Directives-->
 
@@ -150,12 +126,12 @@
 <script type="text/javascript" src="js/services/user_service.js"></script>
 <script type="text/javascript" src="js/services/notifications_history_service.js"></script>
 
-<!--Application-->
-
 <script type="text/javascript" src="app.js"></script>
 
-<!--Application-->
 
+<!--        <script src="assets/js/jquery-1.11.1.min.js"></script>
+        <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+        <script src="assets/js/jquery.backstretch.min.js"></script>-->
 
 </body>
 </html>
