@@ -26,6 +26,17 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
             $http.post('/fetch',data).success(deferred.resolve);
             return deferred.promise;
         };
+
+    ////////////////////////////////////////////////////
+    // *********** RETRIEVE DATA VIA ID ************* //
+    ////////////////////////////////////////////////////
+    var retrieveDataViaId = function(id)
+    {
+        var query = {id: id}
+        var deferred = $q.defer();
+        $http.post('/retrieveDataViaId', query).success(deferred.resolve);
+        return deferred.promise;
+    }    
         
     /////////////////////////////////////////   
     // ******** CREATE NEW ENRTY ********* //
@@ -148,6 +159,22 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
         });
     };
  
+
+    /////////////////////////////////////////////////////////
+    // *********** UPDATE USER NOTIFICATIONS ************* //
+    /////////////////////////////////////////////////////////
+    var updateUserNotifications = function(id, notificationData)
+    {
+        var data = {id: id, notificationData: notificationData};
+        $http.post('/updateUserNotifications', data).success(function(response)
+        {
+            console.log(response);
+        })
+                .error(function(err)
+        {
+            console.log(err);
+        });
+    };
     
     //////////////////////////////////////////////////
     // ******  FUNCTION TO RETRIEVE CHAT DATA ***** //
@@ -167,9 +194,9 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
     var inviteUser = function(userParameters)
     {
         var userData = {userParameters: userParameters};
-            userData.userParameters.senderEmail = 'sender email address';
-            userData.userParameters.senderPassword = 'sender email password';
-            userData.userParameters.service = 'email service (e.g. Yahoo)';
+            //userData.userParameters.senderEmail = 'sender email address';
+            //userData.userParameters.senderPassword = 'sender email password';
+            userData.userParameters.service = 'gmail';
             userData.userParameters.subject = 'Invitation to Join PMS';
             userData.userParameters.content = 'You have been invited to join PMS by ' + $rootScope.currentUser.users.name + '. Your temporary password is ' + userParameters.password;
         console.log(userData);
@@ -185,6 +212,7 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
     
     
     return { retrieveData: retrieveData,
+             retrieveDataViaId: retrieveDataViaId,
              createNewEntry: createNewEntry,
              deleteData: deleteData,
              deleteFile: deleteFile,
@@ -192,6 +220,7 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
              updateData: updateData,
              updateUser: updateUser,
              updateChatFlag: updateChatFlag,
+             updateUserNotifications: updateUserNotifications,
              retrieveChat: retrieveChat,
              inviteUser: inviteUser
             };

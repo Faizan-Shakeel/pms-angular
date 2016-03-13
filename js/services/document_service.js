@@ -5,7 +5,7 @@
 
 var app = angular.module('documentServiceModule', ['ngFileUpload']);
 
-app.service('DocumentService',['NotificationsAndHistoryService' ,'mongoCrudService', 'Upload', function(NotificationsAndHistoryService, mongoCrudService, Upload)
+app.service('DocumentService',['NotificationsAndHistoryService' ,'mongoCrudService', '$localStorage', 'Upload', function(NotificationsAndHistoryService, mongoCrudService, $localStorage, Upload)
 {
     var accordionInfo;
     var documentPanels = [];
@@ -138,9 +138,13 @@ app.service('DocumentService',['NotificationsAndHistoryService' ,'mongoCrudServi
     var newDocumentID = function()
     {
         "use strict";
-
+        if ($localStorage.documentsIdArray)
+        {
+            documentsIdArray = $localStorage.documentsIdArray.slice();
+        }
         var documentID = documentsIdArray.length + 'd';
         documentsIdArray.push(documentID);
+        $localStorage.documentsIdArray = documentsIdArray.slice();
 
         return documentID;
     };
@@ -161,10 +165,7 @@ app.service('DocumentService',['NotificationsAndHistoryService' ,'mongoCrudServi
                 if(valueFromGlobalList.id == valueFromSpecificProject.id)
                 {
                     console.log('this focument called');
-                    console.log(valueFromGlobalList.id);
                     documentPanels = removeEntity(documentPanels, 'id', 'project', valueFromGlobalList.id, valueFromGlobalList.project);
-                    console.log(valueFromGlobalList.id);
-                    console.log(valueFromGlobalList.name);
                     mongoCrudService.deleteData(valueFromGlobalList.id);
                     mongoCrudService.deleteFile(valueFromGlobalList.url);
                 }

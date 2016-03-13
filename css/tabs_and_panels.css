@@ -5,6 +5,11 @@
     /*width: 50px;*/
 }
 
+#ul-without-bullet
+{
+    list-style-type: none;
+}
+
 #outer-panel-tasks-in-new-project-modal, #outer-panel-documents-in-new-project-modal, #outer-panel-users-in-new-project-modal
 {
     position: relative;
@@ -23,6 +28,47 @@
     line-height: 70px;
 }
 
+.pending-approval
+{
+    background: -moz-linear-gradient(top,  rgba(238,238,238,1) 0%, rgba(204,204,204,0) 100%);
+    background: -webkit-linear-gradient(top,  rgba(238,238,238,1) 0%,rgba(204,204,204,0) 100%);
+    background: linear-gradient(to bottom,  rgba(238,238,238,1) 0%,rgba(204,204,204,0) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#00cccccc',GradientType=0 );
+
+}
+
+.approved
+{
+    background: -moz-linear-gradient(top,  rgba(115,136,10,1) 0%, rgba(115,136,10,0) 100%);
+    background: -webkit-linear-gradient(top,  rgba(115,136,10,1) 0%,rgba(115,136,10,0) 100%);
+    background: linear-gradient(to bottom,  rgba(115,136,10,1) 0%,rgba(115,136,10,0) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#73880a', endColorstr='#0073880a',GradientType=0 );
+}
+
+.in-progress
+{
+    background: -moz-linear-gradient(top,  rgba(30,87,153,1) 0%, rgba(41,137,216,0.5) 50%, rgba(32,124,202,0.49) 51%, rgba(125,185,232,0) 100%);
+    background: -webkit-linear-gradient(top,  rgba(30,87,153,1) 0%,rgba(41,137,216,0.5) 50%,rgba(32,124,202,0.49) 51%,rgba(125,185,232,0) 100%);
+    background: linear-gradient(to bottom,  rgba(30,87,153,1) 0%,rgba(41,137,216,0.5) 50%,rgba(32,124,202,0.49) 51%,rgba(125,185,232,0) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1e5799', endColorstr='#007db9e8',GradientType=0 );
+}
+
+.completed
+{
+    background: -moz-linear-gradient(top,  rgba(169,3,41,1) 0%, rgba(143,2,34,0.56) 44%, rgba(109,0,25,0) 100%);
+    background: -webkit-linear-gradient(top,  rgba(169,3,41,1) 0%,rgba(143,2,34,0.56) 44%,rgba(109,0,25,0) 100%);
+    background: linear-gradient(to bottom,  rgba(169,3,41,1) 0%,rgba(143,2,34,0.56) 44%,rgba(109,0,25,0) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a90329', endColorstr='#006d0019',GradientType=0 );
+}
+
+.closed
+{
+    background: -moz-linear-gradient(top,  rgba(0,0,0,0.65) 0%, rgba(0,0,0,0) 100%);
+    background: -webkit-linear-gradient(top,  rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%);
+    background: linear-gradient(to bottom,  rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#00000000',GradientType=0 );
+}
+
 #inner-panel-tasks-in-new-project-modal, #inner-panel-documents-in-new-project-modal, #inner-panel-users-in-new-project-modal
 {
     position: absolute;
@@ -33,6 +79,15 @@
     height: 101px;
     margin-right: 5px;
     line-height: 70px;
+}
+
+#inner-panel-documents-in-new-project-modal, #inner-panel-users-in-new-project-modal
+{
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#eeeeee+0,cccccc+100&1+0,0+100;Gren+3D */
+    background: -moz-linear-gradient(top,  rgba(238,238,238,1) 0%, rgba(204,204,204,0) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  rgba(238,238,238,1) 0%,rgba(204,204,204,0) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  rgba(238,238,238,1) 0%,rgba(204,204,204,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#00cccccc',GradientType=0 ); /* IE6-9 */
 }
 
 #btn-grp-panel
@@ -61,14 +116,28 @@
     margin-left: 35px;
 }
 
-#task-panel-icon-fix-in-new-project-modal, #document-panel-icon-fix-in-new-project-modal, #user-panel-icon-fix-in-new-project-modal
+#project-panel-icon-fix
 {
-    margin-left: -10px;
+    margin-left: -11px;
+    color: #0099ff;
 }
 
-#panel-icon-fix
+#task-panel-icon-fix
 {
     margin-left: -10px;
+    color: #006600;
+}
+
+#document-panel-icon-fix
+{
+    margin-left: -10px;
+    color: #cc6600;
+}
+
+#user-panel-icon-fix
+{
+    margin-left: -6px;
+    color: #660066;
 }
 
 .modal-new-project-form, .modal-new-task-form, .modal-new-document-form, .modal-new-user-form
@@ -86,26 +155,16 @@
 
 .modals-style .modal-dialog
 {
-    width: 700px;
+    width: 600px;
 }
 
-
-/*#test-tabs-height*/
-/*{*/
-    /*height: 400px;*/
-    /*overflow: hidden;*/
-/*}*/
 
 .modals-style .projectModalTextAreaForDescription
 {
-    height: 100px;
+    /*height: 100px;*/
 }
 
-/*#testing*/
-/*{*/
-    /*padding-top: 10px;*/
-    /*margin-top: 10px;*/
-/*}*/
+
 
 .test-position
 {
@@ -162,40 +221,27 @@
     color: #428bca;
 }
 
+.info-divider
+{
+    /*margin-top: 0;*/
+    /*margin-bottom: 0;*/
 
-/*.btn-circle {*/
-/*position: absolute;*/
-/*right: 30px;*/
-/*top: -40px;*/
+    width: 250px;
 
-/*width: 40px;*/
-/*height: 40px;*/
-/*text-align: center;*/
-/*padding: 6px 0;*/
-/*font-size: 12px;*/
-/*line-height: 1.42;*/
-/*border-radius: 15px;*/
-/*}*/
+}
 
 
-/*.btn-circle {*/
-/*position: absolute;*/
-/*top: -49px;*/
-/*right: 20px;*/
+@media only screen and (min-width: 768px) and (max-width: 991px)
+{
 
-/*width: 30px;*/
-/*height: 30px;*/
-/*text-align: center;*/
-/*padding: 6px 0;*/
-/*font-size: 12px;*/
-/*line-height: 1.428571429;*/
-/*border-radius: 15px;*/
-/*}*/
-/*.btn-circle.btn-lg {*/
-/*width: 40px;*/
-/*height: 40px;*/
-/*padding: 8px 9px;*/
-/*font-size: 18px;*/
-/*line-height: 1.33;*/
-/*border-radius: 25px;*/
-/*}*/
+    .modals-style .modal-dialog
+    {
+        width: 500px;
+    }
+
+    .modal-new-project-form .modal-new-task-form .modal-new-document-form, .modal-new-user-form
+    {
+        height: 250px;
+    }
+}
+

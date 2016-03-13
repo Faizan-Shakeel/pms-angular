@@ -66,10 +66,6 @@
     background-color: #f5f5f5;
 }
 
-/*#new-project-modal-form .modal-dialog*/
-/*{*/
-    /*width: 800px;*/
-/*}*/
 
 #new-project-modal-form .modal-dialog, #new-task-modal-form .modal-dialog, #new-file-modal-form .modal-dialog, #new-user-modal-form .modal-dialog,
 #info-project-modal-form .modal-dialog, #info-task-modal-form .modal-dialog, #info-file-modal-form .modal-dialog, #info-user-modal-form .modal-dialog,
@@ -87,14 +83,9 @@
 
 #info-project-modal-body, #info-task-modal-body, #info-file-modal-body, #info-user-modal-body
 {
-    /*outline: solid;*/
     overflow: auto;
 }
 
-/*#project*/
-/*{*/
-    /*overflow: auto;*/
-/*}*/
 
 .custom-notification-panel-footer-style, .custom-history-panel-footer-style
 {
@@ -114,14 +105,6 @@
     font-style: italic;
 }
 
-/*.fa-circle-o*/
-/*{*/
-    /*position: absolute;*/
-    /*top: 18px;*/
-    /*left: 10px;*/
-    /*color: #428bca;*/
-/*}*/
-
 #onlineUserIcon
 {
     position: absolute;
@@ -137,19 +120,12 @@
     /*padding-top: 5px;*/
 }
 
-#acc-content, #acc-content2, #acc-content3
-{
-    /*height: 400px;*/
-    /*overflow: hidden;*/
-}
-
 
 #acc-content
 {
     height: 400px;
 }
 
-<<<<<<< HEAD
 .chat-window
 {
     position: absolute;
@@ -158,13 +134,7 @@
     bottom: 0;
     right: 15px;
 }
-=======
-/*#test-zindex*/
-/*{*/
-    /*position: relative;*/
-    /*z-index: 10;*/
-/*}*/
->>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
+
 
 .unreadMsgTrue
 {
@@ -177,26 +147,7 @@
     padding: 5px 5px 5px 5px;
 }
 
-<<<<<<< HEAD
 .unreadMsgFalse
 {
-=======
-/*.chat-box*/
-/*{*/
-    /*position: absolute;*/
-    /*width: 300px;*/
-    /*height: 400px;*/
-    /*bottom: 0;*/
-    /*right: 55px;*/
-/*}*/
 
-
-.chat-window
-{
-    position: absolute;
-    width: 300px;
-    height: 400px;
-    bottom: 0;
-    right: 15px;
->>>>>>> 49dbea2dec5b2f6b6ee8a4f2c13584307b6b9d52
 }

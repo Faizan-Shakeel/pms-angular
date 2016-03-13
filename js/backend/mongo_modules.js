@@ -40,6 +40,52 @@ var fs = require('fs');
         });
     };
 
+//////////////////////////////////////////////////////////////
+// ************** RETRIEVE DATA VIA ID ******************** //
+//////////////////////////////////////////////////////////////
+
+var retrieveDataViaId = function(req, callback)
+{
+    var query;
+
+    var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
+    db.once('open', function()
+    {
+        var collection = db.collection('pmscollections');
+
+        if (req.body.id.indexOf('p') !== -1)
+        {
+            query = {'projects.id': req.body.id};
+        }
+        else if(req.body.id.indexOf('t') !== -1)
+        {
+            query = {'tasks.id': req.body.id};  
+        }
+        else if(req.body.id.indexOf('d') !== -1)
+        {
+            query = {'documents.id': req.body.id};  
+        }
+        else if(req.body.id.indexOf('u') !== -1)
+        {
+            query = {'users.id': req.body.id};  
+        }
+
+        collection.findOne(query, function(err, data)
+        {
+            if (!err)
+            {
+                db.close();
+                callback(data);
+            }
+            else
+            {
+                db.close();
+                callback(err);
+            }
+        });
+    });
+};
+
 
 /////////////////////////////////////////////////////////////
 // *********** CREATE NEW ENTRY IN DATABASE ************** //
@@ -98,13 +144,11 @@ var updateData = function(req, callback)
             var createSchema = schema.schema(schemaKey);
             var PmsCollection = db.model('PmsCollection',createSchema);
             query[idTag] = req.body.id;
-            console.log(req.body.data);
             //var options = {upsert: false};
             PmsCollection.findOneAndUpdate(query, req.body.data, function(err, doc)
             {
                 if (!err)
                 {
-                    console.log(doc);
                     db.close();
                     callback('Data Updated Successfully');
                 }
@@ -175,6 +219,48 @@ var updateUser = function(req, callback)
     });
 };
 
+
+/////////////////////////////////////////////////////
+// ********* UPDATE USER NOTIFICATIONS *********** //
+/////////////////////////////////////////////////////
+
+var updateUserNotifications = function(req, callback)
+{
+    var query = {'users.id': req.body.id};
+    var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
+    db.once('open', function()
+    {
+//        var collection = db.collection('pmscollections');
+        
+        var createSchema = schema.schema('users');
+        var PmsCollection = db.model('PmsCollection',createSchema);
+        PmsCollection.findOne(query, function(err, doc)
+        {
+            if (!err)
+            {
+                doc.users.notifications.push(req.body.notificationData);
+                doc.save(function(error, data)
+                {
+                    if (!error)
+                    {
+                        db.close();
+                        callback('notification updated');
+                    }
+                    else
+                    {
+                        db.close();
+                        callback(error);
+                    }
+                });
+            }
+            else
+            {
+                db.close();
+                callback(err);
+            }
+        });
+    });
+};
 
 ////////////////////////////////////////////////////
 // ********** UPDATE CHAT MESSAGE FLAG ********** //
@@ -498,12 +584,14 @@ var loginUser = function(username, password, callback)
 };
 
 exports.getData = getData;
+exports.retrieveDataViaId = retrieveDataViaId;
 exports.createNewData = createNewData;
 exports.updateData = updateData;
 exports.deleteData = deleteData;
 exports.registerUser = registerUser;
 exports.loginUser = loginUser;
 exports.updateUser = updateUser;
+exports.updateUserNotifications = updateUserNotifications;
 exports.retrieveChat = retrieveChat;
 exports.updateChatFlag = updateChatFlag;
 exports.uploadFiles = uploadFiles;

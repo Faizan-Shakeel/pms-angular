@@ -1,0 +1,48 @@
+#project-popover, #task-popover, #file-popover, #user-popover
+{
+    /*text-align: center;*/
+}
+
+#test1, #test2, #test3, #test4
+{
+    margin-right: -15px;
+    margin-top: 3px;
+}
+/*#test2*/
+/*{*/
+    /*margin-right: -15px;*/
+/*}*/
+/*#test3*/
+/*{*/
+    /*margin-right: -15px;*/
+/*}*/
+/*#test4*/
+/*{*/
+    /*margin-right: -15px;*/
+/*}*/
+
+/*#test1*/
+/*{*/
+    /*margin-right: 20px;*/
+/*}*/
+
+/*#test2*/
+/*{*/
+    /*margin-right: 46px;*/
+/*}*/
+
+/*#test3*/
+/*{*/
+    /*margin-right: 50px;*/
+/*}*/
+
+/*#test4*/
+/*{*/
+    /*margin-right: 47px;*/
+/*}*/
+
+.test-img-vertical-align
+{
+    margin-top: 8px;
+}
+

@@ -251,7 +251,7 @@
                                 <div id="document-panel-content-in-new-project-modal">
                                     <p>
                                     <h4>{{documentPanel.name}} <span class="col-lg-offset-8">
-                                        <button type="button" ng-click="MainViewVM.downloadFile(documentPanel)">View</button>
+                                        <a href="#/mainview" style="color: blue" ng-click="MainViewVM.downloadFile(documentPanel)">{{documentPanel.fileName}}</a>
                                         ID: {{documentPanel.id}} </span> </h4>
                                     </p>
                                     <p>

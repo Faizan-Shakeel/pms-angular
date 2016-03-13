@@ -1,0 +1,48 @@
+#popover
+{
+    margin-top: 10px;
+    width: 250px;
+
+}
+
+#user-profile-pic
+{
+    width: 100px;
+    height: 100px;
+}
+
+#popup-bottom-half
+{
+    /*background-color: #eeeeee;*/
+    padding-top: 0;
+    /*margin-top: 0;*/
+}
+
+#user-name
+{
+
+}
+
+#user-designation
+{
+
+}
+
+#user-profile
+{
+    margin-bottom: 10px;
+}
+
+#user-info-divider
+{
+    padding-bottom: 0;
+}
+
+#global-settings
+{
+
+}
+
+#user-logout-button
+{
+}

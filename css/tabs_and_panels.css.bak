@@ -1,0 +1,201 @@
+#outer-panel
+{
+    position: relative;
+    margin-top: 10px;
+    /*width: 50px;*/
+}
+
+#outer-panel-tasks-in-new-project-modal, #outer-panel-documents-in-new-project-modal, #outer-panel-users-in-new-project-modal
+{
+    position: relative;
+    margin-top: 10px;
+}
+
+#inner-panel
+{
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    bottom: -1px;
+    width: 40px;
+    height: 101px;
+    margin-right: 5px;
+    line-height: 70px;
+}
+
+#inner-panel-tasks-in-new-project-modal, #inner-panel-documents-in-new-project-modal, #inner-panel-users-in-new-project-modal
+{
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    bottom: -1px;
+    width: 40px;
+    height: 101px;
+    margin-right: 5px;
+    line-height: 70px;
+}
+
+#btn-grp-panel
+{
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    bottom: -1px;
+}
+
+#tasks-btn-grp-panel-in-new-project-modal, #documents-btn-grp-panel-in-new-project-modal, #users-btn-grp-panel-in-new-project-modal
+{
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    bottom: -1px;
+}
+
+#panel-content
+{
+    margin-left: 35px;
+}
+
+#task-panel-content-in-new-project-modal, #document-panel-content-in-new-project-modal, #user-panel-content-in-new-project-modal
+{
+    margin-left: 35px;
+}
+
+#task-panel-icon-fix-in-new-project-modal, #document-panel-icon-fix-in-new-project-modal, #user-panel-icon-fix-in-new-project-modal
+{
+    margin-left: -10px;
+}
+
+#panel-icon-fix
+{
+    margin-left: -10px;
+}
+
+.modal-new-project-form, .modal-new-task-form, .modal-new-document-form, .modal-new-user-form
+{
+    height: 300px;
+}
+
+.modal-new-project-tab-body, .modal-new-task-tab-body, .modal-new-document-tab-body, .modal-new-user-tab-body, .modal-existing-task-body, .modal-existing-document-body, .modal-existing-user-body
+{
+    /*position: relative;*/
+    height: 300px;
+    padding-top: 10px;
+    /*overflow-y: hidden;*/
+}
+
+.modals-style .modal-dialog
+{
+    width: 700px;
+}
+
+
+/*#test-tabs-height*/
+/*{*/
+    /*height: 400px;*/
+    /*overflow: hidden;*/
+/*}*/
+
+.modals-style .projectModalTextAreaForDescription
+{
+    height: 100px;
+}
+
+/*#testing*/
+/*{*/
+    /*padding-top: 10px;*/
+    /*margin-top: 10px;*/
+/*}*/
+
+.test-position
+{
+    position: absolute;
+    top: -47px;
+    right: 18px;
+}
+
+.btn-circle {
+
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    padding: 6px 0;
+    font-size: 12px;
+    line-height: 1.428571429;
+    border-radius: 15px;
+}
+.btn-circle.btn-lg {
+    width: 40px;
+    height: 40px;
+    padding: 8px 9px;
+    font-size: 18px;
+    line-height: 1.33;
+    border-radius: 25px;
+}
+
+
+.btn-circle-user-tab-project-modal {
+    position: absolute;
+    top: -47px;
+    right: 18px;
+
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    padding: 6px 0;
+    font-size: 12px;
+    line-height: 1.428571429;
+    border-radius: 15px;
+}
+.btn-circle-user-tab-project-modal.btn-lg {
+    width: 40px;
+    height: 40px;
+    padding: 8px 9px;
+    font-size: 18px;
+    line-height: 1.33;
+    border-radius: 25px;
+}
+
+
+.addEntityIconColor
+{
+    color: #428bca;
+}
+
+
+/*.btn-circle {*/
+/*position: absolute;*/
+/*right: 30px;*/
+/*top: -40px;*/
+
+/*width: 40px;*/
+/*height: 40px;*/
+/*text-align: center;*/
+/*padding: 6px 0;*/
+/*font-size: 12px;*/
+/*line-height: 1.42;*/
+/*border-radius: 15px;*/
+/*}*/
+
+
+/*.btn-circle {*/
+/*position: absolute;*/
+/*top: -49px;*/
+/*right: 20px;*/
+
+/*width: 30px;*/
+/*height: 30px;*/
+/*text-align: center;*/
+/*padding: 6px 0;*/
+/*font-size: 12px;*/
+/*line-height: 1.428571429;*/
+/*border-radius: 15px;*/
+/*}*/
+/*.btn-circle.btn-lg {*/
+/*width: 40px;*/
+/*height: 40px;*/
+/*padding: 8px 9px;*/
+/*font-size: 18px;*/
+/*line-height: 1.33;*/
+/*border-radius: 25px;*/
+/*}*/

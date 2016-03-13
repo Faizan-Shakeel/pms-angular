@@ -17,8 +17,8 @@
 
                     <form name="validatedForm" class="form-horizontal" ng-submit="validatedForm.$valid && (validatedForm.projectBudget.$dirty || validatedForm.projectTargetEndDate.$dirty || validatedForm.projectStatus.$dirty || validatedForm.projectDescription.$dirty || ModalVM.updateFlag) && ModalVM.createOrUpdateProject(ModalVM)" novalidate>
                         <div class="form-group" ng-class="{ 'has-error': validatedForm.projectName.$touched && validatedForm.projectName.$invalid }">
-                            <label for="projectName" class="col-lg-2 col-md-2 col-sm-2 control-label">Name</label>
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">
+                            <label for="projectName" class="col-lg-3 col-md-3 col-sm-3 control-label">Name</label>
+                            <div class="col-lg-8 col-md-8 col-sm-8">
                                 <input type="text" class="form-control" id="projectName" name="projectName" placeholder="Name" ng-model="ModalVM.projectName" required="" ng-disabled="ModalVM.projectNameEditable"/>
 
                                 <div class="help-block" ng-messages="validatedForm.projectName.$error" ng-show="validatedForm.projectName.$touched">
@@ -28,29 +28,29 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="projectBudget" class="col-lg-2 col-md-2 col-sm-2 control-label">Budget</label>
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">
+                            <label for="projectBudget" class="col-lg-3 col-md-3 col-sm-3 control-label">Budget</label>
+                            <div class="col-lg-8 col-md-8 col-sm-8">
                                 <input id="projectBudget" class="form-control" type="text" name="projectBudget" ng-model="ModalVM.projectBudget" ui-money-mask placeholder="Budget" />
                             </div>
                         </div>
 
                         <div class="form-group">
 
-                            <label for="projectTargetEndDate" class="col-lg-2 col-md-2 col-sm-2 control-label">Target Date</label>
+                            <label for="projectTargetEndDate" class="col-lg-3 col-md-3 col-sm-3 control-label">Target Date</label>
 
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">
+                            <div class="col-lg-8 col-md-8 col-sm-8">
                                 <p class="input-group">
                                     <input type="text" id="projectTargetEndDate" class="form-control" name="projectTargetEndDate" uib-datepicker-popup="{{ModalVM.format}}" is-open="ModalVM.status.opened" ng-model="ModalVM.projectTargetEndDate" close-text="Close" placeholder="Target End Date"/>
                                     <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default" ng-click="ModalVM.openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                        <button type="button" class="btn btn-info" ng-click="ModalVM.openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                                     </span>
                                 </p>
                             </div>
                         </div>
 
                         <div class="form-group" ng-show="ModalVM.statusVisibility">
-                            <label for="projectStatus" class="col-lg-2 col-md-2 col-sm-2 control-label">Status</label>
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-lg-offset-1">
+                            <label for="projectStatus" class="col-lg-3 col-md-3 col-sm-3 control-label">Status</label>
+                            <div class="col-lg-8 col-md-8 col-sm-8">
                                 <select id="projectStatus" class="form-control" name="projectStatus" ng-model="ModalVM.selectedStatus">
                                     <option ng-repeat="projectStatus in ModalVM.statuses">{{projectStatus.status}}</option>
                                 </select>
@@ -58,8 +58,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="projectDescription" class="col-lg-2 col-md-2 col-sm-2 control-label">Description</label>
-                            <div class="col-lg-8 col-md-8 col-sm-8 col-lg-offset-1">
+                            <label for="projectDescription" class="col-lg-3 col-md-3 col-sm-3 control-label">Description</label>
+                            <div class="col-lg-8 col-md-8 col-sm-8">
                                 <textarea class="form-control projectModalTextAreaForDescription" id="projectDescription" name="projectDescription" ng-model="ModalVM.projectDescription" placeholder="Project Description"></textarea>
                             </div>
                         </div>
@@ -93,9 +93,9 @@
                         <div class="panel panel-default" id="outer-panel-tasks-in-new-project-modal" ng-repeat="taskPanel in ModalVM.taskPanels">
                             <div class="panel-body">
 
-                                <div class="panel panel-default" id="inner-panel-tasks-in-new-project-modal">
+                                <div class="panel panel-default {{taskPanel.statusColor}}" id="inner-panel-tasks-in-new-project-modal">
                                     <div class="panel-body">
-                                        <i class="fa fa-suitcase fa-2x" id="task-panel-icon-fix-in-new-project-modal"></i>
+                                        <i class="fa fa-tasks fa-2x" id="task-panel-icon-fix"></i>
                                     </div>
                                 </div>
 
@@ -111,9 +111,9 @@
 
                                 <div class="btn-group-vertical" id="tasks-btn-grp-panel-in-new-project-modal">
                                     <button class="btn btn-default test-button-border" ng-click="ModalVM.infoTaskModal(taskPanel)"><i class="fa fa-info"></i></button>
-                                    <button class="btn btn-default" ng-click="ModalVM.editTaskModal(taskPanel)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-default test-button-border" ng-click="ModalVM.deleteTask(taskPanel)"><i class="fa fa-trash-o"></i></button>
-                                </div>
+                                <button class="btn btn-default" ng-click="ModalVM.editTaskModal(taskPanel)"><i class="fa fa-edit"></i></button>
+                                <button class="btn btn-danger test-button-border" ng-click="ModalVM.deleteTask(taskPanel)"><i class="fa fa-trash-o"></i></button>
+                            </div>
                             </div>
                         </div>
                     </div>
@@ -144,13 +144,13 @@
 
                                 <div class="panel panel-default" id="inner-panel-documents-in-new-project-modal">
                                     <div class="panel-body">
-                                        <i class="fa fa-suitcase fa-2x" id="document-panel-icon-fix-in-new-project-modal"></i>
+                                        <i class="fa fa-files-o fa-2x" id="document-panel-icon-fix"></i>
                                     </div>
                                 </div>
 
                                 <div id="document-panel-content-in-new-project-modal">
                                     <p>
-                                    <h4>{{documentPanel.name}} <span class="col-lg-offset-8">ID: {{documentPanel.id}}</span> </h4>
+                                        <h4>{{documentPanel.name}} <span class="col-lg-offset-8">ID: {{documentPanel.id}}</span> </h4>
                                     </p>
 
                                     <p>
@@ -159,14 +159,12 @@
                                 </div>
 
                                 <div class="btn-group-vertical" id="documents-btn-grp-panel-in-new-project-modal">
-                                    <button class="btn btn-default test-button-border" ng-click="ModalVM.infoDocumentModal(documentPanel)"><i class="fa fa-info"></i></button>
+                                    <button class="btn btn-info test-button-border" ng-click="ModalVM.infoDocumentModal(documentPanel)"><i class="fa fa-info"></i></button>
                                     <button class="btn btn-default" ng-click="ModalVM.editDocumentModal(documentPanel)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-default test-button-border" ng-click="ModalVM.deleteDocument(documentPanel)"><i class="fa fa-trash-o"></i></button>
+                                    <button class="btn btn-danger test-button-border" ng-click="ModalVM.deleteDocument(documentPanel)"><i class="fa fa-trash-o"></i></button>
                                 </div>
-
                             </div>
                         </div>
-
                     </div>
                 </div>
 
@@ -185,7 +183,7 @@
 
                                 <div class="panel panel-default" id="inner-panel-users-in-new-project-modal">
                                     <div class="panel-body">
-                                        <i class="fa fa-suitcase fa-2x" id="user-panel-icon-fix-in-new-project-modal"></i>
+                                        <i class="fa fa-user fa-2x" id="user-panel-icon-fix"></i>
                                     </div>
                                 </div>
 
@@ -200,9 +198,9 @@
                                 </div>
 
                                 <div class="btn-group-vertical" id="users-btn-grp-panel-in-new-project-modal">
-                                    <button class="btn btn-default test-button-border" ng-click="ModalVM.infoUserModal(userPanel)"><i class="fa fa-info"></i></button>
+                                    <button class="btn btn-info test-button-border" ng-click="ModalVM.infoUserModal(userPanel)"><i class="fa fa-info"></i></button>
                                     <button class="btn btn-default" ng-click="ModalVM.editUserModal(userPanel)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-default test-button-border" ng-click="ModalVM.deleteUser(userPanel)"><i class="fa fa-trash-o"></i></button>
+                                    <button class="btn btn-danger test-button-border" ng-click="ModalVM.deleteUser(userPanel)"><i class="fa fa-trash-o"></i></button>
                                 </div>
 
                             </div>
@@ -217,8 +215,8 @@
     </div>
 
     <div class="modal-footer">
-        <label for="submit-form" class="btn btn-primary" ng-disabled="validatedForm.$invalid">{{ModalVM.modalType}}</label>
-        <button type="button" class="btn btn-warning" ng-click="ModalVM.cancel()">Cancel</button>
+        <label for="submit-form" class="btn btn-success" ng-disabled="validatedForm.$invalid">{{ModalVM.modalType}}</label>
+        <button type="button" class="btn btn-default" ng-click="ModalVM.cancel()">Cancel</button>
     </div>
 
 </div>

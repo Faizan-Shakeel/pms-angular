@@ -45,6 +45,7 @@ app.service('ProjectService', ['NotificationsAndHistoryService', 'mongoCrudServi
                 projectToUpdate.targetEndDate = updated_project.targetEndDate;
                 projectToUpdate.description = updated_project.description;
                 projectToUpdate.status = updated_project.status;
+				projectToUpdate.statusColor = updated_project.statusColor;
                 projectToUpdate.modifiedDate = updated_project.modifiedDate;
                 projectToUpdate.lastModifiedBy = updated_project.lastModifiedBy;
                 projectToUpdate.numberOfTasks = updated_project.numberOfTasks;

@@ -2,9 +2,14 @@
 
 var app = angular.module('mainViewModule', ['ui.bootstrap', 'nsPopover']);
 
-app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService', 'DocumentService', 'UserService', 'NotificationsAndHistoryService', 'mongoCrudService', '$localStorage', '$rootScope', 'chatSocket', 'chatService', function ($scope, ProjectService, TaskService, DocumentService, UserService, NotificationsAndHistoryService, mongoCrudService, $localStorage, $rootScope, chatSocket, chatService)
+app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService', 'DocumentService', 'UserService', 'NotificationsAndHistoryService', 'mongoCrudService', '$localStorage', '$rootScope', 'chatSocket', 'chatService', '$filter', '$timeout', function ($scope, ProjectService, TaskService, DocumentService, UserService, NotificationsAndHistoryService, mongoCrudService, $localStorage, $rootScope, chatSocket, chatService, $filter, $timeout)
 {
     var vm = this;
+    var accInfoObject;
+    var loggedInUserName = $localStorage.currentUser.users.name;
+    var userNameMaxLength = 17;
+    loggedInUserName = loggedInUserName.substring(0, userNameMaxLength);
+
     init();
     //chatService.checkMsgStatus(vm.unreadMsgUserEmail);
 
@@ -12,9 +17,9 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
      ////////////////// ACCORDION /////////////////////////////////////////////////////////////////////
      */////////////////////////////////////////////////////////////////////////////////////////////////
 
-    var accInfoObject;
     vm.onlineUsersCount = 0;
     vm.notificationsCount = {count: 0};
+    vm.loggedInUserName = loggedInUserName;
     vm.globalHistory = NotificationsAndHistoryService.getHistory();
     vm.globalNotifications = NotificationsAndHistoryService.getNotifications();
     vm.notificationsCount = NotificationsAndHistoryService.globalNotificationsCount;
@@ -64,18 +69,18 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
             }
             else
             {
-                vm.globalTabsBootstrapClass = 'col-lg-10 col-md-10 col-sm-10';
+                vm.globalTabsBootstrapClass = 'col-lg-10 col-md-10 col-sm-9';
             }
         }
         else
         {
             if(vm.accordionVisibility)
             {
-                vm.globalTabsBootstrapClass = 'col-lg-10 col-md-10 col-sm-10';
+                vm.globalTabsBootstrapClass = 'col-lg-10 col-md-10 col-sm-9';
             }
             else
             {
-                vm.globalTabsBootstrapClass = 'col-lg-8 col-md-8 col-sm-8';
+                vm.globalTabsBootstrapClass = 'col-lg-8 col-md-8 col-sm-6';
             }
         }
     };
@@ -104,7 +109,7 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
         {
             window.open(file);
         })
-    }
+    };
 
     ////////////////////////////////////
     ////// DOWNLOADING FILE [END] //////
@@ -115,6 +120,7 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
      *//////////////////////////////////////////////////////////////////////////////////////////////////
 
     vm.chatPanelVisibility = false;
+
     var online = 'fa fa-circle-o';
     var offline = '';
     vm.users = [];
@@ -167,18 +173,18 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
             }
             else
             {
-                vm.globalTabsBootstrapClass = 'col-lg-10 col-md-10 col-sm-10';
+                vm.globalTabsBootstrapClass = 'col-lg-10 col-md-10 col-sm-9';
             }
         }
         else
         {
             if(vm.chatPanelVisibility)
             {
-                vm.globalTabsBootstrapClass = 'col-lg-10 col-md-10 col-sm-10';
+                vm.globalTabsBootstrapClass = 'col-lg-10 col-md-10 col-sm-9';
             }
             else
             {
-                vm.globalTabsBootstrapClass = 'col-lg-8 col-md-8 col-sm-8';
+                vm.globalTabsBootstrapClass = 'col-lg-8 col-md-8 col-sm-6';
             }
         }
     };
@@ -255,47 +261,108 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
     };
 
     vm.projectVisibility = true;
-    vm.dropdownItems = ['Projects', 'Tasks', 'Documents', 'Users'];
 
-    vm.selectedItem = vm.dropdownItems[0];
+    vm.dropdownItems = [{name: 'Projects', icon: 'fa fa-bar-chart-o', id: 'dropdown-icon-project'}, {name: 'Tasks', icon: 'fa fa-tasks', id: 'dropdown-icon-task'}, {name: 'Documents', icon: 'fa fa-files-o', id: 'dropdown-icon-document'}, {name: 'Users', icon: 'fa fa-users', id: 'dropdown-icon-user'}];
+
+    vm.selectedItem = vm.dropdownItems[0].name;
+
     vm.globalSearchDropDown = function (item) {
 
-        vm.selectedItem = item;
+        if(vm.searchProjects)
+        {
+            if(vm.searchProjects.name)
+            {
+                vm.projectPanelsFilter = vm.projectPanels;
+                vm.taskPanelsFilter = vm.taskPanels;
+                vm.documentPanelsFilter = vm.documentPanels;
+                vm.userPanelsFilter = vm.userPanels;
 
+                console.log("User Input 1 : " + JSON.stringify(vm.searchProjects));
+
+                vm.inputSearchFilter(vm.searchProjects, 'redirect');
+            }
+        }
+
+        vm.selectedItem = item;
         vm.active = {}; //reset
         vm.active[item] = true;
 
-        switch(item) {
-            case 'Projects':
-                vm.projectVisibility = true;
-                vm.taskVisibility = false;
-                vm.documentVisibility = false;
-                vm.userVisibility = false;
-                break;
-            case 'Tasks':
-                vm.projectVisibility = false;
-                vm.taskVisibility = true;
-                vm.documentVisibility = false;
-                vm.userVisibility = false;
-                break;
-            case 'Documents':
-                vm.projectVisibility = false;
-                vm.taskVisibility = false;
-                vm.documentVisibility = true;
-                vm.userVisibility = false;
-                break;
-            case 'Users':
-                vm.projectVisibility = false;
-                vm.taskVisibility = false;
-                vm.documentVisibility = false;
-                vm.userVisibility = true;
-                break;
+        if(item == "Projects")
+        {
+            vm.projectVisibility = true;
+            vm.taskVisibility = false;
+            vm.documentVisibility = false;
+            vm.userVisibility = false;
         }
-//        vm.searchProjectsVisibility = true;
+        else if(item == "Tasks")
+        {
+            vm.projectVisibility = false;
+            vm.taskVisibility = true;
+            vm.documentVisibility = false;
+            vm.userVisibility = false;
+        }
+        else if(item == "Documents")
+        {
+            vm.projectVisibility = false;
+            vm.taskVisibility = false;
+            vm.documentVisibility = true;
+            vm.userVisibility = false;
+        }
+        else if(item == "Users")
+        {
+            vm.projectVisibility = false;
+            vm.taskVisibility = false;
+            vm.documentVisibility = false;
+            vm.userVisibility = true;
+        }
 
     };
 
     vm.displayPopover = false;
+
+    vm.inputSearchFilter = function(userInput, redirect)
+    {
+        if(redirect)
+        {
+            $timeout(function() {
+                if(vm.selectedItem == "Projects")
+                {
+                    vm.projectPanelsFilter = $filter('filter')(vm.projectPanels, userInput);
+                }
+                else if(vm.selectedItem == "Tasks")
+                {
+                    vm.taskPanelsFilter = $filter('filter')(vm.taskPanels, userInput);
+                }
+                else if(vm.selectedItem == "Documents")
+                {
+                    vm.documentPanelsFilter = $filter('filter')(vm.documentPanels, userInput);
+                }
+                else if(vm.selectedItem == "Users")
+                {
+                    vm.userPanelsFilter = $filter('filter')(vm.userPanels, userInput);
+                }
+            }, 25);
+        }
+        else
+        {
+            if(vm.selectedItem == "Projects")
+            {
+                vm.projectPanelsFilter = $filter('filter')(vm.projectPanels, userInput);
+            }
+            else if(vm.selectedItem == "Tasks")
+            {
+                vm.taskPanelsFilter = $filter('filter')(vm.taskPanels, userInput);
+            }
+            else if(vm.selectedItem == "Documents")
+            {
+                vm.documentPanelsFilter = $filter('filter')(vm.documentPanels, userInput);
+            }
+            else if(vm.selectedItem == "Users")
+            {
+                vm.userPanelsFilter = $filter('filter')(vm.userPanels, userInput);
+            }
+        }
+    };
 
     /*////////////////////////////////////////////////////////////////////////////////////////////////
      ////////////////// NAV BAR [E N D] //////////////////////////////////////////////////////////////
@@ -305,12 +372,16 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
      ////////////////// TABS AND PANELS ///////////////////////////////////////////////////////////////
      */////////////////////////////////////////////////////////////////////////////////////////////////
 
-    vm.globalTabsBootstrapClass = 'col-lg-8 col-md-8 col-sm-8';
+    vm.globalTabsBootstrapClass = 'col-lg-8 col-md-8 col-sm-6';
 
     vm.projectPanels = ProjectService.getProjectPanels();
     vm.taskPanels = TaskService.getTaskPanels();
     vm.documentPanels = DocumentService.getDocumentPanels();
     vm.userPanels = UserService.getUserPanels();
+    vm.projectPanelsFilter = vm.projectPanels;
+    vm.taskPanelsFilter = vm.taskPanels;
+    vm.documentPanelsFilter = vm.documentPanels;
+    vm.userPanelsFilter = vm.userPanels;
 
     vm.deleteProject = function(projectToDelete, modalControllerScope)
     {
@@ -511,5 +582,26 @@ function init()
         //chatService.checkMsgStatus(vm.users,vm.unreadMsgUserEmail);
     });
 }
+
+    $scope.$watch("MainViewVM.projectPanels", function( newValue, oldValue )
+    {
+        vm.projectPanelsFilter = vm.projectPanels
+    }, true);
+
+    $scope.$watch("MainViewVM.taskPanels", function( newValue, oldValue )
+    {
+        vm.taskPanelsFilter = vm.taskPanels
+    }, true);
+
+    $scope.$watch("MainViewVM.documentPanels", function( newValue, oldValue )
+    {
+        vm.documentPanelsFilter = vm.documentPanels
+    }, true);
+
+    $scope.$watch("MainViewVM.userPanels", function( newValue, oldValue )
+    {
+        vm.userPanelsFilter = vm.userPanels
+    }, true);
+
 }]);
 

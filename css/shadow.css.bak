@@ -1,0 +1,34 @@
+/* this is my custom CSS */
+
+#application-logo
+{
+    text-shadow: 2px 8px 6px rgba(0,0,0,0.15),
+    0px -5px 35px rgba(255,255,255,0.3);
+}
+
+#signed-in-user-pic
+{
+    box-shadow: 2px 8px 6px rgba(0,0,0,0.15),
+    0px -5px 35px rgba(255,255,255,0.3);
+}
+
+#notifications strong, #users-online strong, #notifications i, #users-online i
+{
+    text-shadow: 2px 8px 6px rgba(0,0,0,0.2),
+    0px -5px 35px rgba(255,255,255,0.3);
+}
+
+/*#testing-signout-button*/
+/*{*/
+    /*text-shadow: 2px 4px 3px rgba(0,0,0,0.3);*/
+/*}*/
+
+#search-button, #test1, #test2, #test3, #test4, #expand-tooltip, #contract-tooltip, .fa-circle-o /*#chat-ul li*/
+{
+    text-shadow: 2px 4px 3px rgba(0,0,0,0.15);
+}
+
+/*#main-div, #search-categories, #search-width, #signed-in-user-id, #user-name, #user-role, #user-email, #menu-opener, #chatting-list-opener, #project-popover, #task-popover, #file-popover, #user-popover, #accordion, #project-popover-buttons, #task-popover-buttons, #file-popover-buttons, #user-popover-buttons, #new-project, #edit-project, #search-project, #new-task, #edit-task, #search-task, #new-file, #edit-file, #search-file, #new-user, #edit-user, #search-user, #chat-panel-heading, #contextMenu, #table-width*/
+/*{*/
+    /*text-shadow: 2px 4px 3px rgba(0,0,0,0.1);*/
+/*}*/

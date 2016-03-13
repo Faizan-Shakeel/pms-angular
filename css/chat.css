@@ -51,11 +51,11 @@
     margin-right: 5px;
 }
 
-/*.panel-body*/
-/*{*/
-    /*overflow-y: scroll;*/
-    /*height: 250px;*/
-/*}*/
+/*.panel-body
+{
+    overflow-y: scroll;
+    height: 250px;
+}*/
 
 #chat-box-panel-body
 {

@@ -6,6 +6,7 @@ var fs = require('fs');
 var Grid = require('gridfs-stream');
 var multipartyMiddleware = multiparty();
 var nodemailer = require('nodemailer');
+var xoauth2 = require('xoauth2');
 var router = express.Router();
 var schema = require('./schema');
 var mongoModules = require('./mongo_modules');
@@ -20,9 +21,6 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 var port = process.env.PORT || 3000;
-
-
-
 
 
 app.use(express.static(__dirname + '/../../../pms-angular'));
@@ -166,6 +164,18 @@ app.post('/update', function(req,res)
 });
 
 
+////////////////////////////////////////////////////
+// *********** UPDATE USER NOTIFICATIONS ******** //
+////////////////////////////////////////////////////
+app.post('/updateUserNotifications', function(req, res)
+{
+    mongoModules.updateUserNotifications(req, function(response)
+    {
+        res.send(response);
+    });
+});
+
+
 ///////////////////////////////////////////////////////
 // *********** DELETE DATA FROM DATABASE *********** //
 //////////////////////////////////////////////////////
@@ -175,6 +185,18 @@ app.post('/delete' , function(req,res)
     {
        res.send(response); 
     });    
+});
+
+
+//////////////////////////////////////////////////////
+// ************ RETRIEVE DATA VIA ID ************** //
+//////////////////////////////////////////////////////
+app.post('/retrieveDataViaId', function(req, res)
+{
+    mongoModules.retrieveDataViaId(req, function(data)
+    {
+        res.send(data);
+    });
 });
 
 
@@ -249,15 +271,51 @@ app.post('/downloadFile', function(req, res)
 /////////////////////////////////////////////////////////
 // ********** INVITE USER VIA EMAIL ****************** //
 /////////////////////////////////////////////////////////
+
+
 app.post('/inviteUser', function(req,res)
 {
-    var transporter = nodemailer.createTransport({
-    service: req.body.userParameters.service,
-    auth: {
-       user: req.body.userParameters.senderEmail,
-       pass: req.body.userParameters.senderPassword
-          }
+
+  var xoauth2gen = xoauth2.createXOAuth2Generator({
+    user: "bilal.mansoor.10@gmail.com",
+    clientId: "333669414238-8c5gsn2f559rlu1ve7vvm10m4s2gbbo6.apps.googleusercontent.com",
+    clientSecret: "Ph6fJKR-YDXGw_YXxMwF9HXj",
+    refreshToken: "1/_E2IbVVZQngzOSoJOx52e37tVpJnGR68TF9YLSYXDQc",
+});
+  
+  xoauth2gen.getToken(function(err, token, accessToken){
+    if(err){
+        return console.log("error generating token " + err);
+    }
+    console.log("Authorization: Bearer " + accessToken);
     });
+
+    var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+       // user: req.body.userParameters.senderEmail,
+       // pass: req.body.userParameters.senderPassword
+          xoauth2: xoauth2.createXOAuth2Generator({
+            user: 'bilal.mansoor.10@gmail.com',
+            clientId: '333669414238-8c5gsn2f559rlu1ve7vvm10m4s2gbbo6.apps.googleusercontent.com',
+            clientSecret: 'Ph6fJKR-YDXGw_YXxMwF9HXj',
+            refreshToken: '1/_E2IbVVZQngzOSoJOx52e37tVpJnGR68TF9YLSYXDQc',
+            accessToken: 'ya29.nwKmUABuEioCarDfBVkAWt7rpqyZWeUQQ3ronQDMO6959ZUzI5WOvBLRqcElKZb53Q'
+              })       
+     }
+  //    generator.on('token', function(token){
+  //   console.log('New token for %s: %s', token.user, token.accessToken);
+  // });
+  });
+    // xoauth2gen.getToken(function(err, token, accessToken)
+    // {
+    //   if (err)
+    //   {
+    //     return console.log(err);
+    //   }
+    //   console.log("token is " + accessToken);
+    // })      
+
 
       var mailOptions = {
        from: req.body.userParameters.senderEmail,
@@ -265,7 +323,7 @@ app.post('/inviteUser', function(req,res)
        subject: req.body.userParameters.subject,
        text: req.body.userParameters.content
    };
-   console.log(req.body.userParameters);
+   
    transporter.sendMail(mailOptions,function(err, info)
    {
        if (err)

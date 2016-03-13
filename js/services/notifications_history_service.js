@@ -2,9 +2,10 @@
 
 var app = angular.module('notificationsAndHistoryModule', []);
 
-app.service('NotificationsAndHistoryService', [function () {
+app.service('NotificationsAndHistoryService', ['mongoCrudService' , function (mongoCrudService) {
 
     var history = [];
+    var elementStatusColor;
     var globalNotifications = [];
     var accordionStatusAndVisibility;
     var globalNotificationsCount = {count: 0};
@@ -38,7 +39,10 @@ app.service('NotificationsAndHistoryService', [function () {
 
             if(!elementFound)
             {
-                history.unshift(historyParams);
+                if(history.length >= 15)
+                {
+                    history.length = 14;
+                }
             }
         }
         else
@@ -71,6 +75,25 @@ app.service('NotificationsAndHistoryService', [function () {
             'actionDate': actionDate,
             'actionTime': actionTime
         };
+
+        //** Check if the element created/modified/deleted is a project or task.
+        //  If it is, find whether it contains any user and update the
+        //  users of the change.
+        if (notificationsParams.elementType == "Project" || notificationsParams.elementType == "Task")
+        {
+            if (notificationsParams.element.users)
+            {
+                for (var i=0; i<notificationsParams.element.users.length; i++)
+                {
+                        mongoCrudService.updateUserNotifications(notificationsParams.element.users[i].id, notificationsParams);
+                }
+            }
+        }
+ 
+		if(globalNotifications.length >= 50)
+        {
+            globalNotifications.length = 49;
+        }
 
         globalNotifications.unshift(notificationsParams);
     };
@@ -111,6 +134,37 @@ app.service('NotificationsAndHistoryService', [function () {
         }
     };
 
+	var setStatusColor = function(status)
+    {
+        console.log("elementStatusColor : " + elementStatusColor);
+
+        if(status == 'Pending Approval')
+        {
+            elementStatusColor = 'pending-approval';
+        }
+        else if(status == 'Approved')
+        {
+            elementStatusColor = 'approved';
+        }
+        else if(status == 'In Progress')
+        {
+            elementStatusColor = 'in-progress';
+        }
+        else if(status == 'Completed')
+        {
+            elementStatusColor = 'completed';
+        }
+        else if(status == 'Closed')
+        {
+            elementStatusColor = 'closed';
+        }
+
+        console.log("elementStatusColor : " + elementStatusColor);
+
+        return elementStatusColor;
+
+    };
+
     return{
         addNotifications: addNotifications,
         getNotifications: getNotifications,
@@ -122,6 +176,8 @@ app.service('NotificationsAndHistoryService', [function () {
         clearNotificationsSecondOpen: clearNotificationsSecondOpen,
         makeHistory: makeHistory,
         getHistory: getHistory,
+		setStatusColor: setStatusColor,
+//        getStatusColor: getStatusColor,
         globalNotificationsCount: globalNotificationsCount
     }
 

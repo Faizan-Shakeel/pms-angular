@@ -1,0 +1,89 @@
+/* this is my custom CSS */
+
+#test-second-custom-bar
+{
+    margin-top: 52px;
+    position: relative;
+    margin-bottom: 1px;
+    height: 40px;
+    background-color: #f5f5f5;
+}
+
+#menu-opener
+{
+    margin-top: 3px;
+    width: 100%;
+    white-space: normal;
+}
+
+.common-class
+{
+    top: 3px;
+}
+
+/*#create-record*/
+/*{*/
+
+/*}*/
+
+#edit-record
+{
+    display: none;
+}
+
+#delete-record
+{
+    display: none;
+}
+
+#chatting-list-opener
+{
+    margin-top: 3px;
+    width: 100%;
+    white-space: normal;
+}
+
+#icon-chat-list-color, #icon-main-options-color
+{
+    color: tan;
+}
+
+#icon-edit-record-color
+{
+    color: #00b3ee;
+}
+
+#icon-delete-record-color
+{
+    color: red;
+}
+
+#one-click-panels-expand
+{
+    position: absolute;
+    right: 47%;
+    top: 3px;
+}
+
+#current-notifications, #current-users-online
+{
+    color: #e38d13;
+}
+
+.vertical-line
+{
+    width: 4px;
+    height: 100%;
+    display: inline;
+    border: 1px inset;
+    background-color: #ebebeb;
+}
+
+.tooltip-inner {
+    font-size: small;
+    letter-spacing: 2px;
+    padding: 5px;
+    border: solid;
+    border-radius: 5px;
+    border-color: #FFFFFF;
+}
