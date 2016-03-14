@@ -135,8 +135,8 @@ app.post('/fetch' , function(req,res)
     // var transporter = nodemailer.createTransport({
     // service: 'Yahoo',
     // auth: {
-    //    user: 'ghost_stalker323',
-    //    pass: 'chacha210'
+    //    user: '',
+    //    pass: ''
     //       }
     // });
 
@@ -277,10 +277,10 @@ app.post('/inviteUser', function(req,res)
 {
 
   var xoauth2gen = xoauth2.createXOAuth2Generator({
-    user: "bilal.mansoor.10@gmail.com",
-    clientId: "333669414238-8c5gsn2f559rlu1ve7vvm10m4s2gbbo6.apps.googleusercontent.com",
-    clientSecret: "Ph6fJKR-YDXGw_YXxMwF9HXj",
-    refreshToken: "1/_E2IbVVZQngzOSoJOx52e37tVpJnGR68TF9YLSYXDQc",
+    user: "",
+    clientId: "",
+    clientSecret: "",
+    refreshToken: "",
 });
   
   xoauth2gen.getToken(function(err, token, accessToken){
@@ -297,10 +297,10 @@ app.post('/inviteUser', function(req,res)
        // pass: req.body.userParameters.senderPassword
           xoauth2: xoauth2.createXOAuth2Generator({
             user: 'bilal.mansoor.10@gmail.com',
-            clientId: '333669414238-8c5gsn2f559rlu1ve7vvm10m4s2gbbo6.apps.googleusercontent.com',
-            clientSecret: 'Ph6fJKR-YDXGw_YXxMwF9HXj',
-            refreshToken: '1/_E2IbVVZQngzOSoJOx52e37tVpJnGR68TF9YLSYXDQc',
-            accessToken: 'ya29.nwKmUABuEioCarDfBVkAWt7rpqyZWeUQQ3ronQDMO6959ZUzI5WOvBLRqcElKZb53Q'
+            clientId: '',
+            clientSecret: '',
+            refreshToken: '',
+            accessToken: ''
               })       
      }
   //    generator.on('token', function(token){
