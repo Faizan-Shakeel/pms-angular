@@ -86,6 +86,13 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
             }
         });
 
+        editProjectModalInstance.result.catch(function(){
+            //Do stuff with respect to dismissal
+
+            console.log("lasdoainw asijd oai jsdoij aosijad");
+
+        });
+
         editProjectModalInstance.result.then(function (projectInfo)
         {
 
@@ -380,7 +387,7 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
             }
         });
 
-        newDocumentModalInstance.result.then(function ()
+        newDocumentModalInstance.result.then(function (result)
         {
 
         }, function () {
@@ -5416,8 +5423,6 @@ app.controller('UserProfileModalInstanceController', ['$scope', '$uibModal', '$u
     var vm = this;
     var userInfo = dataForThisModalInstance.userInfo;
 
-//    console.log("userInfo : " + JSON.stringify(userInfo));
-
     vm.modalTitle = 'User Profile';
     vm.userImageUrl = 'images/Original_Size/user.png';
     vm.userName = userInfo.name;
@@ -5469,7 +5474,6 @@ app.controller('UserProfileModalInstanceController', ['$scope', '$uibModal', '$u
     };
 
 }]);
-
 
 app.controller('UpdateUserProfileModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'UserService', 'NotificationsAndHistoryService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, ProjectService, UserService, NotificationsAndHistoryService) {
 
@@ -5648,18 +5652,6 @@ app.controller('UpdateUserProfileModalInstanceController', ['$scope', '$uibModal
         vm.numberRequiredFlag = false;
         vm.addressRequiredFlag = false;
     }
-
-
-
-//    vm.modalTitle = 'User Profile';
-//    vm.userImageUrl = 'images/Original_Size/user.png';
-//    vm.userName = userInfo.name;
-//    vm.userEmail = userInfo.email;
-//    vm.userGender = userInfo.gender;
-//    vm.userDesignation = userInfo.designation;
-//    vm.userDateOfBirth = userInfo.dateOfBirth;
-//    vm.userContactNumber = userInfo.contactNumber;
-//    vm.userAddress = userInfo.address;
 
     vm.updateUserProfileInfo = function()
     {

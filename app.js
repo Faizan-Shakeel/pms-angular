@@ -5,6 +5,7 @@
 
 var app = angular.module('pmsAngular', [
 
+    'angularMoment',
     'mainViewModule',
     'slimScrollModule',
     'modalsModule',
@@ -15,10 +16,20 @@ var app = angular.module('pmsAngular', [
     'notificationsAndHistoryModule',
     'ui.utils.masks',
     'ui.mask',
-//    'ngLodash',
     'ngMessages',
     'btorfs.multiselect',
     'ngAnimate',
     'ng-sortable',
-    'ngPasswordStrength'
+    'ngPasswordStrength',
+    'angular-simple-chat'
+//    'angular-click-outside'
 ]);
+
+
+
+
+//var app = angular.module('pmsAngular', [
+//
+//    'ngMessages',
+//    'ngAnimate'
+//]);

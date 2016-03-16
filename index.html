@@ -10,6 +10,7 @@
     <!--Third Party Styles-->
 
     <link href="css/Third-Party-CSS/bootstrap.min.css" rel="stylesheet">
+    <link href="bower_components/angular-simple-chat/dist/angular-simple-chat.min.css" rel="stylesheet">
     <link rel="stylesheet" href="font-awesome-4.5.0/css/font-awesome.min.css">
 
     <!--Third Party Styles-->
@@ -197,6 +198,8 @@
             </uib-accordion>
         </div>
 
+        <!--<div ng-hide="true">{{MainViewVM.projectPanels}}</div>-->
+
         <div class="{{MainViewVM.globalTabsBootstrapClass}}">
             <uib-tabset justified="true">
 
@@ -303,7 +306,7 @@
 
                                     <div id="document-panel-content-in-new-project-modal">
                                         <p>
-                                        <h4>{{documentPanel.name}} <span class="col-lg-offset-8">ID: {{documentPanel.id}} </span> </h4>
+                                            <h4>{{documentPanel.name}} <span class="col-lg-offset-8">ID: {{documentPanel.id}} </span> </h4>
                                         </p>
 
                                         <p>
@@ -360,40 +363,33 @@
 
             </uib-tabset>
 
-            <!--<div class="chat-box">-->
-                <irontec-simple-chat
-                        messages="MainViewVM.messages"
-                        username="MainViewVM.username"
-                        input-placeholder-text="You can write here"
-                        submit-button-text="{{MainViewVM.submitButtonText}}"
-                        title="{{MainViewVM.title}}"
-                        theme="material"
-                        submit-function="MainViewVM.sendMessage"
-                        visible="MainViewVM.visible"
-                        expand-on-new="{{MainViewVM.expandOnNew}}">
-                </irontec-simple-chat>
-            <!--</div>-->
+            <div class="panel panel-default" id="chatBoxOuterStyle" ng-show="MainViewVM.chatBoxVisibility">
+
+                <div class="panel-heading" id="chat-box-panel-heading">
+                    {{MainViewVM.loggedInUserName}}
+
+                    <div class="btn-group" id="chat-box-heading-buttons" role="group" aria-label="">
+                        <button type="button" class="btn btn-warning" ng-click="MainViewVM.hideChatBoxInnerPanel()"><i id="chat-box-minimize" class="fa fa-minus"></i></button>
+                        <button type="button" class="btn btn-danger" ng-click="MainViewVM.selectedUser()"><i id="chat-box-close" class="fa fa-close fa-lg"></i></button>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+                    <simple-chat
+                            id="chatBoxInnerStyle"
+                            ng-show="MainViewVM.chatBoxInnerVisibility"
+                            messages="MainViewVM.messages"
+                            local-user="MainViewVM.userObject"
+                            show-user-avatar="true"
+                            show-composer="true"
+                            show-bubble-infos="true"
+                            send-function="MainViewVM.sendMessage"
+                    ></simple-chat>
+                </div>
+
+            </div>
 
         </div>
-
-
-        <!-------------------------------------------------------------------------- Chat Box --------------------------------------------------------------------------------START-->
-
-        <!--<div class="chat-box">-->
-            <!--<irontec-simple-chat-->
-                    <!--messages="MainViewVM.messages"-->
-                    <!--username="MainViewVM.username"-->
-                    <!--input-placeholder-text="You can write here"-->
-                    <!--submit-button-text="{{MainViewVM.submitButtonText}}"-->
-                    <!--title="{{MainViewVM.title}}"-->
-                    <!--theme="material"-->
-                    <!--submit-function="MainViewVM.sendMessage"-->
-                    <!--visible="MainViewVM.visible"-->
-                    <!--expand-on-new="{{MainViewVM.expandOnNew}}">-->
-            <!--</irontec-simple-chat>-->
-        <!--</div>-->
-        <!-------------------------------------------------------------------------- Chat Box -------------------------------------------------------------------------------------END-->
-
 
         <!------------------------------------------------------------------------ Context Menu --------------------------------------------------------------------------START-->
         <!--<ng-include src="'context-menu.html'"></ng-include>-->
@@ -408,8 +404,6 @@
                 <ul class="list-group" id="chat-ul" slim-scroll height="500px">
 
                     <li ng-repeat="user in MainViewVM.users" class="list-group-item" ng-click="MainViewVM.selectedUser(user)"><i id="onlineUserIcon" class={{user.status}}></i>{{user.name}}</li>
-                    <!--<li ng-repeat="user in MainViewVM.users" class="list-group-item" ng-click="MainViewVM.visible = !MainViewVM.visible"><i id="onlineUserIcon" class={{user.status}}></i>{{user.name}}</li>-->
-                    <!--<li ng-repeat="user in MainViewVM.users" class="list-group-item"><i id="onlineUserIcon" class={{user.status}}></i>{{user.name}}</li>-->
 
                 </ul>
 
@@ -440,7 +434,7 @@
 <!--<script src="js/Third-Party-JS/bootstrap-tour.min.js"></script>-->
 <!--<script src="js/Third-Party-JS/respond.js"></script>-->
 <!--<script src="js/Third-Party-JS/jquery.validate.min.js"></script>-->
-<!--<script src="bower_components/lodash/dist/lodash.min.js"></script>-->
+<!--<script src="js/Third-Party-JS/lodash.min.js"></script>-->
 <!--<script src="bower_components/angular-bootstrap-simple-chat/src/scripts/index.js"></script>-->
 
 <!--To Be Deleted-->
@@ -462,8 +456,14 @@
 <script src="bower_components/angular-messages/angular-messages.min.js"></script>
 <script src="bower_components/angular-bootstrap-multiselect/dist/angular-bootstrap-multiselect.min.js"></script>
 <script src="bower_components/moment/moment.js"></script>
+<script src="js/Third-Party-JS/angular-moment.min.js"></script>
 <script src="http://rubaxa.github.io/Sortable/Sortable.js"></script>
 <script src="http://rubaxa.github.io/Sortable/ng-sortable.js"></script>
+
+<script src="bower_components/angular-simple-chat/dist/angular-simple-chat.min.js"></script>
+
+<!--<script src="js/Third-Party-JS/clickoutside.directive.js"></script>-->
+
 
 <!--Third Party-->
 

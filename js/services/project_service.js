@@ -8,6 +8,7 @@ var app = angular.module('projectServiceModule', []);
 app.service('ProjectService', ['NotificationsAndHistoryService', function (NotificationsAndHistoryService)
 {
     var projectPanels = [];
+    var projectPanelsFilter = [];
     var projectsIdArray = [];
     var action;
     var actionBy;
@@ -76,6 +77,13 @@ app.service('ProjectService', ['NotificationsAndHistoryService', function (Notif
         "use strict";
 
         return projectPanels;
+    };
+
+    var getFilteredProjectPanels = function()
+    {
+        "use strict";
+
+        return projectPanelsFilter;
     };
 
     var getProjectByName = function(projectName)
@@ -530,6 +538,9 @@ app.service('ProjectService', ['NotificationsAndHistoryService', function (Notif
         createProjectPanel: createProjectPanel,
         updatedProjectParams: updatedProjectParams,
         getProjectPanels: getProjectPanels,
+        getFilteredProjectPanels: getFilteredProjectPanels,
+        projectPanels: projectPanels,
+        projectPanelsFilter: projectPanelsFilter,
         getProjectByName: getProjectByName,
         getProjectId: getProjectId,
         addProjectToTask: addProjectToTask,

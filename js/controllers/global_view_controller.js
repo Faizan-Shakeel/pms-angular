@@ -117,8 +117,13 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
 
     vm.selectedUser = function(selectedUser)
     {
-        vm.visible = !vm.visible;
+        vm.chatBoxVisibility = !vm.chatBoxVisibility;
     };
+
+//    vm.hideChatBoxInnerPanel = function()
+//    {
+//        vm.chatBoxInnerVisibility = !vm.chatBoxInnerVisibility;
+//    };
 
 //    vm.scrollBarConfig = {
 //        autoResize: true // If true, will listen for DOM elements being added or removed inside the scroll container
@@ -153,8 +158,9 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
     };
 
     vm.messages = [];
-    vm.username = 'Online User';
-    vm.visible = false;
+    vm.userObject = {userId: '0', avatar: 'images/Original_Size/user.png', userName: vm.loggedInUserName};
+    vm.chatBoxVisibility = false;
+    vm.chatBoxInnerVisibility = true;
     vm.title = 'Chatting With';
     vm.submitButtonText = 'Send';
 
@@ -162,7 +168,8 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
         if(message && message !== '' && username) {
             vm.messages.push({
                 'username': username,
-                'content': message
+                'text': message,
+                'date': moment().format('L')
             });
         }
     };
@@ -207,34 +214,34 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
         vm.active = {}; //reset
         vm.active[item] = true;
 
-        if(item == "Projects")
-        {
-            vm.projectVisibility = true;
-            vm.taskVisibility = false;
-            vm.documentVisibility = false;
-            vm.userVisibility = false;
-        }
-        else if(item == "Tasks")
-        {
-            vm.projectVisibility = false;
-            vm.taskVisibility = true;
-            vm.documentVisibility = false;
-            vm.userVisibility = false;
-        }
-        else if(item == "Documents")
-        {
-            vm.projectVisibility = false;
-            vm.taskVisibility = false;
-            vm.documentVisibility = true;
-            vm.userVisibility = false;
-        }
-        else if(item == "Users")
-        {
-            vm.projectVisibility = false;
-            vm.taskVisibility = false;
-            vm.documentVisibility = false;
-            vm.userVisibility = true;
-        }
+//        if(item == "Projects")
+//        {
+//            vm.projectVisibility = true;
+//            vm.taskVisibility = false;
+//            vm.documentVisibility = false;
+//            vm.userVisibility = false;
+//        }
+//        else if(item == "Tasks")
+//        {
+//            vm.projectVisibility = false;
+//            vm.taskVisibility = true;
+//            vm.documentVisibility = false;
+//            vm.userVisibility = false;
+//        }
+//        else if(item == "Documents")
+//        {
+//            vm.projectVisibility = false;
+//            vm.taskVisibility = false;
+//            vm.documentVisibility = true;
+//            vm.userVisibility = false;
+//        }
+//        else if(item == "Users")
+//        {
+//            vm.projectVisibility = false;
+//            vm.taskVisibility = false;
+//            vm.documentVisibility = false;
+//            vm.userVisibility = true;
+//        }
 
     };
 
@@ -339,6 +346,8 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
             UserService.deleteProjectFromUser(selectedProjectUsersArray, projectToDelete.name);
 
             removeEntity(vm.projectPanels, 'id', projectToDelete.id);
+
+            vm.projectPanelsFilter = vm.projectPanels;
         };
 
         modalControllerScope.confirmationModal(deletionConfirmed);
@@ -463,6 +472,26 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
     /*///////////////////////////////////////////////////////////////////////////////////////////////////
      ////////////////// TABS AND PANELS [E N D] /////////////////////////////////////////////////////////
      *//////////////////////////////////////////////////////////////////////////////////////////////////
+
+    $scope.$watch("MainViewVM.projectPanels", function( newValue, oldValue )
+    {
+        vm.projectPanelsFilter = vm.projectPanels
+    }, true);
+
+    $scope.$watch("MainViewVM.taskPanels", function( newValue, oldValue )
+    {
+        vm.taskPanelsFilter = vm.taskPanels
+    }, true);
+
+    $scope.$watch("MainViewVM.documentPanels", function( newValue, oldValue )
+    {
+        vm.documentPanelsFilter = vm.documentPanels
+    }, true);
+
+    $scope.$watch("MainViewVM.userPanels", function( newValue, oldValue )
+    {
+        vm.userPanelsFilter = vm.userPanels
+    }, true);
 
 }]);
 
