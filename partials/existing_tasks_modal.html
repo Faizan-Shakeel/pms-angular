@@ -1,6 +1,6 @@
 <div>
     <div class="modal-header">
-        <h4 class="modal-title text-center">{{AddExistingTasksModalVM.modalHeading}}</h4>
+        <h4 class="modal-title text-center text-success">{{AddExistingTasksModalVM.modalHeading}}</h4>
     </div>
 
     <div class="modal-body">
@@ -8,14 +8,14 @@
 
             <br/>
 
-            <multiselect ng-model="AddExistingTasksModalVM.selectedExistingTasks" options="AddExistingTasksModalVM.existingTasksOptions" id-prop="id" display-prop="name" show-search="AddExistingTasksModalVM.multiSearchSwitch"></multiselect>
+            <multiselect ng-model="AddExistingTasksModalVM.selectedExistingTasks" options="AddExistingTasksModalVM.existingTasksOptions" id-prop="id" display-prop="name" show-search="AddExistingTasksModalVM.multiSearchSwitch" search-limit="AddExistingTasksModalVM.searchResultLimit"></multiselect>
 
         </div>
 
     </div>
 
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" ng-click="AddExistingTasksModalVM.addExistingTasksInProject(AddExistingTasksModalVM.selectedExistingTasks)">OK</button>
-        <button type="button" class="btn btn-warning" ng-click="AddExistingTasksModalVM.cancelModal()">Cancel</button>
+        <button type="button" class="btn btn-success" ng-click="AddExistingTasksModalVM.addExistingTasksInProject(AddExistingTasksModalVM.selectedExistingTasks)">OK</button>
+        <button type="button" class="btn btn-default" ng-click="AddExistingTasksModalVM.cancelModal()">Cancel</button>
     </div>
 </div>

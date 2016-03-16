@@ -1,0 +1,21 @@
+<div>
+    <div class="modal-header">
+        <h4 class="modal-title text-center text-success">{{AddExistingDocumentsModalVM.modalHeading}}</h4>
+    </div>
+
+    <div class="modal-body">
+        <div class="modal-existing-document-body">
+
+            <br/>
+
+            <multiselect ng-model="AddExistingDocumentsModalVM.selectedExistingDocuments" options="AddExistingDocumentsModalVM.existingDocumentsOptions" id-prop="id" display-prop="name" show-search="AddExistingDocumentsModalVM.multiSearchSwitch" search-limit="AddExistingDocumentsModalVM.searchResultLimit"></multiselect>
+
+        </div>
+
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" ng-click="AddExistingDocumentsModalVM.addExistingDocumentsInProject(AddExistingDocumentsModalVM.selectedExistingDocuments)">OK</button>
+        <button type="button" class="btn btn-default" ng-click="AddExistingDocumentsModalVM.cancelModal()">Cancel</button>
+    </div>
+</div>

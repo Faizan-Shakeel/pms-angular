@@ -1,0 +1,21 @@
+<div>
+    <div class="modal-header">
+        <h4 class="modal-title text-center text-success">{{AddExistingUsersModalVM.modalHeading}}</h4>
+    </div>
+
+    <div class="modal-body">
+        <div class="modal-existing-user-body">
+
+            <br/>
+
+            <multiselect ng-model="AddExistingUsersModalVM.selectedExistingUsers" options="AddExistingUsersModalVM.existingUsersOptions" id-prop="id" display-prop="email" show-search="AddExistingUsersModalVM.multiSearchSwitch" search-limit="AddExistingUsersModalVM.searchResultLimit"></multiselect>
+
+        </div>
+
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" ng-click="AddExistingUsersModalVM.addExistingUsersInProject(AddExistingUsersModalVM.selectedExistingUsers)">OK</button>
+        <button type="button" class="btn btn-default" ng-click="AddExistingUsersModalVM.cancelModal()">Cancel</button>
+    </div>
+</div>

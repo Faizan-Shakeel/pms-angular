@@ -1,0 +1,148 @@
+/* this is my custom CSS */
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display: none !important;
+}
+
+body
+{
+    font-family: 'Dancing Script', cursive;
+    font-size: x-large;
+}
+
+#pms
+{
+    position: absolute;
+    top: -200px;
+    right: 150px;
+
+    font-size: 48px;
+    font-weight: bold;
+    /*color: #f2f2f2;*/
+    color: #ffffff;
+}
+
+.login-form-container {
+
+    width: 400px;
+    height: 350px;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+}
+
+#bg {
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+}
+#bg img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    min-width: 50%;
+    min-height: 50%;
+}
+
+#login-panel-style
+{
+    background-color: transparent;
+    border: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.login-form-container .control-label
+{
+    font-weight: normal;
+    color: #f2f2f2;
+}
+
+.login-form-container input
+{
+    background-color: transparent;
+    font-size: 28px;
+    color: #ffffff;
+}
+
+/*#userPassword*/
+/*{*/
+    /*font-size: x-large;*/
+/*}*/
+
+
+#login-button
+{
+    font-size: 28px;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: transparent;
+}
+
+.has-error .ng-invalid
+{
+    border: 3px double #cc00cc;
+    box-shadow: 2px 8px 6px rgba(255, 255, 255, 0),
+    0 -5px 35px rgba(255,255,255,0.3);
+}
+
+#login-form .ng-valid
+{
+    border: 3px double #3399ff;
+    box-shadow: 2px 8px 6px rgba(255, 255, 255, 0),
+    0 -5px 35px rgba(255,255,255,0.3);
+}
+
+.form-control::-webkit-input-placeholder { color: white; }
+.form-control:-moz-placeholder { color: white; }
+.form-control::-moz-placeholder { color: white; }
+.form-control:-ms-input-placeholder { color: white; }
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
+    -webkit-text-fill-color: white !important;
+}
+
+
+/*.messages-class {*/
+    /*transition:1s linear all;*/
+/*}*/
+/*.messages-class.ng-active {*/
+/*// messages are visible*/
+/*}*/
+/*.messages-class.ng-inactive {*/
+/*// messages are hidden*/
+/*}*/
+
+/*.ng-messages-class*/
+/*{*/
+    /*color: #f2f2f2;*/
+/*}*/
+
+/*.help-block*/
+/*{*/
+    /*color: #f2f2f2;*/
+/*}*/
+
+
+
+
+/*html {*/
+/*background: url(login_background.png) no-repeat center center fixed;*/
+/*-webkit-background-size: cover;*/
+/*-moz-background-size: cover;*/
+/*-o-background-size: cover;*/
+/*background-size: cover;*/
+/*}*/

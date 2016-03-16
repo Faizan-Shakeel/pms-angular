@@ -1,38 +1,15 @@
 
 <div class="triangle"></div>
 
-    <div class="popbox">
-        <div class='box'>
-
-            <div class='arrow'></div>
-            <div class='arrow-border'></div>
-
-            <div id="test-content-size">
-
-                <img class="img-thumbnail pull-left" id="user-pic-inside-popover" src="images/Original_Size/user.png" alt=""/>
-
-                <p id="user-name">Online User</p>
-                <p id="user-designation">Quality Assurance</p>
-
-                <button class="btn btn-default btn-xs pull-left" id="user-profile" >Profile</button>
-                <button class="btn btn-default btn-xs pull-right" id="user-account" >Account</button>
-
-                <button class="btn btn-default" id="testing-signout-button">Sign Out</button>
-            </div>
+<div id="popover">
+    <div class="thumbnail">
+        <img ng-src="images/Original_Size/user.png" id="user-profile-pic" alt="">
+        <hr id="user-info-divider">
+        <div class="caption" id="popup-bottom-half">
+            <h4 class="text-center" id="user-name">{{MainViewVM.loggedInUserName}}</h4>
+            <p class="text-center" id="user-designation">User Designation</p>
+            <p><a href="#" class="btn btn-default pull-left" id="user-profile" role="button" ng-click="ModalVM.userProfileModal()">Profile</a> <a href="#" class="btn btn-default pull-right" id="global-settings" role="button">Settings</a></p>
+            <button class="btn btn-danger btn-block" id="user-logout-button">Log Out</button>
         </div>
     </div>
-
-<!--<div class="popover" tabindex="-1" ng-show="content">-->
-    <!--<div class="arrow"></div>-->
-    <!--<h3 class="popover-title" ng-bind-html="title" ng-show="title"></h3>-->
-    <!--<div class="popover-content">-->
-        <!--<form name="popoverForm">-->
-            <!--<p ng-bind-html="content" style="min-width:300px;"></p>-->
-            <!--<pre>2 + 3 = <span ng-cloak>{{ 2 + 3 }}</span></pre>-->
-            <!--<div class="form-actions">-->
-                <!--<button type="button" class="btn btn-danger" ng-click="$hide()">Close</button>-->
-                <!--<button type="button" class="btn btn-primary" ng-click="popover.saved=true;$hide()">Save changes</button>-->
-            <!--</div>-->
-        <!--</form>-->
-    <!--</div>-->
-<!--</div>-->
+</div>

@@ -1,0 +1,158 @@
+
+<div>
+
+    <div class="modal-header">
+        <h4 class="modal-title text-center text-success">Project Info</h4>
+    </div>
+
+    <div class="modal-body">
+
+        <uib-tabset justified="true">
+
+            <uib-tab heading="Project">
+
+                <div class="modal-new-project-form">
+
+                    <div slim-scroll height="310px">
+
+                        <br/>
+
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-lg-4 col-md-4 col-sm-4 control-label">Name</label>
+                                <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
+                                    <p class="form-control-static">{{ModalVM.projectName}}</p>
+                                </div>
+                            </div>
+
+                            <hr class="info-divider"/>
+
+                            <div class="form-group">
+                                <label class="col-lg-4 col-md-4 col-sm-4 control-label">Status</label>
+                                <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
+                                    <p class="form-control-static">{{ModalVM.projectStatus}}</p>
+                                </div>
+                            </div>
+
+                            <hr class="info-divider"/>
+
+                            <div class="form-group">
+                                <label class="col-lg-4 col-md-4 col-sm-4 control-label">Budget</label>
+                                <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
+                                    <p class="form-control-static">{{ModalVM.projectBudget}}</p>
+                                </div>
+                            </div>
+
+                            <hr class="info-divider"/>
+
+                            <div class="form-group">
+                                <label class="col-lg-4 col-md-4 col-sm-4 control-label">Target Date</label>
+                                <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
+                                    <p class="form-control-static">{{ModalVM.projectTargetEndDate}}</p>
+                                </div>
+                            </div>
+
+                            <hr class="info-divider"/>
+
+                            <div class="form-group">
+                                <label class="col-lg-4 col-md-4 col-sm-4 control-label">Description</label>
+                                <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
+                                    <p class="form-control-static">{{ModalVM.projectDescription}}</p>
+                                </div>
+                            </div>
+
+                            <hr class="info-divider"/>
+
+                            <div class="form-group">
+                                <label class="col-lg-4 col-md-4 col-sm-4 control-label">Date Created</label>
+                                <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
+                                    <p class="form-control-static">{{ModalVM.projectCreateDate}}</p>
+                                </div>
+                            </div>
+
+                            <hr class="info-divider"/>
+
+                            <div class="form-group">
+                                <label class="col-lg-4 col-md-4 col-sm-4 control-label">Date Modified</label>
+                                <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
+                                    <p class="form-control-static">{{ModalVM.modifiedDate}}</p>
+                                </div>
+                            </div>
+
+                            <hr class="info-divider"/>
+
+                            <div class="form-group">
+                                <label class="col-lg-4 col-md-4 col-sm-4 control-label">Date Completed</label>
+                                <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
+                                    <p class="form-control-static">{{ModalVM.endDate}}</p>
+                                </div>
+                            </div>
+
+                            <hr class="info-divider"/>
+
+                            <div class="form-group">
+                                <label class="col-lg-4 col-md-4 col-sm-4 control-label">Created By</label>
+                                <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
+                                    <p class="form-control-static">{{ModalVM.createdBy}}</p>
+                                </div>
+                            </div>
+
+                            <hr class="info-divider"/>
+
+                            <div class="form-group">
+                                <label class="col-lg-4 col-md-4 col-sm-4 control-label">Last Modified By</label>
+                                <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
+                                    <p class="form-control-static">{{ModalVM.lastModifiedBy}}</p>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </uib-tab>
+
+            <uib-tab heading="Tasks">
+                <div class="modal-new-task-tab-body">
+                    <div slim-scroll height="310px">
+                        <div class="panel panel-default" ng-repeat="taskPanel in ModalVM.taskPanels">
+                            <div class="panel-body text-center">
+                                <a href="" ng-click="ModalVM.infoTaskModal(taskPanel)">{{taskPanel.name}}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </uib-tab>
+
+            <uib-tab heading="Documents">
+                <div class="modal-new-document-tab-body">
+                    <div slim-scroll height="310px">
+                        <div class="panel panel-default" ng-repeat="documentPanel in ModalVM.documentPanels">
+                            <div class="panel-body text-center">
+                                <a href="" ng-click="ModalVM.infoDocumentModal(documentPanel)">{{documentPanel.name}}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </uib-tab>
+
+            <uib-tab heading="Users">
+                <div class="modal-new-user-tab-body">
+                    <div slim-scroll height="310px">
+                        <div class="panel panel-default" ng-repeat="userPanel in ModalVM.userPanels">
+                            <div class="panel-body text-center">
+                                <a href="" ng-click="ModalVM.infoUserModal(userPanel)">{{userPanel.name}}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </uib-tab>
+
+        </uib-tabset>
+
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="ModalVM.cancel()">Cancel</button>
+    </div>
+
+</div>
