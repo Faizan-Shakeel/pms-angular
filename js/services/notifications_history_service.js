@@ -5,7 +5,11 @@ var app = angular.module('notificationsAndHistoryModule', []);
 app.service('NotificationsAndHistoryService', ['mongoCrudService' , function (mongoCrudService) {
 
     var history = [];
-    var elementStatusColor;
+    var pendingStatusClass;
+    var approvedStatusClass;
+    var inProgressStatusClass;
+    var completedStatusClass;
+    var closedStatusClass;
     var globalNotifications = [];
     var accordionStatusAndVisibility;
     var globalNotificationsCount = {count: 0};
@@ -43,6 +47,8 @@ app.service('NotificationsAndHistoryService', ['mongoCrudService' , function (mo
                 {
                     history.length = 14;
                 }
+
+                history.unshift(historyParams);
             }
         }
         else
@@ -134,34 +140,50 @@ app.service('NotificationsAndHistoryService', ['mongoCrudService' , function (mo
         }
     };
 
-	var setStatusColor = function(status)
+    var setStatusColor = function(status)
     {
-        console.log("elementStatusColor : " + elementStatusColor);
-
         if(status == 'Pending Approval')
         {
-            elementStatusColor = 'pending-approval';
+            pendingStatusClass = 'status-pending-icon-on';
+            approvedStatusClass = 'status-approved-icon-off';
+            inProgressStatusClass = 'status-in-progress-icon-off';
+            completedStatusClass = 'status-completed-icon-off';
+            closedStatusClass = 'status-closed-icon-off';
         }
         else if(status == 'Approved')
         {
-            elementStatusColor = 'approved';
+            pendingStatusClass = 'status-pending-icon-off';
+            approvedStatusClass = 'status-approved-icon-on';
+            inProgressStatusClass = 'status-in-progress-icon-off';
+            completedStatusClass = 'status-completed-icon-off';
+            closedStatusClass = 'status-closed-icon-off';
         }
         else if(status == 'In Progress')
         {
-            elementStatusColor = 'in-progress';
+            pendingStatusClass = 'status-pending-icon-off';
+            approvedStatusClass = 'status-approved-icon-off';
+            inProgressStatusClass = 'status-in-progress-icon-on';
+            completedStatusClass = 'status-completed-icon-off';
+            closedStatusClass = 'status-closed-icon-off';
         }
         else if(status == 'Completed')
         {
-            elementStatusColor = 'completed';
+            pendingStatusClass = 'status-pending-icon-off';
+            approvedStatusClass = 'status-approved-icon-off';
+            inProgressStatusClass = 'status-in-progress-icon-off';
+            completedStatusClass = 'status-completed-icon-on';
+            closedStatusClass = 'status-closed-icon-off';
         }
         else if(status == 'Closed')
         {
-            elementStatusColor = 'closed';
+            pendingStatusClass = 'status-pending-icon-off';
+            approvedStatusClass = 'status-approved-icon-off';
+            inProgressStatusClass = 'status-in-progress-icon-off';
+            completedStatusClass = 'status-completed-icon-off';
+            closedStatusClass = 'status-closed-icon-on';
         }
 
-        console.log("elementStatusColor : " + elementStatusColor);
-
-        return elementStatusColor;
+        return {pendingStatusClass: pendingStatusClass, approvedStatusClass: approvedStatusClass, inProgressStatusClass: inProgressStatusClass, completedStatusClass: completedStatusClass, closedStatusClass: closedStatusClass};
 
     };
 
@@ -176,8 +198,7 @@ app.service('NotificationsAndHistoryService', ['mongoCrudService' , function (mo
         clearNotificationsSecondOpen: clearNotificationsSecondOpen,
         makeHistory: makeHistory,
         getHistory: getHistory,
-		setStatusColor: setStatusColor,
-//        getStatusColor: getStatusColor,
+        setStatusColor: setStatusColor,
         globalNotificationsCount: globalNotificationsCount
     }
 

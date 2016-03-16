@@ -12,6 +12,8 @@ var app = angular.module('pmsAngular', [
     'userServiceModule',
     'notificationsAndHistoryModule',
     'ui.utils.masks',
+    'ui.mask',
+//    'ngLodash',
     'ngMessages',
     'btorfs.multiselect',
     'mongoCrudServiceModule',
@@ -24,8 +26,11 @@ var app = angular.module('pmsAngular', [
     'chatSocketServiceModule',
     'chatServiceModule',
 	'ngAnimate',
-    'ng-sortable'
-
+    'ng-sortable',
+    'ngPasswordStrength',
+    'userProfileModule',
+    'angularMoment',
+    'angular-simple-chat'
 ]);
 
  app.config(['$routeProvider','$httpProvider', function($routeProvider, $httpProvider) {
@@ -45,9 +50,14 @@ var app = angular.module('pmsAngular', [
                     controller: 'registrationCtrl',
                     controllerAs: 'asRegistrationCtrl'
         })
+                .when('/passwordrecovery', {
+                    templateUrl: 'views/password_recovery.html',
+                    controller: 'loginCtrl',
+                    controllerAs: 'asLoginCtrl'
+        })
                 .when('/mainview', {
                     templateUrl: 'views/mainview.html',
-                    //controller: 'Main_View_Controller',
+                    controller: 'Main_View_Controller',
                     controllerAs: 'MainViewVM',
                     resolve: {
                         LoggedIn: function(loginService)

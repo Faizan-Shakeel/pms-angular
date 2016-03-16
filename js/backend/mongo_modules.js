@@ -181,6 +181,55 @@ var updateData = function(req, callback)
 
 
 //////////////////////////////////////////////////////////
+// *************** UPDATE USER PASSWORD *************** //
+//////////////////////////////////////////////////////////
+var updatePassword = function(req, callback)
+{
+    var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
+    db.once('open', function()
+    {
+        
+        var newPasswordHash = bcrypt.hashSync(req.body.newPassword);
+        var createSchema = schema.schema('users');
+        var PmsCollection = db.model('PmsCollection',createSchema);
+            PmsCollection.findOne({'users.id': req.body.id}, function(err, doc)
+            {
+                if (!err)
+                {
+                    var checkPassword = bcrypt.compareSync(req.body.oldPassword, doc.users.password);
+                    if (checkPassword)
+                    {
+                        doc.users.password = newPasswordHash;
+                        doc.save(function(error)
+                        {
+                            if (!error)
+                            {
+                                db.close();
+                                callback('Password Updated Successfully');
+                            }
+                            else
+                            {
+                                db.close();
+                                callback(error);
+                            }
+                        });
+                    }
+                    else
+                    {
+                        db.close();
+                        callback('Incorrect Old Password');
+                    }
+                }
+                else
+                {
+                    db.close();
+                    callback(err);
+                }
+            });
+    });
+};
+
+//////////////////////////////////////////////////////////
 //************** CHAT STORAGE MODULE *******************//
 //////////////////////////////////////////////////////////
 var updateUser = function(req, callback)
@@ -216,6 +265,47 @@ var updateUser = function(req, callback)
                     callback(err);
                 }
             });
+    });
+};
+
+
+////////////////////////////////////////////////////////////////
+// **** PASSWORD RECOVERY (STORE NEW TEMPORARY PASSWORD) **** //
+////////////////////////////////////////////////////////////////
+var passwordRecovery = function(req, callback)
+{
+    var newPasswordHash = bcrypt.hashSync(req.body.newPassword);
+    var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
+    db.once('open', function()
+    {console.log(req.body);
+        var createSchema = schema.schema('users');
+        var query = {'users.email': req.body.userEmail};
+        var PmsCollection = db.model('PmsCollection',createSchema);
+        PmsCollection.findOne(query, function(err, doc)
+        {
+            if (!err)
+            {
+                doc.users.password = newPasswordHash;
+                doc.save(function(error)
+                {   
+                    if (!error)
+                    {
+                        db.close();
+                        callback('An Email has been sent with your temporary password');
+                    }
+                    else
+                    {
+                        db.close();
+                        callback(error);
+                    }
+                });
+            }
+            else
+            {
+                db.close();
+                callback(err);
+            }
+        });
     });
 };
 
@@ -591,7 +681,9 @@ exports.deleteData = deleteData;
 exports.registerUser = registerUser;
 exports.loginUser = loginUser;
 exports.updateUser = updateUser;
+exports.passwordRecovery = passwordRecovery;
 exports.updateUserNotifications = updateUserNotifications;
+exports.updatePassword = updatePassword;
 exports.retrieveChat = retrieveChat;
 exports.updateChatFlag = updateChatFlag;
 exports.uploadFiles = uploadFiles;

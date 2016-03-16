@@ -1,7 +1,7 @@
 <div>
 
     <div class="modal-header">
-        <h4 class="modal-title text-center">{{DocumentModalVM.modalHeading}}</h4>
+        <h4 class="modal-title text-center text-success">{{DocumentModalVM.modalHeading}}</h4>
     </div>
 
     <div class="modal-body">
@@ -43,8 +43,8 @@
     </div>
 
     <div class="modal-footer">
-        <label for="submit-new-document-form" class="btn btn-primary" ng-disabled="addNewDocumentValidationForm.$invalid">{{DocumentModalVM.modalType}}</label>
-        <button type="button" class="btn btn-warning" ng-click="DocumentModalVM.cancelModal()">Cancel</button>
+        <label for="submit-new-document-form" class="btn btn-success" ng-disabled="addNewDocumentValidationForm.$invalid">{{DocumentModalVM.modalType}}</label>
+        <button type="button" class="btn btn-default" ng-click="DocumentModalVM.cancelModal()">Cancel</button>
     </div>
 
 </div>

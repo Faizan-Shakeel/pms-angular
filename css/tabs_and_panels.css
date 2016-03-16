@@ -16,7 +16,7 @@
     margin-top: 10px;
 }
 
-#inner-panel
+#project-icon-panel
 {
     position: absolute;
     top: -1px;
@@ -26,6 +26,92 @@
     height: 101px;
     margin-right: 5px;
     line-height: 70px;
+}
+
+.status-pending-icon-off
+{
+    position: absolute;
+    top: 35px;
+    right: 200px;
+    color: #f2f2f2;
+}
+
+.status-approved-icon-off
+{
+    position: absolute;
+    top: 35px;
+    right: 160px;
+    color: #f2f2f2;
+}
+
+.status-in-progress-icon-off
+{
+    position: absolute;
+    top: 35px;
+    right: 120px;
+    color: #f2f2f2;
+}
+
+.status-completed-icon-off
+{
+    position: absolute;
+    top: 35px;
+    right: 80px;
+    color: #f2f2f2;
+}
+
+.status-closed-icon-off
+{
+    position: absolute;
+    top: 35px;
+    right: 50px;
+    color: #f2f2f2;
+}
+
+.status-pending-icon-on
+{
+    position: absolute;
+    top: 35px;
+    right: 200px;
+    /*color: #cc6600;*/
+    color: #a52a2a;
+    text-shadow: 2px 8px 6px rgba(0,0,0,0.2), 0 -5px 35px rgba(255,255,255,0.3);
+}
+
+.status-approved-icon-on
+{
+    position: absolute;
+    top: 35px;
+    right: 160px;
+    color: #800080;
+    text-shadow: 2px 8px 6px rgba(0,0,0,0.2), 0 -5px 35px rgba(255,255,255,0.3);
+}
+
+.status-in-progress-icon-on
+{
+    position: absolute;
+    top: 35px;
+    right: 120px;
+    color: #0099ff;
+    text-shadow: 2px 8px 6px rgba(0,0,0,0.2), 0 -5px 35px rgba(255,255,255,0.3);
+}
+
+.status-completed-icon-on
+{
+    position: absolute;
+    top: 35px;
+    right: 80px;
+    color: #008000;
+    text-shadow: 2px 8px 6px rgba(0,0,0,0.2), 0 -5px 35px rgba(255,255,255,0.3);
+}
+
+.status-closed-icon-on
+{
+    position: absolute;
+    top: 35px;
+    right: 50px;
+    color: #262626;
+    text-shadow: 2px 8px 6px rgba(0,0,0,0.2), 0 -5px 35px rgba(255,255,255,0.3);
 }
 
 .pending-approval
@@ -69,7 +155,8 @@
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#00000000',GradientType=0 );
 }
 
-#inner-panel-tasks-in-new-project-modal, #inner-panel-documents-in-new-project-modal, #inner-panel-users-in-new-project-modal
+
+#task-icon-panel, #document-icon-panel, #user-icon-panel
 {
     position: absolute;
     top: -1px;
@@ -81,7 +168,8 @@
     line-height: 70px;
 }
 
-#inner-panel-documents-in-new-project-modal, #inner-panel-users-in-new-project-modal
+
+#project-icon-panel, #task-icon-panel, #document-icon-panel, #user-icon-panel
 {
     /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#eeeeee+0,cccccc+100&1+0,0+100;Gren+3D */
     background: -moz-linear-gradient(top,  rgba(238,238,238,1) 0%, rgba(204,204,204,0) 100%); /* FF3.6-15 */
@@ -96,6 +184,33 @@
     top: -1px;
     right: -1px;
     bottom: -1px;
+}
+
+/*#outer-panel:hover #btn-grp-panel*/
+/*{*/
+    /*visibility: visible;*/
+/*}*/
+
+#status-display
+{
+    position: absolute;
+    top: -1px;
+    right: 100px;
+    bottom: -1px;
+    width: 100px;
+}
+
+.status-align
+{
+    height: 21px;
+}
+
+.status-icon-align
+{
+    position: absolute;
+    /*margin-top: -4px;*/
+    top: 2px;
+    right: 43px;
 }
 
 #tasks-btn-grp-panel-in-new-project-modal, #documents-btn-grp-panel-in-new-project-modal, #users-btn-grp-panel-in-new-project-modal
@@ -125,19 +240,19 @@
 #task-panel-icon-fix
 {
     margin-left: -10px;
-    color: #006600;
+    color: #008000;
 }
 
 #document-panel-icon-fix
 {
     margin-left: -10px;
-    color: #cc6600;
+    color: #a52a2a;
 }
 
 #user-panel-icon-fix
 {
     margin-left: -6px;
-    color: #660066;
+    color: #800080;
 }
 
 .modal-new-project-form, .modal-new-task-form, .modal-new-document-form, .modal-new-user-form
@@ -164,7 +279,11 @@
     /*height: 100px;*/
 }
 
+.user-profile-modal-style .modal-dialog
+{
+    width: 500px;
 
+}
 
 .test-position
 {
@@ -223,13 +342,54 @@
 
 .info-divider
 {
-    /*margin-top: 0;*/
-    /*margin-bottom: 0;*/
-
-    width: 250px;
-
+    margin-left: 250px;
+    width: 200px;
 }
 
+.user-profile-info-divider
+{
+    /*margin-left: 250px;*/
+    width: 450px;
+    /*margin-bottom: 0;*/
+    margin-top: -15px;
+}
+
+#user-profile-pic-in-profile
+{
+    height: 150px;
+    width: 150px;
+}
+
+.form-horizontal .control-label{
+    text-align:right;
+    /*font-style: italic;*/
+}
+
+#user-profile-form .control-label
+{
+    text-align: left;
+    font-weight: normal;
+}
+
+#user-profile-pic-row
+{
+    margin-top: -15px;
+}
+
+#user-name-and-designation
+{
+    margin-top: 60px;
+}
+
+.user-profile-edit-buttons
+{
+    margin-top: -10px;
+}
+
+/*.tooltip-inner {*/
+    /*width:100px;*/
+    /*max-width: 200px;*/
+/*}*/
 
 @media only screen and (min-width: 768px) and (max-width: 991px)
 {
@@ -244,4 +404,3 @@
         height: 250px;
     }
 }
-

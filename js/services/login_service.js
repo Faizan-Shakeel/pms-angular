@@ -22,13 +22,15 @@ app.service('loginService',['$http', '$location', '$rootScope', '$q', '$localSto
        });
    };
    
-   var logout = function(callback)
+   var logout = function(user, callback)
    {
-       $http.post('/logout').success(function()
+       var data = {user: user};
+       console.log(data);
+       $http.post('/logout', data).success(function(response)
        {
            $rootScope.currentUser = null;
            $localStorage.currentUser = null;
-           callback();
+           callback(response);
        });
    };
    
@@ -52,10 +54,22 @@ app.service('loginService',['$http', '$location', '$rootScope', '$q', '$localSto
               }
       });
    };
+
+   var passwordRecovery = function(user, callback)
+   {
+      var newPassword = Math.floor(Math.random() * 100000000);
+      var data = {userEmail: user.email, newPassword: newPassword};
+      console.log(newPassword);
+      $http.post('/recoverpassword', data).success(function(response)
+      {
+          callback(response);
+      })
+   }
    
    return {
        login: login,
        logout: logout,
-       checkLoggedIn: checkLoggedIn
+       checkLoggedIn: checkLoggedIn,
+       passwordRecovery: passwordRecovery
    };
 }]);

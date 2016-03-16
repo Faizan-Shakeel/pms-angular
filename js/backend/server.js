@@ -116,6 +116,16 @@ app.get('/loggedin',function(req, res)
 });
 
 
+/////////////////////////////////////////////////
+// ****************** LOGOUT ***************** //
+/////////////////////////////////////////////////
+app.post('/logout', function(req, res)
+{
+    req.logout();
+    res.send('successfully logged out');
+})
+
+
 /////////////////////////////////////////////////////////////////////////////
 // *********** RETRIEVE DATA ASSOCIATED WITH LOGGED IN USER ************** //
 /////////////////////////////////////////////////////////////////////////////
@@ -135,8 +145,8 @@ app.post('/fetch' , function(req,res)
     // var transporter = nodemailer.createTransport({
     // service: 'Yahoo',
     // auth: {
-    //    user: 'ghost_stalker323',
-    //    pass: 'chacha210'
+    //    user: '',
+    //    pass: ''
     //       }
     // });
 
@@ -158,6 +168,29 @@ app.post('/create', function(req,res)
 app.post('/update', function(req,res)
 {        
     mongoModules.updateData(req, function(response)
+    {
+        res.send(response);
+    });
+});
+
+/////////////////////////////////////////////////////
+// *********** PASSWORD RECOVERY ***************** //
+/////////////////////////////////////////////////////
+app.post('/recoverpassword', function(req, res)
+{
+    mongoModules.passwordRecovery(req, function(response)
+    {
+        // send a msg to user's email with his temp password //
+        res.send(response);
+    })
+})
+
+///////////////////////////////////////////////////////////
+// *************** UPDATE USER PASSWORD **************** //
+///////////////////////////////////////////////////////////
+app.post('/updatePassword', function(req,res)
+{
+    mongoModules.updatePassword(req, function(response)
     {
         res.send(response);
     });
@@ -277,10 +310,10 @@ app.post('/inviteUser', function(req,res)
 {
 
   var xoauth2gen = xoauth2.createXOAuth2Generator({
-    user: "bilal.mansoor.10@gmail.com",
-    clientId: "333669414238-8c5gsn2f559rlu1ve7vvm10m4s2gbbo6.apps.googleusercontent.com",
-    clientSecret: "Ph6fJKR-YDXGw_YXxMwF9HXj",
-    refreshToken: "1/_E2IbVVZQngzOSoJOx52e37tVpJnGR68TF9YLSYXDQc",
+    user: "",
+    clientId: "",
+    clientSecret: "",
+    refreshToken: "",
 });
   
   xoauth2gen.getToken(function(err, token, accessToken){
@@ -296,11 +329,11 @@ app.post('/inviteUser', function(req,res)
        // user: req.body.userParameters.senderEmail,
        // pass: req.body.userParameters.senderPassword
           xoauth2: xoauth2.createXOAuth2Generator({
-            user: 'bilal.mansoor.10@gmail.com',
-            clientId: '333669414238-8c5gsn2f559rlu1ve7vvm10m4s2gbbo6.apps.googleusercontent.com',
-            clientSecret: 'Ph6fJKR-YDXGw_YXxMwF9HXj',
-            refreshToken: '1/_E2IbVVZQngzOSoJOx52e37tVpJnGR68TF9YLSYXDQc',
-            accessToken: 'ya29.nwKmUABuEioCarDfBVkAWt7rpqyZWeUQQ3ronQDMO6959ZUzI5WOvBLRqcElKZb53Q'
+            user: '',
+            clientId: '',
+            clientSecret: '',
+            refreshToken: '',
+            accessToken: ''
               })       
      }
   //    generator.on('token', function(token){
@@ -439,7 +472,7 @@ io.on('connection',function(socket)
     
     socket.on('disconnect', function()
     {
-        console.log('client disconnected');
+        //console.log('client disconnected');
     });
         
 });

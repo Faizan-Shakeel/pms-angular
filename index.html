@@ -2,53 +2,37 @@
 <html ng-app="pmsAngular">
 
 <head>
+
+
+    <link href='https://fonts.googleapis.com/css?family=Caveat:400,700' rel='stylesheet' type='text/css'>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PMS</title>
 
-    <!-- ************** LOGIN PAGE ASSETS ************* -->
-        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
-        <!--<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">-->
-        <!--<link rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css">-->
-		<!--<link rel="stylesheet" href="assets/css/form-elements.css">-->
-        <link rel="stylesheet" href="assets/css/style.css">
-
-        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-        <!--[if lt IE 9]>
-            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-        <![endif]-->
-
-        <!-- Favicon and touch icons -->
-        <link rel="shortcut icon" href="assets/ico/favicon.png">
-        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png">
-        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png">
-        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png">
-        <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">
-    <!-- ******   LOGIN PAGE ASSETS END ********* -->   
-    
     <!--Third Party Styles-->
 
     <link href="css/Third-Party-CSS/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="font-awesome-4.5.0/css/font-awesome.min.css">
-    <!--<link rel="stylesheet" href="bower_components/angular-bootstrap-simple-chat/src/css/style.css">-->
-    <!--<link rel="stylesheet" href="bower_components/angular-bootstrap-simple-chat/src/css/themes.css">-->
+    <link rel="stylesheet" href="bower_components/angular-simple-chat/dist/angular-simple-chat.min.css">
 
     <!--Third Party Styles-->
 
     <!--Respond JS-->
 
-    <!--<script type="text/javascript" src="js/Third-Party-JS/respond.min.js"></script>-->
+    <script type="text/javascript" src="js/Third-Party-JS/respond.min.js"></script>
 
     <!--Respond JS-->
 
     <!--Html5Shiv-->
 
+    <!--[if lt IE 9]>
+    <script src="js/Third-Party-JS/html5shiv.min.js"></script>
+    <![endif]-->
+
     <!--Html5Shiv-->
 
     <!--Custom Styles-->
-
+    <link href="css/login_container.css" rel="stylesheet">
     <link href="css/container.css" rel="stylesheet">
     <link href="css/navbar-top.css" rel="stylesheet">
     <link href="css/navbar2.css" rel="stylesheet">
@@ -58,7 +42,7 @@
     <link href="css/tabs_and_panels.css" rel="stylesheet">
     <link href="css/shadow.css" rel="stylesheet">
     <link href="css/popover.css" rel="stylesheet">
-
+    <link href="css/register_container.css" rel="stylesheet">
     <!--Custom Styles-->
 
     <!--To Be Deleted-->
@@ -74,10 +58,10 @@
 
 <body>
 
-    <div ng-view></div>
+<div ng-view></div>
 
-<!-------------------------------------------------------------------- Navigation Bar Fixed Top -----------------------------------------------------------------------START-->
-
+<!------------------------------------------------------------ MAIN CONTAINER (Write No HTML Outside) -----------------------------------------------------------------START-->
+<!--<div class="container-full-width" ng-controller="Main_View_Controller as MainViewVM" ng-cloak>-->
 
 
 <!------------------------------------------------------------- MAIN CONTAINER (Write No HTML Outside) --------------------------------------------------------------------END-->
@@ -98,29 +82,37 @@
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script src="js/Third-Party-JS/bootstrap.min.js"></script>
 <script src="js/Third-Party-JS/jquery.slimscroll.min.js"></script>
-<!--<script type="text/javascript" src="js/Third-Party-JS/angular.min.js"></script>-->
 <script type="text/javascript" src="js/Third-Party-JS/angular.js"></script>
 <script type="text/javascript" src="js/Third-Party-JS/angular-animate.min.js"></script>
 <script type="text/javascript" src="i18n/angular-locale_de-de.js"></script>
 <script type="text/javascript" src="js/Third-Party-JS/ui-bootstrap-tpls-0.14.3.min.js"></script>
 <script type="text/javascript" src="bower_components/nsPopover/src/nsPopover.js"></script>
 <script src="bower_components/angular-input-masks/angular-input-masks-standalone.min.js"></script>
-<script src="bower_components/angular-messages/angular-messages.min.js"></script>
-<script src="bower_components/angular-bootstrap-multiselect/dist/angular-bootstrap-multiselect.min.js"></script>
-<script src="http://rubaxa.github.io/Sortable/Sortable.js"></script>
-<script src="http://rubaxa.github.io/Sortable/ng-sortable.js"></script>
 <script src="bower_components/angular-route/angular-route.js"></script>
 <script src="bower_components/ngstorage/ngStorage.js"></script>
 <script src="bower_components/ng-file-upload/ng-file-upload.js"></script>
-<script src="bower_components/angular-route/angular-route.js"></script>
-<script src="bower_components/lodash/dist/lodash.min.js"></script>
 <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 <script src="bower_components/angular-socket-io/socket.js"></script>
+<script src="/socket.io/socket.io.js"></script>
 <script src="node_modules/socket.io/node_modules/socket.io-client/socket.io.js"></script>
 <script src="bower_components/angular-bootstrap-simple-chat/src/scripts/index.js"></script>
+
+<script type="text/javascript" src="js/Third-Party-JS/mask.min.js"></script>
+<script src="bower_components/lodash/lodash.min.js"></script>
+<script src="bower_components/ng-password-strength/dist/scripts/ng-password-strength.min.js"></script>
+<script src="bower_components/angular-messages/angular-messages.min.js"></script>
+<script src="bower_components/angular-bootstrap-multiselect/dist/angular-bootstrap-multiselect.min.js"></script>
+<!-- <script src="bower_components/moment/moment.js"></script> -->
+<script src="http://rubaxa.github.io/Sortable/Sortable.js"></script>
+<script src="http://rubaxa.github.io/Sortable/ng-sortable.js"></script>
+
 <script src="bower_components/moment/moment.js"></script>
+<script src="bower_components/angular-moment/angular-moment.js"></script>
+
+<script src="bower_components/angular-simple-chat/dist/angular-simple-chat.min.js"></script>
 
 <!--Third Party-->
+
 
 
 <!--Directives-->
@@ -133,9 +125,9 @@
 <script type="text/javascript" src="js/controllers/registration.js"></script>
 <script type="text/javascript" src="js/controllers/global_view_controller.js"></script>
 <script type="text/javascript" src="js/controllers/modals_controller.js"></script>
+<script type="text/javascript" src="js/controllers/user_profile.js"></script>
 
 <!--Services-->
-
 
 <script type="text/javascript" src="js/services/login_service.js"></script>
 <script type="text/javascript" src="js/services/mongo_CRUD_service.js"></script>

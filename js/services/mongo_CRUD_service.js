@@ -176,6 +176,24 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
         });
     };
     
+
+    //////////////////////////////////////////////////////////
+    // ************** UPDATE USER PASSWORD **************** //
+    //////////////////////////////////////////////////////////
+    var updatePassword = function(id, oldPassword, newPassword)
+    {
+        var data = {id: id, oldPassword: oldPassword, newPassword: newPassword};
+        $http.post('/updatePassword', data).success(function(response)
+        {
+            console.log(response);
+        })
+                .error(function(err)
+        {
+            console.log(err);
+        });
+    };   
+
+
     //////////////////////////////////////////////////
     // ******  FUNCTION TO RETRIEVE CHAT DATA ***** //
     //////////////////////////////////////////////////
@@ -186,7 +204,6 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
         $http.post('/retrieveChat', data).success(deferred.resolve);
         return deferred.promise;
     };
-
 
     //////////////////////////////////////////////////
     // ****** INVITE USER VIA EMAIL *************** //
@@ -221,6 +238,7 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
              updateUser: updateUser,
              updateChatFlag: updateChatFlag,
              updateUserNotifications: updateUserNotifications,
+             updatePassword: updatePassword,
              retrieveChat: retrieveChat,
              inviteUser: inviteUser
             };

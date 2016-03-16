@@ -13,7 +13,6 @@ app.service('registrationService', ['$http', '$location', '$rootScope' ,function
                     id: '0u',
                     imageUrl: '',
                     password: user.password,
-                    projectAndRole: ''
                 }
         };
         $http.post('/register',userData).success(function(data)

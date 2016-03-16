@@ -2,13 +2,17 @@
 
 var app = angular.module('mainViewModule', ['ui.bootstrap', 'nsPopover']);
 
-app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService', 'DocumentService', 'UserService', 'NotificationsAndHistoryService', 'mongoCrudService', '$localStorage', '$rootScope', 'chatSocket', 'chatService', '$filter', '$timeout', function ($scope, ProjectService, TaskService, DocumentService, UserService, NotificationsAndHistoryService, mongoCrudService, $localStorage, $rootScope, chatSocket, chatService, $filter, $timeout)
+app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService', 'DocumentService', 'UserService', 'NotificationsAndHistoryService', '$filter', '$timeout', 'mongoCrudService', '$localStorage', '$rootScope', 'chatSocket', 'chatService', function ($scope, ProjectService, TaskService, DocumentService, UserService, NotificationsAndHistoryService, $filter, $timeout, mongoCrudService, $localStorage, $rootScope, chatSocket, chatService)
 {
     var vm = this;
     var accInfoObject;
-    var loggedInUserName = $localStorage.currentUser.users.name;
-    var userNameMaxLength = 17;
-    loggedInUserName = loggedInUserName.substring(0, userNameMaxLength);
+    if ($localStorage.currentUser)
+    {
+        var loggedInUserName = $localStorage.currentUser.users.name;        
+        var userNameMaxLength = 17;
+        loggedInUserName = loggedInUserName.substring(0, userNameMaxLength);
+    }
+
 
     init();
     //chatService.checkMsgStatus(vm.unreadMsgUserEmail);
@@ -124,7 +128,7 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
     var online = 'fa fa-circle-o';
     var offline = '';
     vm.users = [];
-    vm.submitButtonText = 'send';
+    vm.submitButtonText = 'sen3d';
     var selectedUserObject = {};
     vm.title = 'Chat';
     vm.selectedUser = function(selectedUser)
@@ -193,7 +197,11 @@ app.controller('Main_View_Controller', ['$scope', 'ProjectService', 'TaskService
 
             var socket = io();
             vm.messages = [];
-            vm.username = $localStorage.currentUser.users.name;
+            if ($localStorage.currentUser)
+            {
+                vm.username = $localStorage.currentUser.users.name;                
+            }
+
             vm.visible = false;
             //** When the user logges-in, send his emailID to server so that his
             //   socketID can be associated with his emailID. **

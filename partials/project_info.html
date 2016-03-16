@@ -2,7 +2,7 @@
 <div>
 
     <div class="modal-header">
-        <h4 class="modal-title text-center">Project Info</h4>
+        <h4 class="modal-title text-center text-success">Project Info</h4>
     </div>
 
     <div class="modal-body">
@@ -13,53 +13,101 @@
 
                 <div class="modal-new-project-form">
 
-                    <br/>
+                    <div slim-scroll height="310px">
 
-                    <form class="form-horizontal">
-                        <div class="form-group">
-                            <label class="col-lg-3 col-md-3 col-sm-3 control-label">Name</label>
-                            <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
-                                <p class="form-control-static">{{ModalVM.projectName}}</p>
+                        <br/>
+
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-lg-4 col-md-4 col-sm-4 control-label">Name</label>
+                                <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
+                                    <p class="form-control-static">{{ModalVM.projectName}}</p>
+                                </div>
                             </div>
-                        </div>
 
-                        <hr class="info-divider"/>
+                            <hr class="info-divider"/>
 
-                        <div class="form-group">
-                            <label class="col-lg-3 col-md-3 col-sm-3 control-label">Budget</label>
-                            <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
-                                <p class="form-control-static">{{ModalVM.projectBudget}}</p>
+                            <div class="form-group">
+                                <label class="col-lg-4 col-md-4 col-sm-4 control-label">Status</label>
+                                <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
+                                    <p class="form-control-static">{{ModalVM.projectStatus}}</p>
+                                </div>
                             </div>
-                        </div>
 
-                        <hr class="info-divider"/>
+                            <hr class="info-divider"/>
 
-                        <div class="form-group">
-                            <label class="col-lg-3 col-md-3 col-sm-3 control-label">Target Date</label>
-                            <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
-                                <p class="form-control-static">{{ModalVM.projectTargetEndDate}}</p>
+                            <div class="form-group">
+                                <label class="col-lg-4 col-md-4 col-sm-4 control-label">Budget</label>
+                                <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
+                                    <p class="form-control-static">{{ModalVM.projectBudget}}</p>
+                                </div>
                             </div>
-                        </div>
 
-                        <hr class="info-divider"/>
+                            <hr class="info-divider"/>
 
-                        <div class="form-group" ng-show="ModalVM.statusVisibility">
-                            <label class="col-lg-3 col-md-3 col-sm-3 control-label">Status</label>
-                            <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
-                                <p class="form-control-static">{{ModalVM.selectedStatus}}</p>
+                            <div class="form-group">
+                                <label class="col-lg-4 col-md-4 col-sm-4 control-label">Target Date</label>
+                                <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
+                                    <p class="form-control-static">{{ModalVM.projectTargetEndDate}}</p>
+                                </div>
                             </div>
-                        </div>
 
-                        <hr class="info-divider" ng-show="ModalVM.statusVisibility"/>
+                            <hr class="info-divider"/>
 
-                        <div class="form-group">
-                            <label class="col-lg-3 col-md-3 col-sm-3 control-label">Description</label>
-                            <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
-                                <p class="form-control-static">{{ModalVM.projectDescription}}</p>
+                            <div class="form-group">
+                                <label class="col-lg-4 col-md-4 col-sm-4 control-label">Description</label>
+                                <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
+                                    <p class="form-control-static">{{ModalVM.projectDescription}}</p>
+                                </div>
                             </div>
-                        </div>
 
-                    </form>
+                            <hr class="info-divider"/>
+
+                            <div class="form-group">
+                                <label class="col-lg-4 col-md-4 col-sm-4 control-label">Date Created</label>
+                                <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
+                                    <p class="form-control-static">{{ModalVM.projectCreateDate}}</p>
+                                </div>
+                            </div>
+
+                            <hr class="info-divider"/>
+
+                            <div class="form-group">
+                                <label class="col-lg-4 col-md-4 col-sm-4 control-label">Date Modified</label>
+                                <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
+                                    <p class="form-control-static">{{ModalVM.modifiedDate}}</p>
+                                </div>
+                            </div>
+
+                            <hr class="info-divider"/>
+
+                            <div class="form-group">
+                                <label class="col-lg-4 col-md-4 col-sm-4 control-label">Date Completed</label>
+                                <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
+                                    <p class="form-control-static">{{ModalVM.endDate}}</p>
+                                </div>
+                            </div>
+
+                            <hr class="info-divider"/>
+
+                            <div class="form-group">
+                                <label class="col-lg-4 col-md-4 col-sm-4 control-label">Created By</label>
+                                <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
+                                    <p class="form-control-static">{{ModalVM.createdBy}}</p>
+                                </div>
+                            </div>
+
+                            <hr class="info-divider"/>
+
+                            <div class="form-group">
+                                <label class="col-lg-4 col-md-4 col-sm-4 control-label">Last Modified By</label>
+                                <div class="col-lg-6 col-md-6 col-sm-8 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
+                                    <p class="form-control-static">{{ModalVM.lastModifiedBy}}</p>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
                 </div>
             </uib-tab>
 

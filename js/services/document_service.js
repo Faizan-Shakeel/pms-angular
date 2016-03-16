@@ -408,18 +408,28 @@ app.service('DocumentService',['NotificationsAndHistoryService' ,'mongoCrudServi
         return fileExtension;
     }
 
-    var uploadFile = function(documentName,file)    
+    var uploadFile = function(documentName,file, callback)    
     {
+        var progressPercentage;
         var fileExtension = extractFileExtension(file.name);
         documentName = documentName + fileExtension;
         file.upload = Upload.upload({
             url: '/uploads',
             method: 'POST',
             data: {'file': file, documentName: documentName}
-        }).success(function(res)
+        }).then(function(res)
         {
            console.log(res);
-           alert ("Document Saved Successfully");
+           console.log("Document Saved Successfully");
+           //return {msg: 'successfully uploaded'};
+        }, function (res)
+        {
+            console.log(res);
+        }, function (evt)
+        {
+            progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+            //console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+            callback({progress: progressPercentage, fileName: evt.config.data.file.name});
         });
     }
 

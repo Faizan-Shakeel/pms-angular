@@ -2,10 +2,11 @@
 
 /*.container-full-width {*/
 
-/*padding-right: 15px;*/
-/*padding-left: 15px;*/
-/*margin-right: auto;*/
-/*margin-left: auto;*/
+
+    /*padding-right: 15px;*/
+    /*padding-left: 15px;*/
+    /*margin-right: auto;*/
+    /*margin-left: auto;*/
 
 /*}*/
 
@@ -17,4 +18,19 @@
     /*font-family: 'Short Stack', cursive;*/
     font-family: Verdana, Geneva, sans-serif;
     /*font-size: 16px;*/
+}
+
+.drop-box {
+    background: #F8F8F8;
+    border: 5px dashed #DDD;
+    width: inherit;
+    height: 100px;
+    text-align: center;
+    padding-top: 25px;
+    margin: 10px;
+    float: inherit;
+}
+
+.dragover {
+    border: 5px dashed blue;
 }

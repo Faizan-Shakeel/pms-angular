@@ -1,50 +1,47 @@
-        <div class="container-full-width" ng-controller="Main_View_Controller as MainViewVM" ng-cloak>
+<div class="container-fluid" ng-controller="Main_View_Controller as MainViewVM" ng-cloak>
 
 <!-------------------------------------------------------------------- Navigation Bar Fixed Top -----------------------------------------------------------------------START-->
     <div ng-controller="ModalsController as ModalVM">
+
         <nav class="navbar navbar-default navbar-fixed-top" id="navbar-bottom-margin" role="navigation">
+            <div class="container-fluid">
 
-            <header class="navbar-header">
-                <a class="navbar-brand" href="#/mainview" id="application-logo">PMS</a>
-            </header>
+                <div class="row">
 
-            <div class="collapse navbar-collapse col-lg-offset-2" id="bs-example-navbar-collapse-1">
+                    <header class="navbar-header col-lg-2 col-md-2 col-sm-1">
+                        <a class="navbar-brand" href="#/mainview" id="application-logo">PMS</a>
+                    </header>
 
-                <div class="navbar-form navbar-left">
-                    <div class="form-group" id="main-div">
-                        <div class="input-group" id="inline-div-1">
-                            <div class="input-group-btn" id="inline-div-2" uib-dropdown is-open="MainViewVM.searchDropdownStatus.isopen">
-                                <button type="button" class="btn btn-default" uib-dropdown-toggle ng-disabled="disabled" id="search-categories">
-                                    {{MainViewVM.selectedItem}} <span class="caret"></span>
-                                </button>
-
+                    <div class="col-lg-4 col-md-4 col-sm-5" id="search-group">
+                        <div class="input-group">
+                            <div class="input-group-btn" uib-dropdown is-open="MainViewVM.searchDropdownStatus.isopen">
+                                <button type="button" class="btn btn-default" uib-dropdown-toggle ng-disabled="disabled" id="search-categories">{{MainViewVM.selectedItem}} <span class="caret"></span></button>
                                 <ul class="uib-dropdown-menu" id="test-drop-down" role="menu" aria-labelledby="search-categories">
-                                    <li ng-repeat="dropdownItem in MainViewVM.dropdownItems" role="menuitem"><a ng-click="MainViewVM.globalSearchDropDown(dropdownItem)">{{dropdownItem}}</a></li>
+                                    <li ng-repeat="dropdownItem in MainViewVM.dropdownItems" role="menuitem"><a class="dropdown-text-decoration-none" ng-click="MainViewVM.globalSearchDropDown(dropdownItem.name)"><i class="{{dropdownItem.icon}} pull-left" id="{{dropdownItem.id}}"></i>{{dropdownItem.name}}</a></li>
                                 </ul>
                             </div>
 
-                            <input type="search" class="form-control" placeholder="Search Projects" ng-model="MainViewVM.searchProjects.name" ng-show="MainViewVM.projectVisibility" ng-class="ngHide"/>
-                            <input type="search" class="form-control" placeholder="Search Tasks" ng-model="MainViewVM.searchTasks.name" ng-show="MainViewVM.taskVisibility" ng-class="ngHide"/>
-                            <input type="search" class="form-control" placeholder="Search Documents" ng-model="MainViewVM.searchDocuments.name" ng-show="MainViewVM.documentVisibility" ng-class="ngHide"/>
-                            <input type="search" class="form-control" placeholder="Search Users" ng-model="MainViewVM.searchUsers.name" ng-show="MainViewVM.userVisibility" ng-class="ngHide"/>
+                            <input type="text" class="form-control" placeholder="Search Projects" ng-model="MainViewVM.searchProjects.name" ng-change="MainViewVM.inputSearchFilter(MainViewVM.searchProjects)"/>
 
                             <div class="input-group-btn" id="inline-div-3">
                                 <button class="btn btn-default" id="search-button" type="submit"><span class="glyphicon glyphicon-search"></span></button>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="navbar-btn navbar-right" id="signed-in-user">
-                    <span id="signed-in-user-id">{{currentUser.users.name}}</span>
-                    <img class="open img-rounded" id="signed-in-user-pic" ng-src="images/Original_Size/user.png" alt="" ns-popover ns-popover-template="partials/popover.html" ns-popover-timeout=-1 ns-popover-trigger="click" ns-popover-placement="bottom|right" ns-popover="MainViewVM.displayPopover"/>
-                </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 notifications">
+                        <p class="navbar-text" id="notifications" uib-tooltip="Unread Notifications" tooltip-placement="bottom"><i class="fa fa-comments-o"></i><strong> {{MainViewVM.notificationsCount.count}}</strong></p>
+                        <p class="navbar-text" id="users-online" uib-tooltip="Online Users" tooltip-placement="bottom"><i class="fa fa-user-md"></i><strong> {{MainViewVM.onlineUsersCount}}</strong></p>
+                    </div>
 
-                <div>
-                    <p class="navbar-text" id="notifications" uib-tooltip="Unread Notifications" tooltip-placement="bottom"><i class="fa fa-comments-o"></i><strong> {{MainViewVM.notificationsCount.count}}</strong></p>
-                    <p class="navbar-text" id="users-online" uib-tooltip="Online Users" tooltip-placement="bottom"><i class="fa fa-user-md"></i><strong> {{MainViewVM.onlineUsersCount}}</strong></p>
-                </div>
+                    <div class="navbar-brand col-lg-3 col-md-4 col-sm-4 pull-right">
+                        <a class="pull-right" id="signed-in-user">
+                        <span class="" id="signed-in-user-id">{{MainViewVM.loggedInUserName}}</span>
+                            <img class="open img-rounded" id="signed-in-user-pic" ng-src="images/Original_Size/user.png" ns-popover ns-popover-template="partials/popover.html" ns-popover-timeout=-1 ns-popover-trigger="click" ns-popover-placement="bottom|right" ns-popover="MainViewVM.displayPopover"/>
+                        </a>
+                    </div>
 
+                </div>
             </div>
         </nav>
 
@@ -55,36 +52,11 @@
 
         <div class="row hidden-xs" id="test-second-custom-bar">
 
-            <div class="col-lg-2 col-md-2 col-sm-2" id="123">
+            <div class="col-lg-2 col-md-2 col-sm-3" id="123">
                 <button class="btn btn-default" id="menu-opener" ng-click="MainViewVM.switchAccordionVisibility()">Menu <span class="glyphicon glyphicon-book" id="icon-main-options-color"></span></button>
             </div>
 
-            <div class="col-lg-3 col-md-4 col-sm-5 common-class">
-                <div class="btn-group" id="create-record">
-                    <!--<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">-->
-                    <!--Create <span class="caret"></span>-->
-                    <!--</button>-->
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a href="#/mainview" id="create-project-dropdown-menu">Project</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#/mainview" id="create-task-dropdown-menu">Task</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#/mainview" id="create-file-dropdown-menu">File</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#/mainview" id="create-user-dropdown-menu">User</a></li>
-                    </ul>
-
-                </div>
-                <button class="btn btn-default common-class" id="edit-record">Edit <span class="glyphicon glyphicon-edit" id="icon-edit-record-color"></span></button>
-                <button class="btn btn-default common-class" id="delete-record">Delete <span class="glyphicon glyphicon-remove" id="icon-delete-record-color"></span></button>
-            </div>
-
-            <!--<div id="one-click-panels-expand">-->
-            <!--<button class="btn btn-default" id="expand-tooltip" data-toggle="tooltip" data-original-title="Expand"><i class="fa fa-angle-double-left" id="expand-left"></i><i class="fa fa-angle-double-right" id="expand-right"></i></button>-->
-            <!--<button class="btn btn-default" id="contract-tooltip" data-toggle="tooltip" data-original-title="Contract" style="display: none"><i class="fa fa-angle-double-right" id="contract-left"></i><i class="fa fa-angle-double-left" id="contract-right"></i></button>-->
-            <!--</div>-->
-
-            <div class="col-lg-2 col-md-2 col-sm-2 pull-right">
+            <div class="col-lg-2 col-md-2 col-sm-3 pull-right">
                 <button class="btn btn-default" id="chatting-list-opener" ng-click="MainViewVM.switchChatPanelVisibility()">Colleagues <span class="glyphicon glyphicon-comment" id="icon-chat-list-color"></span></button>
             </div>
 
@@ -97,7 +69,7 @@
 
         <div class="row" id="third-row">
 
-        <div class="col-lg-2 col-md-2 col-sm-2" ng-hide="MainViewVM.accordionVisibility">
+        <div class="col-lg-2 col-md-2 col-sm-3" ng-hide="MainViewVM.accordionVisibility">
 
             <uib-accordion close-others="MainViewVM.oneAtATime">
                 <uib-accordion-group is-open="MainViewVM.accordionStatus.isFirstOpen">
@@ -172,29 +144,38 @@
 
                     <div id="test-tabs-height" slim-scroll height="500px">
 
-                        <div class="panel panel-default" id="outer-panel" ng-repeat="projectPanel in MainViewVM.projectPanels | filter:MainViewVM.searchProjects">
-                            <div class="panel-body">
+                        <div ng-sortable="{animation: 400}">
 
-                                <div class="panel panel-default" id="inner-panel">
-                                    <div class="panel-body">
-                                        <i class="fa fa-suitcase fa-2x" id="panel-icon-fix"></i>
+                            <div class="panel panel-default" id="outer-panel" ng-mouseenter="options=true" ng-mouseleave="options=false" ng-repeat="projectPanel in MainViewVM.projectPanelsFilter">
+                                <div class="panel-body">
+
+                                    <div class="panel panel-default" id="project-icon-panel">
+                                        <div class="panel-body">
+                                            <i class="fa fa-bar-chart-o fa-2x" id="project-panel-icon-fix"></i>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div id="panel-content">
-                                    <p>
-                                    <h4>{{projectPanel.name}}</h4>
-                                    </p>
+                                    <div id="panel-content">
+                                        <p>
+                                        <h4>{{projectPanel.name}}</h4>
+                                        </p>
 
-                                    <p>
-                                        {{projectPanel.status}}
-                                    </p>
-                                </div>
+                                        <p>
+                                            {{projectPanel.status}}
+                                        </p>
+                                    </div>
 
-                                <div class="btn-group-vertical" id="btn-grp-panel">
-                                    <button class="btn btn-default test-button-border" ng-click="ModalVM.infoProjectModal(projectPanel)"><i class="fa fa-info"></i></button>
-                                    <button class="btn btn-default" ng-click="ModalVM.editProjectModal(projectPanel)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteProject(projectPanel, ModalVM)"><i class="fa fa-trash-o"></i></button>
+                                    <i class="fa fa-hourglass-half fa-2x {{projectPanel.pendingStatusClass}}" uib-tooltip="Pending Approval" tooltip-placement="top"></i>
+                                    <i class="fa fa-thumbs-o-up fa-2x {{projectPanel.approvedStatusClass}}" uib-tooltip="Approved" tooltip-placement="top"></i>
+                                    <i class="fa fa-play-circle-o fa-2x {{projectPanel.inProgressStatusClass}}" uib-tooltip="In Progress" tooltip-placement="top"></i>
+                                    <i class="fa fa-check-square-o fa-2x {{projectPanel.completedStatusClass}}" uib-tooltip="Completed" tooltip-placement="top"></i>
+                                    <i class="fa fa-lock fa-2x {{projectPanel.closedStatusClass}}" uib-tooltip="Closed" tooltip-placement="top"></i>
+
+                                    <div class="btn-group-vertical" id="btn-grp-panel" ng-show="options">
+                                        <button class="btn btn-info" ng-click="ModalVM.infoProjectModal(projectPanel)"><i class="fa fa-info"></i></button>
+                                        <button class="btn btn-default" ng-click="ModalVM.editProjectModal(projectPanel)"><i class="fa fa-edit"></i></button>
+                                        <button class="btn btn-danger" ng-click="MainViewVM.deleteProject(projectPanel, ModalVM)"><i class="fa fa-trash-o"></i></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -205,30 +186,40 @@
 
                     <div slim-scroll height="500px">
 
-                        <div class="panel panel-default" id="outer-panel-tasks-in-new-project-modal" ng-repeat="taskPanel in MainViewVM.taskPanels | filter:MainViewVM.searchTasks">
-                            <div class="panel-body">
+                        <div ng-sortable="{animation: 400}">
 
-                                <div class="panel panel-default" id="inner-panel-tasks-in-new-project-modal">
-                                    <div class="panel-body">
-                                        <i class="fa fa-suitcase fa-2x" id="task-panel-icon-fix-in-new-project-modal"></i>
+                            <div class="panel panel-default" id="outer-panel-tasks-in-new-project-modal" ng-repeat="taskPanel in MainViewVM.taskPanelsFilter">
+                                <div class="panel-body">
+
+                                    <div class="panel panel-default {{taskPanel.statusColor}}" id="task-icon-panel">
+                                        <div class="panel-body">
+                                            <i class="fa fa-tasks fa-2x" id="task-panel-icon-fix"></i>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div id="task-panel-content-in-new-project-modal">
-                                    <p>
-                                    <h4>{{taskPanel.name}} <span class="col-lg-offset-8">ID: {{taskPanel.id}}</span></h4>
-                                    </p>
+                                    <div id="task-panel-content-in-new-project-modal">
+                                        <p>
+                                        <!--<h4>{{taskPanel.name}} <span class="col-lg-offset-8">ID: {{taskPanel.id}}</span></h4>-->
+                                        <h4>{{taskPanel.name}} </h4>
+                                        </p>
 
-                                    <p>
-                                        {{taskPanel.status}}
-                                        <span class="col-lg-offset-7">{{taskPanel.project}}</span>
-                                    </p>
-                                </div>
+                                        <p>
+                                            {{taskPanel.status}}
+                                            <!--<span class="col-lg-offset-7">{{taskPanel.project}}</span>-->
+                                        </p>
+                                    </div>
 
-                                <div class="btn-group-vertical" id="tasks-btn-grp-panel-in-new-project-modal">
-                                    <button class="btn btn-default test-button-border" ng-click="ModalVM.infoTaskModal(taskPanel)"><i class="fa fa-info"></i></button>
-                                    <button class="btn btn-default" ng-click="ModalVM.editTaskModal(taskPanel)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteTask(taskPanel, ModalVM)"><i class="fa fa-trash-o"></i></button>
+                                    <i class="fa fa-hourglass-half fa-2x {{taskPanel.pendingStatusClass}}" uib-tooltip="Pending Approval" tooltip-placement="top"></i>
+                                    <i class="fa fa-thumbs-o-up fa-2x {{taskPanel.approvedStatusClass}}" uib-tooltip="Approved" tooltip-placement="top"></i>
+                                    <i class="fa fa-play-circle-o fa-2x {{taskPanel.inProgressStatusClass}}" uib-tooltip="In Progress" tooltip-placement="top"></i>
+                                    <i class="fa fa-check-square-o fa-2x {{taskPanel.completedStatusClass}}" uib-tooltip="Completed" tooltip-placement="top"></i>
+                                    <i class="fa fa-lock fa-2x {{taskPanel.closedStatusClass}}" uib-tooltip="Closed" tooltip-placement="top"></i>
+
+                                    <div class="btn-group-vertical" id="tasks-btn-grp-panel-in-new-project-modal">
+                                        <button class="btn btn-info test-button-border" ng-click="ModalVM.infoTaskModal(taskPanel)"><i class="fa fa-info"></i></button>
+                                        <button class="btn btn-default" ng-click="ModalVM.editTaskModal(taskPanel)"><i class="fa fa-edit"></i></button>
+                                        <button class="btn btn-danger test-button-border" ng-click="MainViewVM.deleteTask(taskPanel, ModalVM)"><i class="fa fa-trash-o"></i></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -239,32 +230,35 @@
 
                     <div slim-scroll height="500px">
 
-                        <div class="panel panel-default" id="outer-panel-documents-in-new-project-modal" ng-repeat="documentPanel in MainViewVM.documentPanels | filter:MainViewVM.searchDocuments">
-                            <div class="panel-body">
+                        <div ng-sortable="{animation: 400}">
 
-                                <div class="panel panel-default" id="inner-panel-documents-in-new-project-modal">
-                                    <div class="panel-body">
-                                        <i class="fa fa-suitcase fa-2x" id="document-panel-icon-fix-in-new-project-modal"></i>
+                            <div class="panel panel-default" id="outer-panel-documents-in-new-project-modal" ng-repeat="documentPanel in MainViewVM.documentPanelsFilter">
+                                <div class="panel-body">
+
+                                    <div class="panel panel-default" id="document-icon-panel">
+                                        <div class="panel-body">
+                                            <i class="fa fa-files-o fa-2x" id="document-panel-icon-fix"></i>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div id="document-panel-content-in-new-project-modal">
-                                    <p>
-                                    <h4>{{documentPanel.name}} <span class="col-lg-offset-8">
-                                        <a href="#/mainview" style="color: blue" ng-click="MainViewVM.downloadFile(documentPanel)">{{documentPanel.fileName}}</a>
-                                        ID: {{documentPanel.id}} </span> </h4>
-                                    </p>
-                                    <p>
-                                        {{documentPanel.status}}
-                                        <span class="col-lg-offset-6">[ {{documentPanel.project}} ] [ {{documentPanel.task}} ]</span>
-                                        <!--<span class="col-lg-offset-7">{{documentPanel.task}}</span>-->
-                                    </p>
-                                </div>
+                                    <div id="document-panel-content-in-new-project-modal">
+                                        <p>
+                                        <h4>{{documentPanel.name}} <span class="col-lg-offset-8">ID: {{documentPanel.id}} </span> </h4>
+                                        </p>
+                                        <p>
+                                            {{documentPanel.status}}
+                                            <span class="col-lg-offset-6">[ {{documentPanel.project}} ] [ {{documentPanel.task}} ]</span>
+                                        </p>
+                                    </div>
 
-                                <div class="btn-group-vertical" id="documents-btn-grp-panel-in-new-project-modal">
-                                    <button class="btn btn-default test-button-border" ng-click="ModalVM.infoDocumentModal(documentPanel)"><i class="fa fa-info"></i></button>
-                                    <button class="btn btn-default" ng-click="ModalVM.editDocumentModal(documentPanel)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteDocument(documentPanel, ModalVM)"><i class="fa fa-trash-o"></i></button>
+
+                                    <div class="col-sm-4"><uib-progressbar class="progress-striped active" max="100" value="fileUploadStatusProgress" type="danger"><i>{{fileUploadStatusProgress[documentPanel.fileName]}}%</i></uib-progressbar></div>
+
+                                    <div class="btn-group-vertical" id="documents-btn-grp-panel-in-new-project-modal">
+                                        <button class="btn btn-info test-button-border" ng-click="ModalVM.infoDocumentModal(documentPanel)"><i class="fa fa-info"></i></button>
+                                        <button class="btn btn-default" ng-click="ModalVM.editDocumentModal(documentPanel)"><i class="fa fa-edit"></i></button>
+                                        <button class="btn btn-danger test-button-border" ng-click="MainViewVM.deleteDocument(documentPanel, ModalVM)"><i class="fa fa-trash-o"></i></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -274,29 +268,32 @@
                 <uib-tab heading="Users" active="MainViewVM.active.Users">
                     <div slim-scroll height="500px">
 
-                        <div class="panel panel-default" id="outer-panel-users-in-new-project-modal" ng-repeat="userPanel in MainViewVM.userPanels | filter:MainViewVM.searchUsers">
-                            <div class="panel-body">
+                        <div ng-sortable="{animation: 400}">
 
-                                <div class="panel panel-default" id="inner-panel-users-in-new-project-modal">
-                                    <div class="panel-body">
-                                        <i class="fa fa-suitcase fa-2x" id="user-panel-icon-fix-in-new-project-modal"></i>
+                            <div class="panel panel-default" id="outer-panel-users-in-new-project-modal" ng-repeat="userPanel in MainViewVM.userPanelsFilter">
+                                <div class="panel-body">
+
+                                    <div class="panel panel-default" id="user-icon-panel">
+                                        <div class="panel-body">
+                                            <i class="fa fa-user fa-2x" id="user-panel-icon-fix"></i>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div id="user-panel-content-in-new-project-modal">
-                                    <p>
-                                    <h4>{{userPanel.name}}</h4>
-                                    </p>
+                                    <div id="user-panel-content-in-new-project-modal">
+                                        <p>
+                                        <h4>{{userPanel.name}}</h4>
+                                        </p>
 
-                                    <p>
-                                        {{userPanel.email}}
-                                    </p>
-                                </div>
+                                        <p>
+                                            {{userPanel.email}}
+                                        </p>
+                                    </div>
 
-                                <div class="btn-group-vertical" id="users-btn-grp-panel-in-new-project-modal">
-                                    <button class="btn btn-default test-button-border" ng-click="ModalVM.infoUserModal(userPanel)"><i class="fa fa-info"></i></button>
-                                    <button class="btn btn-default" ng-click="ModalVM.editUserModal(userPanel)"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-default test-button-border" ng-click="MainViewVM.deleteUser(userPanel, ModalVM)"><i class="fa fa-trash-o"></i></button>
+                                    <div class="btn-group-vertical" id="users-btn-grp-panel-in-new-project-modal">
+                                        <button class="btn btn-info test-button-border" ng-click="ModalVM.infoUserModal(userPanel)"><i class="fa fa-info"></i></button>
+                                        <button class="btn btn-default" ng-click="ModalVM.editUserModal(userPanel)"><i class="fa fa-edit"></i></button>
+                                        <button class="btn btn-danger test-button-border" ng-click="MainViewVM.deleteUser(userPanel, ModalVM)"><i class="fa fa-trash-o"></i></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -305,8 +302,35 @@
 
             </uib-tabset>
 
+            <div class="panel panel-default" id="chatBoxOuterStyle" ng-show="MainViewVM.visible">
+
+                <div class="panel-heading" id="chat-box-panel-heading">
+                    {{MainViewVM.loggedInUserName}}
+
+                    <div class="btn-group" id="chat-box-heading-buttons" role="group" aria-label="">
+                        <button type="button" class="btn btn-warning" ng-click="MainViewVM.hideChatBoxInnerPanel()"><i id="chat-box-minimize" class="fa fa-minus"></i></button>
+                        <button type="button" class="btn btn-danger" ng-click="MainViewVM.selectedUser(user)"><i id="chat-box-close" class="fa fa-close fa-lg"></i></button>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+                    <simple-chat
+                            id="chatBoxInnerStyle"
+                            ng-show="MainViewVM.visible"
+                            messages="MainViewVM.messages"
+                            local-user="MainViewVM.user"
+                            show-user-avatar="true"
+                            show-composer="true"
+                            show-bubble-infos="true"
+                            send-function="MainViewVM.sendMessage"
+                            send-button-text="MainViewVM.submitButtonText"
+                    ></simple-chat>
+                </div>
+
+            </div>
+
             <!--<div class="chat-box">-->
-                <irontec-simple-chat
+<!--                 <irontec-simple-chat
                         messages="MainViewVM.messages"
                         username="MainViewVM.username"
                         input-placeholder-text="You can write here"
@@ -317,7 +341,7 @@
                         visible="MainViewVM.visible"
                         expand-on-new="{{MainViewVM.expandOnNew}}">
                 </irontec-simple-chat>
-            <!--</div>-->
+ -->            <!--</div>-->
 
         </div>
 
@@ -345,7 +369,7 @@
         <!------------------------------------------------------------------------ Context Menu --------------------------------------------------------------------------END-->
 
         <!------------------------------------------------------------------------ Chatting List -----------------------------------------------------------------------START-->
-        <aside class="col-lg-2 col-md-2 col-sm-2" id="chatting-list-fixed" ng-hide="MainViewVM.chatPanelVisibility">
+        <aside class="col-lg-2 col-md-2 col-sm-3" id="chatting-list-fixed" ng-hide="MainViewVM.chatPanelVisibility">
 
             <div class="panel panel-default" id="chatting-list-panel">
                 <div class="panel-heading" id="chat-panel-heading">Chat</div>

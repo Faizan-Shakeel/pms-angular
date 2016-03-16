@@ -63,12 +63,13 @@
 
 /*#user-name*/
 /*{*/
-/*font-weight: bold;*/
+
+    /*font-weight: bold;*/
 /*}*/
 
 /*#user-designation*/
 /*{*/
-/*margin-bottom: 25px;*/
+    /*margin-bottom: 25px;*/
 /*}*/
 
 #user-email
@@ -79,7 +80,8 @@
 
 /*#user-profile*/
 /*{*/
-/*margin-left: 10px;*/
+
+    /*margin-left: 10px;*/
 /*}*/
 
 #user-account
@@ -99,7 +101,3 @@
 {
     display: none;
 }
-
-/*{*/
-/*display: none;*/
-/*}*/

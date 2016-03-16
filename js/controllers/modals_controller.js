@@ -6,8 +6,12 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
 
     var vm = this;
 
+    var emptyFunction = function(){};
+
     vm.infoElement = function(elemType, elemInfo)
     {
+        var notificationMessage;
+
         if(elemType == 'Project')
         {
             if(ProjectService.checkProjectExistence(elemInfo.name))
@@ -16,7 +20,8 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
             }
             else
             {
-                alert("Project Doesn't Exist");
+                notificationMessage = 'Project "' + elemInfo.name + '" Does Not Exist Anymore.';
+                vm.notificationModal(emptyFunction, notificationMessage);
             }
         }
         else if(elemType == 'Task')
@@ -27,7 +32,8 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
             }
             else
             {
-                alert("Task Doesn't Exist");
+                notificationMessage = 'Task "' + elemInfo.name + '" Does Not Exist Anymore.';
+                vm.notificationModal(emptyFunction, notificationMessage);
             }
         }
         else if(elemType == 'Document')
@@ -38,7 +44,8 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
             }
             else
             {
-                alert("Document Doesn't Exist");
+                notificationMessage = 'Document "' + elemInfo.name + '" Does Not Exist Anymore.';
+                vm.notificationModal(emptyFunction, notificationMessage);
             }
         }
         else if((elemType.search('user') != -1) || (elemType.search('User') != -1))
@@ -49,7 +56,8 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
             }
             else
             {
-                alert("User Doesn't Exist");
+                notificationMessage = 'User "' + elemInfo.name + '" Does Not Exist Anymore.';
+                vm.notificationModal(emptyFunction, notificationMessage);
             }
         }
     };
@@ -256,8 +264,10 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
 
         editProjectModalInstance.result.then(function (project_params)
         {
-
             NotificationsAndHistoryService.makeHistory({elementType: 'Project', element: project_params});
+
+//            vm.projectStatusColor = NotificationsAndHistoryService.setStatusColor(project_params.status);
+//            vm.projectStatusColor = project_params.statusColor;
 
         }, function () {
 
@@ -334,6 +344,8 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
         {
 
             NotificationsAndHistoryService.makeHistory({elementType: 'Task', element: task_params.updated_task});
+
+//            vm.taskStatusColor = NotificationsAndHistoryService.setStatusColor(task_params.updated_task.status);
 
         }, function () {
 
@@ -534,6 +546,77 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
      ///////////////// Confirmation Modal /////// [ Global ] /////////////////////////////////// [E N D] //////////////
      *////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
 
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////// Notification Modal /////// [ Global ] //////////////////////////////////////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.notificationModal = function (notification, messageOne, messageTwo) {
+
+        var notificationModalInstance = $uibModal.open({
+            animation: true,
+            templateUrl: 'partials/notification_modal.html',
+            controller: 'NotificationModalInstanceController',
+            controllerAs: 'NotificationModalVM',
+            windowClass: 'notification-modal-style',
+            backdrop: 'static',
+            resolve: {
+                dataForThisModalInstance: function(){
+                    return{
+                        notificationMessage1: messageOne,
+                        notificationMessage2: messageTwo
+//                        projectInfo: JSON.parse(JSON.stringify(projectInfo))
+                    };
+                }
+            }
+        });
+
+        notificationModalInstance.result.then(function (result)
+        {
+            notification();
+
+        }, function () {
+
+        });
+    };
+    /*////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+     ///////////////// Notification Modal /////// [ Global ] /////////////////////////////////// [E N D] //////////////
+     *////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////// User Profile /////// [ Global ] //////////////////////////////////////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.userProfileModal = function () {
+
+        var userInfo = UserService.getUserByEmail($rootScope.currentUser.users.email);
+
+        var userProfileModalInstance = $uibModal.open({
+            animation: false,
+            templateUrl: 'partials/user_profile.html',
+            controller: 'UserProfileModalInstanceController',
+            controllerAs: 'UserProfileModalVM',
+            windowClass: 'user-profile-modal-style',
+            backdrop: 'static',
+            resolve: {
+                dataForThisModalInstance: function(){
+                    return{
+                        userInfo: JSON.parse(JSON.stringify(userInfo))
+                    };
+                }
+            }
+        });
+
+        userProfileModalInstance.result.then(function (result)
+        {
+
+        }, function () {
+
+        });
+    };
+    /*////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+     ///////////////// User Profile /////// [ Global ] /////////////////////////////////// [E N D] //////////////
+     *////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+
 }]);
 
 app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'TaskService', 'DocumentService', 'UserService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, ProjectService, TaskService, DocumentService, UserService) {
@@ -687,7 +770,11 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
             'targetEndDate': projectTargetEndDate,
             'description': projectDescription,
             'status': 'Pending Approval',
-			'statusColor': 'pending-approval',
+            'pendingStatusClass': 'status-pending-icon-on',
+            'approvedStatusClass': 'status-approved-icon-off',
+            'inProgressStatusClass': 'status-in-progress-icon-off',
+            'completedStatusClass': 'status-completed-icon-off',
+            'closedStatusClass': 'status-closed-icon-off',
             'createDate': new Date(),
             'modifiedDate': '',
             'endDate': '',
@@ -1084,7 +1171,7 @@ app.controller('CreateProjectModalInstanceController', ['$scope', '$uibModal', '
     vm.editTaskModal = function (taskToEdit) {
 
         var editTaskModalInstance = $uibModal.open({
-            animation: false,
+            animation: true,
             templateUrl: 'partials/task_modal.html',
             controller: 'EditTaskModalInstanceController',
             controllerAs: 'TaskModalVM',
@@ -1617,11 +1704,17 @@ app.controller('InfoProjectModalInstanceController', ['$scope', '$uibModal', '$u
     var projectInfo = dataForThisModalInstance.projectInfo;
 
     vm.projectName = projectInfo.name;
+    vm.projectStatus = projectInfo.status;
     vm.projectBudget = projectInfo.budget;
     vm.projectDescription = projectInfo.description;
     vm.projectTargetEndDate = moment(projectInfo.targetEndDate).format("L");
+    vm.projectCreateDate = moment(projectInfo.createDate).format("L");
+    vm.projectModifiedDate = moment(projectInfo.modifiedDate).format("L");
+    vm.projectEndDate = moment(projectInfo.endDate).format("L");
+    vm.projectCreatedBy = projectInfo.createdBy;
+    vm.projectLastModifiedBy = projectInfo.lastModifiedBy;
 
-	vm.taskPanels = projectInfo.tasks;
+    vm.taskPanels = projectInfo.tasks;
     vm.documentPanels = projectInfo.documents;
     vm.userPanels = JSON.parse(JSON.stringify(projectInfo.users));
 
@@ -1632,7 +1725,7 @@ app.controller('InfoProjectModalInstanceController', ['$scope', '$uibModal', '$u
     vm.infoTaskModal = function (taskInfo) {
 
         var editTaskModalInstance = $uibModal.open({
-            animation: false,
+            animation: true,
             templateUrl: 'partials/task_info.html',
             controller: 'InfoTaskModalInstanceController',
             controllerAs: 'TaskModalVM',
@@ -1665,7 +1758,7 @@ app.controller('InfoProjectModalInstanceController', ['$scope', '$uibModal', '$u
     vm.infoDocumentModal = function (documentInfo) {
 
         var editDocumentModalInstance = $uibModal.open({
-            animation: false,
+            animation: true,
             templateUrl: 'partials/document_info.html',
             controller: 'InfoDocumentModalInstanceController',
             controllerAs: 'DocumentModalVM',
@@ -1701,7 +1794,7 @@ app.controller('InfoProjectModalInstanceController', ['$scope', '$uibModal', '$u
         userInfo = UserService.getUserByEmail(userInfo.email);
 
         var editUserModalInstance = $uibModal.open({
-            animation: false,
+            animation: true,
             templateUrl: 'partials/user_info.html',
             controller: 'InfoUserModalInstanceController',
             controllerAs: 'UserModalVM',
@@ -1743,12 +1836,19 @@ app.controller('InfoTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
     vm.taskNameEditable = true;
     vm.taskName = taskInfo.name;
     vm.taskProject = taskInfo.project;
+    vm.taskStatus = taskInfo.status;
+    vm.taskTargetEndDate = moment(taskInfo.targetEndDate).format("L");
+    vm.taskCreateDate = moment(taskInfo.createDate).format("L");
+    vm.taskModifiedDate = moment(taskInfo.modifiedDate).format("L");
+    vm.taskEndDate = moment(taskInfo.endDate).format("L");
+    vm.taskCreatedBy = taskInfo.createdBy;
+    vm.taskLastModifiedBy = taskInfo.lastModifiedBy;
 
     if(taskInfo.targetEndDate != undefined)
     {
- //       vm.taskTargetEndDate = new Date(taskInfo.targetEndDate);
-    	vm.taskTargetEndDate = moment(taskInfo.targetEndDate).format("L");
-	}
+//        vm.taskTargetEndDate = new Date(taskInfo.targetEndDate);
+        vm.taskTargetEndDate = moment(taskInfo.targetEndDate).format("L");
+    }
 
     vm.taskDescription = taskInfo.description;
     vm.documentPanels = JSON.parse(JSON.stringify(taskInfo.documents));
@@ -1761,7 +1861,7 @@ app.controller('InfoTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
     vm.infoDocumentModal = function (documentInfo) {
 
         var editDocumentModalInstance = $uibModal.open({
-            animation: false,
+            animation: true,
             templateUrl: 'partials/document_info.html',
             controller: 'InfoDocumentModalInstanceController',
             controllerAs: 'DocumentModalVM',
@@ -1797,7 +1897,7 @@ app.controller('InfoTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
         userInfo = UserService.getUserByEmail(userInfo.email);
 
         var editUserModalInstance = $uibModal.open({
-            animation: false,
+            animation: true,
             templateUrl: 'partials/user_info.html',
             controller: 'InfoUserModalInstanceController',
             controllerAs: 'UserModalVM',
@@ -1838,7 +1938,11 @@ app.controller('InfoDocumentModalInstanceController', ['$scope', '$uibModal', '$
     vm.documentName = documentInfo.name;
     vm.documentFileName = documentInfo.fileName;
     vm.documentProject = documentInfo.project;
-    vm.documentTask = documentInfo.task;
+    vm.documentType = documentInfo.type;
+    vm.documentSize = documentInfo.size;
+    vm.documentCreateDate = moment(documentInfo.createDate).format("L");
+    vm.documentCreatedBy = documentInfo.createDate;
+
     vm.documentDescription = documentInfo.description;
 
     vm.cancel = function () {
@@ -1869,7 +1973,7 @@ app.controller('InfoUserModalInstanceController', ['$scope', '$uibModal', '$uibM
         projectInfo = ProjectService.getProjectByName(projectInfo.name);
 
         var editProjectModalInstance = $uibModal.open({
-            animation: false,
+            animation: true,
             templateUrl: 'partials/project_info.html',
             controller: 'InfoProjectModalInstanceController',
             controllerAs: 'ModalVM',
@@ -1904,7 +2008,7 @@ app.controller('InfoUserModalInstanceController', ['$scope', '$uibModal', '$uibM
         taskInfo = TaskService.getTaskById(taskInfo.id);
 
         var editTaskModalInstance = $uibModal.open({
-            animation: false,
+            animation: true,
             templateUrl: 'partials/task_info.html',
             controller: 'InfoTaskModalInstanceController',
             controllerAs: 'TaskModalVM',
@@ -1937,7 +2041,7 @@ app.controller('InfoUserModalInstanceController', ['$scope', '$uibModal', '$uibM
     vm.infoDocumentModal = function (documentInfo) {
 
         var editDocumentModalInstance = $uibModal.open({
-            animation: false,
+            animation: true,
             templateUrl: 'partials/document_info.html',
             controller: 'InfoDocumentModalInstanceController',
             controllerAs: 'DocumentModalVM',
@@ -1970,7 +2074,7 @@ app.controller('InfoUserModalInstanceController', ['$scope', '$uibModal', '$uibM
 
 }]);
 
-app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'TaskService', 'DocumentService', 'UserService', 'mongoCrudService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, ProjectService, TaskService, DocumentService, UserService, mongoCrudService) {
+app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'TaskService', 'DocumentService', 'UserService', 'NotificationsAndHistoryService', 'mongoCrudService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, ProjectService, TaskService, DocumentService, UserService, NotificationsAndHistoryService, mongoCrudService) {
 
     var vm = this;
     var newTasksArray = [];
@@ -2018,10 +2122,6 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
 
     vm.userPanels = JSON.parse(JSON.stringify(projectUsers));
 
-//    console.log("projectToEdit.users : " + JSON.stringify(projectToEdit.users));
-//    console.log("projectUsers : " + JSON.stringify(projectUsers));
-//    console.log("Global Users : " + JSON.stringify(UserService.getUserPanels()));
-
     vm.statuses = [
         {'status': 'Pending Approval'},
         {'status': 'Approved'},
@@ -2038,6 +2138,49 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
     vm.openDatePicker = function($event) {
         vm.status.opened = true;
     };
+
+    var statusControl = function()
+    {
+        vm.selectedStatus = projectToEdit.status;
+    };
+
+    vm.statusChanged = function()
+    {
+        var notificationMessage1;
+        var notificationMessage2;
+
+        if(projectToEdit.status == 'Pending Approval')
+        {
+            if((vm.selectedStatus != 'Approved') && (vm.selectedStatus != 'Closed'))
+            {
+                notificationMessage1 = 'Invalid Status "' + vm.selectedStatus + '" Selected';
+                notificationMessage2 = 'Valid Status Are "Approved" & "Closed"';
+
+                dataForThisModalInstance.globalScope.notificationModal(statusControl, notificationMessage1, notificationMessage2);
+            }
+        }
+        else if(projectToEdit.status == 'Approved' || projectToEdit.status == 'Completed')
+        {
+            if(vm.selectedStatus != 'In Progress' && vm.selectedStatus != 'Closed')
+            {
+                notificationMessage1 = 'Invalid Status "' + vm.selectedStatus + '" Selected';
+                notificationMessage2 = 'Valid Status Are "In Progress" & "Closed"';
+
+                dataForThisModalInstance.globalScope.notificationModal(statusControl, notificationMessage1, notificationMessage2);
+            }
+        }
+        else if(projectToEdit.status == 'In Progress')
+        {
+            if(vm.selectedStatus != 'Completed' && vm.selectedStatus != 'Closed')
+            {
+                notificationMessage1 = 'Invalid Status "' + vm.selectedStatus + '" Selected';
+                notificationMessage2 = 'Valid Status Are "Completed" & "Closed"';
+
+                dataForThisModalInstance.globalScope.notificationModal(statusControl, notificationMessage1, notificationMessage2);
+            }
+        }
+    };
+
 
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
      ////////////////////// Update Project ////////////////////////////////////////////////////////////////////////////
@@ -2181,14 +2324,21 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
             }
         }
 
+        var statusClasses = NotificationsAndHistoryService.setStatusColor(vm.selectedStatus);
+
         projectToEdit.budget = vm.projectBudget;
         projectToEdit.targetEndDate = vm.projectTargetEndDate;
         projectToEdit.description = vm.projectDescription;
         projectToEdit.status = vm.selectedStatus;
-		projectToEdit.statusColor = NotificationsAndHistoryService.setStatusColor(projectToEdit.status);
+        projectToEdit.pendingStatusClass = statusClasses.pendingStatusClass;
+        projectToEdit.approvedStatusClass = statusClasses.approvedStatusClass;
+        projectToEdit.inProgressStatusClass = statusClasses.inProgressStatusClass;
+        projectToEdit.completedStatusClass = statusClasses.completedStatusClass;
+        projectToEdit.closedStatusClass = statusClasses.closedStatusClass;
         projectToEdit.numberOfTasks = vm.taskPanels.length;
         projectToEdit.numberOfDocuments = vm.documentPanels.length;
         projectToEdit.numberOfUsers = vm.userPanels.length;
+
 
         var updated_project_params = {
             'id': projectToEdit.id,
@@ -2197,7 +2347,11 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
             'targetEndDate': projectToEdit.targetEndDate,
             'description': projectToEdit.description,
             'status': projectToEdit.status,
-			'statusColor': projectToEdit.statusColor,
+            'pendingStatusClass': projectToEdit.pendingStatusClass,
+            'approvedStatusClass': projectToEdit.approvedStatusClass,
+            'inProgressStatusClass': projectToEdit.inProgressStatusClass,
+            'completedStatusClass': projectToEdit.completedStatusClass,
+            'closedStatusClass': projectToEdit.closedStatusClass,
             'createDate': projectToEdit.createDate,
             'modifiedDate': new Date(),
             'endDate': projectToEdit.endDate,
@@ -2207,6 +2361,7 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
             'numberOfDocuments': projectToEdit.numberOfDocuments,
             'numberOfUsers': projectToEdit.numberOfUsers
         };
+
 
         ProjectService.updatedProjectParams(updated_project_params);
 
@@ -2224,7 +2379,7 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
     vm.addNewTaskModal = function()
     {
         var addNewTaskModalInstance = $uibModal.open({
-            animation: false,
+            animation: true,
             templateUrl: 'partials/task_modal.html',
             controller: 'CreateTaskModalController',
             controllerAs: 'TaskModalVM',
@@ -2330,7 +2485,7 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
     vm.addNewDocumentModal = function()
     {
         var addNewDocumentModalInstance = $uibModal.open({
-            animation: false,
+            animation: true,
             templateUrl: 'partials/document_modal.html',
             controller: 'CreateDocumentModalInstanceController',
             controllerAs: 'DocumentModalVM',
@@ -2373,7 +2528,7 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
     vm.addExistingUsersModal = function()
     {
         var addExistingUsersModalInstance = $uibModal.open({
-            animation: false,
+            animation: true,
             templateUrl: 'partials/existing_users_modal.html',
             controller: 'ExistingUsersModalInstanceController',
             controllerAs: 'AddExistingUsersModalVM',
@@ -2423,7 +2578,7 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
     vm.editUserModal = function(userToEdit)
     {
         var editUserModalInstance = $uibModal.open({
-            animation: false,
+            animation: true,
             templateUrl: 'partials/user_modal.html',
             controller: 'EditUserModalInstanceController',
             controllerAs: 'UserModalVM',
@@ -2481,7 +2636,7 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
     vm.editTaskModal = function (taskToEdit) {
 
         var editTaskModalInstance = $uibModal.open({
-            animation: false,
+            animation: true,
             templateUrl: 'partials/task_modal.html',
             controller: 'EditTaskModalInstanceController',
             controllerAs: 'TaskModalVM',
@@ -2609,7 +2764,7 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
     vm.editDocumentModal = function (documentToEdit) {
 
         var editDocumentModalInstance = $uibModal.open({
-            animation: false,
+            animation: true,
             templateUrl: 'partials/document_modal.html',
             controller: 'EditDocumentModalInstanceController',
             controllerAs: 'DocumentModalVM',
@@ -2657,7 +2812,7 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
     vm.existingTasksModalInProjectModal = function()
     {
         var existingTasksModalInProjectModalInstance = $uibModal.open({
-            animation: false,
+            animation: true,
             templateUrl: 'partials/existing_tasks_modal.html',
             controller: 'ExistingTasksModalInstanceController',
             controllerAs: 'AddExistingTasksModalVM',
@@ -2942,7 +3097,7 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
     vm.existingDocumentsModalInProjectModal = function()
     {
         var existingDocumentsModalInProjectModalInstance = $uibModal.open({
-            animation: false,
+            animation: true,
             templateUrl: 'partials/existing_documents_modal.html',
             controller: 'ExistingDocumentsModalInstanceController',
             controllerAs: 'AddExistingDocumentsModalVM',
@@ -3013,7 +3168,7 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
     vm.infoTaskModal = function (taskInfo) {
 
         var editTaskModalInstance = $uibModal.open({
-            animation: false,
+            animation: true,
             templateUrl: 'partials/task_info.html',
             controller: 'InfoTaskModalInstanceController',
             controllerAs: 'TaskModalVM',
@@ -3046,7 +3201,7 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
     vm.infoDocumentModal = function (documentInfo) {
 
         var editDocumentModalInstance = $uibModal.open({
-            animation: false,
+            animation: true,
             templateUrl: 'partials/document_info.html',
             controller: 'InfoDocumentModalInstanceController',
             controllerAs: 'DocumentModalVM',
@@ -3080,7 +3235,7 @@ app.controller('EditProjectModalInstanceController', ['$scope', '$uibModal', '$u
     vm.infoUserModal = function (userInfo) {
 
         var editUserModalInstance = $uibModal.open({
-            animation: false,
+            animation: true,
             templateUrl: 'partials/user_info.html',
             controller: 'InfoUserModalInstanceController',
             controllerAs: 'UserModalVM',
@@ -3522,7 +3677,11 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
         }
 
         var taskStatus = 'Pending Approval';
-		var taskStatusColor = 'pending-approval';
+        var taskPendingStatusClass = 'status-pending-icon-on';
+        var taskApprovedStatusClass = 'status-approved-icon-off';
+        var taskInProgressStatusClass = 'status-in-progress-icon-off';
+        var taskCompletedStatusClass = 'status-completed-icon-off';
+        var taskClosedStatusClass = 'status-closed-icon-off';
         var taskDescription = task_params.taskDescription;
 
         if(dataForThisModalInstance.isGlobal)
@@ -3531,7 +3690,11 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
                 'name': taskName,
                 'targetEndDate': taskTargetEndDate,
                 'status': taskStatus,
-				'statusColor': taskStatusColor,
+                'pendingStatusClass': 'status-pending-icon-on',
+                'approvedStatusClass': 'status-approved-icon-off',
+                'inProgressStatusClass': 'status-in-progress-icon-off',
+                'completedStatusClass': 'status-completed-icon-off',
+                'closedStatusClass': 'status-closed-icon-off',
                 'projectsArray': vm.selectedProjects,
                 'description': taskDescription
             };
@@ -3573,7 +3736,11 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
                     newTaskObject.name = new_task_params.name;
                     newTaskObject.targetEndDate = new_task_params.targetEndDate;
                     newTaskObject.status = "Pending Approval";
-					newTaskObject.statusColor = new_task_params.statusColor;
+                    newTaskObject.pendingStatusClass = new_task_params.pendingStatusClass;
+                    newTaskObject.approvedStatusClass = new_task_params.approvedStatusClass;
+                    newTaskObject.inProgressStatusClass = new_task_params.inProgressStatusClass;
+                    newTaskObject.completedStatusClass = new_task_params.completedStatusClass;
+                    newTaskObject.closedStatusClass = new_task_params.closedStatusClass;
                     newTaskObject.project = project.name;
                     newTaskObject.description = new_task_params.description;
                     newTaskObject.documents = documentsArray;
@@ -3686,7 +3853,11 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
                 newTaskObject.name = new_task_params.name;
                 newTaskObject.targetEndDate = new_task_params.targetEndDate;
                 newTaskObject.status = new_task_params.status;
-				newTaskObject.statusColor = new_task_params.statusColor;
+                newTaskObject.pendingStatusClass = new_task_params.pendingStatusClass;
+                newTaskObject.approvedStatusClass = new_task_params.approvedStatusClass;
+                newTaskObject.inProgressStatusClass = new_task_params.inProgressStatusClass;
+                newTaskObject.completedStatusClass = new_task_params.completedStatusClass;
+                newTaskObject.closedStatusClass = new_task_params.closedStatusClass;
                 newTaskObject.project = '';
                 newTaskObject.description = new_task_params.description;
                 newTaskObject.documents = documentsArray;
@@ -3720,7 +3891,11 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
                 'name': taskName,
                 'targetEndDate': taskTargetEndDate,
                 'status': taskStatus,
-				'statusColor': taskStatusColor,
+                'pendingStatusClass': taskPendingStatusClass,
+                'approvedStatusClass': taskApprovedStatusClass,
+                'inProgressStatusClass': taskInProgressStatusClass,
+                'completedStatusClass': taskCompletedStatusClass,
+                'closedStatusClass': taskClosedStatusClass,
                 'project': '',
                 'description': taskDescription,
                 'documents': documentsArray,
@@ -3742,7 +3917,7 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
     vm.addNewDocumentModal = function()
     {
         var addNewDocumentModalInstance = $uibModal.open({
-            animation: false,
+            animation: true,
             templateUrl: 'partials/document_modal.html',
             controller: 'CreateDocumentModalInstanceController',
             controllerAs: 'DocumentModalVM',
@@ -3788,7 +3963,7 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
         //        console.log(" : " + JSON.stringify());
 
         var addExistingUsersModalInstance = $uibModal.open({
-            animation: false,
+            animation: true,
             templateUrl: 'partials/existing_users_modal.html',
             controller: 'ExistingUsersModalInstanceController',
             controllerAs: 'AddExistingUsersModalVM',
@@ -3837,7 +4012,7 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
     vm.editDocumentModal = function (documentToEdit) {
 
         var editDocumentModalInstance = $uibModal.open({
-            animation: false,
+            animation: true,
             templateUrl: 'partials/document_modal.html',
             controller: 'EditDocumentModalInstanceController',
             controllerAs: 'DocumentModalVM',
@@ -3892,7 +4067,7 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
     vm.existingDocumentsModalInProjectModal = function()
     {
         var existingDocumentsModalInProjectModalInstance = $uibModal.open({
-            animation: false,
+            animation: true,
             templateUrl: 'partials/existing_documents_modal.html',
             controller: 'ExistingDocumentsModalInstanceController',
             controllerAs: 'AddExistingDocumentsModalVM',
@@ -4004,7 +4179,7 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
     vm.infoDocumentModal = function (documentInfo) {
 
         var editDocumentModalInstance = $uibModal.open({
-            animation: false,
+            animation: true,
             templateUrl: 'partials/document_info.html',
             controller: 'InfoDocumentModalInstanceController',
             controllerAs: 'DocumentModalVM',
@@ -4038,7 +4213,7 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
     vm.infoUserModal = function (userInfo) {
 
         var editUserModalInstance = $uibModal.open({
-            animation: false,
+            animation: true,
             templateUrl: 'partials/user_info.html',
             controller: 'InfoUserModalInstanceController',
             controllerAs: 'UserModalVM',
@@ -4071,7 +4246,7 @@ app.controller('CreateTaskModalController', ['$scope', '$uibModal', '$uibModalIn
 
 }]);
 
-app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'TaskService', 'DocumentService', 'UserService', 'mongoCrudService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, ProjectService, TaskService, DocumentService, UserService, mongoCrudService) {
+app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'TaskService', 'DocumentService', 'UserService', 'NotificationsAndHistoryService', 'mongoCrudService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, ProjectService, TaskService, DocumentService, UserService, NotificationsAndHistoryService, mongoCrudService) {
 
     var vm = this;
     var updatedDocumentsArray = [];
@@ -4140,6 +4315,48 @@ app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
         vm.taskUpdateFlag = true;
     };
 
+    var statusControl = function()
+    {
+        vm.selectedStatus = taskToEdit.status;
+    };
+
+    vm.statusChanged = function()
+    {
+        var notificationMessage1;
+        var notificationMessage2;
+
+        if(taskToEdit.status == 'Pending Approval')
+        {
+            if((vm.selectedStatus != 'Approved') && (vm.selectedStatus != 'Closed'))
+            {
+                notificationMessage1 = 'Invalid Status "' + vm.selectedStatus + '" Selected';
+                notificationMessage2 = 'Valid Status Are "Approved" & "Closed"';
+
+                dataForThisModalInstance.globalScope.notificationModal(statusControl, notificationMessage1, notificationMessage2);
+            }
+        }
+        else if(taskToEdit.status == 'Approved' || taskToEdit.status == 'Completed')
+        {
+            if(vm.selectedStatus != 'In Progress' && vm.selectedStatus != 'Closed')
+            {
+                notificationMessage1 = 'Invalid Status "' + vm.selectedStatus + '" Selected';
+                notificationMessage2 = 'Valid Status Are "In Progress" & "Closed"';
+
+                dataForThisModalInstance.globalScope.notificationModal(statusControl, notificationMessage1, notificationMessage2);
+            }
+        }
+        else if(taskToEdit.status == 'In Progress')
+        {
+            if(vm.selectedStatus != 'Completed' && vm.selectedStatus != 'Closed')
+            {
+                notificationMessage1 = 'Invalid Status "' + vm.selectedStatus + '" Selected';
+                notificationMessage2 = 'Valid Status Are "Completed" & "Closed"';
+
+                dataForThisModalInstance.globalScope.notificationModal(statusControl, notificationMessage1, notificationMessage2);
+            }
+        }
+    };
+
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
      ////////////////// Update Task ///////////////////////////////////////////////////////////////////////////////////
      */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -4153,11 +4370,18 @@ app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
         var updated_task = {};
         var userObject;
         var userAddedToTask = false;
+        var statusClasses = NotificationsAndHistoryService.setStatusColor(vm.selectedStatus);
 
         taskToEdit.targetEndDate = new Date(task_params.taskTargetEndDate);
         taskToEdit.status = task_params.selectedStatus;
-		taskToEdit.statusColor = NotificationsAndHistoryService.setStatusColor(taskToEdit.status);
+        taskToEdit.statusColor = NotificationsAndHistoryService.setStatusColor(taskToEdit.status);
         taskToEdit.description = task_params.taskDescription;
+
+        taskToEdit.pendingStatusClass = statusClasses.pendingStatusClass;
+        taskToEdit.approvedStatusClass = statusClasses.approvedStatusClass;
+        taskToEdit.inProgressStatusClass = statusClasses.inProgressStatusClass;
+        taskToEdit.completedStatusClass = statusClasses.completedStatusClass;
+        taskToEdit.closedStatusClass = statusClasses.closedStatusClass;
 
         if(dataForThisModalInstance.isGlobal)
         {
@@ -4287,7 +4511,7 @@ app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
     vm.addNewDocumentModal = function()
     {
         var addNewDocumentModalInstance = $uibModal.open({
-            animation: false,
+            animation: true,
             templateUrl: 'partials/document_modal.html',
             controller: 'CreateDocumentModalInstanceController',
             controllerAs: 'DocumentModalVM',
@@ -4337,7 +4561,7 @@ app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
     vm.existingDocumentsModalInProjectModal = function()
     {
         var existingDocumentsModalInProjectModalInstance = $uibModal.open({
-            animation: false,
+            animation: true,
             templateUrl: 'partials/existing_documents_modal.html',
             controller: 'ExistingDocumentsModalInstanceController',
             controllerAs: 'AddExistingDocumentsModalVM',
@@ -4411,7 +4635,7 @@ app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
     vm.addExistingUsersModal = function()
     {
         var addExistingUsersModal = $uibModal.open({
-            animation: false,
+            animation: true,
             templateUrl: 'partials/existing_users_modal.html',
             controller: 'ExistingUsersModalInstanceController',
             controllerAs: 'AddExistingUsersModalVM',
@@ -4464,7 +4688,7 @@ app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
     vm.editDocumentModal = function (documentToEdit) {
 
         var editDocumentModalInstance = $uibModal.open({
-            animation: false,
+            animation: true,
             templateUrl: 'partials/document_modal.html',
             controller: 'EditDocumentModalInstanceController',
             controllerAs: 'DocumentModalVM',
@@ -4594,7 +4818,7 @@ app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
     vm.infoDocumentModal = function (documentInfo) {
 
         var editDocumentModalInstance = $uibModal.open({
-            animation: false,
+            animation: true,
             templateUrl: 'partials/document_info.html',
             controller: 'InfoDocumentModalInstanceController',
             controllerAs: 'DocumentModalVM',
@@ -4628,7 +4852,7 @@ app.controller('EditTaskModalInstanceController', ['$scope', '$uibModal', '$uibM
     vm.infoUserModal = function (userInfo) {
 
         var editUserModalInstance = $uibModal.open({
-            animation: false,
+            animation: true,
             templateUrl: 'partials/user_info.html',
             controller: 'InfoUserModalInstanceController',
             controllerAs: 'UserModalVM',
@@ -4732,7 +4956,7 @@ app.controller('EditDocumentModalInstanceController', ['$scope', '$uibModalInsta
 
 }]);
 
-app.controller('CreateDocumentModalInstanceController', ['$scope', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'DocumentService','Upload', function ($scope, $uibModalInstance, dataForThisModalInstance, ProjectService, DocumentService, Upload) {
+app.controller('CreateDocumentModalInstanceController', ['$scope', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'DocumentService','Upload', '$rootScope', function ($scope, $uibModalInstance, dataForThisModalInstance, ProjectService, DocumentService, Upload, $rootScope) {
 
     var vm = this;
     var new_document_params = '';
@@ -4742,28 +4966,40 @@ app.controller('CreateDocumentModalInstanceController', ['$scope', '$uibModalIns
 
     vm.modalType = 'Create';
     vm.modalHeading = 'Create New Document';
-
+    //$rootScope.fileUploadStatusProgressObject = {};
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
      ////////////////// Create New Document ///////////////////////////////////////////////////////////////////////////
      */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+$rootScope.fileUploadStatusProgress = {};
     vm.createOrUpdateDocument = function(document_params) {
 
         //        console.log("");
         //        console.log(" : " + );
         //        console.log(" : " + JSON.stringify());
-
+        DocumentService.uploadFile(document_params.documentName , document_params.file, function(statusData)
+            {
+                console.log(statusData.fileName);
+                $rootScope.fileUploadStatusProgress[statusData.fileName] = statusData.progress;
+                //console.log($rootScope.fileUploadStatusProgress);
+            });
+        
         var documentName = document_params.documentName;
         var documentDescription = document_params.documentDescription;
-        DocumentService.uploadFile(document_params.documentName , document_params.file);
         var fileExtension = DocumentService.extractFileExtension(document_params.file.name);
         
+        var documentType = document_params.documentType;
+        var documentSize = document_params.documentSize;
+        var documentCreateDate = document_params.documentCreateDate;
+        var documentCreatedBy = document_params.documentCreatedBy;
 
         if(dataForThisModalInstance.isGlobal)
         {
             new_document_params = {
                 'name': documentName,
-                'status': 'Document Status',
+                'type': documentType,
+                'size': documentSize,
+                'createDate': documentCreateDate,
+                'createdBy': documentCreatedBy,
                 'description': documentDescription
             };
 
@@ -4781,7 +5017,10 @@ app.controller('CreateDocumentModalInstanceController', ['$scope', '$uibModalIns
             }
             newDocumentObject.id = DocumentService.newDocumentID();
             newDocumentObject.name = new_document_params.name;
-            newDocumentObject.status = "Waiting For Approval";
+            newDocumentObject.type = new_document_params.type;
+            newDocumentObject.size = new_document_params.size;
+            newDocumentObject.createDate = new_document_params.createDate;
+            newDocumentObject.createdBy = new_document_params.createdBy;
             newDocumentObject.project = '';
             newDocumentObject.task = '';
             newDocumentObject.description = new_document_params.description;
@@ -4820,6 +5059,10 @@ app.controller('CreateDocumentModalInstanceController', ['$scope', '$uibModalIns
                 'fileType': vm.file.type,
                 'status': 'Document Status',
                 'url': documentName + fileExtension,
+                'type': documentType,
+                'size': documentSize,
+                'createDate': documentCreateDate,
+                'createdBy': documentCreatedBy,
                 'project': '',
                 'task': dataForThisModalInstance.taskName,
                 'description': documentDescription
@@ -4862,6 +5105,10 @@ app.controller('CreateDocumentModalInstanceController', ['$scope', '$uibModalIns
                 'fileType': vm.file.type,
                 'status': 'Document Status',
                 'url': documentName + fileExtension,
+                'type': documentType,
+                'size': documentSize,
+                'createDate': documentCreateDate,
+                'createdBy': documentCreatedBy,
                 'project': '',
                 'task': dataForThisModalInstance.taskName,
                 'description': documentDescription
@@ -4896,6 +5143,10 @@ app.controller('CreateDocumentModalInstanceController', ['$scope', '$uibModalIns
                 'fileType': vm.file.type,
                 'status': 'Document Status',
                 'url': documentName + fileExtension,
+                'type': documentType,
+                'size': documentSize,
+                'createDate': documentCreateDate,
+                'createdBy': documentCreatedBy,
                 'project': '',
                 'task': dataForThisModalInstance.taskName,
                 'description': documentDescription
@@ -4920,6 +5171,10 @@ app.controller('CreateDocumentModalInstanceController', ['$scope', '$uibModalIns
                 'fileType': vm.file.type,
                 'status': 'Document Status',
                 'url': documentName + fileExtension,
+                'type': documentType,
+                'size': documentSize,
+                'createDate': documentCreateDate,
+                'createdBy': documentCreatedBy,
                 'project': '',
                 'task': '',
                 'description': documentDescription
@@ -4966,7 +5221,6 @@ app.controller('CreateUserModalInstanceController', ['$scope', '$uibModalInstanc
         vm.roleVisibility = false;
     }
 
-
     vm.createOrUpdateUser = function(user_params) {
 
         //        console.log("");
@@ -4978,10 +5232,17 @@ app.controller('CreateUserModalInstanceController', ['$scope', '$uibModalInstanc
             'name': user_params.userName,
             'email': user_params.userEmail,
             'designation': user_params.userDesignation,
+            'gender': '',
+            'dateOfBirth': '',
+            'contactNumber': '',
+            'address': '',
+            'imageUrl': '',
             'projects': [],
             'tasks': [],
             'documents': []
         };
+
+        console.log("new_user_params : " + JSON.stringify(new_user_params));
 
         for (var userPanel of UserService.getUserPanels())
         {
@@ -5159,22 +5420,6 @@ app.controller('ConfirmationModalInstanceController', ['$scope', '$uibModalInsta
     vm.modalTitle = 'Warning';
     vm.confirmationMessage = 'Are You Sure?';
 
-    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-     ////////////////// Create Existing User //////////////////////////////////////////////////////////////////////////
-     */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    vm.confirm = function() {
-
-        //        console.log("");
-        //        console.log(" : " + );
-        //        console.log(" : " + JSON.stringify());
-
-    };
-
-    /*///////////////////////////////////////////////////////////////////////////////////////////////// [E N D] ///////
-     ////////////////// Create Existing User ////////////////////////////////////////////////////////// [E N D] ///////
-     *///////////////////////////////////////////////////////////////////////////////////////////////// [E N D] ///////
-
     var confirmed = 'OK';
 
     vm.confirm = function () {
@@ -5183,6 +5428,281 @@ app.controller('ConfirmationModalInstanceController', ['$scope', '$uibModalInsta
 
     vm.cancel = function () {
         $uibModalInstance.dismiss('cancel');
+    };
+
+}]);
+
+app.controller('NotificationModalInstanceController', ['$scope', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'UserService', function ($scope, $uibModalInstance, dataForThisModalInstance, ProjectService, UserService) {
+
+    var vm = this;
+
+    vm.modalTitle = 'Not Found';
+    vm.notificationMessage1 = dataForThisModalInstance.notificationMessage1;
+    vm.notificationMessage2 = dataForThisModalInstance.notificationMessage2;
+
+    vm.cancel = function () {
+        $uibModalInstance.close();
+    };
+
+}]);
+
+app.controller('UserProfileModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'UserService', 'NotificationsAndHistoryService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, ProjectService, UserService, NotificationsAndHistoryService) {
+
+    var vm = this;
+    var userInfo = dataForThisModalInstance.userInfo;
+
+//    console.log("userInfo : " + JSON.stringify(userInfo));
+
+    vm.modalTitle = 'User Profile';
+    vm.userImageUrl = 'images/Original_Size/user.png';
+    vm.userName = userInfo.name;
+    vm.userEmail = userInfo.email;
+    vm.userGender = userInfo.gender;
+    vm.userDesignation = userInfo.designation;
+    vm.userDateOfBirth = userInfo.dateOfBirth;
+    vm.userContactNumber = userInfo.contactNumber;
+    vm.userAddress = userInfo.address;
+
+    /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////// Modal For User Email Update /////// [ Global ] /////////////////////////////////////////////////
+     */////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    vm.updateUserProfileModal = function (infoToChange) {
+
+        var updateUserEmailModalInstance = $uibModal.open({
+            animation: false,
+            templateUrl: 'partials/user_profilel_update_modal.html',
+            controller: 'UpdateUserProfileModalInstanceController',
+            controllerAs: 'UserProfileModalVM',
+            windowClass: 'email-update-modal-style',
+            backdrop: 'static',
+            resolve: {
+                dataForThisModalInstance: function(){
+                    return{
+                        userInfo: JSON.parse(JSON.stringify(userInfo)),
+                        infoToChange: infoToChange
+                    };
+                }
+            }
+        });
+
+        updateUserEmailModalInstance.result.then(function (result)
+        {
+
+//            NotificationsAndHistoryService.makeHistory({elementType: 'UserEmail', element: userEmailUpdate});
+
+        }, function () {
+
+        });
+    };
+    /*////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+     ///////////////// Modal For User Email Update /////// [ Global ] /////////////////////////////// [E N D] /////////
+     *////////////////////////////////////////////////////////////////////////////////////////// [E N D] //////////////
+
+    vm.cancel = function () {
+        $uibModalInstance.close();
+    };
+
+}]);
+
+
+app.controller('UpdateUserProfileModalInstanceController', ['$scope', '$uibModal', '$uibModalInstance', 'dataForThisModalInstance', 'ProjectService', 'UserService', 'NotificationsAndHistoryService', function ($scope, $uibModal, $uibModalInstance, dataForThisModalInstance, ProjectService, UserService, NotificationsAndHistoryService) {
+
+    var vm = this;
+
+    vm.modalType = "Update";
+    vm.libMode = "bootstrap";
+    var userInfo = dataForThisModalInstance.userInfo;
+    var infoToChange = dataForThisModalInstance.infoToChange;
+    vm.modalTitle = "Update " + infoToChange;
+
+    vm.userDateOfBirth = '';
+
+    vm.dateOfBirthPicker = {
+        opened: false
+    };
+
+    vm.openDatePicker = function($event) {
+        vm.dateOfBirthPicker.opened = true;
+    };
+
+    vm.dateOfBirthFormat = 'dd.MM.yyyy';
+
+    vm.genders = [
+        {'gender': 'Male'},
+        {'gender': 'Female'}
+    ];
+
+    vm.selectedGender = 'Male';
+
+    if(infoToChange == 'Name')
+    {
+        vm.userProfileNameVisibility = true;
+        vm.userProfileEmailVisibility = false;
+        vm.userProfileDesignationVisibility = false;
+        vm.userProfileGenderVisibility = false;
+        vm.userProfileDateOfBirthVisibility = false;
+        vm.userProfileNumberVisibility = false;
+        vm.userProfileAddressVisibility = false;
+
+        vm.nameRequiredFlag = true;
+        vm.emailRequiredFlag = false;
+        vm.designationRequiredFlag = false;
+        vm.genderRequiredFlag = false;
+        vm.dateOfBirthRequiredFlag = false;
+        vm.numberRequiredFlag = false;
+        vm.addressRequiredFlag = false;
+    }
+    else if(infoToChange == 'Email')
+    {
+        vm.userProfileNameVisibility = false;
+        vm.userProfileEmailVisibility = true;
+        vm.userProfileDesignationVisibility = false;
+        vm.userProfileGenderVisibility = false;
+        vm.userProfileDateOfBirthVisibility = false;
+        vm.userProfileNumberVisibility = false;
+        vm.userProfileAddressVisibility = false;
+
+        vm.nameRequiredFlag = false;
+        vm.emailRequiredFlag = true;
+        vm.designationRequiredFlag = false;
+        vm.genderRequiredFlag = false;
+        vm.dateOfBirthRequiredFlag = false;
+        vm.numberRequiredFlag = false;
+        vm.addressRequiredFlag = false;
+    }
+    else if(infoToChange == 'Designation')
+    {
+        vm.userProfileNameVisibility = false;
+        vm.userProfileEmailVisibility = false;
+        vm.userProfileDesignationVisibility = true;
+        vm.userProfileGenderVisibility = false;
+        vm.userProfileDateOfBirthVisibility = false;
+        vm.userProfileNumberVisibility = false;
+        vm.userProfileAddressVisibility = false;
+
+        vm.nameRequiredFlag = false;
+        vm.emailRequiredFlag = false;
+        vm.designationRequiredFlag = true;
+        vm.genderRequiredFlag = false;
+        vm.dateOfBirthRequiredFlag = false;
+        vm.numberRequiredFlag = false;
+        vm.addressRequiredFlag = false;
+    }
+    else if(infoToChange == 'Gender')
+    {
+        vm.userProfileNameVisibility = false;
+        vm.userProfileEmailVisibility = false;
+        vm.userProfileDesignationVisibility = false;
+        vm.userProfileGenderVisibility = true;
+        vm.userProfileDateOfBirthVisibility = false;
+        vm.userProfileNumberVisibility = false;
+        vm.userProfileAddressVisibility = false;
+
+        vm.nameRequiredFlag = false;
+        vm.emailRequiredFlag = false;
+        vm.designationRequiredFlag = false;
+        vm.genderRequiredFlag = true;
+        vm.dateOfBirthRequiredFlag = false;
+        vm.numberRequiredFlag = false;
+        vm.addressRequiredFlag = false;
+    }
+    else if(infoToChange == 'Date Of Birth')
+    {
+        vm.userProfileNameVisibility = false;
+        vm.userProfileEmailVisibility = false;
+        vm.userProfileDesignationVisibility = false;
+        vm.userProfileGenderVisibility = false;
+        vm.userProfileDateOfBirthVisibility = true;
+        vm.userProfileNumberVisibility = false;
+        vm.userProfileAddressVisibility = false;
+
+        vm.nameRequiredFlag = false;
+        vm.emailRequiredFlag = false;
+        vm.designationRequiredFlag = false;
+        vm.genderRequiredFlag = false;
+        vm.dateOfBirthRequiredFlag = true;
+        vm.numberRequiredFlag = false;
+        vm.addressRequiredFlag = false;
+    }
+    else if(infoToChange == 'Number')
+    {
+        vm.userProfileNameVisibility = false;
+        vm.userProfileEmailVisibility = false;
+        vm.userProfileDesignationVisibility = false;
+        vm.userProfileGenderVisibility = false;
+        vm.userProfileDateOfBirthVisibility = false;
+        vm.userProfileNumberVisibility = true;
+        vm.userProfileAddressVisibility = false;
+
+        vm.nameRequiredFlag = false;
+        vm.emailRequiredFlag = false;
+        vm.designationRequiredFlag = false;
+        vm.genderRequiredFlag = false;
+        vm.dateOfBirthRequiredFlag = false;
+        vm.numberRequiredFlag = true;
+        vm.addressRequiredFlag = false;
+    }
+    else if(infoToChange == 'Address')
+    {
+        vm.userProfileNameVisibility = false;
+        vm.userProfileEmailVisibility = false;
+        vm.userProfileDesignationVisibility = false;
+        vm.userProfileGenderVisibility = false;
+        vm.userProfileDateOfBirthVisibility = false;
+        vm.userProfileNumberVisibility = false;
+        vm.userProfileAddressVisibility = true;
+
+        vm.nameRequiredFlag = false;
+        vm.emailRequiredFlag = false;
+        vm.designationRequiredFlag = false;
+        vm.genderRequiredFlag = false;
+        vm.dateOfBirthRequiredFlag = false;
+        vm.numberRequiredFlag = false;
+        vm.addressRequiredFlag = true;
+    }
+    else if(infoToChange == 'Password')
+    {
+        vm.currentPasswordVisibility = true;
+        vm.newPasswordVisibility = true;
+        vm.userProfileNameVisibility = false;
+        vm.userProfileEmailVisibility = false;
+        vm.userProfileDesignationVisibility = false;
+        vm.userProfileGenderVisibility = false;
+        vm.userProfileDateOfBirthVisibility = false;
+        vm.userProfileNumberVisibility = false;
+        vm.userProfileAddressVisibility = false;
+
+        vm.currentPasswordRequiredFlag = true;
+        vm.newPasswordRequiredFlag = true;
+        vm.nameRequiredFlag = false;
+        vm.emailRequiredFlag = false;
+        vm.designationRequiredFlag = false;
+        vm.genderRequiredFlag = false;
+        vm.dateOfBirthRequiredFlag = false;
+        vm.numberRequiredFlag = false;
+        vm.addressRequiredFlag = false;
+    }
+
+
+
+//    vm.modalTitle = 'User Profile';
+//    vm.userImageUrl = 'images/Original_Size/user.png';
+//    vm.userName = userInfo.name;
+//    vm.userEmail = userInfo.email;
+//    vm.userGender = userInfo.gender;
+//    vm.userDesignation = userInfo.designation;
+//    vm.userDateOfBirth = userInfo.dateOfBirth;
+//    vm.userContactNumber = userInfo.contactNumber;
+//    vm.userAddress = userInfo.address;
+
+    vm.updateUserProfileInfo = function()
+    {
+        $uibModalInstance.close();
+    };
+
+    vm.cancel = function () {
+        $uibModalInstance.dismiss();
     };
 
 }]);
