@@ -300,7 +300,7 @@ app.post('/inviteUser', function(req,res)
     });
 
     var transporter = nodemailer.createTransport({
-    service: 'gmail',
+    service: '',
     auth: {
        // user: req.body.userParameters.senderEmail,
        // pass: req.body.userParameters.senderPassword
