@@ -263,43 +263,19 @@ app.post('/uploads',function(req,res)
 app.post('/downloadFile', function(req, res)
 {
     mongoModules.downloadFiles(req, res);
-   //  {
-   //      res.send(response);
-   //      console.log(res);
-   //      var path = 'uploads/' + req.body.fileName;
-   //      fs.unlink(path, function()
-   //      {
-   //          console.log('temporary file removed');
-   //      });                    
-   // });
-
-    // var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
-    // db.once('open', function()
-    // {
-    //     var gfs = Grid(db.db, mongoose.mongo);
-    //     var readstream = gfs.createReadStream(
-    //     {
-    //         filename: req.body.fileName
-    //     });
-
-    //     readstream.pipe(res);
-
-    //     readstream.on('error', function(err)
-    //     {
-    //         console.log('error occured');
-    //         db.close();
-    //     });
-
-    //     readstream.on('end', function()
-    //     {
-    //         db.close();
-    //         console.log(res);
-    //     })
-    // });
-
-
 });
 
+
+/////////////////////////////////////////////////////
+// ******* STORE PROFILE PICTURE LOCALLY ********* //
+/////////////////////////////////////////////////////
+app.post('/storeProfilePic', function(req, res)
+{
+    mongoModules.storeProfilePic(req, function(response)
+    {
+        res.send(response);
+    });
+});
 
 /////////////////////////////////////////////////////////
 // ********** INVITE USER VIA EMAIL ****************** //
@@ -462,7 +438,7 @@ io.on('connection',function(socket)
             }
             mongoModules.updateUser({emailID: msg.userEmail, msg: msg}, function(response)
             {
-                console.log(response);                
+                console.log(response);
             });
             mongoModules.updateUser({emailID: msg.receiverEmail, msg: msg}, function(response)
             {

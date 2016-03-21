@@ -1,21 +1,24 @@
 var app = angular.module('userProfileModule', []);
 
-app.controller('userProfileCtrl', ['mongoCrudService', function(mongoCrudService)
+app.controller('userProfileCtrl', ['mongoCrudService', '$localStorage', function(mongoCrudService, $localStorage)
 {
 	var vm = this,
 		 contactNumber,
 		 address,
 		 dateOfBirth,
 		 email,
-		 gender;
+		 gender,
+		 userId = $localStorage.currentUser.users.id;
 
-	vm.updateProfile = function(userId, modal)
+
+	vm.updateProfile = function(modal)
 	{
 		console.log(modal);
+		console.log(userId);
 		if (modal.numberRequiredFlag)
 		{
 			contactNumber = {'users.contactNumber': modal.newUserNumber};
-			mongoCrudService.updateData(userId, contactNumber);
+			mongoCrudService.updateData($userId, contactNumber);
 		}
 		else if(modal.addressRequiredFlag)
 		{

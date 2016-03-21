@@ -57,7 +57,7 @@ var app = angular.module('pmsAngular', [
         })
                 .when('/mainview', {
                     templateUrl: 'views/mainview.html',
-                    controller: 'Main_View_Controller',
+                    //controller: 'Main_View_Controller',
                     controllerAs: 'MainViewVM',
                     resolve: {
                         LoggedIn: function(loginService)

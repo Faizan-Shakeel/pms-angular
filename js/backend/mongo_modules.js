@@ -144,8 +144,8 @@ var updateData = function(req, callback)
             var createSchema = schema.schema(schemaKey);
             var PmsCollection = db.model('PmsCollection',createSchema);
             query[idTag] = req.body.id;
-            //var options = {upsert: false};
-            PmsCollection.findOneAndUpdate(query, req.body.data, function(err, doc)
+            var options = {upsert: true};
+            PmsCollection.findOneAndUpdate(query, req.body.data, options, function(err, doc)
             {
                 if (!err)
                 {
@@ -277,7 +277,7 @@ var passwordRecovery = function(req, callback)
     var newPasswordHash = bcrypt.hashSync(req.body.newPassword);
     var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
     db.once('open', function()
-    {console.log(req.body);
+    {
         var createSchema = schema.schema('users');
         var query = {'users.email': req.body.userEmail};
         var PmsCollection = db.model('PmsCollection',createSchema);
@@ -285,20 +285,29 @@ var passwordRecovery = function(req, callback)
         {
             if (!err)
             {
-                doc.users.password = newPasswordHash;
-                doc.save(function(error)
-                {   
-                    if (!error)
-                    {
-                        db.close();
-                        callback('An Email has been sent with your temporary password');
-                    }
-                    else
-                    {
-                        db.close();
-                        callback(error);
-                    }
-                });
+                if (doc)
+                {
+                    doc.users.password = newPasswordHash;
+                    doc.save(function(error)
+                    {   
+                        if (!error)
+                        {
+                            db.close();
+                            callback('An Email has been sent with your temporary password');
+                        }
+                        else
+                        {
+                            db.close();
+                            callback(error);
+                        }
+                    });    
+                }
+                else
+                {
+                    db.close();
+                    callback('No user found with this email');
+                }
+                
             }
             else
             {
@@ -366,7 +375,6 @@ var updateChatFlag = function(req, callback)
     var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
     db.once('open', function()
     {
-        console.log(req.body.userObject.email);
         var createSchema = schema.schema('users');
         var PmsCollection = db.model('PmsCollection',createSchema);
         PmsCollection.findOne({'users.email':req.body.userObject.email}, function(err, doc)
@@ -378,13 +386,11 @@ var updateChatFlag = function(req, callback)
                 {
                     if (!error)
                     {
-                        console.log(data);
                         db.close();
                         callback('message flag updated');
                     }
                     else
                     {
-                        console.log(error);
                         db.close();
                         callback(error);
                     }
@@ -511,7 +517,6 @@ var deleteData = function(req, callback)
 ////////////////////////////////////////////////
 var uploadFiles = function(req, callback)
 {
-    console.log(req.body);
     var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
     db.once('open', function()
     {
@@ -526,8 +531,6 @@ var uploadFiles = function(req, callback)
             db.close();
             callback('Success');                
         });
-
-
     });
 };
 
@@ -540,27 +543,69 @@ var downloadFiles = function(req, res)
     var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
     db.once('open', function()
     {
-        console.log(req.body.fileName);
         var gfs = Grid(db.db, mongoose.mongo);
         var readstream = gfs.createReadStream(
         {
             filename: req.body.fileName
         });
 
-        readstream.pipe(res);
-
         readstream.on('error', function(err)
         {
-            console.log(err);
             db.close();
+            res.send(err);
         });
 
         readstream.on('end', function()
-        {
+        {  
             db.close();
         });
+
+        readstream.pipe(res);
     });
 };
+
+
+////////////////////////////////////////////////////////////////////
+// ****** STORE PROFILE PICTURE LOCALLY (GRIDFS TO SERVER) ****** //
+////////////////////////////////////////////////////////////////////
+var storeProfilePic = function(req, callback)
+{
+    var path = '../../images/profile_pictures/' + req.body.fileName;
+    var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
+    db.once('open', function()
+    {
+        var gfs = Grid(db.db, mongoose.mongo);
+        var readstream = gfs.createReadStream(
+        {
+            filename: req.body.fileName
+        });
+
+        readstream.on('error', function(err)
+        {
+            db.close();
+            callback(err);
+        });
+
+        readstream.on('data', function(chunk)
+        {
+            fs.appendFile(path, chunk, function(err)
+            {
+                if (err)
+                {
+                    console.log(err);
+                    db.close();
+                    callback(err);
+                }
+            });
+        })
+
+        readstream.on('end', function()
+        {  
+            db.close();
+            callback('Profile Picture Stored At Local Directory');
+        });
+    });
+}
 
 
 ////////////////////////////////////////////////
@@ -568,7 +613,6 @@ var downloadFiles = function(req, res)
 ////////////////////////////////////////////////
 var deleteFiles = function(req, callback)
 {
-    console.log(req.body.fileName);
     var db = mongoose.createConnection('mongodb://127.0.0.1/pms');
     db.once('open', function()
     {
@@ -687,5 +731,6 @@ exports.updatePassword = updatePassword;
 exports.retrieveChat = retrieveChat;
 exports.updateChatFlag = updateChatFlag;
 exports.uploadFiles = uploadFiles;
+exports.storeProfilePic = storeProfilePic;
 exports.deleteFiles = deleteFiles;
 exports.downloadFiles = downloadFiles;

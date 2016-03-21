@@ -1,6 +1,6 @@
 var app = angular.module('loginServiceModule',['ngStorage']);
 
-app.service('loginService',['$http', '$location', '$rootScope', '$q', '$localStorage', function($http, $location, $rootScope, $q, $localStorage)
+app.service('loginService',['$http', '$location', '$rootScope', '$q', '$localStorage', 'mongoCrudService', function($http, $location, $rootScope, $q, $localStorage, mongoCrudService)
 {
    var login = function(user, callback)
    {
@@ -8,9 +8,9 @@ app.service('loginService',['$http', '$location', '$rootScope', '$q', '$localSto
        {
            if (response != '0')
            {
-                $rootScope.currentUser = response.user;
                 $localStorage.currentUser = response.user;
-                $rootScope.companyName = response.user.companyName;
+                $localStorage.companyName = response.user.companyName;
+                mongoCrudService.storeProfilePic($localStorage.currentUser);
                 callback(response.user);
            }
            else
@@ -28,7 +28,6 @@ app.service('loginService',['$http', '$location', '$rootScope', '$q', '$localSto
        console.log(data);
        $http.post('/logout', data).success(function(response)
        {
-           $rootScope.currentUser = null;
            $localStorage.currentUser = null;
            callback(response);
        });
@@ -45,7 +44,7 @@ app.service('loginService',['$http', '$location', '$rootScope', '$q', '$localSto
               deferred.resolve(user);
               if (deferred.promise.$$state.value !== '0')
               {
-                  $rootScope.currentUser = $localStorage.currentUser;                  
+                  //$rootScope.currentUser = $localStorage.currentUser;                  
                   $location.url('/mainview');
               }
               else

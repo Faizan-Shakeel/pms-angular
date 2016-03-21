@@ -5,14 +5,14 @@ var app = angular.module('mongoCrudServiceModule', ['ngStorage']);
 
 app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
 {
-    if ($rootScope.companyName)
-    {
-        $localStorage.companyName = $rootScope.companyName;
-    }
-    else if (!$rootScope.companyName)
-    {
-        $rootScope.companyName = $localStorage.companyName;
-    }
+    // if ($rootScope.companyName)
+    // {
+    //     $localStorage.companyName = $rootScope.companyName;
+    // }
+    // else if (!$rootScope.companyName)
+    // {
+    //     $rootScope.companyName = $localStorage.companyName;
+    // }
     
     /////////////////////////////////////////////////////////////////////
     // ********* RETRIEVE DATA ASSOCIATED WITH LOGGED IN USER ******** //
@@ -21,7 +21,7 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
         {
             var deferred = $q.defer();
             var data = {
-                companyName: $rootScope.companyName
+                companyName: $localStorage.companyName
             };
             $http.post('/fetch',data).success(deferred.resolve);
             return deferred.promise;
@@ -43,7 +43,7 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
     /////////////////////////////////////////
     var createNewEntry = function(data)
     { 
-        var entry = {companyName: $rootScope.companyName};
+        var entry = {companyName: $localStorage.companyName};
         for (var i in data)
         {
             entry[i] = data[i];
@@ -106,13 +106,32 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
                 callback(fileUrl);
             });
     };
-    
-    /////////////////////////////////////
-    // ********* UPDATE DATA ******** //
+
+
+    //////////////////////////////////////////////////////////////
+    // ********** STORE PROFILE PICTURE ON SERVER ************* //
+    //////////////////////////////////////////////////////////////
+    var storeProfilePic = function(userObject)
+    {
+        var data = {id: userObject.id, imageUrl: userObject.imageUrl};
+        $http.post('/storeProfilePic', data).success(function(response)
+        {
+            console.log(response);
+        })
+                .error(function(err)
+        {
+            console.log(err);
+        });
+    };
+
+
+    //////////////////////////////////////
+    // ********* UPDATE DATA ********* //
     ////////////////////////////////////
     var updateData = function(id, data)
     {
         var entry = {id: id, data: data};
+        console.log(entry);
         $http.post('/update', entry).success(function(response)
         {
             console.log(response);
@@ -178,7 +197,7 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
     
 
     //////////////////////////////////////////////////////////
-    // ************** UPDATE USER PASSWORD **************** //
+    // ***************** UPDATE PASSWORD ****************** //
     //////////////////////////////////////////////////////////
     var updatePassword = function(id, oldPassword, newPassword)
     {
@@ -215,7 +234,7 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
             //userData.userParameters.senderPassword = 'sender email password';
             userData.userParameters.service = 'gmail';
             userData.userParameters.subject = 'Invitation to Join PMS';
-            userData.userParameters.content = 'You have been invited to join PMS by ' + $rootScope.currentUser.users.name + '. Your temporary password is ' + userParameters.password;
+            userData.userParameters.content = 'You have been invited to join PMS by ' + $localStorage.currentUser.users.name + '. Your temporary password is ' + userParameters.password;
         console.log(userData);
         $http.post('/inviteUser', userData).success(function(response)
         {
@@ -234,6 +253,7 @@ app.service('mongoCrudService',function($http,$q,$rootScope,$localStorage)
              deleteData: deleteData,
              deleteFile: deleteFile,
              downloadFile: downloadFile,
+             storeProfilePic: storeProfilePic,
              updateData: updateData,
              updateUser: updateUser,
              updateChatFlag: updateChatFlag,

@@ -22,8 +22,8 @@ app.service('DocumentService',['NotificationsAndHistoryService' ,'mongoCrudServi
         angular.forEach(newDocumentObject, function(value, index){
             documentPanels.push(newDocumentObject[index]);
             console.log(newDocumentObject[index]);
-            var documentValues = {documents: newDocumentObject[index]};
-            mongoCrudService.createNewEntry(documentValues);
+            var documentValues = {companyName: $localStorage.companyName, documents: newDocumentObject[index]};
+            mongoCrudService.updateData(newDocumentObject[index].id , documentValues);
 
             action = 'created';
             actionBy = 'User';

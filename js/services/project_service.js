@@ -17,9 +17,9 @@ app.service('ProjectService', ['NotificationsAndHistoryService', 'mongoCrudServi
     {
         "use strict";
 
-        var value = {project: project_params};
+        var projectValues = {project: project_params};
         projectPanels.push(project_params);
-        mongoCrudService.createNewEntry(value);
+        mongoCrudService.createNewEntry(projectValues);
 
         action = 'created';
         actionBy = 'User';
@@ -451,9 +451,8 @@ app.service('ProjectService', ['NotificationsAndHistoryService', 'mongoCrudServi
                 for(var document of deletedTaskProject.documents)
                 {
                     if(document.id == taskToDeleteDoc.id)
-                    {   console.log(deletedTaskProject.documents);
+                    {  
                         removeEntity(deletedTaskProject.documents, 'id', taskToDeleteDoc.id);
-                        console.log(deletedTaskProject.documents);
                     }
                 }
             }

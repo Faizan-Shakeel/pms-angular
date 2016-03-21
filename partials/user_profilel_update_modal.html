@@ -69,10 +69,6 @@
                     </div>
                 </div>
 
-
-
-
-
                 <div class="form-group" ng-show="UserProfileModalVM.currentPasswordVisibility">
                     <label for="newUserCurrentPassword" class="col-lg-3 col-md-3 col-sm-3 control-label">Old Password</label>
                     <div class="col-lg-8 col-md-8 col-sm-8">
@@ -102,7 +98,7 @@
     </div>
 
     <div class="modal-footer" ng-controller="userProfileCtrl as userProfileCtrlVM">
-        <label for="update-user-profile-form" class="btn btn-success" ng-disabled="updateUserProfileForm.$invalid" ng-click="userProfileCtrlVM.updateProfile(currentUser.users.id, UserProfileModalVM)">{{UserProfileModalVM.modalType}}</label>
+        <label for="update-user-profile-form" class="btn btn-success" ng-disabled="updateUserProfileForm.$invalid" ng-click="userProfileCtrlVM.updateProfile(UserProfileModalVM)">{{UserProfileModalVM.modalType}}</label>
         <button type="button" class="btn btn-default" ng-click="UserProfileModalVM.cancel()">Cancel</button>
     </div>
 

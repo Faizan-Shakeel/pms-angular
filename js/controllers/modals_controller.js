@@ -2,7 +2,7 @@
 
 var app = angular.module('modalsModule', ['ui.bootstrap','ngFileUpload']);
 
-app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'ProjectService','TaskService','DocumentService', 'UserService' ,'NotificationsAndHistoryService' ,'$log', function ($scope, $rootScope, $uibModal, ProjectService ,TaskService, DocumentService, UserService, NotificationsAndHistoryService, $log) {
+app.controller('ModalsController', ['$scope', '$rootScope', '$localStorage', '$uibModal', 'ProjectService','TaskService','DocumentService', 'UserService' ,'NotificationsAndHistoryService' ,'$log', function ($scope, $rootScope, $localStorage, $uibModal, ProjectService ,TaskService, DocumentService, UserService, NotificationsAndHistoryService, $log) {
 
     var vm = this;
 
@@ -588,7 +588,7 @@ app.controller('ModalsController', ['$scope', '$rootScope', '$uibModal', 'Projec
 
     vm.userProfileModal = function () {
 
-        var userInfo = UserService.getUserByEmail($rootScope.currentUser.users.email);
+        var userInfo = UserService.getUserByEmail($localStorage.currentUser.users.email);
 
         var userProfileModalInstance = $uibModal.open({
             animation: false,
@@ -4978,7 +4978,6 @@ $rootScope.fileUploadStatusProgress = {};
         //        console.log(" : " + JSON.stringify());
         DocumentService.uploadFile(document_params.documentName , document_params.file, function(statusData)
             {
-                console.log(statusData.fileName);
                 $rootScope.fileUploadStatusProgress[statusData.fileName] = statusData.progress;
                 //console.log($rootScope.fileUploadStatusProgress);
             });

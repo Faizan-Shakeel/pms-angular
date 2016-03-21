@@ -245,6 +245,7 @@
                                         <p>
                                         <h4>{{documentPanel.name}} <span class="col-lg-offset-8">ID: {{documentPanel.id}} </span> </h4>
                                         </p>
+                                        <a href="#/mainview" ng-click="MainViewVM.downloadFile(documentPanel)">{{documentPanel.fileName}}</a>
                                         <p>
                                             {{documentPanel.status}}
                                             <span class="col-lg-offset-6">[ {{documentPanel.project}} ] [ {{documentPanel.task}} ]</span>
@@ -252,7 +253,7 @@
                                     </div>
 
 
-                                    <div class="col-sm-4"><uib-progressbar class="progress-striped active" max="100" value="fileUploadStatusProgress" type="danger"><i>{{fileUploadStatusProgress[documentPanel.fileName]}}%</i></uib-progressbar></div>
+                                    <div class="col-sm-4"><uib-progressbar class="progress-striped active" max="100" value="fileUploadStatusProgress[documentPanel.fileName]" type="danger"><i>{{fileUploadStatusProgress[documentPanel.fileName]}}%</i></uib-progressbar></div>
 
                                     <div class="btn-group-vertical" id="documents-btn-grp-panel-in-new-project-modal">
                                         <button class="btn btn-info test-button-border" ng-click="ModalVM.infoDocumentModal(documentPanel)"><i class="fa fa-info"></i></button>
@@ -305,11 +306,11 @@
             <div class="panel panel-default" id="chatBoxOuterStyle" ng-show="MainViewVM.visible">
 
                 <div class="panel-heading" id="chat-box-panel-heading">
-                    {{MainViewVM.loggedInUserName}}
+                    {{MainViewVM.colleagueName}}
 
                     <div class="btn-group" id="chat-box-heading-buttons" role="group" aria-label="">
                         <button type="button" class="btn btn-warning" ng-click="MainViewVM.hideChatBoxInnerPanel()"><i id="chat-box-minimize" class="fa fa-minus"></i></button>
-                        <button type="button" class="btn btn-danger" ng-click="MainViewVM.selectedUser(user)"><i id="chat-box-close" class="fa fa-close fa-lg"></i></button>
+                        <button type="button" class="btn btn-danger" ng-click="MainViewVM.closeChatWindow()"><i id="chat-box-close" class="fa fa-close fa-lg"></i></button>
                     </div>
                 </div>
 
@@ -318,12 +319,12 @@
                             id="chatBoxInnerStyle"
                             ng-show="MainViewVM.visible"
                             messages="MainViewVM.messages"
-                            local-user="MainViewVM.user"
+                            local-user="MainViewVM.chatUserInfoObject"
                             show-user-avatar="true"
                             show-composer="true"
                             show-bubble-infos="true"
                             send-function="MainViewVM.sendMessage"
-                            send-button-text="MainViewVM.submitButtonText"
+                            send-button-text="{{MainViewVM.submitButtonText}}"
                     ></simple-chat>
                 </div>
 

@@ -24,9 +24,9 @@ app.service('TaskService', ['NotificationsAndHistoryService', 'mongoCrudService'
             //newTasksArray[index] = {tasks: newTasksArray[index]};
             taskPanels.push(newTasksArray[index]);
 
-            console.log(newTasksArray[index]);
-            taskValues = {tasks: newTasksArray[index]}
-            mongoCrudService.createNewEntry(taskValues);
+            taskValues = {companyName: $localStorage.companyName , tasks: newTasksArray[index]};
+            console.log(taskValues);
+            mongoCrudService.updateData(newTasksArray[index].id, taskValues);
 
             action = 'created';
             actionBy = 'User';
