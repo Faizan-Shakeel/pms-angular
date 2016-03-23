@@ -23,7 +23,7 @@ var io = require('socket.io')(http);
 var port = process.env.PORT || 3000;
 
 
-app.use(express.static(__dirname + '/../../../pmsangular'));
+app.use(express.static(__dirname + '/../../../pms-angular'));
 
 app.use(multiparty());
 
