@@ -40,8 +40,6 @@ By looking at the aforementioned points, it's clear that we saw these aspects mi
 #####Database:
 * MongoDB
 
-##HOW TO RUN:
+##DEMO:
 
-1. Run mongoDB.
-
-1. Run node server. Server file is located in root directory.
+https://pmsangular.herokuapp.com/
