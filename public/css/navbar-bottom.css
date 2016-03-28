@@ -1,0 +1,24 @@
+
+#navbar-bottom
+{
+    margin-top: 0;
+    min-height: 28px;
+    height: 28px;
+    padding: 1px 5px 1px 5px;
+}
+
+
+.nav-bottom-elem-left
+{
+    margin-top: 3px;
+    font-size: smaller;
+    text-align: center;
+    /*margin-left: 100px;*/
+    color: #999;
+}
+
+.project-git-link
+{
+    margin-right: 10px;
+    text-decoration: none;
+}

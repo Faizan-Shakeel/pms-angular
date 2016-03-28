@@ -2,15 +2,54 @@
   "name": "pms-angular",
   "version": "1.0.0",
   "description": "Web Based Single Page Project Management System",
- "engines": {
-    "node": "4.2.1"
- , "npm": "2.14.7"  },  "scripts": {
-    "start": "node app"
+  "engines": {
+    "node": "4.2.1",
+    "npm": "2.14.7"
+  },
+  "scripts": {
+    "start": "node server",
+    "postinstall": "bower install"
   },
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.15.0",
+    "bower": "1.7.7",
+    "browser-sync": "^2.11.2",
+    "connect-multiparty": "^2.0.0",
+    "cookie-parser": "^1.4.1",
+    "del": "^2.2.0",
     "express": "^4.13.4",
+    "express-session": "^1.13.0",
+    "fs": "0.0.2",
+    "gridfs-stream": "^1.1.1",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.0",
+    "gulp-clean": "^0.3.2",
+    "gulp-compass": "^2.1.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-connect": "^3.2.0",
+    "gulp-extname": "^0.2.2",
+    "gulp-imagemin": "^2.4.0",
+    "gulp-jshint": "^2.0.0",
+    "gulp-load-plugins": "^1.2.0",
+    "gulp-minify-html": "^1.0.6",
+    "gulp-plumber": "^1.1.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^1.5.3",
+    "gulp-usemin": "^0.3.21",
+    "gulp-util": "^3.0.7",
+    "jshint": "^2.9.1",
+    "lodash": "^4.6.1",
+    "marked": "^0.3.5",
+    "mongoose": "^4.4.9",
     "ngstorage": "^0.3.10",
-    "socket.io": "^1.4.4"
+    "nodemailer": "^2.3.0",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "passport-remember-me": "0.0.1",
+    "path": "^0.12.7",
+    "socket.io": "^1.4.5",
+    "xoauth2": "^1.1.0"
   },
   "devDependencies": {},
   "repository": {
