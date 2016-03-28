@@ -1,0 +1,15 @@
+
+<div class="triangle"></div>
+
+<div id="popover" ng-controller="loginCtrl as asLoginCtrl">
+    <div class="thumbnail">
+        <img ng-src="{{MainViewVM.userImageUrl}}" id="user-profile-pic" alt="">
+        <hr id="user-info-divider">
+        <div class="caption" id="popup-bottom-half">
+            <h4 class="text-center" id="user-name">{{MainViewVM.loggedInUserName}}</h4>
+            <p class="text-center" id="user-designation">User Designation</p>
+            <p><a href="#/mainview" class="btn btn-default pull-left" id="user-profile" role="button" ng-click="ModalVM.userProfileModal()">Profile</a> <a href="#/mainview" class="btn btn-default pull-right" id="global-settings" role="button">Settings</a></p>
+            <button class="btn btn-danger btn-block" id="user-logout-button" ng-click="asLoginCtrl.logout()">Log Out</button>
+        </div>
+    </div>
+</div>

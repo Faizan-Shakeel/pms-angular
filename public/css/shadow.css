@@ -1,0 +1,24 @@
+/* this is my custom CSS */
+
+#application-logo
+{
+    text-shadow: 2px 8px 6px rgba(0,0,0,0.15),
+    0 -5px 35px rgba(255,255,255,0.3);
+}
+
+#signed-in-user-pic
+{
+    box-shadow: 2px 8px 6px rgba(0,0,0,0.15),
+    0 -5px 35px rgba(255,255,255,0.3);
+}
+
+#notifications strong, #users-online strong, #notifications i, #users-online i, #signed-in-user-id, #project-panel-icon-fix, #task-panel-icon-fix, #document-panel-icon-fix, #user-panel-icon-fix
+{
+    text-shadow: 2px 8px 6px rgba(0,0,0,0.2),
+    0 -5px 35px rgba(255,255,255,0.3);
+}
+
+#search-button, #test1, #test2, #test3, #test4, #expand-tooltip, #contract-tooltip, .fa-circle-o /*#chat-ul li*/
+{
+    text-shadow: 2px 4px 3px rgba(0,0,0,0.15);
+}

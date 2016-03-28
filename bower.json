@@ -1,0 +1,46 @@
+{
+  "name": "pms-angular",
+  "description": "Web Based Single Page Project Management System",
+  "main": "",
+  "authors": [
+    "Faizan Shakeel and Bilal Mansoor"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "angularjs",
+    "mongodb",
+    "express",
+    "nodejs"
+  ],
+  "homepage": "https://github.com/bil11/pmsheroku",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-bootstrap-simple-chat": "~0.3.1",
+    "angular-messages": "~1.4.8",
+    "angular-input-masks": "~2.1.1",
+    "angular-moment": "~0.10.3",
+    "angular-scroll-glue": "~2.0.6",
+    "angular-route": "~1.4.8",
+    "angular-simple-chat": "~1.0.10",
+    "angular-socket-io": "~0.7.0",
+    "angular-strap": "~2.3.6",
+    "angular-ui-mask": "~1.6.3",
+    "ng-file-upload": "~10.1.9",
+    "ng-password-strength": "~0.2.1",
+    "ngstorage": "~0.3.10",
+    "string-mask": "~0.2.2",    "nsPopover": "~0.6.8",
+    "angular-bootstrap-multiselect": "https://github.com/bentorfs/angular-bootstrap-multiselect.git#^1.1.4"
+  },
+  "resolutions": {
+    "angular": "1.4.9",
+    "lodash": "^3.0.1",
+    "moment": "^2.11.2"
+  }
+}

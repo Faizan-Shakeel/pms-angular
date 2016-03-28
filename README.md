@@ -40,12 +40,6 @@ By looking at the aforementioned points, it's clear that we saw these aspects mi
 #####Database:
 * MongoDB
 
-##HOW TO RUN:
+##DEMO:
 
-1. Download the project and rename the extracted folder to “pms-angular”.
-
-1. Install and run mongoDB.
-
-1. Run node server. Server file is located inside “backend” folder.
-
-1. Go to browser and type “localhost:port”, (default port: 3000).
+https://pmsangular.herokuapp.com/

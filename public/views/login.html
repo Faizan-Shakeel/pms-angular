@@ -1,0 +1,54 @@
+    <div id="bg">
+        <img src="images/login_background.jpg" alt="">
+    </div>
+
+    <div class="login-form-container" ng-controller="loginCtrl as asLoginCtrl">
+
+        <p id="pms">P M S</p>
+        <p id="pms-login">( login )</p>
+
+        <div class="panel panel-default" id="login-panel-style">
+
+            <div class="panel-body login-panel-body-style">
+
+                <form id="login-form" class="form-class" name="loginForm" ng-submit="loginForm.$valid" novalidate>
+                    <div class="form-group" ng-class="{ 'has-error': loginForm.userEmail.$touched && loginForm.userEmail.$invalid }">
+                        <div>
+                            <input type="email" class="form-control input-lg" id="userEmail" name="userEmail" ng-model="user.email" placeholder="Write Your Email" required="">
+                            <div class="help-block" ng-messages="loginForm.userEmail.$error" style="text-align: right" ng-show="loginForm.userEmail.$touched">
+                                <p ng-message="required" class="ng-messages-font">Email is required.</p>
+                                <p ng-message="email" class="ng-messages-font">Invalid Email</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-class="{ 'has-error': loginForm.userPassword.$touched && loginForm.userPassword.$invalid }">
+                        <div>
+                            <input type="password" class="form-control input-lg" id="userPassword" name="userPassword" ng-model="user.password" placeholder="Write Your Password" required="">
+                            <div class="help-block" ng-messages="loginForm.userPassword.$error" style="text-align: right" ng-show="loginForm.userPassword.$touched">
+                                <p ng-message="required" class="ng-messages-font">Password is required.</p>
+                                <!--<p ng-message="minlength" class="ng-messages-font">At Least 8 Characters</p>-->
+                            </div>
+                        </div>
+                    </div>
+
+                    <br/>
+
+                    <div class="checkbox">
+                        <label class="control-label">
+                            <input type="checkbox" ng-model="user.remember_me"> Remember
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-default btn-lg pull-right test-class-disabled-button" id="login-button" ng-disabled="loginForm.$invalid" ng-click="asLoginCtrl.login(user)">Log In</button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        <a href="#/register" id="register">Register</a>
+        <a href="#/passwordrecovery" id="password">Get Password</a>
+
+    </div>

@@ -1,0 +1,72 @@
+
+    <div id="bg">
+        <img src="../images/login_background.jpg" alt="">
+    </div>
+
+    <div class="register-form-container" id="register-view-container">
+
+        <p id="pms">P M S</p>
+        <p id="pms-register">( register )</p>
+
+        <div class="panel panel-default" id="register-panel-style" ng-controller="registrationCtrl as asRegCtrl">
+
+            <div class="panel-body register-panel-body-style">
+
+                <form id="register-form" class="form-class" name="registerForm" ng-submit="registerForm.$valid" novalidate>
+
+                    <div class="form-group" ng-class="{ 'has-error': registerForm.userCompany.$touched && registerForm.userCompany.$invalid }">
+                        <div>
+                            <input type="text" class="form-control input-lg" id="userCompany" name="userCompany" ng-model="user.companyName" placeholder="Write Company Name" required="">
+                            <div class="help-block" ng-messages="registerForm.userCompany.$error" style="text-align: right" ng-show="registerForm.userCompany.$touched">
+                                <p ng-message="required" class="ng-messages-font">Required.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-class="{ 'has-error': registerForm.userName.$touched && registerForm.userName.$invalid }">
+                        <div>
+                            <input type="text" class="form-control input-lg" id="userName" name="userName" ng-model="user.name" placeholder="Write Your Name" required="">
+                            <div class="help-block" ng-messages="registerForm.userName.$error" style="text-align: right" ng-show="registerForm.userName.$touched">
+                                <p ng-message="required" class="ng-messages-font">Name is required.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-class="{ 'has-error': registerForm.userEmail.$touched && registerForm.userEmail.$invalid }">
+                        <div>
+                            <input type="email" class="form-control input-lg" id="userEmail" name="userEmail" ng-model="user.email" placeholder="Write Your Email" required="">
+                            <div class="help-block" ng-messages="registerForm.userEmail.$error" style="text-align: right" ng-show="registerForm.userEmail.$touched">
+                                <p ng-message="required" class="ng-messages-font">Email is required.</p>
+                                <p ng-message="email" class="ng-messages-font">Invalid Email</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-class="{ 'has-error': registerForm.userPassword.$touched && registerForm.userPassword.$invalid }">
+                        <div>
+                            <input type="password" class="form-control input-lg" id="userPassword" name="userPassword" ng-model="user.password" placeholder="Write Your Password" required="">
+                            <div class="help-block" ng-messages="registerForm.userPassword.$error" style="text-align: right" ng-show="registerForm.userPassword.$touched">
+                                <p ng-message="required" class="ng-messages-font">Password is required.</p>
+                                <!--<p ng-message="minlength" class="ng-messages-font">At Least 8 Characters</p>-->
+                            </div>
+
+                            <!--<br/>-->
+
+                            <!--<div ng-if="asRegCtrl.libMode === 'bootstrap'">-->
+                                <!--<div ng-password-strength="asRegCtrl.userPassword" strength="asRegCtrl.passStrength" inner-class="progress-bar" inner-class-prefix="progress-bar-"></div>-->
+                            <!--</div>-->
+
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-default btn-lg pull-right test-class-disabled-button" id="register-button" ng-click="asRegCtrl.register(user)" ng-disabled="registerForm.$invalid">Register</button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        <a href="#/login" id="login" >Log In</a>
+
+    </div>
