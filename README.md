@@ -42,10 +42,6 @@ By looking at the aforementioned points, it's clear that we saw these aspects mi
 
 ##HOW TO RUN:
 
-1. Download the project and rename the extracted folder to “pms-angular”.
+1. Run mongoDB.
 
-1. Install and run mongoDB.
-
-1. Run node server. Server file is located inside “backend” folder.
-
-1. Go to browser and type “localhost:port”, (default port: 3000).
+1. Run node server. Server file is located in root directory.
