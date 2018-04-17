@@ -24,12 +24,6 @@ By looking at the aforementioned points, it's clear that we saw these aspects mi
 * File sharing.
 * Emailing.
 
-#####Under Development:
-
-* User access control.
-* Reports.
-* Gantt chart.
-
 ##TOOLS AND FRAMEWORKS USED:
 #####Front-End:
 * AngularJS
