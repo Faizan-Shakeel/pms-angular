@@ -43,3 +43,7 @@ By looking at the aforementioned points, it's clear that we saw these aspects mi
 ##DEMO:
 
 https://pmsangular.herokuapp.com/
+
+##Contributors:
+Faizan Shakeel
+Muhammad Bilal Mansoor
